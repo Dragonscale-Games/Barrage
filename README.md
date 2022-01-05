@@ -1,2 +1,2 @@
 # Barrage
-A custom C++ engine for building bullet hell games.
+A custom C++ engine designed for building bullet hell games.
