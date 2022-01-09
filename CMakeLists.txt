@@ -32,6 +32,7 @@
 
 # Create the project.
 project(Barrage)
+cmake_minimum_required(VERSION 3.10)
 # Add the subdirectories nececssary to compile the project.
 add_subdirectory(thirdparty)
 add_subdirectory(core)

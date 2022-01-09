@@ -29,3 +29,5 @@
 # Email:        dragonscale.games.llc@gmail.com
 # Date:         1/8/2022
 # =====================================================================================================================
+
+add_executable(BarrageTest "graphics.cpp")

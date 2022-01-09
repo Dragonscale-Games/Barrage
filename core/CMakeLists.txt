@@ -29,3 +29,7 @@
 # Email:        dragonscale.games.llc@gmail.com
 # Date:         1/8/2022
 # =====================================================================================================================
+
+add_library(BarrageCore STATIC "template.cxx")
+#add_dependencies(glfw rapidjson rttr_core stb_image)
+#target_link_libraries(BarrageCore glfw rapidjson rttr_core stb_image)
