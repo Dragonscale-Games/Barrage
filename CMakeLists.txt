@@ -30,10 +30,12 @@
 # Date:         1/4/2022
 # =====================================================================================================================
 
+cmake_minimum_required(VERSION 3.10)
+
 # Create the project.
 project(Barrage)
-cmake_minimum_required(VERSION 3.10)
 # Add the subdirectories for third party libraries.
+include(ExternalProject)
 add_subdirectory(thirdparty)
 # Set the compiler flags before building our own code.
 if(MSVC)

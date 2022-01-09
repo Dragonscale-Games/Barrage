@@ -30,4 +30,12 @@
 # Date:         1/8/2022
 # =====================================================================================================================
 
-# ExternalProject_Add()
+# Add GLFW to the current build.
+set(GLFW_BUILD_EXAMPLES off)
+set(GLFW_BUILD_TESTS on)
+ExternalProject_Add(
+  glfw
+  GIT_REPOSITORY "https://www.github.com/glfw/glfw.git"
+  GIT_TAG "master"
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/thirdparty/glfw"
+)
