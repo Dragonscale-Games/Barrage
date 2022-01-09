@@ -33,7 +33,14 @@
 # Create the project.
 project(Barrage)
 cmake_minimum_required(VERSION 3.10)
-# Add the subdirectories nececssary to compile the project.
+# Add the subdirectories for third party libraries.
 add_subdirectory(thirdparty)
+# Set the compiler flags before building our own code.
+if(MSVC)
+  set(CMAKE_CXX_FLAGS "/W4 /WX")
+else()
+  set(CMAKE_CXX_FLAGS "-Wall -Werror Wextra")
+endif()
+# Add the subdirectories for building the Barrage libraries.
 add_subdirectory(core)
 add_subdirectory(test)
