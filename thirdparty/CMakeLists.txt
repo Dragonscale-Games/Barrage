@@ -30,12 +30,19 @@
 # Date:         1/8/2022
 # =====================================================================================================================
 
+# Add the libraries needed for this project.
+add_subdirectory(glad)
+add_subdirectory(glm)
+add_subdirectory(imgui)
+
 # Add GLFW to the current build.
 set(GLFW_BUILD_EXAMPLES off)
 set(GLFW_BUILD_TESTS on)
-ExternalProject_Add(
-  glfw
-  GIT_REPOSITORY "https://www.github.com/glfw/glfw.git"
-  GIT_TAG "master"
-  SOURCE_DIR "${CMAKE_SOURCE_DIR}/thirdparty/glfw"
-)
+add_subdirectory(glfw)
+
+# Add the correct settings for RapidJson.
+add_subdirectory(rapidjson)
+
+# Add the correct settings for RTTR.
+set(BUILD_DOCUMENTATION off)
+# add_subdirectory(rttr)
