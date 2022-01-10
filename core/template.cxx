@@ -16,6 +16,7 @@
 #include <stb_image/stb_image.h>
 #include <glm/glm.hpp>
 #include <rapidjson/rapidjson.h>
+#include <rttr/registration>
 
 int main(void)
 {
