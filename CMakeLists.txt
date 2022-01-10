@@ -39,9 +39,9 @@ include(ExternalProject)
 add_subdirectory(thirdparty)
 # Set the compiler flags before building our own code.
 if(MSVC)
-  set(CMAKE_CXX_FLAGS "/W4 /WX")
+  set(CMAKE_CXX_FLAGS "/W4 /WX /std:c++17")
 else()
-  set(CMAKE_CXX_FLAGS "-Wall -Werror Wextra")
+  set(CMAKE_CXX_FLAGS "-Wall -Werror Wextra -std=c++17")
 endif()
 # Add the subdirectories for building the Barrage libraries.
 add_subdirectory(core)

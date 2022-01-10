@@ -45,4 +45,5 @@ add_subdirectory(rapidjson)
 
 # Add the correct settings for RTTR.
 set(BUILD_DOCUMENTATION off)
-# add_subdirectory(rttr)
+set(BUILD_EXAMPLES off)
+add_subdirectory(rttr)
