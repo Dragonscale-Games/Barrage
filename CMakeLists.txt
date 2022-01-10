@@ -43,6 +43,7 @@ if(MSVC)
 else()
   set(CMAKE_CXX_FLAGS "-Wall -Werror Wextra -std=c++17")
 endif()
+
 # Add the subdirectories for building the Barrage libraries.
 add_subdirectory(core)
 add_subdirectory(test)

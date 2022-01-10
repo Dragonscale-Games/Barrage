@@ -34,10 +34,12 @@
 add_subdirectory(glad)
 add_subdirectory(glm)
 add_subdirectory(imgui)
+add_subdirectory(stb_image)
 
 # Add GLFW to the current build.
-set(GLFW_BUILD_EXAMPLES off)
-set(GLFW_BUILD_TESTS on)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(glfw)
 
 # Add the correct settings for RapidJson.
