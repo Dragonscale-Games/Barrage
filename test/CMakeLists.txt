@@ -31,3 +31,4 @@
 # =====================================================================================================================
 
 add_executable(BarrageTest "graphics.cpp")
+target_link_libraries(BarrageTest BarrageCore)

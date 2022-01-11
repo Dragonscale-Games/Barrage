@@ -30,7 +30,7 @@
 # Date:         1/4/2022
 # =====================================================================================================================
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 
 # Create the project.
 project(Barrage)
@@ -41,7 +41,7 @@ add_subdirectory(thirdparty)
 if(MSVC)
   set(CMAKE_CXX_FLAGS "/W4 /WX /std:c++17")
 else()
-  set(CMAKE_CXX_FLAGS "-Wall -Werror Wextra -std=c++17")
+  set(CMAKE_CXX_FLAGS "-Wall -Werror -Wextra -std=c++17")
 endif()
 
 # Add the subdirectories for building the Barrage libraries.
