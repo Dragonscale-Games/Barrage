@@ -32,6 +32,5 @@
 
 add_library(BarrageCore STATIC "template.cxx")
 add_library(barragecore ALIAS BarrageCore)
-# add_dependencies(BarrageCore glfw)
-message("Does this even work " rttr)
-target_link_libraries(BarrageCore glfw3 stb_image rttr_core)
+
+target_link_libraries(BarrageCore glfw rapidjson glm stb_image Refureku)

@@ -1,0 +1,71 @@
+[CodeGenManagerSettings]
+# List of supported extensions
+supportedFileExtensions = [".h", ".hpp"]
+
+# Files contained in the directories of this list will be parsed
+toProcessDirectories = [
+#	'''Path/To/Directory/To/Parse'''
+]
+
+# Files to parse which are not included in any directory of toParseDirectories
+toProcessFiles = []
+
+# Files contained in the directories of this list will be ignored
+ignoredDirectories = [
+#	'''Path/To/Output/Dir'''
+]
+
+# Files not to parse which are not included in any directory of ignoredDirectories
+ignoredFiles = []
+
+
+[CodeGenUnitSettings]
+# Generated files will be located here
+outputDirectory = '''Path/To/Output/Dir'''
+
+generatedHeaderFileNamePattern = "##FILENAME##.rfkh.h"
+generatedSourceFileNamePattern = "##FILENAME##.rfks.h"
+classFooterMacroPattern = "##CLASSFULLNAME##_GENERATED"
+headerFileFooterMacroPattern = "File_##FILENAME##_GENERATED"
+
+
+[ParsingSettings]
+# Include directories of the project
+projectIncludeDirectories = [
+#	'''Path/To/RefurekuLibrary/Include''',
+#	'''Path/To/Your/Project/Include'''
+]
+
+# Must be one of "msvc", "clang++", "g++"
+compilerExeName = "clang++"
+
+# Abort parsing on first encountered error
+shouldAbortParsingOnFirstError = true
+
+# Should all entities be parsed whether they are annotated or not
+shouldParseAllNamespaces = false
+shouldParseAllClasses = false
+shouldParseAllStructs = false
+shouldParseAllVariables = false
+shouldParseAllFields = false
+shouldParseAllFunctions = false
+shouldParseAllMethods = false
+shouldParseAllEnums = false
+shouldParseAllEnumValues = true
+
+shouldLogDiagnostic = false
+
+propertySeparator = ","
+subPropertySeparator = ","
+subPropertyStartEncloser = "("
+subPropertyEndEncloser = ")"
+
+namespaceMacroName = "NAMESPACE"
+classMacroName = "CLASS"
+structMacroName = "STRUCT"
+variableMacroName = "VARIABLE"
+fieldMacroName = "FIELD"
+functionMacroName = "FUNCTION"
+methodMacroName = "METHOD"
+enumMacroName = "ENUM"
+enumValueMacroName = "ENUMVALUE"

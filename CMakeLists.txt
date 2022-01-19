@@ -36,6 +36,10 @@ cmake_minimum_required(VERSION 3.16)
 project(Barrage)
 # Add the subdirectories for third party libraries.
 include(ExternalProject)
+if(MSVC)
+  
+endif()
+
 add_subdirectory(thirdparty)
 # Set the compiler flags before building our own code.
 if(MSVC)
