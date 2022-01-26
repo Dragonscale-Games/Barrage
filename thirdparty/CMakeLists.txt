@@ -30,13 +30,15 @@
 # Date:         1/8/2022
 # =====================================================================================================================
 
-# Add the libraries needed for this project.
-find_package(glfw3 3.3 REQUIRED)
-find_package(glm REQUIRED)
-find_package(RapidJSON)
-find_package(RTTR CONFIG REQUIRED Core)
-
 # Compile other libraries from source.
 add_subdirectory(glad)
 add_subdirectory(imgui)
 add_subdirectory(stb_image)
+
+add_subdirectory(rapidjson)
+add_subdirectory(glm)
+
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+add_subdirectory(glfw)

@@ -30,7 +30,8 @@
 # Date:         1/8/2022
 # =====================================================================================================================
 
+# Add the sources for the core library.
 add_library(BarrageCore STATIC "template.cxx")
 add_library(barragecore ALIAS BarrageCore)
-
-target_link_libraries(BarrageCore glfw rapidjson glm stb_image Refureku)
+# And link the dependencies for this library.
+target_link_libraries(BarrageCore PUBLIC glfw rapidjson glm stb_image)
