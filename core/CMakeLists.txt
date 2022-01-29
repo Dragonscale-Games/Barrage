@@ -30,8 +30,22 @@
 # Date:         1/8/2022
 # =====================================================================================================================
 
+# Adding the libraries linked from GitHub.
+include(FetchContent)
+FetchContent_Declare(
+  glfw3
+  GIT_REPOSITORY "https://www.github.com/glfw/glfw"
+)
+FetchContent_Declare(
+  glm
+  GIT_REPOSITORY "https://www.github.com/g-truc/glm"
+)
+FetchContent_MakeAvailable(glfw3 glm)
+
 # Add the sources for the core library.
 add_library(BarrageCore STATIC "template.cxx")
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
-target_link_libraries(BarrageCore PUBLIC glfw rapidjson glm stb_image)
+target_link_libraries(BarrageCore PUBLIC glfw glm rapidjson stb_image)
+message("RapidJSON Include Directory: " ${RAPIDJSON_INCLUDE_DIR})
+#target_link_directories(BarrageCore PUBLIC ${INCLUDE_INSTALL_DIR})
