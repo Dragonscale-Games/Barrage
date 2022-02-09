@@ -12,9 +12,8 @@ jobs:
           sudo apt-get install xorg-dev libosmesa6-dev
           sudo apt-get install doxygen valgrind
           # Going into the directory and make sure the project builds.
-          cd Barrage
-          mkdir Build
-          cd Build
+          mkdir build
+          cd build
           cmake ..
           make
           # Run all unit tests, under Valgrind and not.
