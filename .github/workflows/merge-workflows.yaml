@@ -2,7 +2,7 @@ name: merge-workflows
 on: [push]
 jobs:
   check-requirements:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
