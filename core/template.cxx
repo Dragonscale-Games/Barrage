@@ -2,7 +2,7 @@
 /*!
  * \file            template.cxx
  * \author          David Wong Cascante
- * \par             dragonscale.games.llc@gmail.com
+ * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
    Tests the compilation for all third party libraries.

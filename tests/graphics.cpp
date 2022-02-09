@@ -2,7 +2,7 @@
 /*!
  * \file            graphics.cpp
  * \author          David Wong Cascante
- * \par             dragonscale.games.llc@gmail.com
+ * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
    The test bed used for testing the graphics code used in the engine.
