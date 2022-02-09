@@ -18,7 +18,7 @@ jobs:
           make
           # Run all unit tests, under Valgrind and not.
           cd tests
-          for i in *.exe; do
+          for i in $(ls | grep *.exe *.a); do
             ./"$i"
             valgrind -q --leak-check=full ./i > /dev/null
           done
