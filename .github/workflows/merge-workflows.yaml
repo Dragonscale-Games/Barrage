@@ -20,7 +20,7 @@ jobs:
           cd tests
           for i in $(find . -maxdepth 1 -type f -not -name '*.pdb' -not -name '*.ilk' -not -name '*.cmake' -not -name 'Makefile'); do
             ./"$i"
-            valgrind -q --leak-check=full ./i > /dev/null
+            valgrind -q --leak-check=full ./"$i" > /dev/null
           done
           cd ..
           # Going back to the source directory and checking Doxygen.
