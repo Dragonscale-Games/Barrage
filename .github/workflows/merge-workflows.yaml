@@ -2,7 +2,7 @@ name: merge-workflows
 on: [push]
 jobs:
   check-requirements:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -18,7 +18,7 @@ jobs:
           make
           # Run all unit tests, under Valgrind and not.
           cd tests
-          for i in $(find . -maxdepth 1 -type f -not -name '*.pdb' -not -name '*.ilk' -not -name '*.cmake'); do
+          for i in $(find . -maxdepth 1 -type f -not -name '*.pdb' -not -name '*.ilk' -not -name '*.cmake' -not -name 'Makefile'); do
             ./"$i"
             valgrind -q --leak-check=full ./i > /dev/null
           done
