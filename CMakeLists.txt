@@ -45,4 +45,4 @@ endif()
 
 # Add the subdirectories for building the Barrage libraries.
 add_subdirectory(core)
-add_subdirectory(test)
+add_subdirectory(tests)
