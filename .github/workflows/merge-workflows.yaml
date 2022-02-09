@@ -18,7 +18,7 @@ jobs:
           make
           # Run all unit tests, under Valgrind and not.
           cd tests
-          for i in $(find . -maxdepth 1 -type f -not -name "*.pdb *.ilk *.cmake"); do
+          for i in $(find . -maxdepth 1 -type f -not -name '*.pdb' -not -name '*.ilk' -not -name '*.cmake'); do
             ./"$i"
             valgrind -q --leak-check=full ./i > /dev/null
           done
