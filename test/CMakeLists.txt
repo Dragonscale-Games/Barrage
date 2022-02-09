@@ -30,6 +30,10 @@
 # Date:         1/8/2022
 # =====================================================================================================================
 
-add_executable(BarrageTest "graphics.cpp")
-target_link_libraries(BarrageTest BarrageCore)
+set(TestingModules graphics)
 
+foreach(test ${TestingModules})
+  # Create a test for each module created.
+  add_executable( ${test} ${test}.cpp )
+  target_link_libraries(${test} BarrageCore)
+endforeach()

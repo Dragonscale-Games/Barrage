@@ -43,7 +43,9 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(glfw3 glm)
 
 # Add the sources for the core library.
-add_library(BarrageCore STATIC "template.cxx")
+add_library(BarrageCore STATIC 
+  "template.cxx"
+)
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 target_link_libraries(BarrageCore PUBLIC glfw glm rapidjson stb_image)

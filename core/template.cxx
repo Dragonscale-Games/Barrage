@@ -21,8 +21,7 @@
 #include <rapidjson/writer.h>
 #include <rapidjson/ostreamwrapper.h>
 
-#include <fstream>
-#include <cassert>
+#include <thread>
 
 void fire(void)
 {
