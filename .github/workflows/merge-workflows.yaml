@@ -11,6 +11,8 @@ jobs:
           sudo apt-get install cmake
           sudo apt-get install xorg-dev libosmesa6-dev
           sudo apt-get install doxygen valgrind
+          # Install Linux source dependencies for the project.
+          sudo apt-get install librttr-dev
           # Going into the directory and make sure the project builds.
           mkdir build
           cd build
