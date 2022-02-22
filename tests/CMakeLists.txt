@@ -30,7 +30,7 @@
 # Date:         1/8/2022
 # =====================================================================================================================
 
-set(TestingModules graphics)
+set(TestingModules graphics dummy)
 
 foreach(test ${TestingModules})
   # Create a test for each module created.

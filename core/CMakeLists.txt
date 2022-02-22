@@ -35,12 +35,25 @@ include(FetchContent)
 FetchContent_Declare(
   glfw3
   GIT_REPOSITORY "https://www.github.com/glfw/glfw"
+  GIT_TAG "b716ff5b975b7cda1b35f8aceba8bcbb2f919fe8"
 )
 FetchContent_Declare(
   glm
   GIT_REPOSITORY "https://www.github.com/g-truc/glm"
+  GIT_TAG "6ad79aae3eb5bf809c30bf1168171e9e55857e45"
 )
+FetchContent_Declare(
+  vcpkg
+  GIT_REPOSITORY "https://github.com/microsoft/vcpkg.git"
+  GIT_TAG "03ca9b59af1506a86840e3a3a01a092f3333a29b" # 2022-01-08
+)
+
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    FetchContent_Populate(vcpkg)
+    set(CMAKE_TOOLCHAIN_FILE "${vcpkg_SOURCE_DIR}/scripts/buildsystems/vcpkg.cmake")
+endif()
 FetchContent_MakeAvailable(glfw3 glm)
+find_package(RTTR CONFIG REQUIRED Core)
 
 # Add the sources for the core library.
 add_library(BarrageCore STATIC 
@@ -48,6 +61,6 @@ add_library(BarrageCore STATIC
 )
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
-target_link_libraries(BarrageCore PUBLIC glfw glm rapidjson stb_image)
+target_link_libraries(BarrageCore PUBLIC glfw glm rapidjson stb_image RTTR::Core)
 message("RapidJSON Include Directory: " ${RAPIDJSON_INCLUDE_DIR})
 #target_link_directories(BarrageCore PUBLIC ${INCLUDE_INSTALL_DIR})
