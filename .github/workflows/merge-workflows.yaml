@@ -21,14 +21,9 @@ jobs:
           # Run all unit tests, under Valgrind and not.
           cd tests
           for i in $(find . -maxdepth 1 -type f -not -name '*.pdb' -not -name '*.ilk' -not -name '*.cmake' -not -name 'Makefile'); do
-<<<<<<< HEAD
             echo "Executing Test: $i"
             ./"$i"
             valgrind -q --leak-check=full ./"$i" > /dev/null
-=======
-            echo "Testing $i"
-            valgrind -q --leak-check=full "$i" > /dev/null
->>>>>>> 9439685bc27ce7ee8f7423db4c5ec2f4a570d9bb
           done
           cd ..
           # Going back to the source directory and checking Doxygen.
