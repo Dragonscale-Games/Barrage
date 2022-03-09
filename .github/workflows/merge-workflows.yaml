@@ -7,6 +7,9 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - run: |
+          # Update and upgrade the system.
+          sudo apt-get update
+          sudo apt-get upgrade
           # Installing all dependencies needed to run actions.
           sudo apt-get install cmake
           sudo apt-get install xorg-dev libosmesa6-dev
