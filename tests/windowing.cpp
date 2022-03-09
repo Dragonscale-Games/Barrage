@@ -1,7 +1,7 @@
 #include <catch2/catch_all.hpp>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-#include "../core/rendering/WindowManager.hpp"
+#include <rendering/WindowManager.hpp>
 
 using Barrage::WindowManager;
 

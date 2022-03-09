@@ -38,3 +38,4 @@ add_library(BarrageCore
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 target_link_libraries(BarrageCore PUBLIC glfw glm rapidjson stb_image RTTR::Core)
+target_include_directories(BarrageCore PUBLIC ${CMAKE_SOURCE_DIR}/core/)
