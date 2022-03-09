@@ -31,12 +31,10 @@
 # =====================================================================================================================
 
 # Add the sources for the core library.
-add_library(BarrageCore STATIC 
+add_library(BarrageCore 
   "template.cxx"
   "rendering/WindowManager.hpp" "rendering/WindowManager.cpp"
 )
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 target_link_libraries(BarrageCore PUBLIC glfw glm rapidjson stb_image RTTR::Core)
-message("RapidJSON Include Directory: " ${RAPIDJSON_INCLUDE_DIR})
-#target_link_directories(BarrageCore PUBLIC ${INCLUDE_INSTALL_DIR})
