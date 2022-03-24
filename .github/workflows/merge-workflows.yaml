@@ -1,0 +1,34 @@
+name: merge-workflows
+on: [push]
+jobs:
+  check-requirements:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - run: |
+          # Update and upgrade the system.
+          sudo apt-get update
+          sudo apt-get upgrade
+          # Installing all dependencies needed to run actions.
+          sudo apt-get install cmake
+          sudo apt-get install xorg-dev libosmesa6-dev
+          sudo apt-get install doxygen valgrind
+          # Install Linux source dependencies for the project.
+          sudo apt-get install librttr-dev
+          # Going into the directory and make sure the project builds.
+          mkdir build
+          cd build
+          cmake ..
+          make
+          # Run all unit tests, under Valgrind and not.
+          cd tests
+          for i in $(find . -maxdepth 1 -type f -not -name '*.pdb' -not -name '*.ilk' -not -name '*.cmake' -not -name 'Makefile'); do
+            echo "Executing Test: $i"
+            ./"$i"
+            valgrind -q --leak-check=full ./"$i" > /dev/null
+          done
+          cd ..
+          # Going back to the source directory and checking Doxygen.
+          cd .. 
+          doxygen
