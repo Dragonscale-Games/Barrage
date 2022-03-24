@@ -30,19 +30,10 @@
 # Date:         1/8/2022
 # =====================================================================================================================
 
-# Find Catch2 through FetchContent
-include(FetchContent)
-FetchContent_Declare(
-  Catch2
-  GIT_REPOSITORY "https://github.com/catchorg/Catch2.git"
-  GIT_TAG "v3.0.0-preview3" # 2022-03-05
-)
-FetchContent_MakeAvailable(Catch2)
-# The set of tests being ran.
-set(TestingModules graphics dummy windowing)
+set(TestingModules graphics dummy)
 
 foreach(test ${TestingModules})
   # Create a test for each module created.
   add_executable( ${test} ${test}.cpp )
-  target_link_libraries(${test} PRIVATE BarrageCore Catch2::Catch2WithMain)
+  target_link_libraries(${test} BarrageCore)
 endforeach()

@@ -41,6 +41,7 @@
 //  ===========================================================================
 // Includes
 //  ===========================================================================
+#include <stdafx.h>
 #include <stdexcept>
 
 #include "WindowManager.hpp"
@@ -49,7 +50,7 @@
 namespace Barrage
 {
   WindowManager::WindowManager() :
-    window_(nullptr), data_{1440, 720, false, "Barrage"}
+      window_(nullptr), data_{1440, 720, false, "Barrage"}
   {
   }
 
@@ -104,6 +105,11 @@ namespace Barrage
     glfwTerminate();
   }
 
+  WindowManager* WindowManager::Instance()
+  {
+    return instance_;
+  }
+
   void WindowManager::ResizeToFullscreen()
   {
     // Get the parent monitor the window resides in.
@@ -125,6 +131,7 @@ namespace Barrage
     GLFWmonitor* monitor = GetParentMonitor();
     // Undecorate the window and resize to the window specifcations.
     glm::ivec2 monitorPos;
+    const GLFWvidmode* modes = glfwGetVideoMode(monitor);
     // Get the monitor statistics
     glfwGetMonitorPos(monitor, &monitorPos.x, &monitorPos.y);
     // Undecorate the window and resize it to the monitor.
