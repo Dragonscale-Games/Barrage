@@ -33,7 +33,6 @@
 # Add the sources for the core library.
 add_library(BarrageCore STATIC 
   "template.cxx"
-  "rendering/WindowManager.hpp" "rendering/WindowManager.cpp"
 )
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
