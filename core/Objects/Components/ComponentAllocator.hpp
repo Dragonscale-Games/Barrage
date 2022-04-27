@@ -6,8 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
-
+   Interface for allocating any type of component via its name.
  */
 /* ======================================================================== */
 
@@ -19,18 +18,20 @@
 #include "EngineComponents.hpp"
 
 #include <vector>
+#include <unordered_map>
+#include <string>
 
 namespace Barrage
 {
   class ComponentAllocator;
   
-  typedef ObjectComponent* (ComponentAllocator::* ObjectComponentAllocFunc)(unsigned) const;
-  typedef PoolComponent* (ComponentAllocator::* PoolComponentAllocFunc)(PoolComponent*) const;
+  typedef ComponentArray* (ComponentAllocator::* ComponentArrayAllocFunc)(unsigned) const;
+  typedef SharedComponent* (ComponentAllocator::* SharedComponentAllocFunc)(SharedComponent*) const;
 
-  typedef std::unordered_map<std::string, ObjectComponentAllocFunc> ObjectComponentAllocMap;
-  typedef std::unordered_map<std::string, PoolComponentAllocFunc> PoolComponentAllocMap;
+  typedef std::unordered_map<std::string, ComponentArrayAllocFunc> ComponentArrayAllocMap;
+  typedef std::unordered_map<std::string, SharedComponentAllocFunc> SharedComponentAllocMap;
 
-  //! <class description>
+  //! Responsible for allocating new components
   class ComponentAllocator
 	{
     public:   
@@ -46,15 +47,14 @@ namespace Barrage
       /*!
         \brief
           Tells the component allocator how to allocate a component
-          of a given type. Specializes one of the templated allocation 
-          functions below and adds it to the corresponding allocation 
-          function map.
+          of a given type. Component must inherit from one of the
+          component base classes.
 
         \tparam T
           The type of the component to register.
 
         \param componentName
-          The name the user would like to be assigned to the component.
+          The name the user would like assigned to the component.
       */
       /**************************************************************/
       template <typename T>
@@ -63,38 +63,39 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Creates an array of the object component type with the input
-          name with a number of elements equal to the input capacity.
-          If no component with that name has been registered, returns
-          nullptr.
+          Creates a component array whose type matches the given name. 
+          If no component array with that name has been registered, 
+          returns nullptr.
 
         \param name
-          The name of the object component to allocate.
+          The name of the component array to allocate (must have been
+          registered previously).
 
         \param capacity
-          The number of object components the allocated array should
-          hold.
+          The number of components the array should hold.
 
         \return
           Returns a pointer to the newly allocated array if the
-          component type has been registered, otherwise returns
+          component array type has been registered, otherwise returns
           nullptr.
       */
       /**************************************************************/
-      ObjectComponent* AllocateObjectComponentArray(const std::string& name, unsigned capacity) const;
+      ComponentArray* AllocateComponentArray(const std::string& name, unsigned capacity) const;
 
       /**************************************************************/
       /*!
         \brief
-          Creates a pool component of the input type. If no component 
-          with that name has been registered, returns nullptr.
+          Creates a shared component whose type matches the given 
+          name. If no component with that name has been registered, 
+          returns nullptr.
 
         \param name
-          The name of the pool component to allocate.
+          The name of the shared component to allocate.
 
-        \param other
-          Optional initializer component. If nullptr, allocated pool
-          component is uninitialized.
+        \param initializer
+          Optional. If this argument is provided, the new component 
+          will be a clone of the initializer. If not, the new 
+          component will be default-constructed.
 
         \return
           Returns a pointer to the newly allocated component if the
@@ -102,78 +103,76 @@ namespace Barrage
           nullptr.
       */
       /**************************************************************/
-      PoolComponent* AllocatePoolComponent(const std::string& name, PoolComponent* initializer = nullptr) const;
+      SharedComponent* AllocateSharedComponent(const std::string& name, SharedComponent* initializer = nullptr) const;
 
       /**************************************************************/
       /*!
         \brief
-          Gets the list of all registered object components.
+          Gets the list of all registered component arrays.
 
         \return
-          Returns the list of all registered object components.
+          Returns the list of all registered component arrays.
       */
       /**************************************************************/
-      ObjectComponentList GetObjectComponentNames();
+      std::vector<std::string> GetComponentArrayNames();
       
       /**************************************************************/
       /*!
         \brief
-          Gets the list of all registered pool components.
+          Gets the list of all registered shared components.
 
         \return
-          Returns the list of all registered pool components.
+          Returns the list of all registered shared components.
       */
       /**************************************************************/
-      PoolComponentList GetPoolComponentNames();
+      std::vector<std::string> GetSharedComponentNames();
 
     private:
       /**************************************************************/
       /*!
         \brief
-          A generic object component allocation function that creates
-          an array of the input object component type with a number
-          of elements equal to the input capacity.
+          Creates a component array, where each array element is of 
+          the input type.
 
         \tparam T
-          The type of the object component to allocate.
+          The type of component to allocate.
 
         \param capacity
-          The number of object components the allocated array should
-          hold.
+          The number of components the array should hold.
 
         \return
           Returns a pointer to the newly allocated array.
       */
       /**************************************************************/
       template <typename T>
-      ObjectComponent* AllocateObjectComponentArray(unsigned capacity) const;
+      ComponentArray* AllocateComponentArray(unsigned capacity) const;
 
       /**************************************************************/
       /*!
         \brief
-          A generic pool component allocation function that creates a
-          pool component of the input type.
+          Creates a shared component of the input type.
 
         \tparam T
-          The type of the pool component to allocate.
+          The type of component to allocate.
 
         \param initializer
-          Optional initializer component. If nullptr, allocated
-          component is uninitialized.
+          If this argument is non-null, the new component will be a 
+          clone of the initializer. Otherwise, the component will be
+          default-constructed.
 
         \return
           Returns a pointer to the newly allocated component.
       */
       /**************************************************************/
       template <typename T>
-      PoolComponent* AllocatePoolComponent(PoolComponent* initializer) const;
+      SharedComponent* AllocateSharedComponent(SharedComponent* initializer) const;
 
     private:
-      ObjectComponentAllocMap objectComponentAllocMap_; //!< Maps names of object components to their allocation functions
-      PoolComponentAllocMap poolComponentAllocMap_;     //!< Maps names of pool components to their allocation functions
+      ComponentArrayAllocMap componentArrayAllocMap_;   //!< Maps names of component arrays to their allocation functions
+      SharedComponentAllocMap sharedComponentAllocMap_; //!< Maps names of shared components to their allocation functions
 
-      ObjectComponentList objectComponentNames_;        //!< The names of all registered object components
-      PoolComponentList poolComponentNames_;            //!< The names of all registered pool components
+      std::vector<std::string> componentArrayNames_;    //!< The names of all registered component arrays
+      std::vector<std::string> sharedComponentNames_;   //!< The names of all registered shared components
 	};
 }
 

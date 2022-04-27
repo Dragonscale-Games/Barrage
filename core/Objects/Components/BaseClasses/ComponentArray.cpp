@@ -1,23 +1,24 @@
 /* ======================================================================== */
 /*!
- * \file            Spawner.cpp
+ * \file            ComponentArray.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
-
+   Base component array class that all component arrays should inherit from.
+   Component arrays are used when each object in a pool needs its own copy
+   of a component.
  */
 /* ======================================================================== */
 
 #include "stdafx.h"
-#include "Spawner.hpp"
+#include "ComponentArray.hpp"
 
 namespace Barrage
 {
-  Spawner::Spawner() :
-    spawnTypes_()
+  Component::Type ComponentArray::GetType()
   {
+    return Component::Type::ARRAY;
   }
 }

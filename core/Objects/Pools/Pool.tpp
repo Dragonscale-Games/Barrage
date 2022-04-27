@@ -1,35 +1,35 @@
 /* ======================================================================== */
 /*!
- * \file            Position.hpp
+ * \file            ComponentAllocator.tpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The 2D position of an object in world units.
+   Interface for allocating any type of component via its name.
  */
  /* ======================================================================== */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef Position_BARRAGE_H
-#define Position_BARRAGE_H
+#ifndef ComponentAllocator_BARRAGE_T
+#define ComponentAllocator_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////
-
-#include "Objects/Components/BaseClasses/ObjectComponent.hpp"
-
-#include <glm/glm.hpp>
 
 namespace Barrage
 {
-  //! Component data
-  struct PositionData
+  template <typename T>
+  T& Pool::GetComponentArray(const std::string& componentName)
   {
-    glm::vec2 position_; //!< 2D position in world units
-  };
+    return *static_cast<T*>(componentArrays_.at(componentName));
+  }
 
-  typedef ObjectComponentDerived<PositionData> Position;
+  template <typename T>
+  T& Pool::GetSharedComponent(const std::string& componentName)
+  {
+    return *static_cast<T*>(sharedComponents_.at(componentName));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // Position_BARRAGE_H
+#endif // ComponentAllocator_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////

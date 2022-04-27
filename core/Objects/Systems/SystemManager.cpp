@@ -30,7 +30,7 @@ namespace Barrage
     }
   }
 
-  void SystemManager::SetUpdateOrder(const SystemList& updateOrderList)
+  void SystemManager::SetUpdateOrder(const std::vector<std::string>& updateOrderList)
   {
     updateOrderList_ = updateOrderList;
   }
@@ -69,12 +69,12 @@ namespace Barrage
     }
   }
 
-  SystemList SystemManager::GetRegisteredSystemNames()
+  std::vector<std::string> SystemManager::GetRegisteredSystemNames()
   {
     return systemNames_;
   }
 
-  SystemList SystemManager::GetSystemUpdateOrder()
+  std::vector<std::string> SystemManager::GetSystemUpdateOrder()
   {
     return updateOrderList_;
   }

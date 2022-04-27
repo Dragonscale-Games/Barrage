@@ -30,9 +30,9 @@ namespace Barrage
     archetypeManager_ = &archetypeManager;
   }
 
-  void CreationSystem::SetInitializerManager(InitializerManager& initializerManager)
+  void CreationSystem::SetSpawnFuncManager(SpawnFuncManager& spawnFuncManager)
   {
-    initializerManager_ = &initializerManager;
+    initializerManager_ = &spawnFuncManager;
   }
 
   void CreationSystem::SetPoolManager(PoolManager& poolManager)
@@ -59,50 +59,50 @@ namespace Barrage
       return;
     }
 
-    auto begin_it = pool->objectComponents_.begin();
-    auto end_it = pool->objectComponents_.end();
+    auto begin_it = pool->componentArrays_.begin();
+    auto end_it = pool->componentArrays_.end();
 
     for (auto it = begin_it; it != end_it; ++it)
     {
-      ObjectComponent* destination_component = it->second;
-      ObjectComponent* source_component = archetype.objectComponents_.at(it->first);
+      ComponentArray* destination_array = it->second;
+      ComponentArray* source_component = archetype.components_.at(it->first);
 
       for (unsigned i = 0; i < numNewObjects; ++i)
       {
-        destination_component->CopyToThis(*source_component, 0, pool->activeObjects_ + i);
+        destination_array->CopyToThis(*source_component, 0, pool->activeObjects_ + i);
       }
     }
 
     pool->activeObjects_ += numNewObjects;
   }
 
-  void CreationSystem::ApplyInitializers(const InitializerList& initializers, Pool* initPool, Pool* destPool, unsigned startIndex, unsigned numObjects)
+  void CreationSystem::ApplySpawnFuncs(const std::vector<SpawnFunc>& spawnFuncs, Pool* initPool, Pool* destPool, unsigned startIndex, unsigned numObjects)
   {
     if (numObjects == 0)
       return;
 
-    size_t num_initializers = initializers.size();
+    size_t num_spawn_funcs = spawnFuncs.size();
 
-    for (size_t i = 0; i < num_initializers; ++i)
+    for (size_t i = 0; i < num_spawn_funcs; ++i)
     {
-      Initializer initializer = initializerManager_->GetInitializer(initializers[i]);
+      SpawnFunc spawn_func = spawnFuncs[i];
 
-      if (initializer)
+      if (spawn_func)
       {
-        initializer(*initPool, *destPool, startIndex, numObjects);
+        spawn_func(*initPool, *destPool, startIndex, numObjects);
       }
     }
   }
 
   void CreationSystem::UpdatePool(Pool* pool)
   {
-    Spawner* spawner = static_cast<Spawner*>(pool->poolComponents_["Spawner"]);
+    Spawner* spawner = static_cast<Spawner*>(pool->sharedComponents_["Spawner"]);
     
     size_t num_spawn_types = spawner->spawnTypes_.size();
 
     for (size_t i = 0; i < num_spawn_types; ++i)
     {
-      SpawnType& spawn_type = spawner->spawnTypes_[i];
+      Spawner::SpawnType& spawn_type = spawner->spawnTypes_[i];
 
       Pool* destination_pool = poolManager_->GetPool(spawn_type.poolName_);
       ObjectArchetype* object_archetype = archetypeManager_->GetObjectArchetype(spawn_type.archetypeName_);
@@ -117,7 +117,7 @@ namespace Barrage
 
       CreateObjects(*object_archetype, destination_pool, num_new_objects);
 
-      ApplyInitializers(spawn_type.initializerNames_, pool, destination_pool, first_obj_index, num_new_objects);
+      ApplySpawnFuncs(spawn_type.spawnFuncs_, pool, destination_pool, first_obj_index, num_new_objects);
 
       //spawn_type.spawnNum_ = 0;
     }

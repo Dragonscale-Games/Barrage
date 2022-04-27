@@ -134,7 +134,7 @@ namespace Barrage
 
     private:
       PoolMap pools_;                          //!< The collection of all object pools
-      ComponentAllocator& componentAllocator_; //!< Component allocator
+      ComponentAllocator& componentAllocator_; //!< Component allocator the pool manager will use
 	};
 }
 

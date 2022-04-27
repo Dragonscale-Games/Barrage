@@ -43,8 +43,8 @@ namespace Barrage
       ~PoolArchetype();
 
     public:
-      PoolComponentMap poolComponents_;      //!< Map of initialized pool components to copy
-      ObjectComponentList objectComponents_; //!< List of object component names to add to pool
+      SharedComponentMap sharedComponents_;          //!< Map of initialized shared components to copy
+      std::vector<std::string> componentArrayNames_; //!< List of names of component arrays to add to pool
 	};
 }
 

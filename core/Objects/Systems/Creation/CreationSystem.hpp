@@ -19,7 +19,7 @@
 #include "Objects/Systems/BaseSystem.hpp"
 #include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
 #include "Objects/Archetypes/ArchetypeManager.hpp"
-#include "Objects/Initializers/InitializerManager.hpp"
+#include "Objects/SpawnFuncs/SpawnFuncManager.hpp"
 #include "Objects/Pools/PoolManager.hpp"
 
 namespace Barrage
@@ -59,7 +59,7 @@ namespace Barrage
           initializers.
       */
       /**************************************************************/
-      void SetInitializerManager(InitializerManager& initializerManager);
+      void SetSpawnFuncManager(SpawnFuncManager& spawnFuncManager);
 
       /**************************************************************/
       /*!
@@ -131,7 +131,7 @@ namespace Barrage
           The number of objects to initialize.
       */
       /**************************************************************/
-      void ApplyInitializers(const InitializerList& initializers, Pool* initPool, Pool* destPool, unsigned startIndex, unsigned numObjects);
+      void ApplySpawnFuncs(const std::vector<SpawnFunc>& spawnFuncs, Pool* initPool, Pool* destPool, unsigned startIndex, unsigned numObjects);
 
       /**************************************************************/
       /*!
@@ -145,9 +145,9 @@ namespace Barrage
       void UpdatePool(Pool* pool) override;
 
     private:
-      ArchetypeManager* archetypeManager_;     //!< Used to get object archetypes
-      InitializerManager* initializerManager_; //!< Used to look up initializer functions
-      PoolManager* poolManager_;               //!< Used to get pools where objects will spawn
+      ArchetypeManager* archetypeManager_;    //!< Used to get object archetypes
+      SpawnFuncManager* initializerManager_;  //!< Used to look up initializer functions
+      PoolManager* poolManager_;              //!< Used to get pools where objects will spawn
 	};
 }
 

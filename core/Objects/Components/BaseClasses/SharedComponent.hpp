@@ -1,28 +1,28 @@
 /* ======================================================================== */
 /*!
- * \file            PoolComponent.hpp
+ * \file            SharedComponent.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Base pool component class that all pool components should inherit from.
-   A pool component is a component that is unique per object pool that
-   contains it.
+   Base shared component class that all shared components should inherit from.
+   A shared component is a component that all objects in a pool use. 
+   For instance, all objects in a pool may use the same sprite component.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef PoolComponent_BARRAGE_H
-#define PoolComponent_BARRAGE_H
+#ifndef SharedComponent_BARRAGE_H
+#define SharedComponent_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "BaseComponent.hpp"
 
 namespace Barrage
 {
-	//! Base pool component class that all pool components should inherit from
-  class PoolComponent : public Component
+	//! Base shared component class that all shared components should inherit from
+  class SharedComponent : public Component
   {
     public:
       /**************************************************************/
@@ -31,27 +31,24 @@ namespace Barrage
           Base class requires virtual destructor.
       */
       /**************************************************************/
-      virtual ~PoolComponent() = default;
+      virtual ~SharedComponent() = default;
 
       /**************************************************************/
       /*!
         \brief
-          Tells user this is a pool component type.
+          Used to identify this object as a shared component.
 
         \return
-          Returns pool component type to identify component.
+          Returns the "SHARED" component type.
       */
       /**************************************************************/
       virtual Component::Type GetType() override;
   };
 
-  //! Maps pool component names to pool component singletons
-  typedef std::unordered_map<std::string, PoolComponent*> PoolComponentMap;
-
-  //! Contains a list of names of pool components
-  typedef std::vector<std::string> PoolComponentList;
+  //! Associates each shared component with its name
+  typedef std::unordered_map<std::string, SharedComponent*> SharedComponentMap;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // PoolComponent_BARRAGE_H
+#endif // SharedComponent_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

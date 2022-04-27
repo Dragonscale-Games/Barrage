@@ -1,53 +1,62 @@
 /* ======================================================================== */
 /*!
- * \file            ObjectComponent.tpp
+ * \file            ComponentArray.tpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Base object component classes. NOTE: All object components should inherit
-   from ObjectComponentTemplated, NOT ObjectComponent.
-
-   An object component is a component that is unique per object that contains
-   it.
+   Base component array class that all component arrays should inherit from.
+   Component arrays are used when each object in a pool needs its own copy
+   of a component.
  */
  /* ======================================================================== */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef ObjectComponent_BARRAGE_T
-#define ObjectComponent_BARRAGE_T
+#ifndef ComponentArray_BARRAGE_T
+#define ComponentArray_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace Barrage
 {
   template <typename T>
-  ObjectComponentDerived<T>::ObjectComponentDerived() :
+  ComponentArrayT<T>::ComponentArrayT() :
     data_(nullptr)
   {
   }
   
   template <typename T>
-  ObjectComponentDerived<T>::~ObjectComponentDerived()
+  ComponentArrayT<T>::~ComponentArrayT()
   {
     delete[] data_;
   }
 
   template <typename T>
-  void ObjectComponentDerived<T>::Allocate(unsigned capacity)
+  void ComponentArrayT<T>::Allocate(unsigned capacity)
   {
+    if (data_)
+    {
+      delete[] data_;
+    }
+      
     data_ = new T[capacity];
   }
 
   template <typename T>
-  void ObjectComponentDerived<T>::CopyToThis(const ObjectComponent& source, unsigned sourceIndex, unsigned recipientIndex)
+  void ComponentArrayT<T>::CopyToThis(const ComponentArray& source, unsigned sourceIndex, unsigned recipientIndex)
   {
-    const ObjectComponentDerived<T>& source_derived = static_cast<const ObjectComponentDerived<T>&>(source);
+    const ComponentArrayT<T>& source_derived = static_cast<const ComponentArrayT<T>&>(source);
 
     data_[recipientIndex] = source_derived.data_[sourceIndex];
+  }
+  
+  template <typename T>
+  T& ComponentArrayT<T>::operator[](int i)
+  {
+    return data_[i];
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ObjectComponent_BARRAGE_T
+#endif // ComponentArray_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////

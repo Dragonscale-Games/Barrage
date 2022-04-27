@@ -63,11 +63,11 @@ namespace Barrage
     // for each required component...
     for (auto component : systemComponents_)
     {
-      // check if it's in the object component list
-      if (pool->objectComponents_.count(component) == 0)
+      // check if it's in the component array list
+      if (pool->componentArrays_.count(component) == 0)
       {
-        // if it wasn't, check if it's in the pool component list
-        if (pool->poolComponents_.count(component) == 0)
+        // if it wasn't, check if it's in the shared component list
+        if (pool->sharedComponents_.count(component) == 0)
         {
           // if it doesn't exist in either list, the pool doesn't have the required component
           return false;

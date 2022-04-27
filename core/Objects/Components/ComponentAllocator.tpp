@@ -6,8 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here>
-
+   Interface for allocating any type of component via its name.
  */
  /* ======================================================================== */
 
@@ -29,33 +28,33 @@ namespace Barrage
     {
       Component::Type component_type = component->GetType();
 
-      if (component_type == Component::Type::OBJECT_COMPONENT)
+      if (component_type == Component::Type::ARRAY)
       {
-        if (objectComponentAllocMap_.find(componentName) != objectComponentAllocMap_.end())
+        if (componentArrayAllocMap_.find(componentName) != componentArrayAllocMap_.end())
         {
           return;
         }
 
-        objectComponentAllocMap_[componentName] = &ComponentAllocator::AllocateObjectComponentArray<T>;
-        objectComponentNames_.push_back(componentName);
+        componentArrayAllocMap_[componentName] = &ComponentAllocator::AllocateComponentArray<T>;
+        componentArrayNames_.push_back(componentName);
       }
-      else if (component_type == Component::Type::POOL_COMPONENT)
+      else if (component_type == Component::Type::SHARED)
       {
-        if (poolComponentAllocMap_.find(componentName) != poolComponentAllocMap_.end())
+        if (sharedComponentAllocMap_.find(componentName) != sharedComponentAllocMap_.end())
         {
           return;
         }
 
-        poolComponentAllocMap_[componentName] = &ComponentAllocator::AllocatePoolComponent<T>;
-        poolComponentNames_.push_back(componentName);
+        sharedComponentAllocMap_[componentName] = &ComponentAllocator::AllocateSharedComponent<T>;
+        sharedComponentNames_.push_back(componentName);
       }
     }
   }
 
   template <typename T>
-  ObjectComponent* ComponentAllocator::AllocateObjectComponentArray(unsigned capacity) const
+  ComponentArray* ComponentAllocator::AllocateComponentArray(unsigned capacity) const
   {
-    ObjectComponent* new_component_array = dynamic_cast<ObjectComponent*>(new T);
+    ComponentArray* new_component_array = dynamic_cast<ComponentArray*>(new T);
 
     new_component_array->Allocate(capacity);
 
@@ -63,7 +62,7 @@ namespace Barrage
   }
 
   template <typename T>
-  PoolComponent* ComponentAllocator::AllocatePoolComponent(PoolComponent* initializer) const
+  SharedComponent* ComponentAllocator::AllocateSharedComponent(SharedComponent* initializer) const
   {
     T* new_component = new T;
     T* initializer_full = dynamic_cast<T*>(initializer);
@@ -73,7 +72,7 @@ namespace Barrage
       *new_component = *initializer_full;
     }
 
-    return dynamic_cast<PoolComponent*>(new_component);
+    return dynamic_cast<SharedComponent*>(new_component);
   }
 }
 

@@ -83,9 +83,9 @@ namespace Barrage
     }
   }
 
-  ArchetypeList ArchetypeManager::GetPoolArchetypeNames()
+  std::vector<std::string> ArchetypeManager::GetPoolArchetypeNames()
   {
-    ArchetypeList archetype_list;
+    std::vector<std::string> archetype_list;
 
     for (auto it = poolArchetypes_.begin(); it != poolArchetypes_.end(); ++it)
     {
@@ -95,9 +95,9 @@ namespace Barrage
     return archetype_list;
   }
 
-  ArchetypeList ArchetypeManager::GetObjectArchetypeNames()
+  std::vector<std::string> ArchetypeManager::GetObjectArchetypeNames()
   {
-    ArchetypeList archetype_list;
+    std::vector<std::string> archetype_list;
 
     for (auto it = objectArchetypes_.begin(); it != objectArchetypes_.end(); ++it)
     {

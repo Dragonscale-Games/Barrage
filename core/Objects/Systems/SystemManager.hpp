@@ -25,9 +25,6 @@ namespace Barrage
 {
   //! Maps system names to systems
   typedef std::unordered_map<std::string, System*> SystemMap;
-  
-  //! An ordered list of system names
-  typedef std::vector<std::string> SystemList;
 
   //! <class description>
   class SystemManager
@@ -77,7 +74,7 @@ namespace Barrage
           An ordered list of system names.
       */
       /**************************************************************/
-      void SetUpdateOrder(const SystemList& updateOrderList);
+      void SetUpdateOrder(const std::vector<std::string>& updateOrderList);
 
       /**************************************************************/
       /*!
@@ -114,7 +111,7 @@ namespace Barrage
           Returns the list of all registered systems.
       */
       /**************************************************************/
-      SystemList GetRegisteredSystemNames();
+      std::vector<std::string> GetRegisteredSystemNames();
 
       /**************************************************************/
       /*!
@@ -127,12 +124,12 @@ namespace Barrage
           they're updating.
       */
       /**************************************************************/
-      SystemList GetSystemUpdateOrder();
+      std::vector<std::string> GetSystemUpdateOrder();
 
     private:
-      SystemMap systems_;          //!< The collection of registered systems
-      SystemList systemNames_;     //!< The names of all registered systems
-      SystemList updateOrderList_; //!< The order the systems will update in
+      SystemMap systems_;                        //!< The collection of registered systems
+      std::vector<std::string> systemNames_;     //!< The names of all registered systems
+      std::vector<std::string> updateOrderList_; //!< The order the systems will update in
 
     friend class ObjectManager;
 	};

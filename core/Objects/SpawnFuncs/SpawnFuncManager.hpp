@@ -1,18 +1,21 @@
 /* ======================================================================== */
 /*!
- * \file            InitializerManager.hpp
+ * \file            SpawnFuncManager.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-    Keeps track of object initialization functions and their names.
+    Keeps track of spawn functions and their names. A spawn function modifies
+    how an object spawns. For instance, there may be a "MatchPosition" spawn 
+    function that causes an object to be spawned at the same location as 
+    its spawner.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef InitializerManager_BARRAGE_H
-#define InitializerManager_BARRAGE_H
+#ifndef SpawnFuncManager_BARRAGE_H
+#define SpawnFuncManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Pools/Pool.hpp"
@@ -21,18 +24,14 @@
 
 namespace Barrage
 {
-  // An initializer is a function that modifies a new object's fields
-  // Arguments: initializer pool, pool to modify, index of first new object, number of new objects 
-  typedef void (*Initializer)(Pool&, Pool&, unsigned, unsigned);
+  // Arguments: spawner pool, pool to spawn into, index of first new object, number of new objects 
+  typedef void (*SpawnFunc)(Pool&, Pool&, unsigned, unsigned);
   
-  //! Maps system names to systems
-  typedef std::unordered_map<std::string, Initializer> InitializerMap;
-  
-  //! An ordered list of initializer names
-  typedef std::vector<std::string> InitializerList;
+  //! Associates spawn functions with their names
+  typedef std::unordered_map<std::string, SpawnFunc> SpawnFuncMap;
 
-  //! Keeps track of object initialization functions and their names
-  class InitializerManager
+  //! Keeps track of spawn functions and their names
+  class SpawnFuncManager
 	{
     public:   
       /**************************************************************/
@@ -41,36 +40,36 @@ namespace Barrage
           Default constructor.
       */
       /**************************************************************/
-      InitializerManager();
+      SpawnFuncManager();
 
       /**************************************************************/
       /*!
         \brief
-          Adds an initializer to the manager's collection.
+          Adds a spawn function to the manager's collection.
 
         \param name
-          The name the user would like assigned to the initializer.
+          The name the user would like assigned to the spawn function.
 
-        \param initializer
-          The initializer to add.
+        \param spawnFunction
+          The spawn function to add.
       */
       /**************************************************************/
-      void RegisterInitializer(const std::string name, Initializer initializer);
+      void RegisterSpawnFunc(const std::string name, SpawnFunc spawnFunction);
 
       /**************************************************************/
       /*!
         \brief
-          Gets an initializer function (if it was registered).
+          Gets a spawn function (if it was registered).
 
         \param name
-          The name of an initializer.
+          The name of a spawn function.
 
         \return
-          Returns the initializer with the given name, or nullptr if
-          it doesn't exist.
+          Returns the spawn function with the given name, or nullptr 
+          if it doesn't exist.
       */
       /**************************************************************/
-      Initializer GetInitializer(const std::string name);
+      SpawnFunc GetSpawnFunc(const std::string name);
 
       /**************************************************************/
       /*!
@@ -81,14 +80,14 @@ namespace Barrage
           Returns the list of all registered initializers.
       */
       /**************************************************************/
-      InitializerList GetInitializerNames();
+      std::vector<std::string> GetSpawnFuncNames();
 
     private:
-      InitializerMap initializers_;      //!< The collection of registered initializers
-      InitializerList initializerNames_; //!< The names of all registered initializers
+      SpawnFuncMap spawnFuncs_;                 //!< The collection of registered spawn functions
+      std::vector<std::string> spawnFuncNames_; //!< The names of all registered spawn functions
 	};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // InitializerManager_BARRAGE_H
+#endif // SpawnFuncManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

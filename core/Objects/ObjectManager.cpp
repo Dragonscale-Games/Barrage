@@ -15,7 +15,7 @@
 
 #include "Components/EngineComponents.hpp"
 #include "Systems/EngineSystems.hpp"
-#include "Initializers/EngineInitializers.hpp"
+//#include "SpawnFuncs/EngineSpawnFuncs.hpp"
 
 namespace Barrage
 {
@@ -24,12 +24,12 @@ namespace Barrage
     archetypeManager_(componentAllocator_),
     poolManager_(componentAllocator_),
     systemManager_(),
-    initializerManager_()
+    spawnFuncManager_()
   {
-    RegisterComponent<Destructible>("Destructible");
-    RegisterComponent<Position>("Position");
-    RegisterComponent<Rotation>("Rotation");
-    RegisterComponent<Scale>("Scale");
+    RegisterComponent<DestructibleArray>("DestructibleArray");
+    RegisterComponent<PositionArray>("PositionArray");
+    RegisterComponent<RotationArray>("RotationArray");
+    RegisterComponent<ScaleArray>("ScaleArray");
 
     RegisterComponent<Spawner>("Spawner");
     RegisterComponent<Sprite>("Sprite");
@@ -42,12 +42,12 @@ namespace Barrage
     CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_.at("Creation System"));
 
     creation_system->SetArchetypeManager(archetypeManager_);
-    creation_system->SetInitializerManager(initializerManager_);
+    creation_system->SetSpawnFuncManager(spawnFuncManager_);
     creation_system->SetPoolManager(poolManager_);
 
     RegisterCustomComponents();
     RegisterCustomSystems();
-    RegisterCustomInitializers();
+    RegisterCustomSpawnFuncs();
     SetCustomSystemUpdateOrder();
   }
   
@@ -69,27 +69,27 @@ namespace Barrage
     }
   }
 
-  ObjectComponentList ObjectManager::GetObjectComponentNames()
+  std::vector<std::string> ObjectManager::GetComponentArrayNames()
   {
-    return componentAllocator_.GetObjectComponentNames();
+    return componentAllocator_.GetComponentArrayNames();
   }
 
-  PoolComponentList ObjectManager::GetPoolComponentNames()
+  std::vector<std::string> ObjectManager::GetSharedComponentNames()
   {
-    return componentAllocator_.GetPoolComponentNames();
+    return componentAllocator_.GetSharedComponentNames();
   }
 
-  InitializerList ObjectManager::GetInitializerNames()
+  std::vector<std::string> ObjectManager::GetSpawnFuncNames()
   {
-    return initializerManager_.GetInitializerNames();
+    return spawnFuncManager_.GetSpawnFuncNames();
   }
 
-  SystemList ObjectManager::GetRegisteredSystemNames()
+  std::vector<std::string> ObjectManager::GetRegisteredSystemNames()
   {
     return systemManager_.GetRegisteredSystemNames();
   }
 
-  SystemList ObjectManager::GetSystemUpdateOrder()
+  std::vector<std::string> ObjectManager::GetSystemUpdateOrder()
   {
     return systemManager_.GetSystemUpdateOrder();
   }
@@ -104,12 +104,12 @@ namespace Barrage
     archetypeManager_.AddObjectArchetype(name, archetype);
   }
 
-  ArchetypeList ObjectManager::GetPoolArchetypeNames()
+  std::vector<std::string> ObjectManager::GetPoolArchetypeNames()
   {
     return archetypeManager_.GetPoolArchetypeNames();
   }
 
-  ArchetypeList ObjectManager::GetObjectArchetypeNames()
+  std::vector<std::string> ObjectManager::GetObjectArchetypeNames()
   {
     return archetypeManager_.GetObjectArchetypeNames();
   }
@@ -159,14 +159,14 @@ namespace Barrage
     return poolManager_.GetPoolNames();
   }
 
-  void ObjectManager::SetSystemUpdateOrder(const SystemList& updateOrderList)
+  void ObjectManager::SetSystemUpdateOrder(const std::vector<std::string>& updateOrderList)
   {
     systemManager_.SetUpdateOrder(updateOrderList);
   }
 
-  void ObjectManager::RegisterInitializer(const std::string name, Initializer initializer)
+  void ObjectManager::RegisterSpawnFunc(const std::string name, SpawnFunc initializer)
   {
-    initializerManager_.RegisterInitializer(name, initializer);
+    spawnFuncManager_.RegisterSpawnFunc(name, initializer);
   }
 
   void ObjectManager::Draw()

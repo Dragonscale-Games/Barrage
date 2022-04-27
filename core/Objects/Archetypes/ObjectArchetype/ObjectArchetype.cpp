@@ -16,13 +16,13 @@
 namespace Barrage
 {
   ObjectArchetype::ObjectArchetype() :
-    objectComponents_()
+    components_()
   {
   }
 
   ObjectArchetype::~ObjectArchetype()
   {
-    for (auto it = objectComponents_.begin(); it != objectComponents_.end(); ++it)
+    for (auto it = components_.begin(); it != components_.end(); ++it)
     {
       delete it->second;
     }

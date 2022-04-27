@@ -48,11 +48,11 @@ add_library(BarrageCore STATIC
   "Input/InputManager.cpp" "Input/InputManager.hpp" 
   "Input/KeyMap.hpp" 
   
-  "Objects/Components/BaseClasses/ObjectComponent.cpp" "Objects/Components/BaseClasses/ObjectComponent.hpp" 
-  "Objects/Components/BaseClasses/PoolComponent.cpp"   "Objects/Components/BaseClasses/PoolComponent.hpp"   
+  "Objects/Components/BaseClasses/ComponentArray.cpp" "Objects/Components/BaseClasses/ComponentArray.hpp" 
+  "Objects/Components/BaseClasses/SharedComponent.cpp"   "Objects/Components/BaseClasses/SharedComponent.hpp"   
   "Objects/Components/BaseClasses/BaseComponent.hpp" 
   "Objects/ObjectManager.cpp" "Objects/ObjectManager.hpp" 
-  "Objects/Pools/Pool.cpp"    "Objects/Pools/Pool.hpp"     
+  "Objects/Pools/Pool.cpp"    "Objects/Pools/Pool.hpp"  
   
   "Objects/Systems/EngineSystems.hpp"
   "Objects/Systems/BaseSystem.cpp"                    "Objects/Systems/BaseSystem.hpp"   
@@ -61,17 +61,8 @@ add_library(BarrageCore STATIC
   "Objects/Systems/Draw/DrawSystem.cpp"               "Objects/Systems/Draw/DrawSystem.hpp" 
   
   "Objects/Components/EngineComponents.hpp"
-  "Objects/Components/ObjectComponents/Destructible/Destructible.hpp" 
-  "Objects/Components/ObjectComponents/Position/Position.hpp" 
-  "Objects/Components/ObjectComponents/Rotation/Rotation.hpp" 
-  "Objects/Components/ObjectComponents/Scale/Scale.hpp" 
-  "Objects/Components/PoolComponents/Spawner/Spawner.cpp" "Objects/Components/PoolComponents/Spawner/Spawner.hpp" 
-  "Objects/Components/PoolComponents/Sprite/Sprite.cpp"   "Objects/Components/PoolComponents/Sprite/Sprite.hpp" 
-  "Objects/Components/PoolComponents/Tags/Tags.cpp"       "Objects/Components/PoolComponents/Tags/Tags.hpp"  
   
-  "Objects/Initializers/EngineInitializers.hpp" 
-  
-  "Objects/Initializers/InitializerManager.hpp" "Objects/Initializers/InitializerManager.cpp"  
+  "Objects/SpawnFuncs/SpawnFuncManager.hpp"                "Objects/SpawnFuncs/SpawnFuncManager.cpp"  
   "Objects/Archetypes/ArchetypeManager.cpp"                "Objects/Archetypes/ArchetypeManager.hpp" 
   "Objects/Pools/PoolManager.cpp"                          "Objects/Pools/PoolManager.hpp" 
   "Objects/Systems/SystemManager.cpp"                      "Objects/Systems/SystemManager.hpp" 

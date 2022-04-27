@@ -16,7 +16,8 @@
 #define Pool_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Components/EngineComponents.hpp"
+#include "Objects/Components/BaseClasses/SharedComponent.hpp"
+#include "Objects/Components/BaseClasses/ComponentArray.hpp"
 
 #include <iostream>
 
@@ -34,9 +35,15 @@ namespace Barrage
       /**************************************************************/
       ~Pool();
 
+      template <typename T>
+      T& GetComponentArray(const std::string& componentName);
+
+      template <typename T>
+      T& GetSharedComponent(const std::string& componentName);
+
     public:
-      ObjectComponentMap objectComponents_; //!< Holds object component arrays and maps names to the arrays
-      PoolComponentMap poolComponents_;     //!< Holds pool components and maps names to them
+      ComponentArrayMap componentArrays_;   //!< Holds component arrays and their names
+      SharedComponentMap sharedComponents_; //!< Holds shared components and their names
       unsigned activeObjects_;              //!< Number of currently active objects
       const unsigned capacity_;             //!< Total number of objects the pool can hold
 
@@ -53,6 +60,8 @@ namespace Barrage
       friend class PoolManager;
   };
 }
+
+#include "Pool.tpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif // Pool_BARRAGE_H

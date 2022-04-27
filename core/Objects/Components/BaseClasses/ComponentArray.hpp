@@ -1,23 +1,21 @@
 /* ======================================================================== */
 /*!
- * \file            ObjectComponent.hpp
+ * \file            ComponentArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Base object component classes and template class for object components.
-   All object components should be a specialization of the template class
-   ObjectComponentDerived.
-
-   An object component is a component that is unique per object that contains
-   it.
+   Base component array class that all component arrays should inherit from.
+   Component arrays are used when each object in a pool needs its own copy
+   of a component.
+   For instance, each object may need its own position component.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef ObjectComponent_BARRAGE_H
-#define ObjectComponent_BARRAGE_H
+#ifndef ComponentArray_BARRAGE_H
+#define ComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "BaseComponent.hpp"
@@ -25,8 +23,8 @@
 
 namespace Barrage
 { 
-  //! Base object component class that all object components derive from
-  class ObjectComponent : public Component
+  //! Base component array class that all component arrays inherit from
+  class ComponentArray : public Component
   {
     public:
       /**************************************************************/
@@ -35,13 +33,12 @@ namespace Barrage
           Base class requires virtual destructor.
       */
       /**************************************************************/
-      virtual ~ObjectComponent() = default;
+      virtual ~ComponentArray() = default;
 
       /**************************************************************/
       /*!
         \brief
-          Allocates the component array that a given component type
-          uses.
+          Allocates the component array for a given component type.
 
         \param capacity
           The number of elements in the component array.
@@ -52,8 +49,8 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Copies an object component from some source component array
-          to a recipient in this component array.
+          Copies a component from some source component array to a 
+          recipient component in this component array.
 
         \param source
           The component array holding the component to copy from. The
@@ -67,46 +64,49 @@ namespace Barrage
           to.
       */
       /**************************************************************/
-      virtual void CopyToThis(const ObjectComponent& source, unsigned sourceIndex, unsigned recipientIndex) = 0;
+      virtual void CopyToThis(const ComponentArray& source, unsigned sourceIndex, unsigned recipientIndex) = 0;
 
       /**************************************************************/
       /*!
         \brief
-          Tells user this is an object component type.
+          Used to identify this object as a component array.
 
         \return
-          Returns object component type to identify component.
+          Returns the "ARRAY" component type.
       */
       /**************************************************************/
       virtual Component::Type GetType() override;
   };
 
-  //! Template for an object component class
+  //! All component arrays are a specialization of this template
   template <typename T>
-  class ObjectComponentDerived : public ObjectComponent
+  class ComponentArrayT : public ComponentArray
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Initializes component with empty data array.
+          Initializes with a null component array.
       */
       /**************************************************************/
-      ObjectComponentDerived();
+      ComponentArrayT();
       
-      /**************************************************************/
-      /*!
-        \brief
-          Base class requires virtual destructor.
-      */
-      /**************************************************************/
-      virtual ~ObjectComponentDerived();
+      ComponentArrayT(const ComponentArrayT& other) = delete;
+
+      ComponentArrayT& operator=(const ComponentArrayT& rhs) = delete;
 
       /**************************************************************/
       /*!
         \brief
-          Allocates the component array that a given component type
-          uses.
+          Deallocates component array.
+      */
+      /**************************************************************/
+      virtual ~ComponentArrayT();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Allocates component array with the given number of elements.
 
         \param capacity
           The number of elements in the component array.
@@ -117,8 +117,8 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Copies an object component from some source component array
-          to a recipient in this component array.
+          Copies a component from some source component array to a
+          recipient component in this component array.
 
         \param source
           The component array holding the component to copy from. The
@@ -132,21 +132,32 @@ namespace Barrage
           to.
       */
       /**************************************************************/
-      void CopyToThis(const ObjectComponent& source, unsigned sourceIndex, unsigned recipientIndex) override;
+      void CopyToThis(const ComponentArray& source, unsigned sourceIndex, unsigned recipientIndex) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Accesses the component at a given index in the array.
+
+        \param i
+          The index of the component to access.
+
+        \return
+          Returns a reference to the accessed component.
+      */
+      /**************************************************************/
+      T& operator[](int i);
 
     public:
       T* data_;
   };
 
-  //! Maps object component names to object component arrays
-  typedef std::unordered_map<std::string, ObjectComponent*> ObjectComponentMap;
-
-  //! Contains a list of names of object components
-  typedef std::vector<std::string> ObjectComponentList;
+  //! Associates each component array with its name
+  typedef std::unordered_map<std::string, ComponentArray*> ComponentArrayMap;
 }
 
-#include "ObjectComponent.tpp"
+#include "ComponentArray.tpp"
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ObjectComponent_BARRAGE_H
+#endif // ComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

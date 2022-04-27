@@ -19,14 +19,14 @@
 namespace Barrage
 {
   PoolArchetype::PoolArchetype() :
-    poolComponents_(),
-    objectComponents_()
+    sharedComponents_(),
+    componentArrayNames_()
   {
   }
 
   PoolArchetype::~PoolArchetype()
   {
-    for (auto it = poolComponents_.begin(); it != poolComponents_.end(); ++it)
+    for (auto it = sharedComponents_.begin(); it != sharedComponents_.end(); ++it)
     {
       delete it->second;
     }

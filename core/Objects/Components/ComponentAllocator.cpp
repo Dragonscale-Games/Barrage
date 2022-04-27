@@ -6,10 +6,9 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
-
+   Interface for allocating any type of component via its name.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 #include "stdafx.h"
 #include "ComponentAllocator.hpp"
@@ -17,44 +16,44 @@
 namespace Barrage
 {
   ComponentAllocator::ComponentAllocator() :
-    objectComponentAllocMap_(),
-    poolComponentAllocMap_(),
-    objectComponentNames_(),
-    poolComponentNames_()
+    componentArrayAllocMap_(),
+    sharedComponentAllocMap_(),
+    componentArrayNames_(),
+    sharedComponentNames_()
   {
   }
 
-  ObjectComponent* ComponentAllocator::AllocateObjectComponentArray(const std::string& name, unsigned capacity) const
+  ComponentArray* ComponentAllocator::AllocateComponentArray(const std::string& name, unsigned capacity) const
   {
-    if (objectComponentAllocMap_.find(name) == objectComponentAllocMap_.end())
+    if (componentArrayAllocMap_.find(name) == componentArrayAllocMap_.end())
     {
       return nullptr;
     }
     else
     {
-      return CALL_MEMBER_FN(*this, objectComponentAllocMap_.at(name))(capacity);
+      return CALL_MEMBER_FN(*this, componentArrayAllocMap_.at(name))(capacity);
     }
   }
 
-  PoolComponent* ComponentAllocator::AllocatePoolComponent(const std::string& name, PoolComponent* initializer) const
+  SharedComponent* ComponentAllocator::AllocateSharedComponent(const std::string& name, SharedComponent* initializer) const
   {
-    if (poolComponentAllocMap_.find(name) == poolComponentAllocMap_.end())
+    if (sharedComponentAllocMap_.find(name) == sharedComponentAllocMap_.end())
     {
       return nullptr;
     }
     else
     {
-      return CALL_MEMBER_FN(*this, poolComponentAllocMap_.at(name))(initializer);
+      return CALL_MEMBER_FN(*this, sharedComponentAllocMap_.at(name))(initializer);
     }
   }
 
-  ObjectComponentList ComponentAllocator::GetObjectComponentNames()
+  std::vector<std::string> ComponentAllocator::GetComponentArrayNames()
   {
-    return objectComponentNames_;
+    return componentArrayNames_;
   }
 
-  PoolComponentList ComponentAllocator::GetPoolComponentNames()
+  std::vector<std::string> ComponentAllocator::GetSharedComponentNames()
   {
-    return poolComponentNames_;
+    return sharedComponentNames_;
   }
 }

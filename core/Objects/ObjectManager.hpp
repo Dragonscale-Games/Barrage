@@ -18,7 +18,7 @@
 #include "Archetypes/ArchetypeManager.hpp"
 #include "Pools/PoolManager.hpp"
 #include "Systems/SystemManager.hpp"
-#include "Initializers/InitializerManager.hpp"
+#include "SpawnFuncs/SpawnFuncManager.hpp"
 
 namespace Barrage
 { 
@@ -59,23 +59,23 @@ namespace Barrage
       // Components
       // ===================================================================
 
-      ObjectComponentList GetObjectComponentNames();
+      std::vector<std::string> GetComponentArrayNames();
 
-      PoolComponentList GetPoolComponentNames();
+      std::vector<std::string> GetSharedComponentNames();
 
       // ===================================================================
       // Initializers
       // ===================================================================
 
-      InitializerList GetInitializerNames();
+      std::vector<std::string> GetSpawnFuncNames();
 
       // ===================================================================
       // Systems
       // ===================================================================
 
-      SystemList GetRegisteredSystemNames();
+      std::vector<std::string> GetRegisteredSystemNames();
 
-      SystemList GetSystemUpdateOrder();
+      std::vector<std::string> GetSystemUpdateOrder();
 
       // ===================================================================
       // Pools
@@ -91,7 +91,7 @@ namespace Barrage
 
       void DeleteAllPools();
 
-      ArchetypeList GetPoolArchetypeNames();
+      std::vector<std::string> GetPoolArchetypeNames();
 
       PoolList GetPoolNames();
 
@@ -103,7 +103,7 @@ namespace Barrage
 
       void CreateObject(const std::string& poolName, const std::string& archetypeName);
 
-      ArchetypeList GetObjectArchetypeNames();
+      std::vector<std::string> GetObjectArchetypeNames();
     
     private:
       template <typename T>
@@ -112,15 +112,15 @@ namespace Barrage
       template <typename T>
       void RegisterSystem(const std::string& systemName);
 
-      void RegisterInitializer(const std::string name, Initializer initializer);
+      void RegisterSpawnFunc(const std::string name, SpawnFunc spawnFunction);
 
-      void SetSystemUpdateOrder(const SystemList& updateOrderList);
+      void SetSystemUpdateOrder(const std::vector<std::string>& updateOrderList);
 
       void RegisterCustomComponents();
 
       void RegisterCustomSystems();
 
-      void RegisterCustomInitializers();
+      void RegisterCustomSpawnFuncs();
 
       void SetCustomSystemUpdateOrder();
 
@@ -129,7 +129,7 @@ namespace Barrage
       ArchetypeManager archetypeManager_;
       PoolManager poolManager_;
       SystemManager systemManager_;
-      InitializerManager initializerManager_;
+      SpawnFuncManager spawnFuncManager_;
 	};
 }
 

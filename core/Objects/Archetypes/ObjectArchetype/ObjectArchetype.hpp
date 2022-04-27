@@ -40,7 +40,7 @@ namespace Barrage
       ~ObjectArchetype();
 
     public:
-      ObjectComponentMap objectComponents_; //!< A map of initialized object components to copy
+      ComponentArrayMap components_; //!< A map of initialized components to copy (each array has only one component)
 	};
 }
 

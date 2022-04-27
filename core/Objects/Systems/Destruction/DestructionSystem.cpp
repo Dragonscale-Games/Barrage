@@ -18,7 +18,7 @@ namespace Barrage
   DestructionSystem::DestructionSystem() :
     System()
   {
-    systemComponents_.push_back("Destructible");
+    systemComponents_.push_back("DestructibleArray");
   }
   
   void DestructionSystem::UpdatePool(Pool* pool)
@@ -28,7 +28,7 @@ namespace Barrage
 
   void DestructionSystem::PerObjectDestructionAlgorithm(Pool* pool)
   {
-    Destructible* destructibles = dynamic_cast<Destructible*>(pool->objectComponents_.at("Destructible"));
+    DestructibleArray& destructible_array = pool->GetComponentArray<DestructibleArray>("DestructibleArray");
 
     /*
      *  Objectives:
@@ -43,7 +43,7 @@ namespace Barrage
     // starting at the beginning of the object array, find the index of the first destroyed object (if one exists)
     while (alive_end_index < pool->activeObjects_)
     {
-      if (destructibles->data_[alive_end_index].destroyed_ == true)
+      if (destructible_array[alive_end_index].destroyed_ == true)
         break;
 
       ++alive_end_index;
@@ -57,7 +57,7 @@ namespace Barrage
     while (next_alive_index < pool->activeObjects_)
     {
       // if an alive object is found that needs to be packed...
-      if (destructibles->data_[next_alive_index].destroyed_ == false)
+      if (destructible_array[next_alive_index].destroyed_ == false)
       {
         // copy the object to the end of the packed subarray
         CopyObject(pool, next_alive_index, alive_end_index);
@@ -75,7 +75,7 @@ namespace Barrage
 
   void DestructionSystem::PerComponentDestructionAlgorithm(Pool* pool)
   {
-    Destructible* destructibles = dynamic_cast<Destructible*>(pool->objectComponents_.at("Destructible"));
+    DestructibleArray& destructible_array = pool->GetComponentArray<DestructibleArray>("DestructibleArray");
 
     /*
      *  Objectives:
@@ -91,7 +91,7 @@ namespace Barrage
     // past the end of the original object array
     while (initial_alive_end_index < pool->activeObjects_)
     {
-      if (destructibles->data_[initial_alive_end_index].destroyed_ == true)
+      if (destructible_array[initial_alive_end_index].destroyed_ == true)
         break;
 
       ++initial_alive_end_index;
@@ -102,7 +102,7 @@ namespace Barrage
       return;
 
     // in each component array, shift the components from alive objects to the beginning of the array
-    for (auto it = pool->objectComponents_.begin(); it != pool->objectComponents_.end(); ++it)
+    for (auto it = pool->componentArrays_.begin(); it != pool->componentArrays_.end(); ++it)
     {
       // we'll operate on the destructible array last; after the loop finishes
       if (it->first == "Destructible")
@@ -111,13 +111,13 @@ namespace Barrage
       unsigned alive_end_index = initial_alive_end_index;
       unsigned next_alive_index = alive_end_index + 1;
 
-      ObjectComponent* component = it->second;
+      ComponentArray* component_array = it->second;
 
       while (next_alive_index < pool->activeObjects_)
       {
-        if (destructibles->data_[next_alive_index].destroyed_ == false)
+        if (destructible_array[next_alive_index].destroyed_ == false)
         {
-          component->CopyToThis(*component, next_alive_index, alive_end_index);
+          component_array->CopyToThis(*component_array, next_alive_index, alive_end_index);
 
           ++alive_end_index;
         }
@@ -132,9 +132,9 @@ namespace Barrage
 
     while (next_alive_index < pool->activeObjects_)
     {
-      if (destructibles->data_[next_alive_index].destroyed_ == false)
+      if (destructible_array[next_alive_index].destroyed_ == false)
       {
-        destructibles->CopyToThis(*destructibles, next_alive_index, alive_end_index);
+        destructible_array.CopyToThis(destructible_array, next_alive_index, alive_end_index);
 
         ++alive_end_index;
       }
@@ -148,11 +148,11 @@ namespace Barrage
 
   void DestructionSystem::CopyObject(Pool* pool, unsigned sourceIndex, unsigned recipientIndex) const
   {
-    for (auto it = pool->objectComponents_.begin(); it != pool->objectComponents_.end(); ++it)
+    for (auto it = pool->componentArrays_.begin(); it != pool->componentArrays_.end(); ++it)
     {
-      ObjectComponent* component = it->second;
+      ComponentArray* component_array = it->second;
 
-      component->CopyToThis(*component, sourceIndex, recipientIndex);
+      component_array->CopyToThis(*component_array, sourceIndex, recipientIndex);
     }
   }
 }

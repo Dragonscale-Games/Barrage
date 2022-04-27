@@ -20,7 +20,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../Pools/Pool.hpp"
-
+#include "Objects/Components/EngineComponents.hpp"
 #include <map>
 
 namespace Barrage
@@ -103,8 +103,8 @@ namespace Barrage
       bool PoolMatchesSystem(Pool* pool);
 
     protected:
-      ComponentList systemComponents_; //!< Holds the names of all the components the system cares about
-      OrderedPoolMap pools_;           //!< Holds all subscribed pools in the order they are to be updated (based on key given in Subscribe)
+      std::vector<std::string> systemComponents_; //!< Holds the names of all the components the system cares about
+      OrderedPoolMap pools_;                      //!< Holds all subscribed pools in the order they are to be updated (based on key given in Subscribe)
   };
 }
 

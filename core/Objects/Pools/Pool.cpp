@@ -17,8 +17,8 @@
 namespace Barrage
 {
   Pool::Pool(unsigned capacity) :
-    objectComponents_(),
-    poolComponents_(),
+    componentArrays_(),
+    sharedComponents_(),
     activeObjects_(0),
     capacity_(capacity)
   {
@@ -26,14 +26,14 @@ namespace Barrage
 
   Pool::~Pool()
   {
-    // deallocate object component arrays
-    for (auto it = objectComponents_.begin(); it != objectComponents_.end(); ++it)
+    // deallocate component arrays
+    for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
     {
       delete it->second;
     }
 
-    // deallocate pool components
-    for (auto it = poolComponents_.begin(); it != poolComponents_.end(); ++it)
+    // deallocate shared components
+    for (auto it = sharedComponents_.begin(); it != sharedComponents_.end(); ++it)
     {
       delete it->second;
     }

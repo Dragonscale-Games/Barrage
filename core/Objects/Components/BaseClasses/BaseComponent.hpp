@@ -6,7 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Base component class that all component types should inherit from.
+   Base component class that all components should inherit from.
  */
  /* ======================================================================== */
 
@@ -16,7 +16,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <unordered_map>
-#include <vector>
 #include <string>
 
 namespace Barrage
@@ -28,8 +27,8 @@ namespace Barrage
       //! Type of a given component, so user can get component type from base class pointer
       enum class Type
       {
-        OBJECT_COMPONENT,
-        POOL_COMPONENT
+        SHARED,
+        ARRAY
       };
 
       /**************************************************************/
@@ -53,11 +52,8 @@ namespace Barrage
       virtual Type GetType() = 0;
   };
 
-  //! Maps component names to allocated components
+  //! Associates components with their names
   typedef std::unordered_map<std::string, Component*> ComponentMap;
-
-  //! Contains a list of names of components
-  typedef std::vector<std::string> ComponentList;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

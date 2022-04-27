@@ -20,9 +20,9 @@ namespace Barrage
   DrawSystem::DrawSystem() :
     System()
   {
-    systemComponents_.push_back("Position");
-    systemComponents_.push_back("Scale");
-    systemComponents_.push_back("Rotation");
+    systemComponents_.push_back("PositionArray");
+    systemComponents_.push_back("ScaleArray");
+    systemComponents_.push_back("RotationArray");
     systemComponents_.push_back("Sprite");
   }
   
@@ -30,7 +30,7 @@ namespace Barrage
   {
     if (PoolMatchesSystem(pool))
     {
-      Sprite* pool_sprite = dynamic_cast<Sprite*>(pool->poolComponents_.at("Sprite"));
+      Sprite* pool_sprite = dynamic_cast<Sprite*>(pool->sharedComponents_.at("Sprite"));
       
       pools_.insert(std::pair<unsigned, Pool*>(pool_sprite->layer_, pool));
     }
@@ -42,17 +42,17 @@ namespace Barrage
     {
       Pool* pool = it->second;
 
-      Position* position_component = dynamic_cast<Position*>(pool->objectComponents_.at("Position"));
-      Scale* scale_component = dynamic_cast<Scale*>(pool->objectComponents_.at("Scale"));
-      Rotation* rotation_component = dynamic_cast<Rotation*>(pool->objectComponents_.at("Rotation"));
+      PositionArray& position_array = pool->GetComponentArray<PositionArray>("PositionArray");
+      ScaleArray& scale_array = pool->GetComponentArray<ScaleArray>("ScaleArray");
+      RotationArray& rotation_array = pool->GetComponentArray<RotationArray>("RotationArray");
 
-      glm::vec2* positions = reinterpret_cast<glm::vec2*>(position_component->data_);
-      glm::vec2* scales = reinterpret_cast<glm::vec2*>(scale_component->data_);
-      float* rotations = reinterpret_cast<float*>(rotation_component->data_);
+      glm::vec2* positions = reinterpret_cast<glm::vec2*>(position_array.data_);
+      glm::vec2* scales = reinterpret_cast<glm::vec2*>(scale_array.data_);
+      float* rotations = reinterpret_cast<float*>(rotation_array.data_);
 
-      Sprite* pool_sprite = dynamic_cast<Sprite*>(pool->poolComponents_.at("Sprite"));
+      Sprite& pool_sprite = pool->GetSharedComponent<Sprite>("Sprite");
 
-      TestRenderer::Instance().DrawInstanced(positions, rotations, scales, pool->activeObjects_, pool_sprite->texture_);
+      TestRenderer::Instance().DrawInstanced(positions, rotations, scales, pool->activeObjects_, pool_sprite.texture_);
     }
   }
 }

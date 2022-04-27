@@ -82,25 +82,25 @@ namespace Barrage
   {
     Pool* new_pool = new Pool(capacity);
 
-    // allocate object component arrays
-    for (const std::string& component : archetype.objectComponents_)
+    // allocate component arrays
+    for (const std::string& component_array_name : archetype.componentArrayNames_)
     {
-      ObjectComponent* object_component_array = componentAllocator_.AllocateObjectComponentArray(component, capacity);
+      ComponentArray* component_array = componentAllocator_.AllocateComponentArray(component_array_name, capacity);
 
-      if (object_component_array)
+      if (component_array)
       {
-        new_pool->objectComponents_[component] = object_component_array;
+        new_pool->componentArrays_[component_array_name] = component_array;
       }
     }
 
-    // allocate and initialize pool components
-    for (auto it = archetype.poolComponents_.begin(); it != archetype.poolComponents_.end(); ++it)
+    // allocate and initialize shared components
+    for (auto it = archetype.sharedComponents_.begin(); it != archetype.sharedComponents_.end(); ++it)
     {
-      PoolComponent* pool_component = componentAllocator_.AllocatePoolComponent(it->first, it->second);
+      SharedComponent* shared_component = componentAllocator_.AllocateSharedComponent(it->first, it->second);
 
-      if (pool_component)
+      if (shared_component)
       {
-        new_pool->poolComponents_[it->first] = pool_component;
+        new_pool->sharedComponents_[it->first] = shared_component;
       }
     }
 

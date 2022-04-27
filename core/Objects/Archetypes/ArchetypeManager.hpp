@@ -26,9 +26,6 @@ namespace Barrage
 
   //! Maps object archetype names to object archetypes
   typedef std::unordered_map<std::string, ObjectArchetype*> ObjectArchetypeMap;
-  
-  //! List of archetype names
-  typedef std::vector<std::string> ArchetypeList;
 
   //! <class description>
   class ArchetypeManager
@@ -46,9 +43,9 @@ namespace Barrage
 
       ObjectArchetype* GetObjectArchetype(const std::string name);
 
-      ArchetypeList GetPoolArchetypeNames();
+      std::vector<std::string> GetPoolArchetypeNames();
 
-      ArchetypeList GetObjectArchetypeNames();
+      std::vector<std::string> GetObjectArchetypeNames();
 
       void LoadPoolArchetype(const std::string name);
 
