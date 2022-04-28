@@ -59,7 +59,7 @@ endif()
 # Create the project.
 project(Barrage)
 # Add the subdirectories for third party libraries.
-add_subdirectory(Thirdparty)
+add_subdirectory(ThirdParty)
 find_package(rttr CONFIG REQUIRED)
 FetchContent_MakeAvailable(glfw3 glm)
 
