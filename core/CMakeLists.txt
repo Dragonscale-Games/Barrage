@@ -69,7 +69,16 @@ add_library(BarrageCore STATIC
   "Objects/Components/ComponentAllocator.cpp"              "Objects/Components/ComponentAllocator.hpp" 
   "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp" "Objects/Archetypes/ObjectArchetype/ObjectArchetype.cpp" 
   "Objects/Archetypes/PoolArchetype/PoolArchetype.hpp"     "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
-)
+  "Objects/SpawnFuncs/EngineSpawnFuncs.hpp" 
+  "Objects/Pools/PoolType.cpp" "Objects/Pools/PoolType.hpp" 
+  "Objects/Components/ComponentArrays/DestructibleArray.hpp" 
+  "Objects/Components/ComponentArrays/PositionArray.hpp" 
+  "Objects/Components/ComponentArrays/ScaleArray.hpp" 
+  "Objects/Components/ComponentArrays/RotationArray.hpp" 
+  "Objects/Components/SharedComponents/Spawner.hpp"
+  "Objects/Components/SharedComponents/Sprite.hpp"
+  "Objects/Components/ComponentArrays/LifetimeArray.hpp" "Objects/Components/ComponentArrays/VelocityArray.hpp")
+
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)

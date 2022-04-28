@@ -22,7 +22,10 @@ namespace Barrage
     initializerManager_(nullptr),
     poolManager_(nullptr)
   {
-    systemComponents_.push_back("Spawner");
+    PoolType spawner_type;
+    spawner_type.AddComponentName("Spawner");
+
+    poolTypes_.push_back(spawner_type);
   }
 
   void CreationSystem::SetArchetypeManager(ArchetypeManager& archetypeManager)

@@ -18,12 +18,16 @@ namespace Barrage
   DestructionSystem::DestructionSystem() :
     System()
   {
-    systemComponents_.push_back("DestructibleArray");
+    PoolType destructible_type;
+    destructible_type.AddComponentName("DestructibleArray");
+
+    poolTypes_.push_back(destructible_type);
   }
   
   void DestructionSystem::UpdatePool(Pool* pool)
   {
     PerComponentDestructionAlgorithm(pool);
+    // PerObjectDestructionAlgorithm(pool);
   }
 
   void DestructionSystem::PerObjectDestructionAlgorithm(Pool* pool)

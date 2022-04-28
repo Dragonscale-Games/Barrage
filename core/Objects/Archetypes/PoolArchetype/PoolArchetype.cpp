@@ -6,9 +6,9 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Used to initialize an object pool. Provides starting values of pool
-   components using its pool component map. Only provides names of object 
-   components, as object components are initialized later with an
+   Used to initialize an object pool. Provides starting values of shared
+   components using its shared component map. Only provides names of component 
+   arrays, as components in component arrays are initialized later with an
    ObjectArchetype.
  */
 /* ======================================================================== */
@@ -20,7 +20,8 @@ namespace Barrage
 {
   PoolArchetype::PoolArchetype() :
     sharedComponents_(),
-    componentArrayNames_()
+    componentArrayNames_(),
+    tags_()
   {
   }
 

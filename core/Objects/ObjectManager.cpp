@@ -15,7 +15,7 @@
 
 #include "Components/EngineComponents.hpp"
 #include "Systems/EngineSystems.hpp"
-//#include "SpawnFuncs/EngineSpawnFuncs.hpp"
+#include "SpawnFuncs/EngineSpawnFuncs.hpp"
 
 namespace Barrage
 {
@@ -26,18 +26,9 @@ namespace Barrage
     systemManager_(),
     spawnFuncManager_()
   {
-    RegisterComponent<DestructibleArray>("DestructibleArray");
-    RegisterComponent<PositionArray>("PositionArray");
-    RegisterComponent<RotationArray>("RotationArray");
-    RegisterComponent<ScaleArray>("ScaleArray");
-
-    RegisterComponent<Spawner>("Spawner");
-    RegisterComponent<Sprite>("Sprite");
-    RegisterComponent<Tags>("Tags");
-
-    RegisterSystem<CreationSystem>("Creation System");
-    RegisterSystem<DestructionSystem>("Destruction System");
-    RegisterSystem<DrawSystem>("Draw System");
+    RegisterEngineComponents();
+    RegisterEngineSystems();
+    RegisterEngineSpawnFuncs();
 
     CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_.at("Creation System"));
 
@@ -177,5 +168,30 @@ namespace Barrage
     {
       draw_system->Draw();
     }
+  }
+
+  void ObjectManager::RegisterEngineComponents()
+  {
+    RegisterComponent<DestructibleArray>("DestructibleArray");
+    RegisterComponent<LifetimeArray>("LifetimeArray");
+    RegisterComponent<PositionArray>("PositionArray");
+    RegisterComponent<RotationArray>("RotationArray");
+    RegisterComponent<ScaleArray>("ScaleArray");
+    RegisterComponent<VelocityArray>("VelocityArray");
+
+    RegisterComponent<Spawner>("Spawner");
+    RegisterComponent<Sprite>("Sprite");
+  }
+
+  void ObjectManager::RegisterEngineSystems()
+  {
+    RegisterSystem<CreationSystem>("Creation System");
+    RegisterSystem<DestructionSystem>("Destruction System");
+    RegisterSystem<DrawSystem>("Draw System");
+  }
+
+  void ObjectManager::RegisterEngineSpawnFuncs()
+  {
+
   }
 }

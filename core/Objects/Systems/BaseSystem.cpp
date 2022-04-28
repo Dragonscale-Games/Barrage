@@ -20,16 +20,22 @@
 namespace Barrage
 {
   System::System() :
-    systemComponents_(),
+    poolTypes_(),
     pools_()
   {
   }
 
   void System::Subscribe(Pool* pool)
   {
-    if (PoolMatchesSystem(pool))
+    int num_pool_types = poolTypes_.size();
+
+    for (int i = 0; i < num_pool_types; ++i)
     {
-      pools_.insert(std::pair<unsigned, Pool*>(0, pool));
+      if (poolTypes_[i].MatchesPool(pool))
+      {
+        pools_.insert(std::pair<unsigned, Pool*>(static_cast<unsigned>(i), pool));
+        return;
+      }
     }
   }
 
@@ -56,26 +62,5 @@ namespace Barrage
   void System::UpdatePool(Pool* pool)
   {
     UNREFERENCED(pool);
-  }
-
-  bool System::PoolMatchesSystem(Pool* pool)
-  {
-    // for each required component...
-    for (auto component : systemComponents_)
-    {
-      // check if it's in the component array list
-      if (pool->componentArrays_.count(component) == 0)
-      {
-        // if it wasn't, check if it's in the shared component list
-        if (pool->sharedComponents_.count(component) == 0)
-        {
-          // if it doesn't exist in either list, the pool doesn't have the required component
-          return false;
-        }
-      }
-    }
-
-    // if we made it here, the pool contains all required components
-    return true;
   }
 }

@@ -20,6 +20,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../Pools/Pool.hpp"
+#include "../Pools/PoolType.hpp"
 #include "Objects/Components/EngineComponents.hpp"
 #include <map>
 
@@ -93,18 +94,9 @@ namespace Barrage
       /**************************************************************/
       virtual void UpdatePool(Pool* pool);
 
-      /**************************************************************/
-      /*!
-        \brief
-          Determines if an object pool has the set of components the
-          system cares about (using the system component list).
-      */
-      /**************************************************************/
-      bool PoolMatchesSystem(Pool* pool);
-
     protected:
-      std::vector<std::string> systemComponents_; //!< Holds the names of all the components the system cares about
-      OrderedPoolMap pools_;                      //!< Holds all subscribed pools in the order they are to be updated (based on key given in Subscribe)
+      std::vector<PoolType> poolTypes_; //!< Holds the names of all pool types the system cares about
+      OrderedPoolMap pools_;            //!< Holds all subscribed pools in the order they are to be updated
   };
 }
 

@@ -82,6 +82,12 @@ namespace Barrage
   {
     Pool* new_pool = new Pool(capacity);
 
+    // add tags
+    for (const std::string& tag : archetype.tags_)
+    {
+      new_pool->tags_.insert(tag);
+    }
+
     // allocate component arrays
     for (const std::string& component_array_name : archetype.componentArrayNames_)
     {

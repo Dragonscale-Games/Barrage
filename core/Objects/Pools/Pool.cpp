@@ -17,6 +17,7 @@
 namespace Barrage
 {
   Pool::Pool(unsigned capacity) :
+    tags_(),
     componentArrays_(),
     sharedComponents_(),
     activeObjects_(0),
@@ -37,5 +38,10 @@ namespace Barrage
     {
       delete it->second;
     }
+  }
+
+  bool Pool::HasTag(const std::string& tag) const
+  {
+    return tags_.count(tag);
   }
 }

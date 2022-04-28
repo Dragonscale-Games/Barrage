@@ -6,7 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Definitions of each type of engine system.
+   Definitions of each type of built-in system.
  */
  /* ======================================================================== */
 

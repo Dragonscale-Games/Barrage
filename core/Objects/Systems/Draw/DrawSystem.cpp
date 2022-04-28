@@ -20,15 +20,18 @@ namespace Barrage
   DrawSystem::DrawSystem() :
     System()
   {
-    systemComponents_.push_back("PositionArray");
-    systemComponents_.push_back("ScaleArray");
-    systemComponents_.push_back("RotationArray");
-    systemComponents_.push_back("Sprite");
+    PoolType basic_sprite_type;
+    basic_sprite_type.AddComponentName("PositionArray");
+    basic_sprite_type.AddComponentName("ScaleArray");
+    basic_sprite_type.AddComponentName("RotationArray");
+    basic_sprite_type.AddComponentName("Sprite");
+
+    poolTypes_.push_back(basic_sprite_type);
   }
   
   void DrawSystem::Subscribe(Pool* pool)
   {
-    if (PoolMatchesSystem(pool))
+    if (poolTypes_[0].MatchesPool(pool))
     {
       Sprite* pool_sprite = dynamic_cast<Sprite*>(pool->sharedComponents_.at("Sprite"));
       
