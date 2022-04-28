@@ -27,13 +27,8 @@
 # File:         CMakeLists.txt
 # Author:       David Wong Cascante
 # Email:        dragonscale.games.llc@gmail.com
-# Date:         1/8/2022
+# Date:         4/28/2022
 # =====================================================================================================================
 
-set(TestingModules Graphics Dummy)
-
-foreach(test ${TestingModules})
-  # Create a test for each module created.
-  add_executable( ${test} ${test}.cpp )
-  target_link_libraries(${test} BarrageCore)
-endforeach()
+# Add the subdirectories for compiling a variety of sample projects.
+add_subdirectory(Graphics)

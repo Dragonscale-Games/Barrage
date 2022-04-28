@@ -59,7 +59,7 @@ endif()
 # Create the project.
 project(Barrage)
 # Add the subdirectories for third party libraries.
-add_subdirectory(thirdparty)
+add_subdirectory(Thirdparty)
 find_package(rttr CONFIG REQUIRED)
 FetchContent_MakeAvailable(glfw3 glm)
 
@@ -71,5 +71,6 @@ else()
 endif()
 
 # Add the subdirectories for building the Barrage libraries.
-add_subdirectory(core)
-add_subdirectory(tests)
+add_subdirectory(Core)
+add_subdirectory(Tests)
+add_subdirectory(Samples)
