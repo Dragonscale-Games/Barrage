@@ -13,7 +13,7 @@
 /* Includes */
 /* ======================================================================== */
 #include <Rendering/GfxManager2D.hpp>
-
+#include <Rendering/WindowManager.hpp>
 
 /****************************************************************************/
 /*!
@@ -23,6 +23,21 @@
 /****************************************************************************/
 int main()
 {
-
+  // The windowing module.
+  Barrage::WindowManager windowing;
+  Barrage::WindowManager::WindowData settings = {};
+  settings.decorated_ = true;
+  settings.width_ = 1920;
+  settings.height_ = 1080;
+  settings.title_ = "Barrage";
+  windowing.Initialize(settings);
+  
+  // Update the windowi while it's open.
+  while(!glfwWindowShouldClose(windowing.GetInternalHandle())) 
+  {
+    glfwPollEvents();
+  }
+  
+  windowing.Shutdown();
   return 0;
 }
