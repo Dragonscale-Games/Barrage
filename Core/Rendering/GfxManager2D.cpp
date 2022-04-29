@@ -136,7 +136,7 @@ namespace Barrage
   }
 
   GfxManager2D::GfxManager2D() :
-    windowing_(nullptr), glVersion_(0)
+    glVersion_(0), windowing_(nullptr)
   {
   }
 
@@ -379,6 +379,7 @@ namespace Barrage
     // Clean up unused meshes.
     // Check that all the lists here are the same size.
     const size_t meshListSize = internalMeshes_.size();
+    UNREFERENCED(meshListSize);
     assert(meshBuffers_.size() == meshListSize);
     assert(meshes_.size() == meshListSize);
     CleanUnusedInList(meshes_, &GfxManager2D::CleanUnusedMeshes);
@@ -386,6 +387,7 @@ namespace Barrage
     // Clean up unused shaders.
     // Check that all the resources are indeed the same size.
     const size_t programListSize = internalPrograms_.size();
+    UNREFERENCED(programListSize);
     assert(internalStages_.size() == programListSize);
     assert(shaderPrograms_.size() == programListSize);
     CleanUnusedInList(shaderPrograms_, &GfxManager2D::CleanUnusedShaders);
@@ -393,7 +395,8 @@ namespace Barrage
     // Clean up unused textures.
     // Check that all the resources are indeed the same size.
     const size_t textureListSize = internalTextures_.size();
-    assert(textures_.size() == programListSize);
+    UNREFERENCED(textureListSize);
+    assert(textures_.size() == textureListSize);
     CleanUnusedInList(textures_, &GfxManager2D::CleanUnusedTextures);
     
     // TODO: Clean up framebuffers.
@@ -523,7 +526,7 @@ namespace Barrage
 
   void GfxManager2D::CleanUnusedInList(std::vector<ResourceID>& resourceList, void (GfxManager2D::* cleanExtension)(int))
   {
-    for (int i = 0; i < resourceList.size(); )
+    for (size_t i = 0; i < resourceList.size(); )
     {
       // The flag that marks whether there was a 
       // swap (deletion of a resource).

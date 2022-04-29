@@ -28,7 +28,7 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
-#include "../utilities/Utilities.hpp"
+#include <Utilities/Utilities.hpp>
 #include "GfxManager2D.hpp"
 
 namespace Barrage

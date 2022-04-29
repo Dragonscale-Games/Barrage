@@ -21,12 +21,13 @@
 #include <algorithm>              // std::copy
 #include <limits>                 // std::numeric_limits
 
-#include <rendering/GLError.hpp>
+#include <Rendering/GLError.hpp>
 
 namespace Barrage
 {
   GfxRenderer2D::GfxRenderer2D() :
-    manager_(nullptr), clearColor_(glm::vec3(0.0f), 1.0f), viewport_{ glm::mat4(1.0f) }, instancedBuffers_{ 0 }
+    clearColor_(glm::vec3(0.0f), 1.0f), viewport_{ glm::mat4(1.0f) },
+    manager_(nullptr), instancedBuffers_{ 0 }
   {
   }
 
