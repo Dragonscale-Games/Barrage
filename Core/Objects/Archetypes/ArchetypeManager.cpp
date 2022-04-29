@@ -15,10 +15,10 @@
 
 namespace Barrage
 {
-  ArchetypeManager::ArchetypeManager(ComponentAllocator& componentAllocator) :
+  ArchetypeManager::ArchetypeManager(ComponentAllocator& /*componentAllocator*/) :
     poolArchetypes_(),
-    objectArchetypes_(),
-    componentAllocator_(componentAllocator)
+    objectArchetypes_()//,
+    //componentAllocator_(componentAllocator)
   {
   }
 
@@ -109,21 +109,21 @@ namespace Barrage
 
   void ArchetypeManager::LoadPoolArchetype(const std::string name)
   {
-    (void)name;
+    UNREFERENCED(name);
   }
 
   void ArchetypeManager::LoadObjectArchetype(const std::string name)
   {
-    (void)name;
+    UNREFERENCED(name);
   }
 
   void ArchetypeManager::SavePoolArchetype(const std::string name)
   {
-    (void)name;
+    UNREFERENCED(name);
   }
 
   void ArchetypeManager::SaveObjectArchetype(const std::string name)
   {
-    (void)name;
+    UNREFERENCED(name);
   }
 }

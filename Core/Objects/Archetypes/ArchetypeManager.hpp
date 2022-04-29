@@ -58,7 +58,7 @@ namespace Barrage
     private:
       PoolArchetypeMap poolArchetypes_;
       ObjectArchetypeMap objectArchetypes_;
-      ComponentAllocator& componentAllocator_;
+      //ComponentAllocator& componentAllocator_;
 	};
 }
 
