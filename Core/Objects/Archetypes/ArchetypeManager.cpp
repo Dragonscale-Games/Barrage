@@ -109,21 +109,21 @@ namespace Barrage
 
   void ArchetypeManager::LoadPoolArchetype(const std::string name)
   {
-    name;
+    (void)name;
   }
 
   void ArchetypeManager::LoadObjectArchetype(const std::string name)
   {
-    name;
+    (void)name;
   }
 
   void ArchetypeManager::SavePoolArchetype(const std::string name)
   {
-    name;
+    (void)name;
   }
 
   void ArchetypeManager::SaveObjectArchetype(const std::string name)
   {
-    name;
+    (void)name;
   }
 }

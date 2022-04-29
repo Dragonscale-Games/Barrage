@@ -29,7 +29,7 @@ namespace Barrage
 {
   static void WindowResizeCallback(GLFWwindow* window, int width, int height)
   {
-    window;
+    (void)window;
     glViewport(0, 0, width, height);
   }
 
@@ -42,8 +42,8 @@ namespace Barrage
   TestRenderer::TestRenderer() :
     window_(nullptr),
 
-    boundShader_(nullptr),
     boundTexture_(nullptr),
+    boundShader_(nullptr),
 
     viewMat_(),
     projMat_(),
