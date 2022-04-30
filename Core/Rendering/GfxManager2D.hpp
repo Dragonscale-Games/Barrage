@@ -555,7 +555,7 @@ namespace Barrage
         was cleaned so the caller can do anything else that's needed.
     */
     /*************************************************************************/
-    void CleanUnusedInList(std::vector<ResourceID>& resourceList, void (GfxManager2D::*cleanExtension)(int));
+    void CleanUnusedInList(std::vector<ResourceID>& resourceList, void (GfxManager2D::*cleanExtension)(size_t));
     /*************************************************************************/
     /*!
       \brief
@@ -564,7 +564,7 @@ namespace Barrage
         The index where the resources got deleted from.
     */
     /*************************************************************************/
-    void CleanUnusedMeshes(int index);
+    void CleanUnusedMeshes(size_t index);
     /*************************************************************************/
     /*!
       \brief
@@ -573,7 +573,7 @@ namespace Barrage
         The index where the resources got deleted from.
     */
     /*************************************************************************/
-    void CleanUnusedTextures(int index);
+    void CleanUnusedTextures(size_t index);
     /*************************************************************************/
     /*!
       \brief
@@ -582,7 +582,7 @@ namespace Barrage
         The index where the resources got deleted from.
     */
     /*************************************************************************/
-    void CleanUnusedShaders(int index);
+    void CleanUnusedShaders(size_t index);
 
     int glVersion_;                                                   //!< Store the version of OpenGL used.
     WindowManager* windowing_;                                        //!< The windowing system to create the context for.

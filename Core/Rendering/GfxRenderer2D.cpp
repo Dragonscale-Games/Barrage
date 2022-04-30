@@ -16,6 +16,8 @@
 //  ===========================================================================
 // Includes
 //  ===========================================================================
+
+#include <stdafx.h>
 #include "GfxRenderer2D.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <algorithm>              // std::copy
@@ -275,8 +277,8 @@ namespace Barrage
     const InternalRequest& request,
     const GfxManager2D* manager)
   {
-    //UNREFERENCED(manager);
-    (void)manager;
+    UNREFERENCED(manager);
+    //(void)manager;
     
     // Get the uniform locations.
     GLint translationUniform = glGetUniformLocation(shaderID, "translation");
@@ -321,15 +323,10 @@ namespace Barrage
     const InternalRequest& request,
     const GfxManager2D* manager)
   {
-    //UNREFERENCED(shaderID);
-    //UNREFERENCED(data);
-    //UNREFERENCED(request);
-    //UNREFERENCED(manager);
-
-    (void)(shaderID);
-    (void)(data);
-    (void)(request);
-    (void)(manager);
+    UNREFERENCED(shaderID);
+    UNREFERENCED(data);
+    UNREFERENCED(request);
+    UNREFERENCED(manager);
 
     // Remember that the mesh index for instanced requests will always be the instanced mesh.
     // You can get the index to the source mesh using the sourceMeshIndex member variable.

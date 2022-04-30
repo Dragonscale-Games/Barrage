@@ -524,7 +524,7 @@ namespace Barrage
     return windowing_;
   }
 
-  void GfxManager2D::CleanUnusedInList(std::vector<ResourceID>& resourceList, void (GfxManager2D::* cleanExtension)(int))
+  void GfxManager2D::CleanUnusedInList(std::vector<ResourceID>& resourceList, void (GfxManager2D::* cleanExtension)(size_t))
   {
     for (size_t i = 0; i < resourceList.size(); )
     {
@@ -546,7 +546,8 @@ namespace Barrage
         // then we don't have to change anything... it's already gone.
         // Otherwise, we have to read just the index the resource
         // points to.
-        *(resourceList[i].internalResource_) = i;
+        // TODO: Figure out a better way of doing this, maybe with an assert?
+        *(resourceList[i].internalResource_) = static_cast<int>(i);
         // Eliminate the smart pointer and it's now defunct resources.
         // We do it after setting the resource (even if it's deleted)
         // beacuse it makes the algorithm less complex.
@@ -565,7 +566,7 @@ namespace Barrage
     }
   }
 
-  void GfxManager2D::CleanUnusedMeshes(int i)
+  void GfxManager2D::CleanUnusedMeshes(size_t i)
   {
     // Make sure to move all the resources to the correct place.
     std::swap(meshBuffers_[i], meshBuffers_.back());
@@ -578,7 +579,7 @@ namespace Barrage
     internalMeshes_.pop_back();
   }
 
-  void GfxManager2D::CleanUnusedTextures(int i)
+  void GfxManager2D::CleanUnusedTextures(size_t i)
   {
     // Swap the resources with the last element on the back AND pop the back.
     std::swap(internalTextures_[i], internalTextures_.back());
@@ -588,7 +589,7 @@ namespace Barrage
     internalTextures_.pop_back();
   }
 
-  void GfxManager2D::CleanUnusedShaders(int i)
+  void GfxManager2D::CleanUnusedShaders(size_t i)
   {
     // Swap the resources with the last element on the back AND pop the back.
     std::swap(internalStages_[i], internalStages_.back());

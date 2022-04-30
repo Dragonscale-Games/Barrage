@@ -27,7 +27,7 @@ namespace Barrage
 
   void System::Subscribe(Pool* pool)
   {
-    int num_pool_types = poolTypes_.size();
+    size_t num_pool_types = poolTypes_.size();
 
     for (int i = 0; i < num_pool_types; ++i)
     {
