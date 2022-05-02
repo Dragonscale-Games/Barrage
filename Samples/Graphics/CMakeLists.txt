@@ -30,5 +30,5 @@
 # Date:         4/28/2022
 # =====================================================================================================================
 
-add_executable(GraphicsSample main.cpp)
+add_executable(GraphicsSample "main.cpp")
 target_link_libraries(GraphicsSample PRIVATE BarrageCore)
