@@ -77,15 +77,20 @@ add_library(BarrageCore STATIC
   "Objects/Components/ComponentArrays/RotationArray.hpp" 
   "Objects/Components/SharedComponents/Spawner.hpp"
   "Objects/Components/SharedComponents/Sprite.hpp"
-  "Objects/Components/ComponentArrays/LifetimeArray.hpp" "Objects/Components/ComponentArrays/VelocityArray.hpp"
-  
+  "Objects/Components/ComponentArrays/LifetimeArray.hpp" 
+  "Objects/Components/ComponentArrays/VelocityArray.hpp" 
+  "Objects/Components/SharedComponents/CircleCollider.hpp" 
+  "Objects/Components/ComponentArrays/AngularSpeedArray.hpp" 
+
   "Rendering/WindowManager.hpp" "Rendering/WindowManager.cpp"
   "Rendering/GfxManager2D.hpp" "Rendering/GfxManager2D.cpp"
   "Rendering/GfxRenderer2D.hpp" "Rendering/GfxRenderer2D.cpp"
   "Rendering/GfxFactory2D.hpp"
   "Rendering/GfxDraw2D.hpp"
   "Rendering/GLError.hpp"
-  )
+
+  "Objects/Systems/Movement/MovementSystem.hpp" "Objects/Systems/Movement/MovementSystem.cpp"
+  "Objects/Systems/Collision/CollisionSystem.hpp" "Objects/Systems/Collision/CollisionSystem.cpp")
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
