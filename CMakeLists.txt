@@ -50,7 +50,7 @@ FetchContent_Declare(
   GIT_TAG "6ad79aae3eb5bf809c30bf1168171e9e55857e45"
 )
 
-# And unleash into into this project.
+# And unleash into this project.
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   FetchContent_Populate(vcpkg)
   set(CMAKE_TOOLCHAIN_FILE "${vcpkg_SOURCE_DIR}/scripts/buildsystems/vcpkg.cmake")

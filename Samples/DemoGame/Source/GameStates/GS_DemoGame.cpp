@@ -6,8 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <description>
-
+   Demo game state.
  */
 /* ======================================================================== */
 
@@ -29,7 +28,7 @@ namespace Demo
   void GS_DemoGame::Enter()
   {
     const unsigned MAX_BULLETS = 100000;
-    
+
     isPaused_ = false;
 
     Barrage::Engine::Instance->Objects().CreatePool("Player Pool", "Player Pool Archetype");

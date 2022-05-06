@@ -6,8 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <description>
-
+   Demo game state.
  */
 /* ======================================================================== */
 

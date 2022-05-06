@@ -13,7 +13,7 @@
 #include "MovementSystem.hpp"
 #include "Engine/Engine.hpp"
 #include "Utilities/Utilities.hpp"
-#include <iostream>
+
 namespace Barrage
 {
   static const unsigned BASIC_MOVEMENT_POOLS = 0;
@@ -59,7 +59,7 @@ namespace Barrage
 
   void MovementSystem::UpdatePlayerMovement(Pool* pool)
   {
-    float speed = 10.0f;
+    float speed = 7.0f;
     Velocity player_velocity;
 
     if (Engine::Instance->Input().KeyIsDown(KEY_SHIFT_LEFT))

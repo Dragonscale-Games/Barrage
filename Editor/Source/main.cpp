@@ -8,17 +8,18 @@
  * \brief
    Entry point for the demo game.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
-#include "Game/DemoGame.hpp"
+#include "Editor/Editor.hpp"
 
-int main()
+int main(void)
 {
-  Demo::Game* game = new Demo::Game();
+  Barrage::Editor* editor = new Barrage::Editor;
 
-  game->Run();
+  editor->Run();
 
-  delete game;
+  delete editor;
 
   return 0;
 }
+

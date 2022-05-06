@@ -94,7 +94,7 @@ add_library(BarrageCore STATIC
   "Objects/Components/SharedComponents/RNG.hpp" 
   "Objects/SpawnFuncs/Direction/DirectionFuncs.hpp" "Objects/SpawnFuncs/Direction/DirectionFuncs.cpp"
   "Objects/SpawnFuncs/Position/PositionFuncs.hpp" "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
- "Objects/Components/SharedComponents/BoundaryBox.hpp")
+  "Objects/Components/SharedComponents/BoundaryBox.hpp")
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

@@ -21,7 +21,8 @@ namespace Barrage
   Engine::Engine() :
     gsManager_(),
     inputManager_(),
-    objectManager_()
+    objectManager_(),
+    rng_()
   {
   }
 

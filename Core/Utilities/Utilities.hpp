@@ -55,7 +55,7 @@ namespace Barrage
       min or above max. Useful for angles. 
 
       For instance, the wrapped value of 400 in the range [0, 360)
-      is 40 (like how 400 degrees is equivalent to 40 degrees). 
+      is 40 (i.e. 400 degrees is equivalent to 40 degrees). 
 
     \tparam T
       The type of the value to clamp.
