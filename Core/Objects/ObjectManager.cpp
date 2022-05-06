@@ -29,6 +29,7 @@ namespace Barrage
     RegisterEngineComponents();
     RegisterEngineSystems();
     RegisterEngineSpawnFuncs();
+    SetDefaultSystemUpdateOrder();
 
     CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_.at("Creation System"));
 
@@ -39,9 +40,14 @@ namespace Barrage
     RegisterCustomComponents();
     RegisterCustomSystems();
     RegisterCustomSpawnFuncs();
-    SetCustomSystemUpdateOrder();
+    SetSystemUpdateOrder();
   }
   
+  void ObjectManager::Initialize()
+  {
+    CreateArchetypes();
+  }
+
   void ObjectManager::Update()
   {
     systemManager_.Update();
@@ -172,15 +178,19 @@ namespace Barrage
 
   void ObjectManager::RegisterEngineComponents()
   {
-    RegisterComponent<DestructibleArray>("DestructibleArray");
-    RegisterComponent<LifetimeArray>("LifetimeArray");
-    RegisterComponent<PositionArray>("PositionArray");
-    RegisterComponent<RotationArray>("RotationArray");
-    RegisterComponent<ScaleArray>("ScaleArray");
-    RegisterComponent<VelocityArray>("VelocityArray");
+    RegisterComponent<AngularSpeedArray>("Angular Speed Array");
+    RegisterComponent<DestructibleArray>("Destructible Array");
+    RegisterComponent<LifetimeArray>("Lifetime Array");
+    RegisterComponent<PositionArray>("Position Array");
+    RegisterComponent<RotationArray>("Rotation Array");
+    RegisterComponent<ScaleArray>("Scale Array");
+    RegisterComponent<VelocityArray>("Velocity Array");
 
+    RegisterComponent<BoundaryBox>("Boundary Box");
+    RegisterComponent<CircleCollider>("Circle Collider");
     RegisterComponent<Spawner>("Spawner");
     RegisterComponent<Sprite>("Sprite");
+    RegisterComponent<RNG>("RNG");
   }
 
   void ObjectManager::RegisterEngineSystems()
@@ -188,10 +198,26 @@ namespace Barrage
     RegisterSystem<CreationSystem>("Creation System");
     RegisterSystem<DestructionSystem>("Destruction System");
     RegisterSystem<DrawSystem>("Draw System");
+    RegisterSystem<MovementSystem>("Movement System");
+    RegisterSystem<CollisionSystem>("Collision System");
   }
 
   void ObjectManager::RegisterEngineSpawnFuncs()
   {
+    RegisterSpawnFunc("Random Direction", Spawn::RandomDirection);
+    RegisterSpawnFunc("Match Position", Spawn::MatchPosition);
+  }
 
+  void ObjectManager::SetDefaultSystemUpdateOrder()
+  {
+    std::vector<std::string> update_order;
+
+    update_order.push_back("Creation System");
+    update_order.push_back("Destruction System");
+    update_order.push_back("Movement System");
+    update_order.push_back("Creation System");
+    update_order.push_back("Collision System");
+
+    SetSystemUpdateOrder(update_order);
   }
 }

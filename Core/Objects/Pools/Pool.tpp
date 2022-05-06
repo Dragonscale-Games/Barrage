@@ -11,25 +11,25 @@
  /* ======================================================================== */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef ComponentAllocator_BARRAGE_T
-#define ComponentAllocator_BARRAGE_T
+#ifndef Pool_BARRAGE_T
+#define Pool_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace Barrage
 {
   template <typename T>
-  T& Pool::GetComponentArray(const std::string& componentName)
+  T* Pool::GetComponentArray(const std::string& componentName)
   {
-    return *static_cast<T*>(componentArrays_.at(componentName));
+    return static_cast<T*>(componentArrays_.at(componentName));
   }
 
   template <typename T>
-  T& Pool::GetSharedComponent(const std::string& componentName)
+  T* Pool::GetSharedComponent(const std::string& componentName)
   {
-    return *static_cast<T*>(sharedComponents_.at(componentName));
+    return static_cast<T*>(sharedComponents_.at(componentName));
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ComponentAllocator_BARRAGE_T
+#endif // Pool_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////

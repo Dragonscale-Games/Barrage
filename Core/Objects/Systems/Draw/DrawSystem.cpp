@@ -17,21 +17,22 @@
 
 namespace Barrage
 {
+  static const unsigned BASIC_2D_SPRITE_POOLS = 0;
+  
   DrawSystem::DrawSystem() :
     System()
   {
     PoolType basic_sprite_type;
-    basic_sprite_type.AddComponentName("PositionArray");
-    basic_sprite_type.AddComponentName("ScaleArray");
-    basic_sprite_type.AddComponentName("RotationArray");
+    basic_sprite_type.AddComponentName("Position Array");
+    basic_sprite_type.AddComponentName("Scale Array");
+    basic_sprite_type.AddComponentName("Rotation Array");
     basic_sprite_type.AddComponentName("Sprite");
-
-    poolTypes_.push_back(basic_sprite_type);
+    poolTypes_[BASIC_2D_SPRITE_POOLS] = basic_sprite_type;
   }
   
   void DrawSystem::Subscribe(Pool* pool)
   {
-    if (poolTypes_[0].MatchesPool(pool))
+    if (poolTypes_[BASIC_2D_SPRITE_POOLS].MatchesPool(pool))
     {
       Sprite* pool_sprite = dynamic_cast<Sprite*>(pool->sharedComponents_.at("Sprite"));
       
@@ -45,17 +46,17 @@ namespace Barrage
     {
       Pool* pool = it->second;
 
-      PositionArray& position_array = pool->GetComponentArray<PositionArray>("PositionArray");
-      ScaleArray& scale_array = pool->GetComponentArray<ScaleArray>("ScaleArray");
-      RotationArray& rotation_array = pool->GetComponentArray<RotationArray>("RotationArray");
+      PositionArray& position_array = *pool->GetComponentArray<PositionArray>("Position Array");
+      ScaleArray& scale_array = *pool->GetComponentArray<ScaleArray>("Scale Array");
+      RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("Rotation Array");
 
       glm::vec2* positions = reinterpret_cast<glm::vec2*>(position_array.data_);
       glm::vec2* scales = reinterpret_cast<glm::vec2*>(scale_array.data_);
       float* rotations = reinterpret_cast<float*>(rotation_array.data_);
 
-      Sprite& pool_sprite = pool->GetSharedComponent<Sprite>("Sprite");
+      Sprite& pool_sprite = *pool->GetSharedComponent<Sprite>("Sprite");
 
-      TestRenderer::Instance().DrawInstanced(positions, rotations, scales, pool->activeObjects_, pool_sprite.texture_);
+      TestRenderer::Instance().DrawInstanced(positions, rotations, scales, pool->size_, pool_sprite.texture_);
     }
   }
 }

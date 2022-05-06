@@ -29,6 +29,12 @@ namespace Barrage
   class Pool
   {
     public:  
+      // default constructor is private below - only a pool manager should construct pools
+      
+      Pool(const Pool& other) = delete;
+
+      Pool& operator=(const Pool& rhs) = delete;
+      
       /**************************************************************/
       /*!
         \brief
@@ -71,7 +77,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      T& GetComponentArray(const std::string& componentName);
+      T* GetComponentArray(const std::string& componentName);
 
       /**************************************************************/
       /*!
@@ -92,13 +98,13 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      T& GetSharedComponent(const std::string& componentName);
+      T* GetSharedComponent(const std::string& componentName);
 
     public:
       TagSet tags_;                         //!< Holds the pool's tags
       ComponentArrayMap componentArrays_;   //!< Holds component arrays and their names
       SharedComponentMap sharedComponents_; //!< Holds shared components and their names
-      unsigned activeObjects_;              //!< Number of currently active objects
+      unsigned size_;                       //!< Number of currently active objects
       const unsigned capacity_;             //!< Total number of objects the pool can hold
 
     private:

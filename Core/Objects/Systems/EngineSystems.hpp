@@ -18,6 +18,8 @@
 #include "Creation/CreationSystem.hpp"
 #include "Destruction/DestructionSystem.hpp"
 #include "Draw/DrawSystem.hpp"
+#include "Collision/CollisionSystem.hpp"
+#include "Movement/MovementSystem.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif // EngineSystems_BARRAGE_H

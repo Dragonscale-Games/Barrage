@@ -18,14 +18,14 @@
 #define SpawnFuncManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Pools/Pool.hpp"
-
 #include <unordered_map>
 
 namespace Barrage
 {
-  // Arguments: spawner pool, pool to spawn into, index of first new object, number of new objects 
-  typedef void (*SpawnFunc)(Pool&, Pool&, unsigned, unsigned);
+  class Pool;
+  
+  // Arguments: spawner pool, pool to spawn into, index of first new object, number of new objects, indices of spawner objects
+  typedef void (*SpawnFunc)(Pool&, Pool&, unsigned, unsigned, const std::vector<unsigned>&);
   
   //! Associates spawn functions with their names
   typedef std::unordered_map<std::string, SpawnFunc> SpawnFuncMap;

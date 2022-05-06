@@ -32,3 +32,4 @@
 
 # Add the subdirectories for compiling a variety of sample projects.
 add_subdirectory(Graphics)
+add_subdirectory(DemoGame)

@@ -20,7 +20,7 @@ namespace Barrage
     tags_(),
     componentArrays_(),
     sharedComponents_(),
-    activeObjects_(0),
+    size_(0),
     capacity_(capacity)
   {
   }

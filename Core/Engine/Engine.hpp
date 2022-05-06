@@ -19,6 +19,8 @@
 #include "Input/InputManager.hpp"
 #include "GameStates/GameStateManager.hpp"
 #include "Objects/ObjectManager.hpp"
+#include "TempRenderer/TestRenderer.hpp"
+#include "Random/Random.hpp"
 
 namespace Barrage
 {   
@@ -83,7 +85,7 @@ namespace Barrage
       InputManager& Input();
 
       // ===================================================================
-      // Input Manager
+      // Object Manager
       // ===================================================================
 
       /**************************************************************/
@@ -97,10 +99,26 @@ namespace Barrage
       /**************************************************************/
       ObjectManager& Objects();
 
+      // ===================================================================
+      // Random Number Generator
+      // ===================================================================
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's random number generator.
+
+        \return
+          Returns a reference to the engine's random number generator.
+      */
+      /**************************************************************/
+      Random& RNG();
+
     private:
-      GameStateManager gsManager_;  //!< Game state manager instance
-      InputManager inputManager_;   //!< Input manager instance
-      ObjectManager objectManager_; //!< Object manager instance
+      GameStateManager gsManager_;  //!< Game state manager
+      InputManager inputManager_;   //!< Input manager
+      ObjectManager objectManager_; //!< Object manager
+      Random rng_;                  //!< Random number generator
 	};
 }
 

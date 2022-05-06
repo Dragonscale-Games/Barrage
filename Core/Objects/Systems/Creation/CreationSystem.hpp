@@ -39,6 +39,23 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Clears the spawn type vectors. Hacky way to preserve
+          capacity. Will be fixed in future iterations.
+      */
+      /**************************************************************/
+      void Subscribe(Pool* pool) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Creates all objects queued for spawning.
+      */
+      /**************************************************************/
+      void Update() override;
+
+      /**************************************************************/
+      /*!
+        \brief
           Sets the archetype manager the creation system will use
           to get object archetypes.
 
@@ -131,7 +148,7 @@ namespace Barrage
           The number of objects to initialize.
       */
       /**************************************************************/
-      void ApplySpawnFuncs(const std::vector<SpawnFunc>& spawnFuncs, Pool* initPool, Pool* destPool, unsigned startIndex, unsigned numObjects);
+      void ApplySpawnFuncs(const std::vector<std::string>& spawnFuncs, Pool* initPool, Pool* destPool, unsigned startIndex, unsigned numObjects, const std::vector<unsigned>& sourceIndices);
 
       /**************************************************************/
       /*!
@@ -142,12 +159,12 @@ namespace Barrage
           The pool to update.
       */
       /**************************************************************/
-      void UpdatePool(Pool* pool) override;
+      void UpdateSpawners(Pool* pool);
 
     private:
-      ArchetypeManager* archetypeManager_;    //!< Used to get object archetypes
-      SpawnFuncManager* initializerManager_;  //!< Used to look up initializer functions
-      PoolManager* poolManager_;              //!< Used to get pools where objects will spawn
+      ArchetypeManager* archetypeManager_;  //!< Used to get object archetypes
+      SpawnFuncManager* spawnFuncManager_;  //!< Used to look up spawn functions
+      PoolManager* poolManager_;            //!< Used to get pools where objects will spawn
 	};
 }
 

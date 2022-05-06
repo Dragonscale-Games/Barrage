@@ -30,6 +30,15 @@ namespace Barrage
   }
 
   template <typename T>
+  T ClampWrapped(T value, T min, T max)
+  {
+    const T width = max - min;
+    const T offset = value - min;
+
+    return (offset - (floor(offset / width) * width)) + min;
+  }
+
+  template <typename T>
   T Lerp(T min, T max, float lerpFactor)
   {
     lerpFactor = Clamp(lerpFactor, 0.0f, 1.0f);

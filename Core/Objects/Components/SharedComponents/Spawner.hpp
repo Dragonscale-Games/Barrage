@@ -21,19 +21,20 @@
 
 namespace Barrage
 {
+  //!< Holds all information needed to spawn an object from another object
+  struct SpawnType
+  {
+    std::vector<std::string> spawnFuncs_; //!< List of spawn functions to apply
+    std::string poolName_;                //!< Name of pool the new object will spawn in
+    std::string archetypeName_;           //!< Name of object archetype that will be cloned
+    unsigned spawnNum_;                   //!< Number of objects to spawn this frame
+    std::vector<unsigned> sourceIndices_; //!< Indices of spawner objects
+  };
+  
   //! Component that allows objects to spawn other objects
   class Spawner : public SharedComponent
   {
     public:
-      //!< Holds all information needed to spawn an object from another object
-      struct SpawnType
-      {
-        std::vector<SpawnFunc> spawnFuncs_; //!< List of spawn functions to apply
-        std::string poolName_;              //!< Name of pool the new object will spawn in
-        std::string archetypeName_;         //!< Name of object archetype that will be cloned
-        unsigned spawnNum_;                 //!< Number of objects to spawn this frame
-      };
-
       std::vector<SpawnType> spawnTypes_; //!< List of the object types that will be spawned
 
       inline Spawner() : spawnTypes_() {}

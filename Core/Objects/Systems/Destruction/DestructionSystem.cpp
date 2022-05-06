@@ -15,24 +15,32 @@
 
 namespace Barrage
 {
+  static const unsigned BASIC_DESTRUCTIBLE_POOLS = 0;
+  
   DestructionSystem::DestructionSystem() :
     System()
   {
     PoolType destructible_type;
-    destructible_type.AddComponentName("DestructibleArray");
-
-    poolTypes_.push_back(destructible_type);
+    destructible_type.AddComponentName("Destructible Array");
+    poolTypes_[BASIC_DESTRUCTIBLE_POOLS] = destructible_type;
   }
   
-  void DestructionSystem::UpdatePool(Pool* pool)
+  void DestructionSystem::Update()
   {
-    PerComponentDestructionAlgorithm(pool);
+    UpdatePoolGroup(BASIC_DESTRUCTIBLE_POOLS, UpdateBasicDestructibles);
+  }
+
+  void DestructionSystem::UpdateBasicDestructibles(Pool* pool)
+  {
+    /* Only use one of these algorithms - profile and see which is faster */ 
+
     // PerObjectDestructionAlgorithm(pool);
+    PerComponentDestructionAlgorithm(pool);
   }
 
   void DestructionSystem::PerObjectDestructionAlgorithm(Pool* pool)
   {
-    DestructibleArray& destructible_array = pool->GetComponentArray<DestructibleArray>("DestructibleArray");
+    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("Destructible Array");
 
     /*
      *  Objectives:
@@ -45,7 +53,7 @@ namespace Barrage
     unsigned alive_end_index = 0;
 
     // starting at the beginning of the object array, find the index of the first destroyed object (if one exists)
-    while (alive_end_index < pool->activeObjects_)
+    while (alive_end_index < pool->size_)
     {
       if (destructible_array[alive_end_index].destroyed_ == true)
         break;
@@ -58,7 +66,7 @@ namespace Barrage
     unsigned next_alive_index = alive_end_index + 1;
 
     // make sure we're only looking for additional alive objects within the original bounds of the array
-    while (next_alive_index < pool->activeObjects_)
+    while (next_alive_index < pool->size_)
     {
       // if an alive object is found that needs to be packed...
       if (destructible_array[next_alive_index].destroyed_ == false)
@@ -74,12 +82,12 @@ namespace Barrage
     }
 
     // update the size of the newly packed object array
-    pool->activeObjects_ = alive_end_index;
+    pool->size_ = alive_end_index;
   }
 
   void DestructionSystem::PerComponentDestructionAlgorithm(Pool* pool)
   {
-    DestructibleArray& destructible_array = pool->GetComponentArray<DestructibleArray>("DestructibleArray");
+    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("Destructible Array");
 
     /*
      *  Objectives:
@@ -93,7 +101,7 @@ namespace Barrage
 
     // starting at the beginning of the original object array, find the index of the first destroyed object (if one exists) or one
     // past the end of the original object array
-    while (initial_alive_end_index < pool->activeObjects_)
+    while (initial_alive_end_index < pool->size_)
     {
       if (destructible_array[initial_alive_end_index].destroyed_ == true)
         break;
@@ -102,14 +110,14 @@ namespace Barrage
     }
 
     // if no objects were destroyed, early out
-    if (initial_alive_end_index >= pool->activeObjects_)
+    if (initial_alive_end_index >= pool->size_)
       return;
 
     // in each component array, shift the components from alive objects to the beginning of the array
     for (auto it = pool->componentArrays_.begin(); it != pool->componentArrays_.end(); ++it)
     {
       // we'll operate on the destructible array last; after the loop finishes
-      if (it->first == "Destructible")
+      if (it->first == "Destructible Array")
         continue;
       
       unsigned alive_end_index = initial_alive_end_index;
@@ -117,7 +125,7 @@ namespace Barrage
 
       ComponentArray* component_array = it->second;
 
-      while (next_alive_index < pool->activeObjects_)
+      while (next_alive_index < pool->size_)
       {
         if (destructible_array[next_alive_index].destroyed_ == false)
         {
@@ -134,7 +142,7 @@ namespace Barrage
     unsigned alive_end_index = initial_alive_end_index;
     unsigned next_alive_index = alive_end_index + 1;
 
-    while (next_alive_index < pool->activeObjects_)
+    while (next_alive_index < pool->size_)
     {
       if (destructible_array[next_alive_index].destroyed_ == false)
       {
@@ -147,10 +155,10 @@ namespace Barrage
     }
 
     // update the size of the newly packed object array
-    pool->activeObjects_ = alive_end_index;
+    pool->size_ = alive_end_index;
   }
 
-  void DestructionSystem::CopyObject(Pool* pool, unsigned sourceIndex, unsigned recipientIndex) const
+  void DestructionSystem::CopyObject(Pool* pool, unsigned sourceIndex, unsigned recipientIndex)
   {
     for (auto it = pool->componentArrays_.begin(); it != pool->componentArrays_.end(); ++it)
     {

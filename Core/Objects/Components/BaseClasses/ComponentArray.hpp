@@ -83,10 +83,6 @@ namespace Barrage
   class ComponentArrayT : public ComponentArray
   {
     public:
-      ComponentArrayT(const ComponentArrayT& other) = delete;
-
-      ComponentArrayT& operator=(const ComponentArrayT& rhs) = delete;
-      
       /**************************************************************/
       /*!
         \brief

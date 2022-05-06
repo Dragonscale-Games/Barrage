@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            STUB.hpp
+ * \file            EngineSpawnFuncs.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -11,12 +11,13 @@
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef STUB_BARRAGE_H
-#define STUB_BARRAGE_H
+#ifndef EngineSpawnFuncs_BARRAGE_H
+#define EngineSpawnFuncs_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-
+#include "Direction/DirectionFuncs.hpp"
+#include "Position/PositionFuncs.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // STUB_BARRAGE_H
+#endif // EngineSpawnFuncs_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

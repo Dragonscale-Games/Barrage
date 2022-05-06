@@ -49,7 +49,16 @@ namespace Barrage
       }
     }
 
-
+    // for each of the pool type's required tags...
+    for (const auto& tag : tags_)
+    {
+      // check if it's in the pool's tag list
+      if (pool->tags_.count(tag) == 0)
+      {
+        // if it doesn't exist, the pool doesn't have the required tag
+        return false;
+      }
+    }
 
     // if we made it here, the pool matches the pool type
     return true;

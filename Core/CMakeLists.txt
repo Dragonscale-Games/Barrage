@@ -90,7 +90,11 @@ add_library(BarrageCore STATIC
   "Rendering/GLError.hpp"
 
   "Objects/Systems/Movement/MovementSystem.hpp" "Objects/Systems/Movement/MovementSystem.cpp"
-  "Objects/Systems/Collision/CollisionSystem.hpp" "Objects/Systems/Collision/CollisionSystem.cpp")
+  "Objects/Systems/Collision/CollisionSystem.hpp" "Objects/Systems/Collision/CollisionSystem.cpp" 
+  "Objects/Components/SharedComponents/RNG.hpp" 
+  "Objects/SpawnFuncs/Direction/DirectionFuncs.hpp" "Objects/SpawnFuncs/Direction/DirectionFuncs.cpp"
+  "Objects/SpawnFuncs/Position/PositionFuncs.hpp" "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
+ "Objects/Components/SharedComponents/BoundaryBox.hpp")
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

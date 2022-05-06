@@ -33,6 +33,14 @@ namespace Barrage
       /**************************************************************/
       DestructionSystem();
       
+      /**************************************************************/
+      /*!
+        \brief
+          Destroys all objects marked for destruction.
+      */
+      /**************************************************************/
+      void Update() override;
+
     private:
       /**************************************************************/
       /*!
@@ -45,7 +53,7 @@ namespace Barrage
           The pool to update.
       */
       /**************************************************************/
-      void UpdatePool(Pool* pool) override;
+      static void UpdateBasicDestructibles(Pool* pool);
 
       /**************************************************************/
       /*!
@@ -58,7 +66,7 @@ namespace Barrage
           The pool to update.
       */
       /**************************************************************/
-      void PerObjectDestructionAlgorithm(Pool* pool);
+      static void PerObjectDestructionAlgorithm(Pool* pool);
 
       /**************************************************************/
       /*!
@@ -71,7 +79,7 @@ namespace Barrage
           The pool to update.
       */
       /**************************************************************/
-      void PerComponentDestructionAlgorithm(Pool* pool);
+      static void PerComponentDestructionAlgorithm(Pool* pool);
 
       /**************************************************************/
       /*!
@@ -90,7 +98,7 @@ namespace Barrage
           source object.
       */
       /**************************************************************/
-      void CopyObject(Pool* pool, unsigned sourceIndex, unsigned recipientIndex) const;
+      static void CopyObject(Pool* pool, unsigned sourceIndex, unsigned recipientIndex);
 	};
 }
 

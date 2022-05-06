@@ -13,12 +13,6 @@
 
 #include "stdafx.h"
 #include "Engine.hpp"
-#include "TempRenderer/TestRenderer.hpp"
-#include "GameStates/GameStateManager.hpp"
-#include "Input/InputManager.hpp"
-
-#include <glad/gl.h>
-#include <GLFW/glfw3.h>
 
 namespace Barrage
 {
@@ -36,11 +30,12 @@ namespace Barrage
     TestRenderer::Instance().Initialize();
 
     inputManager_.Initialize(TestRenderer::Instance().GetWindowHandle());
+
+    objectManager_.Initialize();
   }
 
   void Engine::Shutdown()
   {
-
     inputManager_.Shutdown();
 
     TestRenderer::Instance().Shutdown();
@@ -59,5 +54,10 @@ namespace Barrage
   ObjectManager& Engine::Objects()
   {
     return objectManager_;
+  }
+
+  Random& Engine::RNG()
+  {
+    return rng_;
   }
 }

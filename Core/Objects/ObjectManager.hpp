@@ -42,6 +42,14 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Initializes the game object manager.
+      */
+      /**************************************************************/
+      void Initialize();
+
+      /**************************************************************/
+      /*!
+        \brief
           Updates all objects.
       */
       /**************************************************************/
@@ -122,13 +130,17 @@ namespace Barrage
 
       void RegisterEngineSpawnFuncs();
 
+      void SetDefaultSystemUpdateOrder();
+
       void RegisterCustomComponents();
 
       void RegisterCustomSystems();
 
       void RegisterCustomSpawnFuncs();
 
-      void SetCustomSystemUpdateOrder();
+      void SetSystemUpdateOrder();
+
+      void CreateArchetypes();
 
     private:
       ComponentAllocator componentAllocator_;

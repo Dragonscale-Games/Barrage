@@ -12,6 +12,7 @@
 
 #include "stdafx.h"
 #include "SpawnFuncManager.hpp"
+#include "Objects/Pools/Pool.hpp"
 
 namespace Barrage
 {

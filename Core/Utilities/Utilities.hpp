@@ -24,8 +24,8 @@ namespace Barrage
   /**************************************************************/
   /*!
     \brief
-      Clamps a value to be between min and max. Works on any type 
-      with defined < and > operators.
+      Clamps a value to a range by setting it to the min or max
+      of the range if the input value is outside the range.
 
     \tparam T
       The type of the value to clamp.
@@ -34,10 +34,10 @@ namespace Barrage
       The input value to clamp.
 
     \param min
-      The return value will be no lower than min.
+      The minimum value of the range.
 
     \param max
-      The return value will be no greater than max.
+      The maximum value of the range.
 
     \return
       Returns min if the input value is lower than min, returns 
@@ -47,6 +47,34 @@ namespace Barrage
   /**************************************************************/
   template <typename T>
   T Clamp(T value, T min, T max);
+
+  /**************************************************************/
+  /*!
+    \brief
+      Clamps a value by assuming the range wraps around when below
+      min or above max. Useful for angles. 
+
+      For instance, the wrapped value of 400 in the range [0, 360)
+      is 40 (like how 400 degrees is equivalent to 40 degrees). 
+
+    \tparam T
+      The type of the value to clamp.
+
+    \param value
+      The input value to clamp.
+
+    \param min
+      The minimum value of the range.
+
+    \param max
+      The maximum value of the range.
+
+    \return
+      Returns a wrapped value within the range.
+  */
+  /**************************************************************/
+  template <typename T>
+  T ClampWrapped(T value, T min, T max);
 
   /**************************************************************/
   /*!

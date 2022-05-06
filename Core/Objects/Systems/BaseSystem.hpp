@@ -23,10 +23,15 @@
 #include "../Pools/PoolType.hpp"
 #include "Objects/Components/EngineComponents.hpp"
 #include <map>
+#include <unordered_map>
 
 namespace Barrage
 {
+  typedef std::unordered_map<unsigned, PoolType> PoolTypeMap;
   typedef std::multimap<unsigned, Pool*> OrderedPoolMap;
+
+  typedef void (*PoolUpdateFunc)(Pool*);
+  typedef void (*InteractionFunc)(Pool*, Pool*);
 
   //! Base object system class that all object systems should inherit from
   class System
@@ -86,17 +91,38 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Update function for a single object pool.
+          Applies the given function to all pools in the given group.
 
-        \param pool
-          The pool to update.
+        \param group
+          The key of the pool group.
+
+        \param function
+          The function to apply to these pools.
       */
       /**************************************************************/
-      virtual void UpdatePool(Pool* pool);
+      void UpdatePoolGroup(unsigned group, PoolUpdateFunc function);
+
+      /**************************************************************/
+      /*!
+        \brief
+          For each pool in group 1, applies the given function to all
+          pools in group 2. 
+
+        \param group1
+          The key of the first pool group in the interaction.
+
+        \param group2
+          The key of the second pool group in the interaction.
+
+        \param function
+          The function to apply to these pools.
+      */
+      /**************************************************************/
+      void UpdateInteraction(unsigned group1, unsigned group2, InteractionFunc function);
 
     protected:
-      std::vector<PoolType> poolTypes_; //!< Holds the names of all pool types the system cares about
-      OrderedPoolMap pools_;            //!< Holds all subscribed pools in the order they are to be updated
+      PoolTypeMap poolTypes_; //!< Holds all pool types the system cares about
+      OrderedPoolMap pools_;  //!< Holds all subscribed pools in a specific order
   };
 }
 

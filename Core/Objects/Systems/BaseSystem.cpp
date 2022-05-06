@@ -27,40 +27,62 @@ namespace Barrage
 
   void System::Subscribe(Pool* pool)
   {
-    size_t num_pool_types = poolTypes_.size();
-
-    for (int i = 0; i < num_pool_types; ++i)
+    for (auto it = poolTypes_.begin(); it != poolTypes_.end(); ++it)
     {
-      if (poolTypes_[i].MatchesPool(pool))
+      PoolType& pool_type = it->second;
+      
+      if (pool_type.MatchesPool(pool))
       {
-        pools_.insert(std::pair<unsigned, Pool*>(static_cast<unsigned>(i), pool));
-        return;
+        pools_.insert(std::pair<unsigned, Pool*>(it->first, pool));
       }
     }
   }
 
   void System::Unsubscribe(Pool* pool)
   {
-    for (auto it = pools_.begin(); it != pools_.end(); ++it)
+    for (auto it = pools_.begin(); it != pools_.end(); /* increment handled in body */)
     {
       if (it->second == pool)
       {
-        pools_.erase(it);
-        return;
+        it = pools_.erase(it);
+      }
+      else
+      {
+        ++it;
       }
     }
   }
 
   void System::Update()
   {
-    for (auto it = pools_.begin(); it != pools_.end(); ++it)
+    // intentionally empty
+  }
+
+  void System::UpdatePoolGroup(unsigned group, PoolUpdateFunc function)
+  {
+    auto pool_group = pools_.equal_range(group);
+
+    for (auto it = pool_group.first; it != pool_group.second; ++it)
     {
-      UpdatePool(it->second);
+      Pool* pool = (*it).second;
+      function(pool);
     }
   }
 
-  void System::UpdatePool(Pool* pool)
+  void System::UpdateInteraction(unsigned group1, unsigned group2, InteractionFunc function)
   {
-    UNREFERENCED(pool);
+    auto pool_group_1 = pools_.equal_range(group1);
+    auto pool_group_2 = pools_.equal_range(group2);
+
+    for (auto it = pool_group_1.first; it != pool_group_1.second; ++it)
+    {
+      for (auto jt = pool_group_2.first; jt != pool_group_2.second; ++jt)
+      {
+        Pool* pool_1 = (*it).second;
+        Pool* pool_2 = (*jt).second;
+
+        function(pool_1, pool_2);
+      }
+    }
   }
 }
