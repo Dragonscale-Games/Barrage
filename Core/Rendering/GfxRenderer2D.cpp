@@ -21,6 +21,7 @@
 #include "GfxRenderer2D.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <algorithm>              // std::copy
+#include <dinput.h>
 #include <limits>                 // std::numeric_limits
 
 #include <Rendering/GLError.hpp>
@@ -42,7 +43,7 @@ namespace Barrage
     CHECK_GL( glDisable(GL_DEPTH_TEST) );
     CHECK_GL( glEnable(GL_BLEND) );
 
-    CHECK_GL( glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a) );
+    CHECK_GL( glClearBufferfv(GL_COLOR, 0, glm::value_ptr(clearColor_)));
     CHECK_GL( glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA) );
 
     // Create the mesh responsible for drawing
@@ -72,25 +73,6 @@ namespace Barrage
     viewport_.projection_ = glm::ortho(-dimensions.x / 2.0f, dimensions.x / 2.0f, -dimensions.y / 2.0f, dimensions.y / 2.0f);
   }
 
-  void GfxRenderer2D::AddRequest(const SingleRequest& request)
-  {
-    // This is necessary as to save the pointer dereferencing done
-    // by the internal resources of the incoming request.
-    // We dereference those as the resources should still exist
-    // by the time we draw them.
-    InternalRequest internal = {};
-    internal.type_ = RequestType::REQUEST_SINGLE;
-    internal.resources_.meshIndex_ = request.resources_.mesh_;
-    internal.resources_.textureIndex_ = request.resources_.texture_;
-    internal.resources_.shaderIndex_ = request.resources_.shader_;
-    internal.resources_.framebufferIndex_ = request.resources_.framebuffer_;
-    internal.transform_.single_ = request.transform_;
-    // Zero out the instanced data to avoid baaaad stuff.
-    std::memset(&internal.transform_.instanced_, 0, sizeof(InstancedTransformData));
-
-    requests_.push_back(internal);
-  }
-
   void GfxRenderer2D::AddRequest(const InstancedRequest& request)
   {
     // This is necessary as to save the pointer dereferencing done
@@ -98,7 +80,6 @@ namespace Barrage
     // We dereference those as the resources should still exist
     // by the time we draw them.
     InternalRequest internal = {};
-    internal.type_ = RequestType::REQUEST_INSTANCED;
     // So for the mesh, we are technically going to render the 
     // instanced mesh.
     internal.resources_.meshIndex_ = request.resources_.mesh_;
@@ -107,8 +88,6 @@ namespace Barrage
     internal.resources_.shaderIndex_ = request.resources_.shader_;
     internal.resources_.framebufferIndex_ = request.resources_.framebuffer_;
     internal.transform_.instanced_ = request.transform_;
-    // Zero out the single data to avoid baaaad stuff.
-    std::memset(&internal.transform_.single_, 0, sizeof(SingleTransformData));
 
     requests_.push_back(internal);
   }
@@ -116,7 +95,7 @@ namespace Barrage
   void GfxRenderer2D::RenderRequests()
   {
     // Clear the backbuffer, for now hardcoded.
-    CHECK_GL( glClearColor(clearColor_.r, clearColor_.g, clearColor_.b, clearColor_.a) );
+    CHECK_GL( glClearBufferfv(GL_COLOR, 0, glm::value_ptr(clearColor_)) );
     CHECK_GL( glClear(GL_COLOR_BUFFER_BIT) );
 
     // Render all the requests.
@@ -138,9 +117,9 @@ namespace Barrage
     current_.shaderIndex_ = -1;
     current_.textureIndex_ = -1;
     current_.framebufferIndex_ = -1;
-    // Keep track of whether we have rendered a single or instanced request.
-    RequestType type = RequestType::REQUEST_SINGLE;
-
+    // Bind the instancing mesh.
+    CHECK_GL( glBindVertexArray(resourceMeshes[instancedMesh_].internalMeshID_) );
+    
     // Keep track of the previous shader bound to the pipeline.
     for (auto& renderState : requests_)
     {
@@ -163,22 +142,10 @@ namespace Barrage
       // If the previous mesh is not the same ID as the current one.
       // Reset the previous mesh and bind the new one.
 
-      if (current_.meshIndex_ != resource.meshIndex_ || type != renderState.type_)
+      if (current_.meshIndex_ != resource.meshIndex_)
       {
         // Save the currently bound mesh.
         current_.meshIndex_ = resource.meshIndex_;
-        // And the type of request drawn.
-        type = renderState.type_;
-        // And bind the mesh to the OpenGL pipeline.
-        switch (renderState.type_)
-        {
-        case RequestType::REQUEST_SINGLE:
-          CHECK_GL( glBindVertexArray(resourceMeshes[current_.meshIndex_].internalMeshID_) );
-          break;
-        case RequestType::REQUEST_INSTANCED:
-          CHECK_GL( glBindVertexArray(resourceMeshes[instancedMesh_].internalMeshID_) );
-          break;
-        }
       }
       // If the previous texture is not the same ID as the current one.
       // Reset the previous texture and bind the new one.
@@ -192,15 +159,7 @@ namespace Barrage
 
       const GfxManager2D::MeshData& meshData = resourceMeshes[current_.meshIndex_];
       // Finally, render the correct algorithm.
-      switch (renderState.type_)
-      {
-      case RequestType::REQUEST_SINGLE:
-        RenderSingleMesh(resourceShaders[current_.shaderIndex_], meshData, renderState, manager_);
-        break;
-      case RequestType::REQUEST_INSTANCED:
-        RenderInstancedMesh(resourceShaders[current_.shaderIndex_], meshData, renderState, manager_);
-        break;
-      }
+      RenderInstancedMesh(resourceShaders[current_.shaderIndex_], meshData, renderState, manager_);
     }
 
     CHECK_GL( glBindVertexArray(0) );
@@ -270,53 +229,7 @@ namespace Barrage
     // Unbind the instanced mesh.
     CHECK_GL( glBindVertexArray(0) );
   }
-
-  void GfxRenderer2D::RenderSingleMesh(
-    const GLuint shaderID,
-    const GfxManager2D::MeshData& data,
-    const InternalRequest& request,
-    const GfxManager2D* manager)
-  {
-    UNREFERENCED(manager);
-    //(void)manager;
-    
-    // Get the uniform locations.
-    GLint translationUniform = glGetUniformLocation(shaderID, "translation");
-    GLint scaleUniform = glGetUniformLocation(shaderID, "scale");
-    GLint rotationUniform = glGetUniformLocation(shaderID, "rotation");
-    GLint textureUniform = glGetUniformLocation(shaderID, "diffuse");
-    CHECK_GL((void)0);
-    // Set the values for the uniforms.
-    if (translationUniform != -1)
-    {
-      glUniform2fv(translationUniform, 1, glm::value_ptr(request.transform_.single_.position_));
-    }
-    if (scaleUniform != -1)
-    {
-      glUniform2fv(scaleUniform, 1, glm::value_ptr(request.transform_.single_.scale_));
-    }
-    if (rotationUniform != -1)
-    {
-      glUniform1f(rotationUniform, request.transform_.single_.rotation_);
-    }
-    if (textureUniform != -1)
-    {
-      glUniform1i(textureUniform, 0);
-    }
-    CHECK_GL((void)0);
-
-    // Enable the vertex attributes separately for every specific mesh.
-    const int positionIndex = 0;
-    const int uvIndex = 1;
-    CHECK_GL( glEnableVertexAttribArray(positionIndex) );
-    CHECK_GL( glEnableVertexAttribArray(uvIndex) );
-    // Now the mesh is ready for rendering.
-    CHECK_GL( glDrawElements(GL_TRIANGLES, 3 * data.faceCount_, GL_UNSIGNED_INT, nullptr) );
-    // Disable the vertices after.
-    CHECK_GL( glDisableVertexAttribArray(positionIndex) );
-    CHECK_GL( glDisableVertexAttribArray(uvIndex) );
-  }
-
+  
   void GfxRenderer2D::RenderInstancedMesh(
     const GLuint shaderID, 
     const GfxManager2D::MeshData& data, 

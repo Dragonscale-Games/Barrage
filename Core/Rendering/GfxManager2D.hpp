@@ -202,7 +202,7 @@ namespace Barrage
         GLuint vertex1_;    //!< The first vertex of the face.
         GLuint vertex2_;    //!< The second vertex of the face.
         GLuint vertex3_;    //!< The third vertex of the face.
-      } individual_;
+      };
 
       GLuint vertices_[3];  //!< The three vertices that make up a face.
     };
@@ -228,7 +228,7 @@ namespace Barrage
 
     enum ShaderStage //! Enumerates the available shader stages.
     {
-      VERTEX_SHAHDER = 0,
+      VERTEX_SHADER = 0,
       PIXEL_SHADER,
       // This one always goes last.
       NUM_POSSIBLE,
@@ -308,6 +308,14 @@ namespace Barrage
     */
     /*************************************************************************/
     void Initialize(WindowManager& windowing);
+    /*************************************************************************/
+    /*!
+      \brief
+        Shuts down the system and cleans up all resources associated with
+        it.
+    */
+    /*************************************************************************/
+    void Shutdown();
     /*************************************************************************/
     /*!
       \brief

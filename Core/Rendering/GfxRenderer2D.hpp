@@ -38,14 +38,6 @@ namespace Barrage
   class GfxRenderer2D
   {
   public:
-    
-    struct SingleTransformData //! The transform data needed for each single request
-    {
-      glm::vec2 position_;                      //!< The position to render the request.
-      glm::vec2 scale_;                         //!< The scale to render the request.
-      RADIAN rotation_;                         //!< The rotation of the request.
-    };
-
     struct InstancedTransformData //! The transform data needed for instance requests.
     {
       int count_;                 //!< The count of all the positions.
@@ -56,7 +48,6 @@ namespace Barrage
 
     struct TransformData //! The transform data needed for either type of request.
     {
-      SingleTransformData single_;        //!< Transform data for single requests.
       InstancedTransformData instanced_;  //!< Transform data for instanced requests.
     };
 
@@ -66,12 +57,6 @@ namespace Barrage
       GfxManager2D::TextureID texture_;           //!< The currently bound texture.
       GfxManager2D::ShaderID shader_;             //!< The currently bound shader.
       GfxManager2D::FramebufferID framebuffer_;   //!< The currently bound framebuffer.
-    };
-    
-    struct SingleRequest //! The structure to keep track of requests.
-    {
-      ResourceState resources_;       //!< The resources used on this binding.
-      SingleTransformData transform_; //!< The transform data used to render this request.
     };
 
     struct InstancedRequest //! The structure to keep track of instanced requests.
@@ -95,7 +80,6 @@ namespace Barrage
 
     struct InternalRequest //! The internal data for the single requests.
     {
-      RequestType type_;        //!< The type of request being made.
       InternalState resources_; //!< The manager resources needed for this request.
       TransformData transform_; //!< The transform data for this request.
     };
@@ -159,17 +143,7 @@ namespace Barrage
     */
     /*************************************************************************/
     void SetViewportSpace(const glm::vec2& dimensions);
-
-    /*************************************************************************/
-    /*!
-      \brief
-        Adds the rendering request to the internal structure
-        the renderer uses to keep track of where everything is needed.
-      \param request
-        The rendering request made to the renderer.
-    */
-    /*************************************************************************/
-    void AddRequest(const SingleRequest& request);
+    
     /*************************************************************************/
     /*!
       \brief
@@ -215,28 +189,7 @@ namespace Barrage
     {
       glm::mat4 projection_; //!< The projection matrix of the renderer's viewport.
     };
-
-    /*************************************************************************/
-    /*!
-      \brief
-        Function pointer for used to render the mesh inputted.
-      \param shaderID
-        The shader ID to OpenGL that is currently bound to the pipeline.
-      \param meshData
-        The data to the mesh being rendered currently.
-      \param request
-        The request being drawn as a C-style polymorphic struct.
-      \param manager
-        The manager that keeps track of the resources for OpenGL.
-    */
-    /*************************************************************************/
-    typedef void (GfxRenderer2D::*RenderAlgorithm)(
-      const GLuint shaderID, 
-      const GfxManager2D::MeshData& meshData, 
-      const InternalState* request,
-      const GfxManager2D* manager
-    );
-
+    
     /*************************************************************************/
     /*!
       \brief
@@ -245,26 +198,6 @@ namespace Barrage
     */
     /*************************************************************************/
     void CreateInstancedMesh();
-    /*************************************************************************/
-    /*!
-      \brief
-        Renders a single request mesh.
-      \param manager
-        The manager that keeps track of the resources for OpenGL.
-      \param shaderID
-        The shader ID to OpenGL that is currently bound to the pipeline.
-      \param meshData
-        The data from the mesh being requested to render.
-      \param request
-        A C-style polymorphic struct containing the data needed to know
-        what resources are being used but if use correctly should
-        also be casted to whatever type is expected to make this work.
-    */
-    /*************************************************************************/
-    void RenderSingleMesh(
-      const GLuint shaderID, const GfxManager2D::MeshData& meshData, 
-      const InternalRequest& request,
-      const GfxManager2D* manager);
     /*************************************************************************/
     /*!
       \brief
@@ -295,6 +228,7 @@ namespace Barrage
       BUFFER_COUNT
     };
 
+    GLuint rendererContext_;                  //!< The vertex array object for the renderer.
     glm::vec4 clearColor_;                    //!< The color to clear the screen.
     Viewport viewport_;                       //!< The viewport for this renderer.
     InternalState current_;                   //!< The current resource state.

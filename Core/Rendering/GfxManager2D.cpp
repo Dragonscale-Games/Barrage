@@ -142,7 +142,7 @@ namespace Barrage
 
   GfxManager2D::~GfxManager2D()
   {
-    CleanAllResources();
+    Shutdown();
   }
 
   void GfxManager2D::Initialize(WindowManager& windowing)
@@ -158,6 +158,11 @@ namespace Barrage
     std::cout << "Loading OpenGL Version " << GLAD_VERSION_MAJOR(glVersion_) << "." << GLAD_VERSION_MINOR(glVersion_) << std::endl;
   }
 
+  void GfxManager2D::Shutdown()
+  {
+    CleanAllResources();
+  }
+  
   GfxManager2D::MeshID GfxManager2D::CreateMesh(const MeshSpecs& specs)
   {
     // Create an empty mesh.
@@ -280,10 +285,10 @@ namespace Barrage
 
     // Generate the shader code and create the code.
     StageList& stages = internalStages_[shader];
-    GLuint& vertexShader = stages[ShaderStage::VERTEX_SHAHDER];
+    GLuint& vertexShader = stages[ShaderStage::VERTEX_SHADER];
 
     // Set the vertex shader's source code and compile it.
-    CHECK_GL( glShaderSource(vertexShader, 1, &specs.stageSources_[ShaderStage::VERTEX_SHAHDER], nullptr) );
+    CHECK_GL( glShaderSource(vertexShader, 1, &specs.stageSources_[ShaderStage::VERTEX_SHADER], nullptr) );
     CHECK_GL( glCompileShader(vertexShader) );
     CHECK_GL( glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success) );
     if (!success)
