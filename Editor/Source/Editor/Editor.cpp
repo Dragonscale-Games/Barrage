@@ -14,9 +14,8 @@
 #include "stdafx.h"
 
 #include "Editor.hpp"
-#include "Objects/Systems/GameSystems.hpp"
-#include "GameStates/TestGameStates/Cruse/GSBulletTest.hpp"
-#include "GameStates/TestGameStates/Cruse/GSWaves.hpp"
+//#include "Objects/Systems/GameSystems.hpp"
+#include "GS_DemoGame.hpp"
 #include "TempRenderer/TestRenderer.hpp"
 
 #include <unordered_set>
@@ -58,7 +57,7 @@ namespace Barrage
 
     engine_.Initialize();
 
-    engine_.GSM().SetGameState(Barrage::GSBulletTest());
+    engine_.GSM().SetGameState(Demo::GS_DemoGame());
 
     gui_.Initialize(TestRenderer::Instance().GetWindowHandle());
   }
@@ -82,7 +81,6 @@ namespace Barrage
       if (engine_.GSM().GameStateIsRunning())
       {
         engine_.GSM().Update();
-        engine_.Objects().Update();
       }
       else
         isRunning_ = false;
@@ -129,18 +127,12 @@ namespace Barrage
     ImGui::Text(frametime.c_str());
     ImGui::Text("");
 
-    std::string num_bullets("Number of bullets: ");
-    num_bullets += std::to_string(GSBulletTest::GetNumBullets());
-
-    ImGui::Text(num_bullets.c_str());
-    ImGui::Text("");
-
     ImGui::Text("Currently registered:");
     ImGui::Text("----------------------");
 
     if (ImGui::CollapsingHeader("Pool Components"))
     {
-      PoolComponentList pool_component_list = engine_.Objects().GetPoolComponentNames();
+      std::vector<std::string> pool_component_list = engine_.Objects().GetSharedComponentNames();
 
       for (auto it = pool_component_list.begin(); it != pool_component_list.end(); ++it)
       {
@@ -152,7 +144,7 @@ namespace Barrage
     
     if (ImGui::CollapsingHeader("Object Components"))
     {
-      ObjectComponentList object_component_list = engine_.Objects().GetObjectComponentNames();
+      std::vector<std::string> object_component_list = engine_.Objects().GetComponentArrayNames();
 
       for (auto it = object_component_list.begin(); it != object_component_list.end(); ++it)
       {
@@ -164,7 +156,7 @@ namespace Barrage
 
     if (ImGui::CollapsingHeader("Initializers"))
     {
-      InitializerList initializer_list = engine_.Objects().GetInitializerNames();
+      std::vector<std::string> initializer_list = engine_.Objects().GetSpawnFuncNames();
 
       for (auto it = initializer_list.begin(); it != initializer_list.end(); ++it)
       {
@@ -176,9 +168,9 @@ namespace Barrage
 
     if (ImGui::CollapsingHeader("Systems"))
     {
-      SystemList registered_system_list = engine_.Objects().GetRegisteredSystemNames();
-      SystemList update_order_list = engine_.Objects().GetSystemUpdateOrder();
-      SystemList unused_system_list;
+      std::vector<std::string> registered_system_list = engine_.Objects().GetRegisteredSystemNames();
+      std::vector<std::string> update_order_list = engine_.Objects().GetSystemUpdateOrder();
+      std::vector<std::string> unused_system_list;
 
       std::unordered_set<std::string> used_system_set;
 
@@ -219,7 +211,7 @@ namespace Barrage
 
     if (ImGui::CollapsingHeader("Pool Archetypes"))
     {
-      ArchetypeList archetype_list = engine_.Objects().GetPoolArchetypeNames();
+      std::vector<std::string> archetype_list = engine_.Objects().GetPoolArchetypeNames();
 
       for (auto it = archetype_list.begin(); it != archetype_list.end(); ++it)
       {
@@ -231,7 +223,7 @@ namespace Barrage
 
     if (ImGui::CollapsingHeader("Object Archetypes"))
     {
-      ArchetypeList archetype_list = engine_.Objects().GetObjectArchetypeNames();
+      std::vector<std::string> archetype_list = engine_.Objects().GetObjectArchetypeNames();
 
       for (auto it = archetype_list.begin(); it != archetype_list.end(); ++it)
       {
