@@ -42,9 +42,10 @@ namespace Barrage
     CHECK_GL( glDisable(GL_CULL_FACE) );
     CHECK_GL( glDisable(GL_DEPTH_TEST) );
     CHECK_GL( glEnable(GL_BLEND) );
-
     CHECK_GL( glClearBufferfv(GL_COLOR, 0, glm::value_ptr(clearColor_)));
     CHECK_GL( glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA) );
+    // Create the Vertex Array Object for the renderer.
+    CHECK_GL( glGenVertexArrays(1, &renderState_) );
 
     // Create the mesh responsible for drawing
     // instanced version of meshes.
@@ -56,6 +57,8 @@ namespace Barrage
     FlushRequests();
     // Delete the buffers that used to belong on the instanced mesh.
     CHECK_GL( glDeleteBuffers(GfxRenderer2D::BUFFER_COUNT, instancedBuffers_) );
+    // Delete the Vertex Array Object.
+    CHECK_GL( glDeleteVertexArrays(1, &renderState_));
   }
 
   void GfxRenderer2D::SetExpectedRequests(size_t requests)
@@ -189,22 +192,10 @@ namespace Barrage
     const std::vector<GfxManager2D::BufferList>& buffers = manager_->GetOpenGLBuffers();
     const GfxManager2D::BufferList instancedMeshBuffers = buffers[instancedMesh_];
 
-    // Start operating on the meshs.
+    // Start operating on the mesh.
     CHECK_GL( glBindVertexArray(resourceMeshes[instancedMesh_].internalMeshID_) );
-    // And make sure to include the element index buffer.
-    CHECK_GL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instancedMeshBuffers[GfxManager2D::FACES]) );
-    // Start binding buffers under new attribute locations.
-    CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedMeshBuffers[GfxManager2D::VERTICES]) );
-    const GLint positionIndex = 0;
-    const GLint uvIndex = 1;
-    // Setup the input layout for the vertex buffer.
-    // Set up the layout for positions.
-    CHECK_GL( glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, sizeof(GfxManager2D::Vertex), reinterpret_cast<void*>(0)) );
-    CHECK_GL( glEnableVertexAttribArray(positionIndex) );
-    // Set up the layout for uvs.
-    CHECK_GL( glVertexAttribPointer(
-      uvIndex, 2, GL_FLOAT, GL_FALSE, sizeof(GfxManager2D::Vertex), reinterpret_cast<void*>(sizeof(glm::vec2))) );
-    CHECK_GL( glEnableVertexAttribArray(uvIndex) );
+    BindMeshBuffers(buffers[instancedMesh_]);
+    
     // Setup the layout for the instanced transform data buffers.
     const GLint translationIndex = 2;
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[TRANSLATION_BUFFER]) );
@@ -256,27 +247,8 @@ namespace Barrage
     // Get the buffers found in the instance buffer.
     const GfxManager2D::BufferList instancedVertexBuffers = resourceBuffers[instancedMesh_];
 
-    // -> Copy the buffers from the mesh buffer data in the request over to the instanced mesh.
-    
-    // Copy over the vertices first.
-    const size_t vertexBufferSize = requestMesh.vertexCount_ * sizeof(GfxManager2D::Vertex);
-    CHECK_GL( glBindBuffer(GL_COPY_READ_BUFFER, requestBuffers[GfxManager2D::VERTICES]) );
-    CHECK_GL( glBindBuffer(GL_COPY_WRITE_BUFFER, instancedVertexBuffers[GfxManager2D::VERTICES]) );
-    CHECK_GL( glBufferData(GL_COPY_WRITE_BUFFER, vertexBufferSize, nullptr, GL_STREAM_DRAW) );
-
-    CHECK_GL( glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, vertexBufferSize) );
-
-    // Then copy over the faces.
-    const size_t faceBufferSize = requestMesh.faceCount_ * sizeof(GfxManager2D::Face);
-    CHECK_GL( glBindBuffer(GL_COPY_READ_BUFFER, requestBuffers[GfxManager2D::FACES]) );
-    CHECK_GL( glBindBuffer(GL_COPY_WRITE_BUFFER, instancedVertexBuffers[GfxManager2D::FACES]) );
-    CHECK_GL( glBufferData(GL_COPY_WRITE_BUFFER, faceBufferSize, nullptr, GL_STREAM_DRAW) );
-
-    CHECK_GL( glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, faceBufferSize) );
-
-    // Unbind the copy read and write buffers.
-    CHECK_GL( glBindBuffer(GL_COPY_READ_BUFFER, 0) );
-    CHECK_GL( glBindBuffer(GL_COPY_WRITE_BUFFER, 0) );
+    // -> Point the buffers for the input mesh data for this instanced mesh.
+    BindMeshBuffers(requestBuffers);
 
     // -> Set the instanced buffer with the transform data necessary.
     
@@ -297,4 +269,23 @@ namespace Barrage
     const int numMeshesDrawn = request.transform_.count_;
     CHECK_GL( glDrawElementsInstanced(GL_TRIANGLES, 3U * requestMesh.faceCount_, GL_UNSIGNED_INT, nullptr, numMeshesDrawn) );
   }
+
+  void GfxRenderer2D::BindMeshBuffers(const GfxManager2D::BufferList& buffers)
+  {
+    // And make sure to include the element index buffer.
+    CHECK_GL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[GfxManager2D::FACES]) );
+    // Start binding buffers under new attribute locations.
+    CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, buffers[GfxManager2D::VERTICES]) );
+    constexpr GLint positionIndex = 0;
+    constexpr GLint uvIndex = 1;
+    // Setup the input layout for the vertex buffer.
+    // Set up the layout for positions.
+    CHECK_GL( glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, sizeof(GfxManager2D::Vertex), reinterpret_cast<void*>(0)) );
+    CHECK_GL( glEnableVertexAttribArray(positionIndex) );
+    // Set up the layout for uvs.
+    CHECK_GL( glVertexAttribPointer(
+      uvIndex, 2, GL_FLOAT, GL_FALSE, sizeof(GfxManager2D::Vertex), reinterpret_cast<void*>(sizeof(glm::vec2))) );
+    CHECK_GL( glEnableVertexAttribArray(uvIndex) );
+  }
+
 }

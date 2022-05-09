@@ -57,13 +57,14 @@ int main()
   renderRequest.resources_.mesh_ = mesh;
   renderRequest.resources_.shader_ = shader;
 
-  glm::vec2 position(0.0f, 0.0f);
-  glm::vec2 scale(150.0f);
-  RADIAN rotation = 0.25f * (22.0f / 7.0f); // 0.0f;
-  renderRequest.transform_.positions_ = &position;
-  renderRequest.transform_.scales_ = &scale;
-  renderRequest.transform_.rotations_ = &rotation;
-  renderRequest.transform_.count_ = 1;
+  constexpr int size = 2;
+  glm::vec2 positions[size] = { glm::vec2(-150.0f, 0.0f), glm::vec2(150.0f, 0.0f) };
+  glm::vec2 scales[size] = { glm::vec2(150.0f), glm::vec2(50.0f, 120.0f) };
+  RADIAN rotations[size] = { 0.25f * (22.0f / 7.0f), 0.0f };
+  renderRequest.transform_.positions_ = positions;
+  renderRequest.transform_.scales_ = scales;
+  renderRequest.transform_.rotations_ = rotations;
+  renderRequest.transform_.count_ = size;
   
   // Add the render request to the renderer.
   renderer.AddRequest(renderRequest);

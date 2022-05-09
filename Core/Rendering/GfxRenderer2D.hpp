@@ -215,7 +215,16 @@ namespace Barrage
       const GfxManager2D::MeshData& meshData, 
       const InternalRequest& request,
       const GfxManager2D* manager);
-
+    /*************************************************************************/
+    /*!
+      \brief
+        Binds the buffers responsible for the mesh data.
+      \param buffers
+        The buffers to bind to this renderer.
+    */
+    /*************************************************************************/
+    void BindMeshBuffers(const GfxManager2D::BufferList& buffers);
+    
     enum InstancedBuffer //! The indices to the instanced buffers.
     {
       TRANSLATION_BUFFER,
@@ -224,7 +233,7 @@ namespace Barrage
       BUFFER_COUNT
     };
 
-    GLuint rendererContext_;                  //!< The vertex array object for the renderer.
+    GLuint renderState_;                      //!< The vertex array object for the renderer.
     glm::vec4 clearColor_;                    //!< The color to clear the screen.
     Viewport viewport_;                       //!< The viewport for this renderer.
     InternalState current_;                   //!< The current resource state.
