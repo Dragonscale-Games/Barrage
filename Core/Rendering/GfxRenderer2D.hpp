@@ -38,17 +38,13 @@ namespace Barrage
   class GfxRenderer2D
   {
   public:
-    struct InstancedTransformData //! The transform data needed for instance requests.
+
+    struct TransformData //! The transform data needed for either type of request.
     {
       int count_;                 //!< The count of all the positions.
       glm::vec2* positions_;      //!< The positions to all the objects in the render the request.
       glm::vec2* scales_;         //!< The scales to all the objects in the render the request.
       RADIAN* rotations_;         //!< The rotations to all the objects in the request.
-    };
-
-    struct TransformData //! The transform data needed for either type of request.
-    {
-      InstancedTransformData instanced_;  //!< Transform data for instanced requests.
     };
 
     struct ResourceState //!< Keeps track of the currently bound resources.
@@ -62,7 +58,7 @@ namespace Barrage
     struct InstancedRequest //! The structure to keep track of instanced requests.
     {
       ResourceState resources_;           //!< The resources used on this binding.
-      InstancedTransformData transform_;  //!< The transform data for the instance request.
+      TransformData transform_;           //!< The transform data for the instance request.
     };
 
     struct InternalState //! The internal request data where the pointer data is already dereferenced.

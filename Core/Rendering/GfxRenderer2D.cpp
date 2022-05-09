@@ -87,7 +87,7 @@ namespace Barrage
     internal.resources_.textureIndex_ = request.resources_.texture_;
     internal.resources_.shaderIndex_ = request.resources_.shader_;
     internal.resources_.framebufferIndex_ = request.resources_.framebuffer_;
-    internal.transform_.instanced_ = request.transform_;
+    internal.transform_ = request.transform_;
 
     requests_.push_back(internal);
   }
@@ -282,19 +282,19 @@ namespace Barrage
     
     // Set the data for the translation, scale, and rotation buffers.
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[TRANSLATION_BUFFER]) );
-    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * request.transform_.instanced_.count_,
-      request.transform_.instanced_.positions_, GL_STREAM_DRAW) );
+    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * request.transform_.count_,
+      request.transform_.positions_, GL_STREAM_DRAW) );
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[SCALE_BUFFER]) );
-    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * request.transform_.instanced_.count_,
-      request.transform_.instanced_.scales_, GL_STREAM_DRAW) );
+    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * request.transform_.count_,
+      request.transform_.scales_, GL_STREAM_DRAW) );
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[ROTATION_BUFFER]) );
-    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(float) * request.transform_.instanced_.count_,
-      request.transform_.instanced_.rotations_, GL_STREAM_DRAW) );
+    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(float) * request.transform_.count_,
+      request.transform_.rotations_, GL_STREAM_DRAW) );
 
     // Make sure to bind the correct buffer.
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedVertexBuffers[GfxManager2D::VERTICES]) );
     // Now the mesh is ready to be drawn.
-    const int numMeshesDrawn = request.transform_.instanced_.count_;
+    const int numMeshesDrawn = request.transform_.count_;
     CHECK_GL( glDrawElementsInstanced(GL_TRIANGLES, 3U * requestMesh.faceCount_, GL_UNSIGNED_INT, nullptr, numMeshesDrawn) );
   }
 }
