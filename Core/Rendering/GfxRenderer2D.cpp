@@ -120,8 +120,9 @@ namespace Barrage
     current_.shaderIndex_ = -1;
     current_.textureIndex_ = -1;
     current_.framebufferIndex_ = -1;
-    // Bind the instancing mesh.
-    CHECK_GL( glBindVertexArray(resourceMeshes[instancedMesh_].internalMeshID_) );
+    
+    // Bind the rendering state and the attribute formatting.
+    CHECK_GL( glBindVertexArray(renderState_) );
     
     // Keep track of the previous shader bound to the pipeline.
     for (auto& renderState : requests_)
@@ -144,7 +145,6 @@ namespace Barrage
       }
       // If the previous mesh is not the same ID as the current one.
       // Reset the previous mesh and bind the new one.
-
       if (current_.meshIndex_ != resource.meshIndex_)
       {
         // Save the currently bound mesh.
@@ -188,13 +188,12 @@ namespace Barrage
     CHECK_GL( glGenBuffers(BUFFER_COUNT, instancedBuffers_) );
     // Bind these buffers under the mesh with the attribute divisor on.
     // The meshes to to perform the OpenGL code with.
-    const std::vector<GfxManager2D::MeshData>& resourceMeshes = manager_->GetOpenGLMeshes();
     const std::vector<GfxManager2D::BufferList>& buffers = manager_->GetOpenGLBuffers();
     const GfxManager2D::BufferList instancedMeshBuffers = buffers[instancedMesh_];
 
     // Start operating on the mesh.
-    CHECK_GL( glBindVertexArray(resourceMeshes[instancedMesh_].internalMeshID_) );
-    BindMeshBuffers(buffers[instancedMesh_]);
+    CHECK_GL( glBindVertexArray(renderState_));
+    BindMeshBuffers(instancedMeshBuffers);
     
     // Setup the layout for the instanced transform data buffers.
     const GLint translationIndex = 2;
@@ -281,11 +280,11 @@ namespace Barrage
     // Setup the input layout for the vertex buffer.
     // Set up the layout for positions.
     CHECK_GL( glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, sizeof(GfxManager2D::Vertex), reinterpret_cast<void*>(0)) );
-    CHECK_GL( glEnableVertexAttribArray(positionIndex) );
     // Set up the layout for uvs.
     CHECK_GL( glVertexAttribPointer(
       uvIndex, 2, GL_FLOAT, GL_FALSE, sizeof(GfxManager2D::Vertex), reinterpret_cast<void*>(sizeof(glm::vec2))) );
+    // Enable the basic attributes for this rendering state.
+    CHECK_GL( glEnableVertexAttribArray(positionIndex) );
     CHECK_GL( glEnableVertexAttribArray(uvIndex) );
   }
-
 }

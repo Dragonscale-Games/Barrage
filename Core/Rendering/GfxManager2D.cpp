@@ -171,8 +171,6 @@ namespace Barrage
     // Set the number of faces.
     internalMeshes_[mesh].faceCount_ = static_cast<int>(specs.faces_.size());
     internalMeshes_[mesh].vertexCount_ = static_cast<int>(specs.vertices_.size());
-    // Load the vertex array and the buffers themselves.
-    CHECK_GL( glBindVertexArray(internalMeshes_[mesh].internalMeshID_) );
     // Load the vertex buffer and its data from the specs.
     GfxManager2D::BufferList& buffers = meshBuffers_[mesh];
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, buffers[MeshBuffer::VERTICES]) );
@@ -180,16 +178,9 @@ namespace Barrage
     // Load the face buffer and its data from the specifications.
     CHECK_GL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[MeshBuffer::FACES]) );
     CHECK_GL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Face) * specs.faces_.size(), specs.faces_.data(), GL_STATIC_DRAW) );
-    // Organize the data given into buffers.
-    const GLint positionIndex = 0;
-    const GLint uvIndex = 1;
-    CHECK_GL( glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(0)) );
-    CHECK_GL( glVertexAttribPointer(uvIndex, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(glm::vec2))) );
-    // And enable the vertices.
-    CHECK_GL( glEnableVertexAttribArray(positionIndex) );
-    CHECK_GL( glEnableVertexAttribArray(uvIndex) );
-    // Unbind the vertex array buffer.
-    CHECK_GL( glBindVertexArray(0) );
+    // Unbind all the buffers after their creation.
+    CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, 0));
+    CHECK_GL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 
     return mesh;
   }
@@ -325,16 +316,17 @@ namespace Barrage
 
   GfxManager2D::MeshID GfxManager2D::CreateMesh()
   {
-    // Create a new mesh and push it to the back of the mesh.
-    GLuint vertexArray = static_cast<GLuint>(-1);
-    CHECK_GL( glGenVertexArrays(1, &vertexArray) );
+    // Create the mesh
+    MeshData meshData = {};
+    meshData.faceCount_ = 0;
+    meshData.vertexCount_ = 0;
     // Create the buffers associated with the vertex array.
     BufferList buffers = {};
     CHECK_GL( glGenBuffers(NUM_BUFFERS, buffers.data()) );
     // Push back the resulting vertex array and the bufferse
     // that would go with it.
-    internalMeshes_.push_back({ vertexArray, 0, 0 });
     meshBuffers_.push_back(buffers);
+    internalMeshes_.push_back(meshData);
     // The mesh to keep track of indices correctly by indexing to the back.
     MeshID meshID(static_cast<int>(internalMeshes_.size()) - 1);
     meshes_.push_back(meshID);
@@ -433,10 +425,12 @@ namespace Barrage
     {
       CHECK_GL( glDeleteBuffers(NUM_BUFFERS, &vbo[0]) );
     }
+    /*
     for (MeshData& vao : internalMeshes_)
     {
       CHECK_GL( glDeleteVertexArrays(1, &vao.internalMeshID_) );
     }
+    */
     // Clean up all the textures.
     for (TextureData& texture : internalTextures_)
     {
@@ -578,7 +572,9 @@ namespace Barrage
     std::swap(internalMeshes_[i], internalMeshes_.back());
     // Clear the OpenGL resources associated with clearing a mesh.
     CHECK_GL( glDeleteBuffers(NUM_BUFFERS, meshBuffers_.back().data()) );
+    /*
     CHECK_GL( glDeleteVertexArrays(1, &internalMeshes_.back().internalMeshID_) );
+    */
     // Kick out the bucket with the old resources.
     meshBuffers_.pop_back();
     internalMeshes_.pop_back();

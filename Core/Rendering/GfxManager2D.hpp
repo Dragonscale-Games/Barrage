@@ -209,7 +209,7 @@ namespace Barrage
 
     struct MeshData //! Represents the mesh data needed to draw the meshes.
     {
-      GLuint internalMeshID_; //!< The internal mesh ID to OpenGL.
+      //GLuint internalMeshID_; //!< The internal mesh ID to OpenGL.
       GLuint vertexCount_;    //!< The number of vertices this has.
       GLuint faceCount_;      //!< The number of faces the mesh has.
     };
