@@ -65,7 +65,7 @@ FetchContent_MakeAvailable(glfw3 glm)
 
 # Set the compiler flags before building our own code.
 if(MSVC)
-  set(CMAKE_CXX_FLAGS "/W4 /WX /std:c++17 /EHsc /wd4201")
+  set(CMAKE_CXX_FLAGS "/W4 /std:c++17 /EHsc /wd4201") # /WX
 else()
   set(CMAKE_CXX_FLAGS "-Wall -Werror -Wextra -std=c++17")
 endif()

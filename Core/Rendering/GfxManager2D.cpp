@@ -147,15 +147,15 @@ namespace Barrage
     MeshID mesh = CreateMesh();
 
     // Set the number of faces.
-    internalMeshes_[mesh].faceCount_ = static_cast<int>(specs.faces_.size());
-    internalMeshes_[mesh].vertexCount_ = static_cast<int>(specs.vertices_.size());
+    internalMeshes_[mesh].faceCount_ = static_cast<int>(specs.indicesLength_);
+    internalMeshes_[mesh].vertexCount_ = static_cast<int>(specs.bufferLength_);
     // Load the vertex buffer and its data from the specs.
     GfxManager2D::BufferList& buffers = meshBuffers_[mesh];
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, buffers[MeshBuffer::VERTICES]) );
-    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * specs.vertices_.size(), specs.vertices_.data(), GL_STATIC_DRAW) );
+    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, specs.bufferLength_ * specs.bufferElementSize_, specs.buffer_, GL_STATIC_DRAW) );
     // Load the face buffer and its data from the specifications.
     CHECK_GL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[MeshBuffer::FACES]) );
-    CHECK_GL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Face) * specs.faces_.size(), specs.faces_.data(), GL_STATIC_DRAW) );
+    CHECK_GL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, specs.indicesLength_ * specs.indicesElementSize_, specs.indices_, GL_STATIC_DRAW) );
     // Unbind all the buffers after their creation.
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, 0));
     CHECK_GL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));

@@ -16,6 +16,8 @@
 #include <Rendering/GfxRenderer2D.hpp>
 #include <Rendering/WindowManager.hpp>
 
+#include "Rendering/GfxPrimitives.hpp"
+
 Barrage::GfxManager2D::MeshID CreateSampleMesh(Barrage::GfxManager2D& manager);
 Barrage::GfxManager2D::ShaderID CreateSampleShader(Barrage::GfxManager2D& manager);
 
@@ -47,7 +49,7 @@ int main()
   // The rendering module.
   Barrage::GfxRenderer2D renderer;
   renderer.Initialize(manager);
-  renderer.SetBackgroundColor(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
+  renderer.SetBackgroundColor(glm::vec4(0.2f, 0.1f, 0.1f, 1.0f));
 
   // Create the assets needed to render a scene.
   GfxManager2D::MeshID mesh = CreateSampleMesh(manager);
@@ -91,19 +93,17 @@ int main()
 Barrage::GfxManager2D::MeshID CreateSampleMesh(Barrage::GfxManager2D& manager)
 {
   using namespace Barrage;
-  const std::vector<Vertex> vertices = {
-    Vertex(glm::vec2(-0.5f, -0.5f), glm::vec2(0.0f, 0.0f)),
-    Vertex(glm::vec2(-0.5f,  0.5f), glm::vec2(0.0f, 1.0f)),
-    Vertex(glm::vec2( 0.5f,  0.5f), glm::vec2(1.0f, 1.0f)),
-    Vertex(glm::vec2( 0.5f,  -0.5f), glm::vec2(1.0f, 0.0f)),
-  };
-  const std::vector<Face> faces = {
-    Face(0, 1, 2),
-    Face(2, 3, 0),
-  };
+  std::vector<Vertex> vertices;
+  std::vector<Face> faces;
+  GenQuadInfo(vertices, faces);
+  
   GfxManager2D::MeshSpecs specs = {};
-  specs.vertices_ = vertices;
-  specs.faces_ = faces;
+  specs.bufferLength_ = vertices.size();
+  specs.indicesLength_ = faces.size();
+  specs.bufferElementSize_ = sizeof(vertices.front());
+  specs.indicesElementSize_ = sizeof(faces.front());
+  specs.buffer_ = vertices.data();
+  specs.indices_ = faces.data();
 
   return manager.CreateMesh(specs);
 }

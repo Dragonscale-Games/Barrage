@@ -47,7 +47,7 @@ namespace Barrage
         for the shader stages in GfxManager2D.
     */
     /*************************************************************************/
-    GfxManager2D::ShaderID CreateShader(const char filepaths[GfxManager2D::ShaderStage::NUM_POSSIBLE]);
+    GfxManager2D::ShaderID CreateShader(const char filepaths[GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE]);
     /*************************************************************************/
     /*!
       \brief

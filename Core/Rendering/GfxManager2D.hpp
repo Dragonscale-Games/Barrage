@@ -25,7 +25,7 @@
 #include <glad/gl.h>
 #include <vector>
 #include <array>
-#include "GfxUtil.hpp"
+#include "GfxTypes.hpp"
 
 namespace Barrage
 {
@@ -145,7 +145,6 @@ namespace Barrage
 
     struct MeshData //! Represents the mesh data needed to draw the meshes.
     {
-      //GLuint internalMeshID_; //!< The internal mesh ID to OpenGL.
       GLuint vertexCount_;    //!< The number of vertices this has.
       GLuint faceCount_;      //!< The number of faces the mesh has.
     };
@@ -156,10 +155,14 @@ namespace Barrage
       GLenum textureType_;       //!< The OpenGL texture type.
     };
 
-    struct MeshSpecs //! Represents the specficiations for mesh creation.
+    struct MeshSpecs //! Represents the specifications for mesh creation.
     {
-      std::vector<Vertex> vertices_;  //!< The vertices the mesh is specified with.
-      std::vector<Face> faces_;       //!< Decides what vertices correspond with which faces.
+      size_t bufferLength_;
+      size_t bufferElementSize_;
+      size_t indicesLength_;
+      size_t indicesElementSize_;
+      const void* buffer_;
+      const void* indices_;
     };
 
     enum ShaderStage //! Enumerates the available shader stages.
@@ -332,7 +335,7 @@ namespace Barrage
       \brief
         Cleans up all the resources regardless if they are being used
         or not.
-        Preferrably, use the CleanUnusedResources function.
+        Preferably, use the CleanUnusedResources function.
     */
     /*************************************************************************/
     void CleanAllResources();

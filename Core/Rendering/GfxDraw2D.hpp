@@ -109,8 +109,8 @@ namespace Barrage
 
   private:
     GfxRenderer2D* renderer_;                       //!< The internal renderer which keeps track of the commands sent to it.
-    const GfxManager2D::ShaderID* boundShader;      //!< The currently bound shader.
-    const GfxManager2D::FramebufferID* boundFrame;  //!< The currently bound framebuffer.
+    const GfxManager2D::ShaderID boundShader;       //!< The currently bound shader.
+    const GfxManager2D::FramebufferID boundFrame;   //!< The currently bound framebuffer.
     GfxManager2D::MeshID square_;                   //!< The square mesh rendered.
   };
 }
