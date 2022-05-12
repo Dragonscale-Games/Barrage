@@ -97,14 +97,6 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
-        Gets the first window created throughout the lifetime of the engine.
-    */
-    /*************************************************************************/
-    static WindowManager* Instance();
-
-    /*************************************************************************/
-    /*!
-      \brief
         Changes the window settings accordingly to position
         and resize the window to fullscreen.
     */
@@ -221,7 +213,6 @@ namespace Barrage
     const GLFWwindow* GetInternalHandle() const;
 
   private:
-    static WindowManager* instance_; //!< The first instance of the window created.
     GLFWwindow* window_;            //!< The internal handle to the windowing library.
     WindowData data_;               //!< The data given to the window.
 

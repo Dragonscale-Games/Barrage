@@ -71,9 +71,15 @@ namespace Barrage
     clearColor_ = color;
   }
 
-  void GfxRenderer2D::SetViewportSpace(const glm::vec2& dimensions)
+  void GfxRenderer2D::SetViewportSpace(const glm::ivec2& dimensions)
   {
-    viewport_.projection_ = glm::ortho(-dimensions.x / 2.0f, dimensions.x / 2.0f, -dimensions.y / 2.0f, dimensions.y / 2.0f);
+    viewport_.projection_ =
+      glm::ortho(
+        static_cast<float>(-dimensions.x) / 2.0f,
+        static_cast<float>(dimensions.x) / 2.0f,
+        static_cast<float>(-dimensions.y) / 2.0f,
+        static_cast<float>(dimensions.y) / 2.0f);
+    CHECK_GL( glViewport(0, 0, dimensions.x, dimensions.y) );
   }
 
   void GfxRenderer2D::AddRequest(const InstancedRequest& request)

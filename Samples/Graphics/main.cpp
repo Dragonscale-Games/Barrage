@@ -19,7 +19,6 @@
 #include "Rendering/GfxDraw2D.hpp"
 #include "Rendering/GfxPrimitives.hpp"
 
-Barrage::GfxManager2D::MeshID CreateSampleMesh(Barrage::GfxManager2D& manager);
 Barrage::GfxManager2D::ShaderID CreateSampleShader(Barrage::GfxManager2D& manager);
 
 /****************************************************************************/
@@ -81,24 +80,6 @@ int main()
   manager.CleanAllResources();
   windowing.Shutdown();
   return 0;
-}
-
-Barrage::GfxManager2D::MeshID CreateSampleMesh(Barrage::GfxManager2D& manager)
-{
-  using namespace Barrage;
-  std::vector<Vertex> vertices;
-  std::vector<Face> faces;
-  GenQuadInfo(vertices, faces);
-  
-  GfxManager2D::MeshSpecs specs = {};
-  specs.bufferLength_ = vertices.size();
-  specs.indicesLength_ = faces.size();
-  specs.bufferElementSize_ = sizeof(vertices.front());
-  specs.indicesElementSize_ = sizeof(faces.front());
-  specs.buffer_ = vertices.data();
-  specs.indices_ = faces.data();
-
-  return manager.CreateMesh(specs);
 }
 
 Barrage::GfxManager2D::ShaderID CreateSampleShader(Barrage::GfxManager2D& manager)

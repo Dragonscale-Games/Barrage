@@ -138,7 +138,7 @@ namespace Barrage
         has available to render.
     */
     /*************************************************************************/
-    void SetViewportSpace(const glm::vec2& dimensions);
+    void SetViewportSpace(const glm::ivec2& dimensions);
     
     /*************************************************************************/
     /*!

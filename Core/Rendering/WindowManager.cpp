@@ -23,28 +23,13 @@
 
 namespace Barrage
 {
-  // Initializing the static variables.
-  WindowManager* WindowManager::instance_ = nullptr;
-
   WindowManager::WindowManager() :
       window_(nullptr), data_{1440, 720, false, "Barrage"}
   {
-    // If the instance variable is not set yet... then...
-    // we set it.
-    if (!instance_)
-    {
-      instance_ = this;
-    }
   }
 
   WindowManager::~WindowManager()
   {
-    // Unset the instance variable if it points to
-    // this object.
-    if (instance_ == this)
-    {
-      instance_ = nullptr;
-    }
   }
 
   WindowManager::WindowManager(const WindowManager& rhs) :
@@ -91,11 +76,6 @@ namespace Barrage
     glfwDestroyWindow(window_);
     window_ = nullptr;
     glfwTerminate();
-  }
-
-  WindowManager* WindowManager::Instance()
-  {
-    return instance_;
   }
 
   void WindowManager::ResizeToFullscreen()
