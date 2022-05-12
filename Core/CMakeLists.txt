@@ -85,6 +85,7 @@ add_library(BarrageCore STATIC
   "Rendering/WindowManager.hpp" "Rendering/WindowManager.cpp"
   "Rendering/GfxManager2D.hpp" "Rendering/GfxManager2D.cpp"
   "Rendering/GfxRenderer2D.hpp" "Rendering/GfxRenderer2D.cpp"
+  "Rendering/GfxUtil.hpp" "Rendering/GfxUtil.cpp"
   "Rendering/GfxFactory2D.hpp"
   "Rendering/GfxDraw2D.hpp"
   "Rendering/GLError.hpp"

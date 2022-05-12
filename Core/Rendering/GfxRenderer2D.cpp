@@ -99,7 +99,7 @@ namespace Barrage
   {
     // Clear the backbuffer, for now hardcoded.
     CHECK_GL( glClearBufferfv(GL_COLOR, 0, glm::value_ptr(clearColor_)) );
-    CHECK_GL( glClear(GL_COLOR_BUFFER_BIT) );
+    //CHECK_GL( glClear(GL_COLOR_BUFFER_BIT) );
 
     // Render all the requests.
     // Get the list of shaders.
@@ -279,10 +279,10 @@ namespace Barrage
     constexpr GLint uvIndex = 1;
     // Setup the input layout for the vertex buffer.
     // Set up the layout for positions.
-    CHECK_GL( glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, sizeof(GfxManager2D::Vertex), reinterpret_cast<void*>(0)) );
+    CHECK_GL( glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(0)) );
     // Set up the layout for uvs.
     CHECK_GL( glVertexAttribPointer(
-      uvIndex, 2, GL_FLOAT, GL_FALSE, sizeof(GfxManager2D::Vertex), reinterpret_cast<void*>(sizeof(glm::vec2))) );
+      uvIndex, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(glm::vec2))) );
     // Enable the basic attributes for this rendering state.
     CHECK_GL( glEnableVertexAttribArray(positionIndex) );
     CHECK_GL( glEnableVertexAttribArray(uvIndex) );

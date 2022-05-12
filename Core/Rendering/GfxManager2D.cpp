@@ -113,28 +113,6 @@ namespace Barrage
   // GfxManager2D
   // ==========================================================================
 
-  GfxManager2D::Vertex::Vertex() :
-    position_(0.0f), uvCoordinate_(0.0f)
-  {
-  }
-
-  GfxManager2D::Vertex::Vertex(const glm::vec2& position, const glm::vec2& uvCoordinate) :
-    position_(position), uvCoordinate_(uvCoordinate)
-  {
-  }
-
-  GfxManager2D::Face::Face() :
-    vertices_{ 0, 0, 0 }
-  {
-  }
-
-  GfxManager2D::Face::Face(GLuint vertex1, GLuint vertex2, GLuint vertex3)
-  {
-    vertices_[0] = vertex1;
-    vertices_[1] = vertex2;
-    vertices_[2] = vertex3;
-  }
-
   GfxManager2D::GfxManager2D() :
     glVersion_(0), windowing_(nullptr)
   {

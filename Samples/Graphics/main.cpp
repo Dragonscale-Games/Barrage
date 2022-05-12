@@ -91,15 +91,15 @@ int main()
 Barrage::GfxManager2D::MeshID CreateSampleMesh(Barrage::GfxManager2D& manager)
 {
   using namespace Barrage;
-  const std::vector<GfxManager2D::Vertex> vertices = {
-    GfxManager2D::Vertex(glm::vec2(-0.5f, -0.5f), glm::vec2(0.0f, 0.0f)),
-    GfxManager2D::Vertex(glm::vec2(-0.5f,  0.5f), glm::vec2(0.0f, 1.0f)),
-    GfxManager2D::Vertex(glm::vec2( 0.5f,  0.5f), glm::vec2(1.0f, 1.0f)),
-    GfxManager2D::Vertex(glm::vec2( 0.5f,  -0.5f), glm::vec2(1.0f, 0.0f)),
+  const std::vector<Vertex> vertices = {
+    Vertex(glm::vec2(-0.5f, -0.5f), glm::vec2(0.0f, 0.0f)),
+    Vertex(glm::vec2(-0.5f,  0.5f), glm::vec2(0.0f, 1.0f)),
+    Vertex(glm::vec2( 0.5f,  0.5f), glm::vec2(1.0f, 1.0f)),
+    Vertex(glm::vec2( 0.5f,  -0.5f), glm::vec2(1.0f, 0.0f)),
   };
-  const std::vector<GfxManager2D::Face> faces = {
-    GfxManager2D::Face(0, 1, 2),
-    GfxManager2D::Face(2, 3, 0),
+  const std::vector<Face> faces = {
+    Face(0, 1, 2),
+    Face(2, 3, 0),
   };
   GfxManager2D::MeshSpecs specs = {};
   specs.vertices_ = vertices;

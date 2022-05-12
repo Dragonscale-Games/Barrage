@@ -23,11 +23,9 @@
 //  ===========================================================================
 
 #include <glad/gl.h>
-#include <glm/vec3.hpp>
-#include <glm/vec2.hpp>
 #include <vector>
-#include <string>
 #include <array>
+#include "GfxUtil.hpp"
 
 namespace Barrage
 {
@@ -144,68 +142,6 @@ namespace Barrage
     typedef ResourceID TextureID;         //!< Typedef for the Texture IDs.
     typedef ResourceID FramebufferID;     //!< Typedef for Framebuffer IDs.
     typedef ResourceID ShaderID;          //!< Typedef for the Shader IDs.
-
-    struct Vertex //! Represents a single vertex inside a mesh.
-    {
-      /*************************************************************************/
-      /*!
-        \brief
-          Creates a vertex that has a position at the origin
-          and the uv coordinates on the bottom left corner of the image.
-      */
-      /*************************************************************************/
-      Vertex();
-      /*************************************************************************/
-      /*!
-        \brief
-          Constructs a vertex given it's position in 2D space
-          and the UV texture coordinate it corresponds to.
-        \param position
-          The position of the vertex in 2D space.
-        \param uvCoordinate
-          The point in the texture that part the mesh gets mapped to.
-      */
-      /*************************************************************************/
-      Vertex(const glm::vec2& position, const glm::vec2& uvCoordinate);
-
-      glm::vec2 position_;        //!< The position of the vertex in 2D space.
-      glm::vec2 uvCoordinate_;    //!< The texture coordinate in UV coordinates.
-    };
-
-    union Face //! Indicates which vertices correspond with which faces.
-    {
-      /*************************************************************************/
-      /*!
-        \brief
-          Creates a face in which all the indices point to the first
-          vertex of the face.
-      */
-      /*************************************************************************/
-      Face();
-      /*************************************************************************/
-      /*!
-        \brief
-          Constructs a face given the three indices to the vertices 
-          it is made out of.
-        \param vertex1
-          The first vertex in the face.
-        \param vertex2
-          The second vertex in the face.
-        \param vertex3
-          The third vertex in the face.
-      */
-      /*************************************************************************/
-      Face(GLuint vertex1, GLuint vertex2, GLuint vertex3);
-
-      struct
-      {
-        GLuint vertex1_;    //!< The first vertex of the face.
-        GLuint vertex2_;    //!< The second vertex of the face.
-        GLuint vertex3_;    //!< The third vertex of the face.
-      };
-
-      GLuint vertices_[3];  //!< The three vertices that make up a face.
-    };
 
     struct MeshData //! Represents the mesh data needed to draw the meshes.
     {
