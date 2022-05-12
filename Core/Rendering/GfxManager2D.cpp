@@ -575,7 +575,7 @@ namespace Barrage
     std::swap(internalPrograms_[i], internalPrograms_.back());
     // Clear the OpenGL resources associated with clearing a shader program.
     const GLuint* shaderBuffer = internalStages_.back().data();
-    std::for_each(shaderBuffer, shaderBuffer + ShaderStage::NUM_POSSIBLE, glDeleteShader);
+    std::for_each(shaderBuffer, shaderBuffer + ShaderStage::NUM_SHADERS_POSSIBLE, glDeleteShader);
     CHECK_GL((void)0);
     CHECK_GL( glDeleteProgram(internalPrograms_.back()) );
     // Eliminate the now defunct resources.

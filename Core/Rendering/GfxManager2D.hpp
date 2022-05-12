@@ -167,7 +167,7 @@ namespace Barrage
       VERTEX_SHADER = 0,
       PIXEL_SHADER,
       // This one always goes last.
-      NUM_POSSIBLE,
+      NUM_SHADERS_POSSIBLE,
     };
 
     enum MeshBuffer //! Enumerates the available buffers written by this system.
@@ -177,20 +177,6 @@ namespace Barrage
       FACES,
       // This one always goes last.
       NUM_BUFFERS,
-    };
-
-    enum TextureFormat //! Enumerates the available formats for the textures.
-    {
-      R8G8B8A8,
-      R8G8B8,
-      R8G8,
-      R8,
-    };
-
-    enum TextureFilter //! Enumerates the available filters for textures.
-    {
-      FILTER_NONE,
-      FILTER_LINEAR,
     };
 
     struct TextureSpecs //! Represents the specifications for the textures.
@@ -206,7 +192,7 @@ namespace Barrage
 
     struct ShaderSpecs //! Represents the specifications for the shaders used.
     {
-      const char* stageSources_[ShaderStage::NUM_POSSIBLE]; //!< Used to specify the code for the shader stages available.
+      const char* stageSources_[ShaderStage::NUM_SHADERS_POSSIBLE]; //!< Used to specify the code for the shader stages available.
     };
     
     struct FramebufferSpecs //! Represents the specifications used for framebuffers.
@@ -215,7 +201,7 @@ namespace Barrage
       std::vector<TextureID> outputBuffers_;  //!< The buffers to use for the framebuffer.
     };
 
-    typedef std::array<GLuint, ShaderStage::NUM_POSSIBLE> StageList; //!< The container for all the stages.
+    typedef std::array<GLuint, ShaderStage::NUM_SHADERS_POSSIBLE> StageList; //!< The container for all the stages.
     typedef std::array<GLuint, MeshBuffer::NUM_BUFFERS> BufferList; //!< The container for all buffers per array.
 
   public:
