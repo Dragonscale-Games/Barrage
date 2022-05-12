@@ -19,6 +19,7 @@
 //  ===========================================================================
 // INCLUDES
 //  ===========================================================================
+#include "GfxManager2D.hpp"
 #include "GfxRenderer2D.hpp"
 
 namespace Barrage
@@ -40,11 +41,13 @@ namespace Barrage
     /*!
       \brief
         Initializes the system by selecting the renderer being used.
+      \param manager
+        The manager to create internal resources with.
       \param renderer
         The renderer that keeps track of all the commands sent to it.
     */
     /*************************************************************************/
-    void Initialize(GfxRenderer2D* renderer);
+    void Initialize(GfxManager2D& manager, GfxRenderer2D& renderer);
 
     /*************************************************************************/
     /*!
@@ -77,41 +80,47 @@ namespace Barrage
         The scale to draw the square in.
       \param rotations
         The rotation to draw the square in.
-      \param textureID
+      \param texture
         The texture to apply to the square.
     */
     /*************************************************************************/
     void DrawInstancedQuad(
       bool instanced,
       int count,
-      const glm::vec2& positions,
-      const glm::vec2& scales,
-      const RADIAN& rotations,
-      const GfxManager2D::TextureID& textureID
+      const glm::vec2* positions,
+      const glm::vec2* scales,
+      const RADIAN* rotations,
+      const GfxManager2D::TextureID& texture
     );
     /*************************************************************************/
     /*!
       \brief
         Applies a shader effect for any shapes drawn after this call.
-      \param shaderID
+      \param shader
         The shader to apply to all shapes after the fact.
     */
     /*************************************************************************/
-    void ApplyShader(const GfxManager2D::ShaderID& shaderID);
+    void ApplyShader(const GfxManager2D::ShaderID& shader);
     /*************************************************************************/
     /*!
       \brief
         Binds a framebuffer to the pipeline. Any shapes drawn will now
         be drawn to the current framebuffer.
+      \param framebuffer
+        The framebuffer to render everything to.
     */
     /*************************************************************************/
-    void ApplyFramebuffer(const GfxManager2D::FramebufferID& framebufferID);
+    void ApplyFramebuffer(const GfxManager2D::FramebufferID& framebuffer);
 
   private:
+    GfxManager2D::ShaderID boundShader_;            //!< The currently bound shader.
+    GfxManager2D::FramebufferID boundFrame_;        //!< The currently bound framebuffer.
+    GfxManager2D::MeshID quad_;                     //!< The square mesh rendered.
+    GfxManager2D* manager_;                         //!< The internal manager to create internal resources with.
     GfxRenderer2D* renderer_;                       //!< The internal renderer which keeps track of the commands sent to it.
-    const GfxManager2D::ShaderID boundShader;       //!< The currently bound shader.
-    const GfxManager2D::FramebufferID boundFrame;   //!< The currently bound framebuffer.
-    GfxManager2D::MeshID square_;                   //!< The square mesh rendered.
+    std::vector<glm::vec2> singlePositions_;        //!< The buffer to store single call positions.
+    std::vector<glm::vec2> singleScales_;           //!< The buffer to store single call scales.
+    std::vector<float> singleRotations_;            //!< The buffer to store single rotations.
   };
 }
 

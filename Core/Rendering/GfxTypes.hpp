@@ -1,7 +1,7 @@
 ﻿/* ========================================================================= */
 /*!
  *
- * \file            GfxUtil.hpp
+ * \file            GfxTypes.hpp
  * \author          David Wong Cascante
  * \par             david.wongcascante\@digipen.edu
 

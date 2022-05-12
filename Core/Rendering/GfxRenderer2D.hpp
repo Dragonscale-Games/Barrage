@@ -41,10 +41,10 @@ namespace Barrage
 
     struct TransformData //! The transform data needed for either type of request.
     {
-      int count_;                 //!< The count of all the positions.
-      glm::vec2* positions_;      //!< The positions to all the objects in the render the request.
-      glm::vec2* scales_;         //!< The scales to all the objects in the render the request.
-      RADIAN* rotations_;         //!< The rotations to all the objects in the request.
+      int count_;                       //!< The count of all the positions.
+      const glm::vec2* positions_;      //!< The positions to all the objects in the render the request.
+      const glm::vec2* scales_;         //!< The scales to all the objects in the render the request.
+      const RADIAN* rotations_;         //!< The rotations to all the objects in the request.
     };
 
     struct ResourceState //!< Keeps track of the currently bound resources.

@@ -1,7 +1,7 @@
 ﻿/* ========================================================================= */
 /*!
  *
- * \file            GfxUtil.cpp
+ * \file            GfxTypes.cpp
  * \author          David Wong Cascante
  * \par             david.wongcascante\@digipen.edu
 
