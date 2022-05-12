@@ -59,19 +59,18 @@ namespace Barrage
         The scale to draw the square in.
       \param rotation
         The rotation to draw the square in.
-      \param textureID
+      \param texture
         The texture to apply to the square.
     */
     /*************************************************************************/
     void DrawQuad(
       const glm::vec2& position, const glm::vec2& scale, const RADIAN& rotation,
-      const GfxManager2D::TextureID& textureID);
+      const GfxManager2D::TextureID& texture = GfxManager2D::TextureID()
+    );
     /*************************************************************************/
     /*!
       \brief
         Draws several squares with the given parameters.
-      \param instanced
-        Whether the 
       \param count
         The number of elements being rendered.
       \param positions
@@ -85,12 +84,11 @@ namespace Barrage
     */
     /*************************************************************************/
     void DrawInstancedQuad(
-      bool instanced,
       int count,
       const glm::vec2* positions,
       const glm::vec2* scales,
       const RADIAN* rotations,
-      const GfxManager2D::TextureID& texture
+      const GfxManager2D::TextureID& texture = GfxManager2D::TextureID()
     );
     /*************************************************************************/
     /*!

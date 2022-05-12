@@ -16,6 +16,7 @@
 #include <Rendering/GfxRenderer2D.hpp>
 #include <Rendering/WindowManager.hpp>
 
+#include "Rendering/GfxDraw2D.hpp"
 #include "Rendering/GfxPrimitives.hpp"
 
 Barrage::GfxManager2D::MeshID CreateSampleMesh(Barrage::GfxManager2D& manager);
@@ -45,31 +46,23 @@ int main()
   // The resources manager for the graphics system.
   Barrage::GfxManager2D manager;
   manager.Initialize(windowing);
-
   // The rendering module.
   Barrage::GfxRenderer2D renderer;
   renderer.Initialize(manager);
   renderer.SetBackgroundColor(glm::vec4(0.2f, 0.1f, 0.1f, 1.0f));
+  // The drawing module that simplifies rendering.
+  Barrage::GfxDraw2D drawing;
+  drawing.Initialize(manager, renderer);
 
   // Create the assets needed to render a scene.
-  GfxManager2D::MeshID mesh = CreateSampleMesh(manager);
   GfxManager2D::ShaderID shader = CreateSampleShader(manager);
-  // Create a render request for the renderer to draw this mesh.
-  GfxRenderer2D::InstancedRequest renderRequest = {};
-  renderRequest.resources_.mesh_ = mesh;
-  renderRequest.resources_.shader_ = shader;
-
+  drawing.ApplyShader(shader);
+  // Tell the drawing system to draw a couple of squares on the screen.
   constexpr int size = 2;
   glm::vec2 positions[size] = { glm::vec2(-150.0f, 0.0f), glm::vec2(150.0f, 0.0f) };
   glm::vec2 scales[size] = { glm::vec2(150.0f), glm::vec2(50.0f, 120.0f) };
   RADIAN rotations[size] = { 0.25f * (22.0f / 7.0f), 0.0f };
-  renderRequest.transform_.positions_ = positions;
-  renderRequest.transform_.scales_ = scales;
-  renderRequest.transform_.rotations_ = rotations;
-  renderRequest.transform_.count_ = size;
-  
-  // Add the render request to the renderer.
-  renderer.AddRequest(renderRequest);
+  drawing.DrawInstancedQuad(size, positions, scales, rotations);
   
   // Update the window while it's open.
   while(!glfwWindowShouldClose(windowing.GetInternalHandle())) 

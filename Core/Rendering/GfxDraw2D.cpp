@@ -47,13 +47,13 @@ namespace Barrage
 
   void GfxDraw2D::DrawQuad(
     const glm::vec2& position, const glm::vec2& scale, const RADIAN& rotation,
-    const GfxManager2D::TextureID& textureID)
+    const GfxManager2D::TextureID& texture)
   {
     assert(renderer_);
   }
 
   void GfxDraw2D::DrawInstancedQuad(
-    bool instanced, int count,
+    int count,
     const glm::vec2* positions, const glm::vec2* scales,
     const RADIAN* rotations, const GfxManager2D::TextureID& texture)
   {
