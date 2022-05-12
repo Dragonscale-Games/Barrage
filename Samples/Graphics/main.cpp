@@ -56,6 +56,7 @@ int main()
   // Create the assets needed to render a scene.
   GfxManager2D::ShaderID shader = CreateSampleShader(manager);
   drawing.ApplyShader(shader);
+  drawing.ApplyFramebuffer(GfxManager2D::FramebufferID());
   // Tell the drawing system to draw a couple of squares on the screen.
   constexpr int size = 2;
   glm::vec2 positions[size] = { glm::vec2(-150.0f, 0.0f), glm::vec2(150.0f, 0.0f) };

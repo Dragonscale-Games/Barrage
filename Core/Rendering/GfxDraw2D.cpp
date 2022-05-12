@@ -17,6 +17,7 @@
 #include "GfxDraw2D.hpp"
 #include <cassert>
 
+#include "stdafx.h"
 #include "GfxPrimitives.hpp"
 
 namespace Barrage
@@ -50,6 +51,7 @@ namespace Barrage
     const GfxManager2D::TextureID& texture)
   {
     assert(renderer_);
+    NO_IMPL();
   }
 
   void GfxDraw2D::DrawInstancedQuad(
@@ -78,5 +80,11 @@ namespace Barrage
   {
     boundShader_ = shader;
   }
+
+  void GfxDraw2D::ApplyFramebuffer(const GfxManager2D::FramebufferID& framebuffer)
+  {
+    NO_IMPL();
+  }
+
 
 }
