@@ -21,6 +21,16 @@
 #include "WindowManager.hpp"
 #include <glm/vec2.hpp>
 
+namespace
+{
+  void OnResize(GLFWwindow* window, int width, int height)
+  {
+    auto* manager = static_cast<Barrage::WindowManager*>(glfwGetWindowUserPointer(window));
+    assert(manager);
+    manager->Resize(width, height);
+  }
+}
+
 namespace Barrage
 {
   WindowManager::WindowManager() :
@@ -161,6 +171,7 @@ namespace Barrage
     Change(settings);
     // Set the user pointer.
     glfwSetWindowUserPointer(window_, this);
+    glfwSetWindowSizeCallback(window_, OnResize);
   }
 
   bool WindowManager::IsFocused() const

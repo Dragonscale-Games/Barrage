@@ -288,7 +288,7 @@ namespace Barrage
     CHECK_GL( glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(0)) );
     // Set up the layout for uvs.
     CHECK_GL( glVertexAttribPointer(
-      uvIndex, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(sizeof(glm::vec2))) );
+      uvIndex, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position_))) );
     // Enable the basic attributes for this rendering state.
     CHECK_GL( glEnableVertexAttribArray(positionIndex) );
     CHECK_GL( glEnableVertexAttribArray(uvIndex) );
