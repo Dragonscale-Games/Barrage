@@ -36,6 +36,8 @@ namespace Barrage
     // Read the shader code from the files specified in the filepaths.
     // Store the strings read from the files in the array.
     std::array<std::stringstream, GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE> codes;
+    // Create containers to store the codes.
+    std::array<std::string, GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE> codeContainers;
     // The file handle to read shader code from.
     std::ifstream file;
     for(unsigned i = 0; i < GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE; ++i)
@@ -44,6 +46,9 @@ namespace Barrage
       file.open(filepaths[i], std::ifstream::in);
       if(file.is_open())
       {
+        // Add the version directive in addition to the code.
+        // TODO: Find a way to do this programmatically so the directive isn't hardcoded.
+        codes[i] << "#version 330 core" << std::endl;
         codes[i] << file.rdbuf();
       }
       // Close the file handle before doing anything destructive.
@@ -60,7 +65,11 @@ namespace Barrage
     // the shader.
     for(unsigned i = 0; i < GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE; ++i)
     {
-      specs.stageSources_[i] = codes[i].str().c_str();
+      codeContainers[i] = codes[i].str();
+    }
+    for(unsigned i = 0; i < GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE; ++i)
+    {
+      specs.stageSources_[i] = codeContainers[i].c_str();
     }
     // Create the shader.
     assert(manager_);
