@@ -34,7 +34,17 @@ namespace Barrage
         The manager in charge of creating all the resources.
     */
     /*************************************************************************/
-    explicit GfxFactory2D(GfxManager2D* manager);
+    explicit GfxFactory2D();
+    /*************************************************************************/
+    /*!
+      \brief
+        Initializes the system given a particuluar graphics manager
+        to create resources out of.
+      \param manager
+        A reference to the manager used to create resources.
+    */
+    /*************************************************************************/
+    void Initialize(GfxManager2D& manager);
 
     /*************************************************************************/
     /*!
@@ -45,6 +55,9 @@ namespace Barrage
         The filepaths of each shader for the program created.
         The index into the array corresponds to the enumeration
         for the shader stages in GfxManager2D.
+      \returns
+        - A valid shader ID when successful.
+        - An invalid shader ID if an error occurred.
     */
     /*************************************************************************/
     GfxManager2D::ShaderID CreateShader(const char filepaths[GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE]);
@@ -55,9 +68,15 @@ namespace Barrage
       \param filepath
         The filepath to look for the texture starting from the current
         directory.
+      \returns
+        - A valid texture ID when successful.
+        - An invalid texture ID if an error occurred.
     */
     /*************************************************************************/
     GfxManager2D::TextureID CreateTexture(const char* filepath);
+  
+  private:
+    GfxManager2D* manager_; //!< The manager to make resources out of.
   };
 }
 
