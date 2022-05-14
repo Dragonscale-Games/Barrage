@@ -12,12 +12,15 @@
 /* ======================================================================== */
 /* Includes */
 /* ======================================================================== */
+
+#include <Rendering/GfxPrimitives.hpp>
 #include <Rendering/GfxManager2D.hpp>
 #include <Rendering/GfxRenderer2D.hpp>
+#include <Rendering/GfxDraw2D.hpp>
+#include <Rendering/GfxFactory2D.hpp>
+
 #include <Rendering/WindowManager.hpp>
 
-#include "Rendering/GfxDraw2D.hpp"
-#include "Rendering/GfxPrimitives.hpp"
 
 Barrage::GfxManager2D::ShaderID CreateSampleShader(Barrage::GfxManager2D& manager);
 
@@ -52,9 +55,22 @@ int main()
   // The drawing module that simplifies rendering.
   Barrage::GfxDraw2D drawing;
   drawing.Initialize(manager, renderer);
+  // The factory module that lets the user create
+  // resources for the graphics modules from files.
+  Barrage::GfxFactory2D factory;
+  factory.Initialize(manager);
 
   // Create the assets needed to render a scene.
-  GfxManager2D::ShaderID shader = CreateSampleShader(manager);
+  // Attempt to create our shaders from files.
+  std::array<const char*, GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE> filepaths = {
+    "instanced.vs", "instanced.fs"
+  };
+  GfxManager2D::ShaderID shader = factory.CreateShader(filepaths.data());
+  if(shader == -1)
+  {
+    shader = CreateSampleShader(manager);
+  }
+  
   drawing.ApplyShader(shader);
   // Tell the drawing system to draw a couple of squares on the screen.
   constexpr int size = 2;
@@ -74,6 +90,7 @@ int main()
     renderer.SetViewportSpace(dimensions);
     renderer.RenderRequests();
     glfwSwapBuffers(windowing.GetInternalHandle());
+    glfwSwapInterval(1);
   }
   
   renderer.Shutdown();
