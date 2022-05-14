@@ -21,7 +21,6 @@
 #include "GfxRenderer2D.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include <algorithm>              // std::copy
-#include <dinput.h>
 #include <limits>                 // std::numeric_limits
 
 #include <Rendering/GLError.hpp>

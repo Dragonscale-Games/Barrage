@@ -32,7 +32,7 @@
 #ifdef _WIN32
 #define NO_IMPL() __debugbreak()
 #else
-#define NO_IMPL() std::raise(SIGBREAK)
+#define NO_IMPL() std::raise(SIGINT)
 #endif
 
 /****************************************************************************/

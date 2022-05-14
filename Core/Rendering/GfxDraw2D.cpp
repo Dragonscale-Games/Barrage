@@ -50,6 +50,10 @@ namespace Barrage
     const glm::vec2& position, const glm::vec2& scale, const RADIAN& rotation,
     const GfxManager2D::TextureID& texture)
   {
+    UNREFERENCED(position);
+    UNREFERENCED(scale);
+    UNREFERENCED(rotation);
+    UNREFERENCED(texture);
     assert(renderer_);
     NO_IMPL();
   }
@@ -83,6 +87,7 @@ namespace Barrage
 
   void GfxDraw2D::ApplyFramebuffer(const GfxManager2D::FramebufferID& framebuffer)
   {
+    UNREFERENCED(framebuffer);
     NO_IMPL();
   }
 

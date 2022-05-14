@@ -18,6 +18,7 @@
 #define SpawnFuncManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <vector>
 #include <unordered_map>
 
 namespace Barrage
