@@ -119,6 +119,17 @@ namespace Barrage
       */
       /***********************************************************************/
       void Invalidate();
+      /***********************************************************************/
+      /*!
+        \brief
+          Checks whether a resource is valid or not based on the
+          reference index.
+        \returns
+          - True if the resource is a valid one.
+          - False otherwise.
+      */
+      /***********************************************************************/
+      bool IsValid() const;
 
     private:
       /***********************************************************************/

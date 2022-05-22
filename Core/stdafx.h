@@ -34,6 +34,14 @@
 #else
 #define NO_IMPL() std::raise(SIGINT)
 #endif
+/****************************************************************************/
+/*!
+  \brief
+    Defines a macro to let users know when a function really shouldn't
+    be used anymore.
+*/
+/****************************************************************************/
+#define DEPRECATED() NO_IMPL()
 
 /****************************************************************************/
 /*!

@@ -31,7 +31,7 @@ namespace Barrage
     manager_ = &manager;
   }
 
-  GfxManager2D::ShaderID GfxFactory2D::CreateShader(const char* filepaths[GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE])
+  GfxManager2D::ShaderID GfxFactory2D::CreateShader(const char* const filepaths[GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE]) const
   {
     // Read the shader code from the files specified in the filepaths.
     // Store the strings read from the files in the array.

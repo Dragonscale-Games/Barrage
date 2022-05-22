@@ -109,6 +109,11 @@ namespace Barrage
 //#endif
   }
 
+  bool GfxManager2D::ResourceID::IsValid() const
+  {
+    return *internalResource_ != INVALID_RESOURCE;
+  }
+
   // ==========================================================================
   // GfxManager2D
   // ==========================================================================

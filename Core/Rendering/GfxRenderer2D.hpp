@@ -223,7 +223,7 @@ namespace Barrage
         The buffers to bind to this renderer.
     */
     /*************************************************************************/
-    void BindMeshBuffers(const GfxManager2D::BufferList& buffers);
+    static void BindMeshBuffers(const GfxManager2D::BufferList& buffers);
     
     enum InstancedBuffer //! The indices to the instanced buffers.
     {

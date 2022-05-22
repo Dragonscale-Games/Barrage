@@ -60,7 +60,7 @@ namespace Barrage
         - An invalid shader ID if an error occurred.
     */
     /*************************************************************************/
-    GfxManager2D::ShaderID CreateShader(const char* filepaths[GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE]);
+    GfxManager2D::ShaderID CreateShader(const char* const filepaths[GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE]) const;
     /*************************************************************************/
     /*!
       \brief

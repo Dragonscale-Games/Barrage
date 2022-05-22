@@ -62,11 +62,11 @@ int main()
 
   // Create the assets needed to render a scene.
   // Attempt to create our shaders from files.
-  std::array<const char*, GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE> filepaths = {
+  const std::array<const char*, GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE> filepaths = {
     "instanced.vs", "instanced.fs"
   };
   GfxManager2D::ShaderID shader = factory.CreateShader(filepaths.data());
-  if(shader == -1)
+  if(!shader.IsValid())
   {
     shader = CreateSampleShader(manager);
   }
@@ -94,7 +94,7 @@ int main()
   }
   
   renderer.Shutdown();
-  manager.CleanAllResources();
+  manager.Shutdown();
   windowing.Shutdown();
   return 0;
 }

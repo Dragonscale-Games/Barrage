@@ -20,8 +20,6 @@
 #include <stdafx.h>
 #include "GfxRenderer2D.hpp"
 #include <glm/gtc/type_ptr.hpp>
-#include <algorithm>              // std::copy
-#include <limits>                 // std::numeric_limits
 
 #include <Rendering/GLError.hpp>
 
@@ -138,7 +136,7 @@ namespace Barrage
       if (current_.shaderIndex_ != resource.shaderIndex_)
       {
         current_.shaderIndex_ = resource.shaderIndex_;
-        int shaderID = resourceShaders[current_.shaderIndex_];
+        int shaderID = static_cast<int>(resourceShaders[current_.shaderIndex_]);
         CHECK_GL( glUseProgram(shaderID) );
         // Set the uniform for the projection matrix.
         GLint projectionUniform = glGetUniformLocation(shaderID, "projection");
