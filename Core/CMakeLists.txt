@@ -34,11 +34,12 @@
 add_library(BarrageCore STATIC 
   "template.cxx"
   "stdafx.h"
-  "Random/Random.cpp"  "Random/Random.hpp" 
-  "Engine/Engine.cpp" "Engine/Engine.hpp"    
+  "Random/Random.cpp" "Random/Random.hpp"
+  "Engine/Engine.cpp" "Engine/Engine.hpp"
   "GameStates/GameStateManager.cpp" "GameStates/GameStateManager.hpp" 
   "GameStates/GameState.cpp" "GameStates/GameState.hpp" 
   "Utilities/Utilities.hpp" 
+  "Utilities/Mallocator.hpp"
   
   "TempRenderer/TestRenderer.cpp" "TempRenderer/TestRenderer.hpp" 
   "TempRenderer/TempShader/TestShader.cpp" "TempRenderer/TempShader/TestShader.hpp" 
@@ -102,5 +103,3 @@ add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
 target_include_directories(BarrageCore PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-message("RapidJSON Include Directory: " ${RAPIDJSON_INCLUDE_DIR})
-#target_link_directories(BarrageCore PUBLIC ${INCLUDE_INSTALL_DIR})

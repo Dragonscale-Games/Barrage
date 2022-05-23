@@ -21,7 +21,6 @@
 
 #include <Rendering/WindowManager.hpp>
 
-
 Barrage::GfxManager2D::ShaderID CreateSampleShader(Barrage::GfxManager2D& manager);
 
 /****************************************************************************/
@@ -33,7 +32,7 @@ Barrage::GfxManager2D::ShaderID CreateSampleShader(Barrage::GfxManager2D& manage
 int main()
 {
   using namespace Barrage;
-  
+
   // The windowing module.
   Barrage::WindowManager windowing;
   Barrage::WindowManager::WindowData initSettings = {};
