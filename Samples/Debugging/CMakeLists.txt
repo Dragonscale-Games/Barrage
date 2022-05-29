@@ -27,10 +27,8 @@
 # File:         CMakeLists.txt
 # Author:       David Wong Cascante
 # Email:        dragonscale.games.llc@gmail.com
-# Date:         4/28/2022
+# Date:         5/29/2022
 # =====================================================================================================================
 
-# Add the subdirectories for compiling a variety of sample projects.
-add_subdirectory(Graphics)
-add_subdirectory(Debugging)
-add_subdirectory(DemoGame)
+add_executable(DebuggingSample "main.cpp")
+target_link_libraries(DebuggingSample PRIVATE BarrageCore)

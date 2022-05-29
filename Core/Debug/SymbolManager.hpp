@@ -19,10 +19,14 @@
 //  ===========================================================================
 // INCLUDES
 //  ===========================================================================
+#include <string>
 #include <Utilities/Mallocator.hpp>
 
 namespace Barrage
 {
+  //! The type defintion for the mallocator string.
+  using MallocString = std::basic_string<char, std::char_traits<char>, Mallocator<char> >;
+
   //! The structure maintaining symbol information for a single memory address.
   struct SymbolInfo
   {
@@ -31,7 +35,7 @@ namespace Barrage
     //! The memory address with the related info.
     const void* address_;
     //! The line number the memory address comes from.
-    short line_;
+    unsigned long line_;
   };
   //! The class responsible for managing symbol information.
   class SymbolManager

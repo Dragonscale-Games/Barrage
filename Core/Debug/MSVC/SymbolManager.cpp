@@ -15,7 +15,7 @@
 // INCLUDES
 //  ===========================================================================
 #include <stdafx.h>
-#include "SymbolManager.hpp"
+#include <Debug/SymbolManager.hpp>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -25,7 +25,7 @@ namespace Barrage
 {
   SymbolManager::SymbolManager()
   {
-    SymSetOptions(SYMOPT_LOAD_LINES);
+    SymSetOptions(SYMOPT_UNDNAME | SYMOPT_DEFERRED_LOADS | SYMOPT_LOAD_LINES);
     HANDLE process = GetCurrentProcess();
     BOOL result = SymInitialize(process, NULL, true);
     if (!result)
@@ -45,14 +45,15 @@ namespace Barrage
     HANDLE process = GetCurrentProcess();
     IMAGEHLP_LINE64 winSymbols = {};
     DWORD displacement = 0;
+    DWORD64 lineAddress = reinterpret_cast<DWORD64>(address);
     
     winSymbols.SizeOfStruct = sizeof(winSymbols);
     
-    BOOL result = SymGetLineFromAddr64(process, address, &displacement, &winSymbols);
+    BOOL result = SymGetLineFromAddr64(process, lineAddress, &displacement, &winSymbols);
     if (result)
     {
       info.filepath_ = winSymbols.FileName;
-      info.address_ = winSymbols.Address;
+      info.address_ = reinterpret_cast<void*>(winSymbols.Address);
       info.line_ = winSymbols.LineNumber;
     }
     else
