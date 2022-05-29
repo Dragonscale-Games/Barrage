@@ -3,7 +3,7 @@
  *
  * \file            GfxTypes.cpp
  * \author          David Wong Cascante
- * \par             david.wongcascante\@digipen.edu
+ * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
  * Encompasses utility functions for graphics programs.

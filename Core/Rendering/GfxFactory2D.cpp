@@ -3,7 +3,7 @@
  *
  * \file            GfxFactory2D.cpp
  * \author          David Wong Cascante
- * \par             david.wongcascante\@digipen.edu
+ * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
  * Makes creating any of the resources easier and data driven.

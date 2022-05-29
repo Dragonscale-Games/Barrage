@@ -3,7 +3,7 @@
  *
  * \file            GfxManager2D.hpp
  * \author          David Wong Cascante
- * \par             david.wongcascante\@digipen.edu
+ * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
  * Defines the interface used to initialize all graphics.

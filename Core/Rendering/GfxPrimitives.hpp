@@ -3,7 +3,7 @@
  *
  * \file            GfxPrimitives.hpp
  * \author          David Wong Cascante
- * \par             david.wongcascante\@digipen.edu
+ * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
  * Defines a ton of useful functions for generate geometric primitives.

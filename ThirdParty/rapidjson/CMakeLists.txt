@@ -31,6 +31,5 @@
 # =====================================================================================================================
 
 file(GLOB_RECURSE RAPIDJSON_INCLUDES include "*.h")
-message("RapidJson Includes " ${RAPIDJSON_INCLUDES})
 add_library(rapidjson INTERFACE)
 target_include_directories(rapidjson INTERFACE "${CMAKE_SOURCE_DIR}/thirdparty/rapidjson/include/")

@@ -3,7 +3,7 @@
  *
  * \file            WindowManager.hpp
  * \author          David Wong Cascante
- * \par             david.wongcascante\@digipen.edu
+ * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
  * Defines the windowing system used by the engine.

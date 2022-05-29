@@ -30,6 +30,13 @@
 # Date:         1/8/2022
 # =====================================================================================================================
 
+# Sets the folder name for OS specific implementations.
+if(MSVC)
+  set(OS_IMPL_FOLDER "MSVC")
+else()
+  set(OS_IMPL_FOLDER "LINUX")
+endif()
+
 # Add the sources for the core library.
 add_library(BarrageCore STATIC 
   "template.cxx"
@@ -97,9 +104,17 @@ add_library(BarrageCore STATIC
   "Objects/Components/SharedComponents/RNG.hpp" 
   "Objects/SpawnFuncs/Direction/DirectionFuncs.hpp" "Objects/SpawnFuncs/Direction/DirectionFuncs.cpp"
   "Objects/SpawnFuncs/Position/PositionFuncs.hpp" "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
-  "Objects/Components/SharedComponents/BoundaryBox.hpp")
+  "Objects/Components/SharedComponents/BoundaryBox.hpp"
+  
+  "Debug/SymbolManager.hpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
+  "Debug/MemoryDebugger.hpp"
+  "Debug/AllocOverrides.hpp"
+)
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
+if(WIN32)
+  target_link_libraries(BarrageCore PUBLIC DbgHelp)
+endif()
 target_include_directories(BarrageCore PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

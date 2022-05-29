@@ -3,7 +3,7 @@
  *
  * \file            GfxDraw2D.hpp
  * \author          David Wong Cascante
- * \par             david.wongcascante\@digipen.edu
+ * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
  * Defines a simplified interface that manages the renderer.

@@ -1,9 +1,9 @@
 /* ======================================================================== */
 /*!
- * \file            GLError.h
+ * \file            GLError.hpp
  * \par             Barrage Engine
  * \author          David Wong Cascante
- * \par             david.wongcascante\@gmail.com
+ * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
  * All common code for checking OpenGL errors.
