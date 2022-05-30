@@ -76,7 +76,7 @@ namespace Barrage
   {
   public:
     
-    SymbolManager()
+    SymbolManager() : manager_(nullptr)
     {
       if (++referenceCount_ == 1)
       {
