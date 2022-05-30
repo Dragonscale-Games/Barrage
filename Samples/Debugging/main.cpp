@@ -20,10 +20,10 @@
 #include <iostream>
 #include <intrin.h>
 
-#ifndef MSVC
-#define RETURN_ADDRESS() __builtin_return_address(0)
-#else
+#ifdef _MSC_VER
 #define RETURN_ADDRESS() _ReturnAddress()
+#else
+#define RETURN_ADDRESS() __builtin_return_address(0)
 #endif
 
 /****************************************************************************/
