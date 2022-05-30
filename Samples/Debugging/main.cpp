@@ -20,6 +20,12 @@
 #include <iostream>
 #include <intrin.h>
 
+#ifndef MSVC
+#define RETURN_ADDRESS() __builtin_return_address(0)
+#else
+#define RETURN_ADDRESS() _ReturnAddress()
+#endif
+
 /****************************************************************************/
 /*!
   \brief
@@ -50,7 +56,7 @@ int main()
 
 void SymbolDemo()
 {
-  Barrage::SymbolInfo info = Barrage::symbolManager.GetSymbolInfo(_ReturnAddress());
+  Barrage::SymbolInfo info = Barrage::symbolManager.GetSymbolInfo(RETURN_ADDRESS());
   // Print out the symbol information for this function.
   std::cout << "Symbols for the return address in SymbolDemo: " << info.filepath_ << std::endl;
 }
