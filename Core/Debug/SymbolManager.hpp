@@ -38,23 +38,26 @@ namespace Barrage
     unsigned long line_;
   };
   //! The class responsible for managing symbol information.
-  class SymbolManager
+  class SymbolManagerImpl
   {
-  public:
+  private:
+    //! Forward declaration to the symbol manager that drives this implementation.
+    friend class SymbolManager;
+
     /*************************************************************************/
     /*!
       \brief
         Initializes the symbol loading library from the operating system.
     */
     /*************************************************************************/
-    SymbolManager();
+    SymbolManagerImpl();
     /*************************************************************************/
     /*!
       \brief
         Shuts down the symbol loading library.
     */
     /*************************************************************************/
-    ~SymbolManager();
+    ~SymbolManagerImpl();
     /*************************************************************************/
     /*!
       \brief
@@ -66,8 +69,46 @@ namespace Barrage
         A structure with the information of the memory address.
     */
     /*************************************************************************/
-    SymbolInfo GetSymbolInfo(const void* address);
- };
+    SymbolInfo GetSymbolInfo(const void* address) const;
+  };
+  //! The starter for the symbol manager.
+  class SymbolManager
+  {
+  public:
+    
+    SymbolManager()
+    {
+      if (++referenceCount_ == 1)
+      {
+        // Manually call the constructor for the symbol manager.
+        manager_ = static_cast<SymbolManagerImpl*>(malloc(sizeof(SymbolManagerImpl)));
+        new (&manager_) SymbolManagerImpl;
+      }
+    }
+
+    ~SymbolManager()
+    {
+      if (referenceCount_-- == 1)
+      {
+        // Manually release the resources called by the manager.
+        manager_->~SymbolManagerImpl();
+        free(manager_);
+        manager_ = nullptr;
+      }
+    }
+
+    SymbolInfo GetSymbolInfo(void* address) const
+    {
+      return (*manager_).GetSymbolInfo(address);
+    }
+
+  private:
+    // Create the memory necessary to store a manager but not actually create one.
+    SymbolManagerImpl* manager_;
+    static int referenceCount_;
+  };
+
+  static SymbolManager symbolManager;
 }
 
 #endif // SymbolManager_MODULE_H

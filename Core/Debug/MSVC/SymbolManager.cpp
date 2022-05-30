@@ -20,26 +20,33 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <DbgHelp.h>
+#include <intrin.h>
 
 namespace Barrage
 {
-  SymbolManager::SymbolManager()
+  int SymbolManager::referenceCount_ = 0;
+
+  SymbolManagerImpl::SymbolManagerImpl()
   {
-    SymSetOptions(SYMOPT_UNDNAME | SYMOPT_DEFERRED_LOADS | SYMOPT_LOAD_LINES);
+    SymSetOptions(SYMOPT_UNDNAME | SYMOPT_DEFERRED_LOADS);
     HANDLE process = GetCurrentProcess();
-    BOOL result = SymInitialize(process, NULL, true);
+    BOOL result = SymInitialize(process, NULL, TRUE);
     if (!result)
     {
+      // Get the error for the symbol manager.
+      DWORD error = GetLastError();
+      std::cout << "Failed to initialize symbol loading in Windows (error code: "
+        << error << ")" << std::endl;
       // Failed to load symbols on this process.
-      DebugBreak();
+      __debugbreak();
     }
   }
 
-  SymbolManager::~SymbolManager()
+  SymbolManagerImpl::~SymbolManagerImpl()
   {
   }
 
-  SymbolInfo SymbolManager::GetSymbolInfo(const void* address)
+  SymbolInfo SymbolManagerImpl::GetSymbolInfo(const void* address) const
   {
     SymbolInfo info = {};
     HANDLE process = GetCurrentProcess();
@@ -49,6 +56,7 @@ namespace Barrage
     
     winSymbols.SizeOfStruct = sizeof(winSymbols);
     
+    SymSetOptions(SYMOPT_LOAD_LINES);
     BOOL result = SymGetLineFromAddr64(process, lineAddress, &displacement, &winSymbols);
     if (result)
     {
@@ -59,10 +67,9 @@ namespace Barrage
     else
     {
       // We passed a memory address not within our code base.
-      DebugBreak();
+      __debugbreak();
     }
 
     return info;
   }
 }
-

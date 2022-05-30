@@ -15,7 +15,7 @@
 // INCLUDES
 //  ===========================================================================
 #include <stdafx.h>
-#include "SymbolManager.hpp"
+#include <Debug/SymbolManager.hpp>
 
 namespace Barrage
 {

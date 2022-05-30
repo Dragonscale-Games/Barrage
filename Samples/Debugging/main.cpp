@@ -28,7 +28,6 @@
 int main()
 {
   using namespace Barrage;
-  SymbolManager symbolManager;
   SymbolInfo info = symbolManager.GetSymbolInfo(_ReturnAddress());
   // Print out the symbol information for this function.
   std::cout << "Symbol line: " << info.filepath_ << std::endl;
