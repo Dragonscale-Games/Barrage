@@ -22,6 +22,7 @@
 // INCLUDES
 //  ===========================================================================
 #include <Debug/MemoryDebugger.hpp>
+#include <cstdlib>
 #include <array>
 
 namespace
@@ -64,7 +65,7 @@ namespace Barrage
     };
     assert(statList.size() == availableStats.size());
     // Create the file to dump our statistics.
-    FILE* statFile = fopen(filepath, "wt");
+    FILE* statFile = OpenDumpFile(filepath);
     if (statFile)
     {
       size_t length = statList.size();
@@ -78,7 +79,7 @@ namespace Barrage
           DumpList(statFile, *statList[i], labels[i]);
         }
       }
-      fclose(statFile);
+      CloseDumpFile(statFile);
     }
     else
     {
@@ -86,24 +87,20 @@ namespace Barrage
     }
   }
 
-  void MemoryDebuggerImpl::DumpStatHeader(FILE* file)
+  void MemoryDebuggerImpl::CloseDumpFile(FILE* const statFile)
   {
-    assert(file);
-    fprintf(file, "Status, Allocation Size, Memory Address, File\n");
+    assert(statFile);
+    fclose(statFile);
   }
 
-  void MemoryDebuggerImpl::DumpList(FILE* file, const AllocList& list, const char* entryLabel)
+  void MemoryDebuggerImpl::DumpList(FILE* statFile, const AllocList& list, const char* entryLabel)
   {
-    assert(file);
+    assert(statFile);
     assert(entryLabel);
     for (auto iter = list.cbegin(); iter != list.cend(); ++iter)
     {
       const Allocation& allocation = *iter;
-      fprintf(file, "%s, %ul, %p, %s",
-        entryLabel,
-        allocation.allocSize_,
-        allocation.allocation_,
-        allocation.file_.c_str());
+      DumpAllocation(statFile, allocation, entryLabel);
     }
   }
 }

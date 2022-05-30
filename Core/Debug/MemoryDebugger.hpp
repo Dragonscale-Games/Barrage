@@ -115,17 +115,38 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
-        Dumps the header of the csv file.
-      \param file
-        The header of the statistics file.
+        Creates a stat dump file using the filepath.
+      \param filepath
+        The path to dump the file in.
+      \returns
+        A handle to a file if the function successful, otherwise
+        it returns a pointer to null.
     */
     /*************************************************************************/
-    static void DumpStatHeader(FILE* file);
+    static FILE* OpenDumpFile(const char* filepath);
     /*************************************************************************/
     /*!
       \brief
-        Dumps the allocation list to a csv file.
-      \param file
+        Closes the statistics file.
+      \param statFile
+        The handle to the file to close.
+    */
+    /*************************************************************************/
+    static void CloseDumpFile(FILE* const statFile);
+    /*************************************************************************/
+    /*!
+      \brief
+        Dumps the header of the csv file.
+      \param statFile
+        The header of the statistics file.
+    */
+    /*************************************************************************/
+    static void DumpStatHeader(FILE* statFile);
+    /*************************************************************************/
+    /*!
+      \brief
+        Dumps the allocation list to a statistics file.
+      \param statFile
         A pointer to the file opened to write the list.
       \param list
         The list to dump.
@@ -133,7 +154,20 @@ namespace Barrage
         The status label for every entry on this list.
     */
     /*************************************************************************/
-    static void DumpList(FILE* file, const AllocList& list, const char* entryLabel);
+    static void DumpList(FILE* statFile, const AllocList& list, const char* entryLabel);
+    /*************************************************************************/
+    /*!
+      \brief
+        Dumps an allocation to a statistics file.
+      \param statFile
+        A pointer to the file opened to write the allocation in.
+      \param allocation
+        The allocation to write to the file.
+      \param entryLabel
+        The label for the allocationo entry being written.
+    */
+    /*************************************************************************/
+    static void DumpAllocation(FILE* statFile, const Allocation& allocation, const char* entryLabel);
   };
 }
 
