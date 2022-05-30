@@ -19,17 +19,19 @@
 
 namespace Barrage
 {
-  SymbolManager::SymbolManager()
+  SymbolManagerImpl::SymbolManagerImpl()
   {
   }
 
-  SymbolManager::~SymbolManager()
+  SymbolManagerImpl::~SymbolManagerImpl()
   {
   }
 
-  SymbolInfo SymbolManager::GetSymbolInfo(const void* address)
+  SymbolInfo SymbolManagerImpl::GetSymbolInfo(const void* address) const
   {
     UNREFERENCED(address);
+    SymbolInfo info = {};
+    return info;
   }
 }
 

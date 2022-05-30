@@ -16,13 +16,13 @@
 template <typename T>
 T* Mallocator<T>::address(T& r) const
 {
-  return &r
+  return &r;
 }
 
 template <typename T>
 const T* Mallocator<T>::address(const T& s) const
 {
-  return &s
+  return &s;
 }
 
 template <typename T>
