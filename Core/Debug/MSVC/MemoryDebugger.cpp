@@ -42,7 +42,7 @@ namespace Barrage
   {
     assert(statFile);
     assert(entryLabel);
-    fprintf_s(statFile, "%s, %ul, %p, %s",
+    fprintf_s(statFile, "%s, %lu, %p, %s",
       entryLabel,
       allocation.allocSize_,
       allocation.allocation_,

@@ -36,7 +36,7 @@ namespace Barrage
   {
     assert(statFile);
     assert(entryLabel);
-    fprintf(statFile, "%s, %ul, %p, %s",
+    fprintf(statFile, "%s, %lu, %p, %s",
       entryLabel,
       allocation.allocSize_,
       allocation.allocation_,
