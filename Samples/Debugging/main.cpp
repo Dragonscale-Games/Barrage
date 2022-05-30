@@ -16,9 +16,24 @@
 #ifdef _WIN32
 
 #include <Debug/SymbolManager.hpp>
+#include <Debug/MemoryDebugger.hpp>
 #include <iostream>
 #include <intrin.h>
 
+/****************************************************************************/
+/*!
+  \brief
+    Runs a demo for using the symbol manager.
+*/
+/****************************************************************************/
+void SymbolDemo();
+/****************************************************************************/
+/*!
+  \brief
+    Runs a demo for using the memory debugger.
+*/
+/****************************************************************************/
+void MemoryDemo();
 /****************************************************************************/
 /*!
   \brief
@@ -27,12 +42,26 @@
 /****************************************************************************/
 int main()
 {
-  using namespace Barrage;
-  SymbolInfo info = symbolManager.GetSymbolInfo(_ReturnAddress());
-  // Print out the symbol information for this function.
-  std::cout << "Symbol line: " << info.filepath_ << std::endl;
+  SymbolDemo();
+  MemoryDemo();
   __debugbreak();
   return 0;
+}
+
+void SymbolDemo()
+{
+  Barrage::SymbolInfo info = Barrage::symbolManager.GetSymbolInfo(_ReturnAddress());
+  // Print out the symbol information for this function.
+  std::cout << "Symbols for the return address in SymbolDemo: " << info.filepath_ << std::endl;
+}
+
+void MemoryDemo()
+{
+  Barrage::MemoryDebuggerImpl memoryDebugger;
+  void* address = memoryDebugger.Allocate(Barrage::AllocType::SINGLE, 40u);
+  memoryDebugger.DumpMemoryStats("memory_stats.csv");
+  memoryDebugger.Release(address);
+  memoryDebugger.DumpMemoryStats("memory_stats.csv");
 }
 
 #else

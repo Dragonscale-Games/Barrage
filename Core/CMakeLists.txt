@@ -107,9 +107,9 @@ add_library(BarrageCore STATIC
   "Objects/Components/SharedComponents/BoundaryBox.hpp"
   
   "Debug/SymbolManager.hpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
-  "Debug/MemoryDebugger.hpp"
+  "Debug/MemoryDebugger.hpp" "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
   "Debug/AllocOverrides.hpp"
-)
+ )
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

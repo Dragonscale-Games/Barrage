@@ -7,6 +7,10 @@
 
  * \brief
  * A debugging class to help catch memory problems.
+ * Features of this class include:
+ * - Throwing exceptions when users use deleted memory.
+ * - Tracks allocated and release memory.
+ * - Tracks errors created when deleting memory.
  * 
  */
  /* ========================================================================= */
@@ -21,10 +25,20 @@
 //  ===========================================================================
 #include <stddef.h>
 #include <list>
-#include "Utilities/Mallocator.hpp"
+#include <Debug/SymbolManager.hpp>
+#include <Utilities/Mallocator.hpp>
 
 namespace Barrage
 {
+  //! The enumeration for the statistics tracked by the memory debugger.
+  enum class MemStat : uint8_t
+  {
+    CURRENTLY_ALLOCATED = 0x01,
+    CURRENTLY_DELETED = 0x02,
+    DOUBLE_DELETES = 0x04,
+    MISMATCHED_DELETES = 0x08,
+    ALL = 0xFF
+  };
   //! The enumeration for the kinds of allocations possible to track.
   enum class AllocType
   {
@@ -34,10 +48,10 @@ namespace Barrage
   //! The structure to encapsulate the metadata of each allocation.
   struct Allocation
   {
-    //! The size of the allocation made.
-    size_t allocSize_;
     //! The type of allocation made.
     AllocType type_;
+    //! The size of the allocation made.
+    size_t allocSize_;
     //! The pointer to the page made for this allocation.
     void* page_;
     //! The pointer to the allocation.
@@ -46,37 +60,25 @@ namespace Barrage
     MallocString file_;
   };
   //! The type defintion for an allocation list.
-  using AllocList = std::list<Mallocator<Allocation> >;
+  using AllocList = std::list<Allocation, Mallocator<Allocation> >;
+
   //! The class in charge of keep track of memory allocations.
-  class MemoryDebugger
+  class MemoryDebuggerImpl
   {
   public:
-    /*************************************************************************/
-    /*!
-      \brief
-        Creates an instance of the memory debugger.
-    */
-    /*************************************************************************/
-    MemoryDebugger();
-    /*************************************************************************/
-    /*!
-      \brief
-        Destroys the memory debugger and dumps the every wrong memory 
-        operation into a csv file.
-    */
-    /*************************************************************************/
-    ~MemoryDebugger();
-
+    
     /*************************************************************************/
     /*!
       \brief
         Allocates a page and returns a memory address n bytes away from
         a page boundary.
+      \param type
+        The type of memory allocation being made.
       \param n
         The distance away from the memory boundary in bytes.
     */
     /*************************************************************************/
-    void* Allocate(ptrdiff_t n);
+    void* Allocate(AllocType type, ptrdiff_t n);
     /*************************************************************************/
     /*!
       \brief
@@ -86,7 +88,7 @@ namespace Barrage
         The memory address to free.
     */
     /*************************************************************************/
-    void Free(void* address);
+    void Release(void* address);
 
     /*************************************************************************/
     /*!
@@ -94,18 +96,11 @@ namespace Barrage
         Dumps all mismatched memory deletes.
       \param filepath
         The filepath to dump the csv file.
+      \param flags
+        Flags for the function denoting which statistics to dump.
     */
     /*************************************************************************/
-    void DumpMismatchedDeletes(const char* filepath);
-    /*************************************************************************/
-    /*!
-      \brief
-        Dumps all double memory deletes.
-      \param filepath
-        The filepath to dump the csv file.
-    */
-    /*************************************************************************/
-    void DumpDoubleDeletes(const char* filepath);
+    void DumpMemoryStats(const char* filepath, MemStat flags = MemStat::ALL);
 
   private:
     //! The list keeping track of currently allocated objects.
@@ -120,14 +115,25 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
-        Dumps the allocation list to a csv file.
-      \param list
-        The list to dump.
-      \param filepath
-        The path given to dump the csv file.
+        Dumps the header of the csv file.
+      \param file
+        The header of the statistics file.
     */
     /*************************************************************************/
-    static void DumpList(const AllocList& list, const char* filepath);
+    static void DumpStatHeader(FILE* file);
+    /*************************************************************************/
+    /*!
+      \brief
+        Dumps the allocation list to a csv file.
+      \param file
+        A pointer to the file opened to write the list.
+      \param list
+        The list to dump.
+      \param entryLabel
+        The status label for every entry on this list.
+    */
+    /*************************************************************************/
+    static void DumpList(FILE* file, const AllocList& list, const char* entryLabel);
   };
 }
 
