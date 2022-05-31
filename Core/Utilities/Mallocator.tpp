@@ -40,6 +40,7 @@ bool Mallocator<T>::operator!=(const Mallocator& other) const
 template <typename T>
 bool Mallocator<T>::operator==(const Mallocator& other) const
 {
+  (void)other;
   return true;
 }
 
