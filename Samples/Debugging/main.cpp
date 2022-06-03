@@ -17,6 +17,10 @@
 
 #include <Debug/SymbolManager.hpp>
 #include <Debug/MemoryDebugger.hpp>
+/*****************************************************************************/
+/* The overrides for the new and delete operators offered by C++ */
+/*****************************************************************************/
+#include <Debug/MemoryOverrides.hpp>
 #include <iostream>
 #include <intrin.h>
 
@@ -65,8 +69,12 @@ void MemoryDemo()
 {
   Barrage::MemoryDebuggerImpl memoryDebugger;
   void* address = memoryDebugger.Allocate(Barrage::AllocType::SINGLE, 40u);
+  void* allocated = new int[4];
+  UNREFERENCED(allocated);
+  // and whoops there goes some memory...
   memoryDebugger.DumpMemoryStats("memory_stats.csv");
   memoryDebugger.Release(address);
+  // ... hopefully this will get tracked c:
   memoryDebugger.DumpMemoryStats("memory_stats.csv");
 }
 

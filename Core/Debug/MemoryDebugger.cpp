@@ -22,6 +22,8 @@
 // INCLUDES
 //  ===========================================================================
 #include <Debug/MemoryDebugger.hpp>
+
+#include <fstream>
 #include <cstdlib>
 #include <array>
 
@@ -29,12 +31,12 @@ namespace
 {
   constexpr int databaseLength = 4;
   template <typename T>
-  using Database = std::array<T, databaseLength>;
+  using Database = std::array<T, databaseLength >;
 }
 
 namespace Barrage
 {
-  void* MemoryDebuggerImpl::Allocate(AllocType type, ptrdiff_t n)
+  void* MemoryDebuggerImpl::Allocate(AllocType type, ptrdiff_t n) noexcept(false)
   {
     UNREFERENCED(type);
     UNREFERENCED(n);
@@ -65,7 +67,8 @@ namespace Barrage
     };
     assert(statList.size() == availableStats.size());
     // Create the file to dump our statistics.
-    FILE* statFile = OpenDumpFile(filepath);
+    std::ofstream statFile;
+    statFile.open(filepath);
     if (statFile)
     {
       size_t length = statList.size();
@@ -79,21 +82,15 @@ namespace Barrage
           DumpList(statFile, *statList[i], labels[i]);
         }
       }
-      CloseDumpFile(statFile);
     }
     else
     {
       std::cout << "Failed to create the statistics file." << std::endl;
     }
+    statFile.close();
   }
 
-  void MemoryDebuggerImpl::CloseDumpFile(FILE* const statFile)
-  {
-    assert(statFile);
-    fclose(statFile);
-  }
-
-  void MemoryDebuggerImpl::DumpList(FILE* statFile, const AllocList& list, const char* entryLabel)
+  void MemoryDebuggerImpl::DumpList(std::ofstream& statFile, const AllocList& list, const char* entryLabel)
   {
     assert(statFile);
     assert(entryLabel);
@@ -102,6 +99,21 @@ namespace Barrage
       const Allocation& allocation = *iter;
       DumpAllocation(statFile, allocation, entryLabel);
     }
+  }
+
+  void MemoryDebuggerImpl::DumpStatHeader(std::ofstream& statFile)
+  {
+    assert(statFile);
+    statFile << "Status, Allocation Size, Memory Address, File" << std::endl;
+  }
+
+  void MemoryDebuggerImpl::DumpAllocation(
+    std::ofstream& statFile, const Allocation& allocation, const char* entryLabel)
+  {
+    statFile << entryLabel << ", ";
+    statFile << allocation.allocSize_ << ", ";
+    statFile << allocation.allocation_ << ", ";
+    statFile << allocation.file_.c_str() << ", ";
   }
 }
 

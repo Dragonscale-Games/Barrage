@@ -19,34 +19,18 @@
 
 namespace Barrage
 {
-  FILE* MemoryDebuggerImpl::OpenDumpFile(const char* filepath)
+  Allocation MemoryDebuggerImpl::Commision(size_t size)
   {
-    FILE* statFile = NULL;
-    errno_t error = fopen_s(&statFile, filepath, "wt");
-    // Not sure if this is necessary, but just in case...
-    if (error != 0)
-    {
-      statFile = NULL;
-    }
-    return statFile;
+    UNREFERENCED(size);
+    Allocation allocation = {};
+    allocation.allocation_ = nullptr;
+    return allocation;
   }
-
-  void MemoryDebuggerImpl::DumpStatHeader(FILE* statFile)
+  
+  bool MemoryDebuggerImpl::Decommision(Allocation allocation)
   {
-    assert(statFile);
-    fprintf_s(statFile, "Status, Allocation Size, Memory Address, File\n");
-  }
-
-  void MemoryDebuggerImpl::DumpAllocation(
-    FILE* statFile, const Allocation& allocation, const char* entryLabel)
-  {
-    assert(statFile);
-    assert(entryLabel);
-    fprintf_s(statFile, "%s, %lu, %p, %s",
-      entryLabel,
-      allocation.allocSize_,
-      allocation.allocation_,
-      allocation.file_.c_str());
+    UNREFERENCED(allocation);
+    return false;
   }
 }
 

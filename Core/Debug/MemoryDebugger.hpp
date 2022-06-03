@@ -66,7 +66,7 @@ namespace Barrage
   class MemoryDebuggerImpl
   {
   public:
-    
+
     /*************************************************************************/
     /*!
       \brief
@@ -76,9 +76,12 @@ namespace Barrage
         The type of memory allocation being made.
       \param n
         The distance away from the memory boundary in bytes.
+      \throws std::bad_alloc
+        Whenever the user allocates for a size the operating system
+        cannot not offer.
     */
     /*************************************************************************/
-    void* Allocate(AllocType type, ptrdiff_t n);
+    void* Allocate(AllocType type, ptrdiff_t n) noexcept(false);
     /*************************************************************************/
     /*!
       \brief
@@ -115,33 +118,12 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
-        Creates a stat dump file using the filepath.
-      \param filepath
-        The path to dump the file in.
-      \returns
-        A handle to a file if the function successful, otherwise
-        it returns a pointer to null.
-    */
-    /*************************************************************************/
-    static FILE* OpenDumpFile(const char* filepath);
-    /*************************************************************************/
-    /*!
-      \brief
-        Closes the statistics file.
-      \param statFile
-        The handle to the file to close.
-    */
-    /*************************************************************************/
-    static void CloseDumpFile(FILE* const statFile);
-    /*************************************************************************/
-    /*!
-      \brief
         Dumps the header of the csv file.
       \param statFile
         The header of the statistics file.
     */
     /*************************************************************************/
-    static void DumpStatHeader(FILE* statFile);
+    static void DumpStatHeader(std::ofstream& statFile);
     /*************************************************************************/
     /*!
       \brief
@@ -154,7 +136,7 @@ namespace Barrage
         The status label for every entry on this list.
     */
     /*************************************************************************/
-    static void DumpList(FILE* statFile, const AllocList& list, const char* entryLabel);
+    static void DumpList(std::ofstream& statFile, const AllocList& list, const char* entryLabel);
     /*************************************************************************/
     /*!
       \brief
@@ -167,8 +149,38 @@ namespace Barrage
         The label for the allocationo entry being written.
     */
     /*************************************************************************/
-    static void DumpAllocation(FILE* statFile, const Allocation& allocation, const char* entryLabel);
+    static void DumpAllocation(std::ofstream& statFile, const Allocation& allocation, const char* entryLabel);
+
+    /*************************************************************************/
+    /*!
+      \brief
+        Creates an allocation using a memory page.
+        Commiting from a page helps combat invalid reads and writes but
+        also allocates a multiple of a page's size (typically 4 kilobytes) no
+        matter the allocation size.
+      \param size
+        The size of the allocation made.
+      \returns
+        A structure containing the allocation. On a failure, the allocation
+        field on the structure will be a null pointer.
+    */
+    /*************************************************************************/
+    static Allocation Commision(size_t size);
+    /*************************************************************************/
+    /*!
+      \brief
+        Decommisions an allocation and its associated page.
+      \param allocation
+        The allocation to decommision.
+      \returns
+        True if successful, false if errors were created in the attempt.
+    */
+    /*************************************************************************/
+    static bool Decommision(Allocation allocation);
   };
 }
+
+//! The single instance of the memory debugger.
+Barrage::MemoryDebuggerImpl memoryDebugger;
 
 #endif
