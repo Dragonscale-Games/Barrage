@@ -68,7 +68,15 @@ namespace Barrage
   class MemoryDebuggerImpl
   {
   public:
+    static const size_t FourK = 4096u;
 
+    /*************************************************************************/
+    /*!
+      \brief
+        Releases all pages allocated throughout tracking.
+    */
+    /*************************************************************************/
+    ~MemoryDebuggerImpl();
     /*************************************************************************/
     /*!
       \brief
@@ -213,6 +221,19 @@ namespace Barrage
     */
     /*************************************************************************/
     AllocList::const_iterator FindAddressIn(const AllocList& list, const void* address);
+    /*************************************************************************/
+    /*!
+      \brief
+        Calculates the number of pages to house a given allocation size.
+        Passing in a size of zero is invalid to calculate the page 
+        count.
+      \param size
+        The size of the allocation.
+      \returns
+        The number of pages to allocate.
+    */
+    /*************************************************************************/
+    size_t CalculatePageCount(size_t size);
   };
 }
 

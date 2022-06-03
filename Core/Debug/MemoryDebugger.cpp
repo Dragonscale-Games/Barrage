@@ -35,6 +35,15 @@ namespace
 
 namespace Barrage
 {
+  MemoryDebuggerImpl::~MemoryDebuggerImpl()
+  {
+    // Finally, release all of our allocated pages.
+    for (const Allocation& allocation : deleted_)
+    {
+      ReleasePage(allocation);
+    }
+  }
+
   void* MemoryDebuggerImpl::Allocate(AllocType type, size_t n) noexcept(false)
   {
     Allocation allocation = {};
@@ -176,6 +185,11 @@ namespace Barrage
     // Find the allocation address within our list.
     auto iter = std::find_if(list.cbegin(), list.cend(), findOnAddressMatch);
     return iter;
+  }
+
+  size_t MemoryDebuggerImpl::CalculatePageCount(size_t size)
+  {
+    return size / FourK + 1u * ((size % FourK) != 0);
   }
 }
 
