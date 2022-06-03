@@ -25,15 +25,23 @@
 /****************************************************************************/
 /*!
   \brief
+    Breaks execution of the program, useful for debugging.
+*/
+/****************************************************************************/
+#ifdef _WIN32
+#define BREAKPOINT() __debugbreak()
+#else
+#define BREAKPOINT() std::raise(SIGINT)
+#endif
+/****************************************************************************/
+/*!
+  \brief
     Defines a macro to let users know when a function is not ready
     to be used yet.
 */
 /****************************************************************************/
-#ifdef _WIN32
-#define NO_IMPL() __debugbreak()
-#else
-#define NO_IMPL() std::raise(SIGINT)
-#endif
+#define NO_IMPL() BREAKPOINT()
+
 /****************************************************************************/
 /*!
   \brief

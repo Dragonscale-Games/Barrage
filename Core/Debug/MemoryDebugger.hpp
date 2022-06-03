@@ -37,7 +37,9 @@ namespace Barrage
     CURRENTLY_DELETED = 0x02,
     DOUBLE_DELETES = 0x04,
     MISMATCHED_DELETES = 0x08,
-    ALL = 0xFF
+    UNALLOCATED_DELETES = 0x10,
+    ALL = 0xFF,
+    COUNT = 5,
   };
   //! The enumeration for the kinds of allocations possible to track.
   enum class AllocType
@@ -81,17 +83,19 @@ namespace Barrage
         cannot not offer.
     */
     /*************************************************************************/
-    void* Allocate(AllocType type, ptrdiff_t n) noexcept(false);
+    void* Allocate(AllocType type, size_t n) noexcept(false);
     /*************************************************************************/
     /*!
       \brief
         Frees the memory address specified and uncommiting the page
         associated with it.
+      \param type
+        The type of memory allocation being released.
       \param address
         The memory address to free.
     */
     /*************************************************************************/
-    void Release(void* address);
+    void Release(AllocType type, const void* address);
 
     /*************************************************************************/
     /*!
@@ -114,6 +118,8 @@ namespace Barrage
     AllocList doubleDeleted_;
     //! The list keeping track of all mismatched deletes.
     AllocList mismatched_;
+    //! The list maintaining unallocated deletes.
+    AllocList unallocDeleted_;
 
     /*************************************************************************/
     /*!
@@ -165,22 +171,53 @@ namespace Barrage
         field on the structure will be a null pointer.
     */
     /*************************************************************************/
-    static Allocation Commision(size_t size);
+    static Allocation AllocatePage(size_t size);
     /*************************************************************************/
     /*!
       \brief
-        Decommisions an allocation and its associated page.
+        Decommisions an allocation and its associated page. If the user
+        attempts to access this allocation again, they will get a 
+        hardware exception.
       \param allocation
         The allocation to decommision.
       \returns
         True if successful, false if errors were created in the attempt.
     */
     /*************************************************************************/
-    static bool Decommision(Allocation allocation);
+    static bool DecommisionPage(const Allocation& allocation);
+    /*************************************************************************/
+    /*!
+      \brief
+        Releases the page back to the operating system. Once this happens
+        there is no safety nets for the user if they access the memory
+        again.
+      \param allocation
+        The allocation used to access the page.
+      \returns
+        True if successful, otherwise there were errors.
+    */
+    /*************************************************************************/
+    static bool ReleasePage(const Allocation& allocation);
+    /*************************************************************************/
+    /*!
+      \brief
+        Finds whether an allocation address is already in a list.
+      \param list
+        The list to check for the address.
+      \param address
+        The address to check in the list.
+      \returns
+        A constant iterator which returns the position in the list
+        if the address is found.
+        Otherwise, it returns one element past the end of the list.
+    */
+    /*************************************************************************/
+    AllocList::const_iterator FindAddressIn(const AllocList& list, const void* address);
   };
 }
 
 //! The single instance of the memory debugger.
-Barrage::MemoryDebuggerImpl memoryDebugger;
-
-#endif
+static Barrage::MemoryDebuggerImpl memoryDebugger;
+////////////////////////////////////////////////////////////////////////////////
+#endif // MemoryDebugger_MODULE_H
+////////////////////////////////////////////////////////////////////////////////

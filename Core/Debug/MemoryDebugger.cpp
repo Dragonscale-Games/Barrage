@@ -29,30 +29,80 @@
 
 namespace
 {
-  constexpr int databaseLength = 4;
   template <typename T>
-  using Database = std::array<T, databaseLength >;
+  using Database = std::array<T, (uint8_t)Barrage::MemStat::COUNT >;
 }
 
 namespace Barrage
 {
-  void* MemoryDebuggerImpl::Allocate(AllocType type, ptrdiff_t n) noexcept(false)
+  void* MemoryDebuggerImpl::Allocate(AllocType type, size_t n) noexcept(false)
   {
-    UNREFERENCED(type);
-    UNREFERENCED(n);
-    return nullptr;
+    Allocation allocation = {};
+    allocation = AllocatePage(n);
+    // Check if we successfully made an allocation.
+    if (!allocation.allocation_)
+    {
+      throw std::bad_alloc();
+    }
+    // Upon success, we add our allocation to a list and return the allocation.
+    allocated_.push_back(allocation);
+    return allocation.allocation_;
   }
 
-  void MemoryDebuggerImpl::Release(void* address)
+  void MemoryDebuggerImpl::Release(AllocType type, const void* address)
   {
-    UNREFERENCED(address);
+    // Find the allocation address within our list.
+    auto iter = FindAddressIn(allocated_, address);
+    if (iter != allocated_.cend())
+    {
+      // We first check whether we actually have deleted this address before.
+      iter = FindAddressIn(deleted_, address);
+      if (iter != deleted_.cend())
+      {
+        // At this point we know the user attempted to delete a previously deleted address.
+        doubleDeleted_.push_back(*iter);
+        BREAKPOINT();
+      }
+      else
+      {
+        // Otherwise, we decommision page storing it and keep track of our allocation.
+        DecommisionPage(*iter);
+        deleted_.push_back(*iter);
+        // Check if we have a mismatch delete on our hands.
+        if (iter->type_ != type)
+        {
+          mismatched_.push_back(*iter);
+          BREAKPOINT();
+        }
+      }
+    }
+    else
+    {
+      // Otherwise, we attempted to delete something that wasn't allocated.
+      // The result could be...
+      // A double delete..?
+      iter = FindAddressIn(deleted_, address);
+      if (iter != deleted_.cend())
+      {
+        // Log our double delete.
+        doubleDeleted_.push_back(*iter);
+        BREAKPOINT();
+      }
+      // Or we attempted to delete something we didn't even allocate.
+      else
+      {
+        // Log our mysterious delete.
+        unallocDeleted_.push_back(*iter);
+        BREAKPOINT();
+      }
+    }
   }
   
   void MemoryDebuggerImpl::DumpMemoryStats(const char* filepath, MemStat flags)
   {
     // A table with the lists associated with each statistic.
     const Database<AllocList*> statList = {
-      &allocated_, &deleted_, &doubleDeleted_, &mismatched_,
+      &allocated_, &deleted_, &doubleDeleted_, &mismatched_, &unallocDeleted_,
     };
     // A table containing all possible stats.
     const Database<MemStat> availableStats = {
@@ -60,10 +110,11 @@ namespace Barrage
       MemStat::CURRENTLY_DELETED,
       MemStat::DOUBLE_DELETES,
       MemStat::MISMATCHED_DELETES,
+      MemStat::UNALLOCATED_DELETES,
     };
     // A table containing all the labels for the stats.
     const Database<const char* const> labels = {
-      "Allocate", "Delete", "Double Delete", "Mismatched Delete"
+      "Allocate", "Delete", "Double Delete", "Mismatched Delete", "Unallocated Delete"
     };
     assert(statList.size() == availableStats.size());
     // Create the file to dump our statistics.
@@ -114,6 +165,17 @@ namespace Barrage
     statFile << allocation.allocSize_ << ", ";
     statFile << allocation.allocation_ << ", ";
     statFile << allocation.file_.c_str() << ", ";
+  }
+
+  AllocList::const_iterator MemoryDebuggerImpl::FindAddressIn(const AllocList& list, const void* address)
+  {
+    const auto findOnAddressMatch = [&address](const Allocation& allocation)
+    {
+      return allocation.allocation_ == address;
+    };
+    // Find the allocation address within our list.
+    auto iter = std::find_if(list.cbegin(), list.cend(), findOnAddressMatch);
+    return iter;
   }
 }
 

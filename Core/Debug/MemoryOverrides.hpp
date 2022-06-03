@@ -25,74 +25,63 @@
 
 void* operator new(std::size_t count)
 {
-  NO_IMPL();
-  UNREFERENCED(count);
-  return malloc(count);
+  return memoryDebugger.Allocate(Barrage::AllocType::SINGLE, count);
 }
 
 void* operator new[](std::size_t count)
 {
-  NO_IMPL();
-  UNREFERENCED(count);
-  return malloc(count);
+  return memoryDebugger.Allocate(Barrage::AllocType::ARRAY, count);
 }
 
 void* operator new(std::size_t count, const std::nothrow_t&) noexcept
 {
-  NO_IMPL();
-  UNREFERENCED(count);
-  return malloc(count);
+  return memoryDebugger.Allocate(Barrage::AllocType::SINGLE, count);
 }
 
 void* operator new[](std::size_t count, const std::nothrow_t&) noexcept
 {
-  NO_IMPL();
-  UNREFERENCED(count);
-  return malloc(count);
+  void* allocation = nullptr;
+  try
+  {
+    allocation = memoryDebugger.Allocate(Barrage::AllocType::ARRAY, count);
+  }
+  catch (std::bad_alloc&)
+  {
+  }
+
+  return allocation;
 }
 
 void operator delete(void* ptr)
 {
-  NO_IMPL();
-  UNREFERENCED(ptr);
-  free(ptr);
+  memoryDebugger.Release(Barrage::AllocType::SINGLE, ptr);
 }
 
 void operator delete[](void* ptr)
 {
-  NO_IMPL();
-  UNREFERENCED(ptr);
-  free(ptr);
+  memoryDebugger.Release(Barrage::AllocType::ARRAY, ptr);
 }
 
 void operator delete(void* ptr, const std::nothrow_t&)
 {
-  NO_IMPL();
-  UNREFERENCED(ptr);
-  free(ptr);
+  memoryDebugger.Release(Barrage::AllocType::SINGLE, ptr);
 }
 
 void operator delete[](void* ptr, const std::nothrow_t&)
 {
-  NO_IMPL();
-  UNREFERENCED(ptr);
-  free(ptr);
+  memoryDebugger.Release(Barrage::AllocType::ARRAY, ptr);
 }
 
 void operator delete(void* ptr, std::size_t count)
 {
-  NO_IMPL();
-  UNREFERENCED(ptr);
   UNREFERENCED(count);
-  free(ptr);
+  memoryDebugger.Release(Barrage::AllocType::SINGLE, ptr);
 }
 
 void operator delete[](void* ptr, std::size_t count)
 {
-  NO_IMPL();
-  UNREFERENCED(ptr);
   UNREFERENCED(count);
-  free(ptr);
+  memoryDebugger.Release(Barrage::AllocType::ARRAY, ptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

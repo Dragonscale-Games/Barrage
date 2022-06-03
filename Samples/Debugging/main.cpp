@@ -54,7 +54,7 @@ int main()
 {
   SymbolDemo();
   MemoryDemo();
-  __debugbreak();
+  BREAKPOINT();
   return 0;
 }
 
@@ -67,14 +67,17 @@ void SymbolDemo()
 
 void MemoryDemo()
 {
+  /*
   Barrage::MemoryDebuggerImpl memoryDebugger;
   void* address = memoryDebugger.Allocate(Barrage::AllocType::SINGLE, 40u);
-  void* allocated = new int[4];
+  */
+  int* allocated = new int[4];
   UNREFERENCED(allocated);
   // and whoops there goes some memory...
   memoryDebugger.DumpMemoryStats("memory_stats.csv");
-  memoryDebugger.Release(address);
+  //memoryDebugger.Release(address);
   // ... hopefully this will get tracked c:
+  delete[] allocated;
   memoryDebugger.DumpMemoryStats("memory_stats.csv");
 }
 
