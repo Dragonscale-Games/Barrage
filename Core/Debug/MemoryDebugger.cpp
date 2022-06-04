@@ -98,6 +98,8 @@ namespace Barrage
           mismatched_.push_back(*allocatedIter);
           BREAKPOINT();
         }
+        // Removoe the allocated entry from the list.
+        allocated_.erase(allocatedIter);
       }
     }
     else
@@ -138,7 +140,7 @@ namespace Barrage
     };
     // A table containing all the labels for the stats.
     const Database<const char* const> labels = {
-      "Allocate", "Delete", "Double Delete", "Mismatched Delete", "Unallocated Delete"
+      "Allocated", "Deleted", "Double Delete", "Mismatched Delete", "Unallocated Delete"
     };
     assert(statList.size() == availableStats.size());
     // Create the file to dump our statistics.
