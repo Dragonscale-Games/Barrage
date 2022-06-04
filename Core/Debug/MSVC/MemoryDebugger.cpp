@@ -17,29 +17,28 @@
 #include <stdafx.h>
 #include <Debug/MemoryDebugger.hpp>
 
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include <memoryapi.h>
+
 namespace Barrage
 {
-  Allocation MemoryDebuggerImpl::AllocatePage(size_t size)
+  void* MemoryDebuggerImpl::AllocatePage(size_t size)
   {
-    NO_IMPL();
-    UNREFERENCED(size);
-    Allocation allocation = {};
-    allocation.allocation_ = nullptr;
-    return allocation;
-  }
-  
-  bool MemoryDebuggerImpl::DecommisionPage(const Allocation& allocation)
-  {
-    NO_IMPL();
-    UNREFERENCED(allocation);
-    return false;
+    // Get a page from the windows operating system.
+    const size_t pageSize = CalculatePageCount(size) * FourK;
+    void* page = VirtualAlloc(NULL, pageSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    return page;
   }
 
-  bool MemoryDebuggerImpl::ReleasePage(const Allocation& allocation)
+  bool MemoryDebuggerImpl::DecommisionPage(void* page)
   {
-    NO_IMPL();
-    UNREFERENCED(allocation);
-    return false;
+    return VirtualFree(page, 0u, MEM_DECOMMIT);
+  }
+
+  bool MemoryDebuggerImpl::ReleasePage(void* page)
+  {
+    return VirtualFree(page, 0u, MEM_RELEASE);
   }
 }
 

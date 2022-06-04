@@ -175,37 +175,36 @@ namespace Barrage
       \param size
         The size of the allocation made.
       \returns
-        A structure containing the allocation. On a failure, the allocation
+        A pointer to the page allocated. On a failure, the allocation
         field on the structure will be a null pointer.
     */
     /*************************************************************************/
-    static Allocation AllocatePage(size_t size);
+    static void* AllocatePage(size_t size);
     /*************************************************************************/
     /*!
       \brief
-        Decommisions an allocation and its associated page. If the user
-        attempts to access this allocation again, they will get a 
-        hardware exception.
-      \param allocation
-        The allocation to decommision.
+        Decommisions a page. If the user attempts to access the 
+        memory from this page again, they will get a hardware exception.
+      \param page
+        The page to decommision.
       \returns
         True if successful, false if errors were created in the attempt.
     */
     /*************************************************************************/
-    static bool DecommisionPage(const Allocation& allocation);
+    static bool DecommisionPage(void* page);
     /*************************************************************************/
     /*!
       \brief
         Releases the page back to the operating system. Once this happens
         there is no safety nets for the user if they access the memory
         again.
-      \param allocation
-        The allocation used to access the page.
+      \param page
+        The page to release.
       \returns
         True if successful, otherwise there were errors.
     */
     /*************************************************************************/
-    static bool ReleasePage(const Allocation& allocation);
+    static bool ReleasePage(void* page);
     /*************************************************************************/
     /*!
       \brief
@@ -233,7 +232,19 @@ namespace Barrage
         The number of pages to allocate.
     */
     /*************************************************************************/
-    size_t CalculatePageCount(size_t size);
+    static size_t CalculatePageCount(size_t size);
+    static size_t CalculatePageSize(size_t size);
+    /*************************************************************************/
+    /*!
+      \brief
+        Calculates the position of the allocation within the page.
+      \param page
+        The page to calculate the offset to.
+      \param size
+        The size of the allocation itself.
+    */
+    /*************************************************************************/
+    static void* GetPositionInPage(void* page, size_t size);
   };
 }
 

@@ -19,24 +19,22 @@
 
 namespace Barrage
 {
-  Allocation MemoryDebuggerImpl::AllocatePage(size_t size)
+  void* MemoryDebuggerImpl::AllocatePage(size_t size)
   {
-    Allocation allocation = {};
-    allocation.allocation_ = nullptr;
-    return allocation;
+    return nullptr;
   }
 
-  bool MemoryDebuggerImpl::DecommisionPage(const Allocation& allocation)
+  bool MemoryDebuggerImpl::DecommisionPage(void* page)
   {
     NO_IMPL();
-    UNREFERENCED(allocation);
+    UNREFERENCED(page);
     return false;
   }
 
-  bool MemoryDebuggerImpl::ReleasePage(const Allocation& allocation)
+  bool MemoryDebuggerImpl::ReleasePage(void* page)
   {
     NO_IMPL();
-    UNREFERENCED(allocation);
+    UNREFERENCED(page);
     return false;
   }
 }

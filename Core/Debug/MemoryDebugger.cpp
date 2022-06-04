@@ -40,18 +40,28 @@ namespace Barrage
     // Finally, release all of our allocated pages.
     for (const Allocation& allocation : deleted_)
     {
-      ReleasePage(allocation);
+      ReleasePage(allocation.page_);
     }
   }
 
   void* MemoryDebuggerImpl::Allocate(AllocType type, size_t n) noexcept(false)
   {
     Allocation allocation = {};
-    allocation = AllocatePage(n);
+    void* page = AllocatePage(n);
+    allocation.page_ = page;
     // Check if we successfully made an allocation.
-    if (!allocation.allocation_)
+    if (!page)
     {
       throw std::bad_alloc();
+    }
+    else
+    {
+      // When we have an allocated page, we fill out the rest of the allocation
+      // structure.
+      allocation.type_ = type;
+      allocation.allocSize_ = n;
+      allocation.page_ = page;
+      allocation.allocation_ = GetPositionInPage(page, n);
     }
     // Upon success, we add our allocation to a list and return the allocation.
     allocated_.push_back(allocation);
@@ -61,11 +71,11 @@ namespace Barrage
   void MemoryDebuggerImpl::Release(AllocType type, const void* address)
   {
     // Find the allocation address within our list.
-    auto iter = FindAddressIn(allocated_, address);
-    if (iter != allocated_.cend())
+    auto allocatedIter = FindAddressIn(allocated_, address);
+    if (allocatedIter != allocated_.cend())
     {
       // We first check whether we actually have deleted this address before.
-      iter = FindAddressIn(deleted_, address);
+      auto iter = FindAddressIn(deleted_, address);
       if (iter != deleted_.cend())
       {
         // At this point we know the user attempted to delete a previously deleted address.
@@ -75,12 +85,17 @@ namespace Barrage
       else
       {
         // Otherwise, we decommision page storing it and keep track of our allocation.
-        DecommisionPage(*iter);
-        deleted_.push_back(*iter);
-        // Check if we have a mismatch delete on our hands.
-        if (iter->type_ != type)
+        bool isDecommisionSuccess = DecommisionPage(allocatedIter->page_);
+        if (!isDecommisionSuccess)
         {
-          mismatched_.push_back(*iter);
+          BREAKPOINT();
+        }
+        // Mark the allocation as deleted.
+        deleted_.push_back(*allocatedIter);
+        // Check if we have a mismatch delete on our hands.
+        if (allocatedIter->type_ != type)
+        {
+          mismatched_.push_back(*allocatedIter);
           BREAKPOINT();
         }
       }
@@ -90,7 +105,7 @@ namespace Barrage
       // Otherwise, we attempted to delete something that wasn't allocated.
       // The result could be...
       // A double delete..?
-      iter = FindAddressIn(deleted_, address);
+      auto iter = FindAddressIn(deleted_, address);
       if (iter != deleted_.cend())
       {
         // Log our double delete.
@@ -174,6 +189,7 @@ namespace Barrage
     statFile << allocation.allocSize_ << ", ";
     statFile << allocation.allocation_ << ", ";
     statFile << allocation.file_.c_str() << ", ";
+    statFile << std::endl;
   }
 
   AllocList::const_iterator MemoryDebuggerImpl::FindAddressIn(const AllocList& list, const void* address)
@@ -190,6 +206,16 @@ namespace Barrage
   size_t MemoryDebuggerImpl::CalculatePageCount(size_t size)
   {
     return size / FourK + 1u * ((size % FourK) != 0);
+  }
+
+  size_t MemoryDebuggerImpl::CalculatePageSize(size_t size)
+  {
+    return CalculatePageCount(size) * FourK * sizeof(unsigned char);
+  }
+
+  void* MemoryDebuggerImpl::GetPositionInPage(void* page, size_t size)
+  {
+    return static_cast<unsigned char*>(page) + CalculatePageSize(size) - size;
   }
 }
 
