@@ -23,6 +23,7 @@
 //  ===========================================================================
 #include <Debug/MemoryDebugger.hpp>
 
+#include <sstream>
 #include <fstream>
 #include <cstdlib>
 #include <array>
@@ -44,7 +45,7 @@ namespace Barrage
     }
   }
 
-  void* MemoryDebuggerImpl::Allocate(AllocType type, size_t n) noexcept(false)
+  void* MemoryDebuggerImpl::Allocate(AllocType type, size_t n, const void* allocAddress) noexcept(false)
   {
     Allocation allocation = {};
     void* page = AllocatePage(n);
@@ -56,12 +57,17 @@ namespace Barrage
     }
     else
     {
+      SymbolInfo symbol = symbolManager.GetSymbolInfo(allocAddress);
+      std::basic_stringstream<char, std::char_traits<char>, Mallocator<char> > symbolNameBuild;
+      symbolNameBuild << symbol.filepath_;
+      symbolNameBuild << ":" << symbol.line_;
       // When we have an allocated page, we fill out the rest of the allocation
       // structure.
       allocation.type_ = type;
       allocation.allocSize_ = n;
       allocation.page_ = page;
       allocation.allocation_ = GetPositionInPage(page, n);
+      allocation.file_ = symbolNameBuild.str().c_str();
     }
     // Upon success, we add our allocation to a list and return the allocation.
     allocated_.push_back(allocation);

@@ -97,7 +97,7 @@ namespace Barrage
       }
     }
 
-    SymbolInfo GetSymbolInfo(void* address) const
+    SymbolInfo GetSymbolInfo(const void* address) const
     {
       return (*manager_).GetSymbolInfo(address);
     }

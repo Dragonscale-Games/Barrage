@@ -15,6 +15,7 @@
 
 #ifdef _WIN32
 
+#include <stdafx.h>
 #include <Debug/SymbolManager.hpp>
 #include <Debug/MemoryDebugger.hpp>
 /*****************************************************************************/
@@ -23,12 +24,6 @@
 #include <Debug/MemoryOverrides.hpp>
 #include <iostream>
 #include <intrin.h>
-
-#ifdef __clang__
-#define RETURN_ADDRESS() __builtin_return_address(0)
-#else
-#define RETURN_ADDRESS() _ReturnAddress()
-#endif
 
 /****************************************************************************/
 /*!

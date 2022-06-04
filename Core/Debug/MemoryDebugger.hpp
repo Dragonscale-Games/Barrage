@@ -25,8 +25,9 @@
 //  ===========================================================================
 #include <stddef.h>
 #include <list>
-#include <Debug/SymbolManager.hpp>
+
 #include <Utilities/Mallocator.hpp>
+#include <Debug/SymbolManager.hpp>
 
 namespace Barrage
 {
@@ -86,12 +87,14 @@ namespace Barrage
         The type of memory allocation being made.
       \param n
         The distance away from the memory boundary in bytes.
+      \param allocAddress
+        The instruction address which called the allocation function.
       \throws std::bad_alloc
         Whenever the user allocates for a size the operating system
         cannot not offer.
     */
     /*************************************************************************/
-    void* Allocate(AllocType type, size_t n) noexcept(false);
+    void* Allocate(AllocType type, size_t n, const void* allocAddress) noexcept(false);
     /*************************************************************************/
     /*!
       \brief

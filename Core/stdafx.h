@@ -13,6 +13,21 @@
 #include <cassert>
 #include <csignal>
 
+#include <intrin.h>
+
+/****************************************************************************/
+/*!
+  \brief
+    A macro that helps users get the return address of the current
+    function.
+*/
+/****************************************************************************/
+#ifdef __clang__
+#define RETURN_ADDRESS() __builtin_return_address(0)
+#else
+#define RETURN_ADDRESS() _ReturnAddress()
+#endif
+
 /****************************************************************************/
 /*!
   \brief

@@ -21,21 +21,22 @@
 //  ===========================================================================
 // INCLUDES
 //  ===========================================================================
+#include <stdafx.h>
 #include "MemoryDebugger.hpp"
 
 void* operator new(std::size_t count)
 {
-  return memoryDebugger.Allocate(Barrage::AllocType::SINGLE, count);
+  return memoryDebugger.Allocate(Barrage::AllocType::SINGLE, count, RETURN_ADDRESS());
 }
 
 void* operator new[](std::size_t count)
 {
-  return memoryDebugger.Allocate(Barrage::AllocType::ARRAY, count);
+  return memoryDebugger.Allocate(Barrage::AllocType::ARRAY, count, RETURN_ADDRESS());
 }
 
 void* operator new(std::size_t count, const std::nothrow_t&) noexcept
 {
-  return memoryDebugger.Allocate(Barrage::AllocType::SINGLE, count);
+  return memoryDebugger.Allocate(Barrage::AllocType::SINGLE, count, RETURN_ADDRESS());
 }
 
 void* operator new[](std::size_t count, const std::nothrow_t&) noexcept
@@ -43,7 +44,8 @@ void* operator new[](std::size_t count, const std::nothrow_t&) noexcept
   void* allocation = nullptr;
   try
   {
-    allocation = memoryDebugger.Allocate(Barrage::AllocType::ARRAY, count);
+    allocation = 
+      memoryDebugger.Allocate(Barrage::AllocType::ARRAY, count, RETURN_ADDRESS());
   }
   catch (std::bad_alloc&)
   {
