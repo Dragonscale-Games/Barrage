@@ -22,6 +22,7 @@
 // INCLUDES
 //  ===========================================================================
 #include <Debug/MemoryDebugger.hpp>
+#include <Debug/SymbolManager.hpp>
 
 #include <sstream>
 #include <fstream>
@@ -36,6 +37,13 @@ namespace
 
 namespace Barrage
 {
+  int MemoryDebugger::referenceCount_ = 0;
+  MemoryDebuggerImpl* MemoryDebugger::debugger_ = nullptr;
+
+  MemoryDebuggerImpl::MemoryDebuggerImpl()
+  {
+  }
+
   MemoryDebuggerImpl::~MemoryDebuggerImpl()
   {
     // Finally, release all of our allocated pages.
@@ -49,7 +57,6 @@ namespace Barrage
   {
     Allocation allocation = {};
     void* page = AllocatePage(n);
-    allocation.page_ = page;
     // Check if we successfully made an allocation.
     if (!page)
     {
@@ -57,7 +64,7 @@ namespace Barrage
     }
     else
     {
-      SymbolInfo symbol = symbolManager.GetSymbolInfo(allocAddress);
+      SymbolInfo symbol = SymbolManager::GetSymbolInfo(allocAddress);
       std::basic_stringstream<char, std::char_traits<char>, Mallocator<char> > symbolNameBuild;
       symbolNameBuild << symbol.filepath_;
       symbolNameBuild << ":" << symbol.line_;
@@ -130,7 +137,7 @@ namespace Barrage
     }
   }
   
-  void MemoryDebuggerImpl::DumpMemoryStats(const char* filepath, MemStat flags)
+  void MemoryDebuggerImpl::DumpMemoryStats(const char* filepath, int flags)
   {
     // A table with the lists associated with each statistic.
     const Database<AllocList*> statList = {

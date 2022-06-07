@@ -76,6 +76,11 @@ namespace Barrage
     {
       --* objectsUsingThis_;
     }
+    // If no one is using this resource after copying then we invalidate.
+    if (*objectsUsingThis_ == 0)
+    {
+      Invalidate();
+    }
     // Copy over the pointers to the new resource.
     objectsUsingThis_ = rhs.objectsUsingThis_;
     internalResource_ = rhs.internalResource_;
@@ -390,11 +395,13 @@ namespace Barrage
     {
       resource.Invalidate();
     };
+    /*
     // Clean up the smart pointers.
     std::for_each(meshes_.begin(), meshes_.end(), invalidation);
     std::for_each(shaderPrograms_.begin(), shaderPrograms_.end(), invalidation);
     std::for_each(textures_.begin(), textures_.end(), invalidation);
     std::for_each(framebuffers_.begin(), framebuffers_.end(), invalidation);
+    */
     // Made sure to clear all bad pointers to the resources.
     meshes_.clear();
     shaderPrograms_.clear();

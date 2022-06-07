@@ -26,17 +26,17 @@
 
 void* operator new(std::size_t count)
 {
-  return memoryDebugger.Allocate(Barrage::AllocType::SINGLE, count, RETURN_ADDRESS());
+  return Barrage::MemoryDebugger::Allocate(Barrage::AllocType::SINGLE, count, RETURN_ADDRESS());
 }
 
 void* operator new[](std::size_t count)
 {
-  return memoryDebugger.Allocate(Barrage::AllocType::ARRAY, count, RETURN_ADDRESS());
+  return Barrage::MemoryDebugger::Allocate(Barrage::AllocType::ARRAY, count, RETURN_ADDRESS());
 }
 
 void* operator new(std::size_t count, const std::nothrow_t&) noexcept
 {
-  return memoryDebugger.Allocate(Barrage::AllocType::SINGLE, count, RETURN_ADDRESS());
+  return Barrage::MemoryDebugger::Allocate(Barrage::AllocType::SINGLE, count, RETURN_ADDRESS());
 }
 
 void* operator new[](std::size_t count, const std::nothrow_t&) noexcept
@@ -45,7 +45,7 @@ void* operator new[](std::size_t count, const std::nothrow_t&) noexcept
   try
   {
     allocation = 
-      memoryDebugger.Allocate(Barrage::AllocType::ARRAY, count, RETURN_ADDRESS());
+      Barrage::MemoryDebugger::Allocate(Barrage::AllocType::ARRAY, count, RETURN_ADDRESS());
   }
   catch (std::bad_alloc&)
   {
@@ -56,34 +56,34 @@ void* operator new[](std::size_t count, const std::nothrow_t&) noexcept
 
 void operator delete(void* ptr)
 {
-  memoryDebugger.Release(Barrage::AllocType::SINGLE, ptr);
+  Barrage::MemoryDebugger::Release(Barrage::AllocType::SINGLE, ptr);
 }
 
 void operator delete[](void* ptr)
 {
-  memoryDebugger.Release(Barrage::AllocType::ARRAY, ptr);
+  Barrage::MemoryDebugger::Release(Barrage::AllocType::ARRAY, ptr);
 }
 
 void operator delete(void* ptr, const std::nothrow_t&)
 {
-  memoryDebugger.Release(Barrage::AllocType::SINGLE, ptr);
+  Barrage::MemoryDebugger::Release(Barrage::AllocType::SINGLE, ptr);
 }
 
 void operator delete[](void* ptr, const std::nothrow_t&)
 {
-  memoryDebugger.Release(Barrage::AllocType::ARRAY, ptr);
+  Barrage::MemoryDebugger::Release(Barrage::AllocType::ARRAY, ptr);
 }
 
 void operator delete(void* ptr, std::size_t count)
 {
   UNREFERENCED(count);
-  memoryDebugger.Release(Barrage::AllocType::SINGLE, ptr);
+  Barrage::MemoryDebugger::Release(Barrage::AllocType::SINGLE, ptr);
 }
 
 void operator delete[](void* ptr, std::size_t count)
 {
   UNREFERENCED(count);
-  memoryDebugger.Release(Barrage::AllocType::ARRAY, ptr);
+  Barrage::MemoryDebugger::Release(Barrage::AllocType::ARRAY, ptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

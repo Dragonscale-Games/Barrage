@@ -32,7 +32,7 @@
 namespace Barrage
 {
   //! The enumeration for the statistics tracked by the memory debugger.
-  enum class MemStat : uint8_t
+  enum MemStat
   {
     CURRENTLY_ALLOCATED = 0x01,
     CURRENTLY_DELETED = 0x02,
@@ -69,8 +69,12 @@ namespace Barrage
   class MemoryDebuggerImpl
   {
   public:
+    friend class MemoryDebugger;
     static const size_t FourK = 4096u;
 
+    /*************************************************************************/
+    /*************************************************************************/
+    MemoryDebuggerImpl();
     /*************************************************************************/
     /*!
       \brief
@@ -118,9 +122,10 @@ namespace Barrage
         Flags for the function denoting which statistics to dump.
     */
     /*************************************************************************/
-    void DumpMemoryStats(const char* filepath, MemStat flags = MemStat::ALL);
+    void DumpMemoryStats(const char* filepath, int flags = MemStat::ALL);
 
   private:
+    static MemoryDebuggerImpl* instance_;
     //! The list keeping track of currently allocated objects.
     AllocList allocated_;
     //! The list keeping track of all deleted objects.
@@ -236,6 +241,16 @@ namespace Barrage
     */
     /*************************************************************************/
     static size_t CalculatePageCount(size_t size);
+    /*************************************************************************/
+    /*!
+      \brief
+        Calculates the size of the page allocation in bytes.
+      \param size
+        The size of the allocation.
+      \returns
+        The number of bytes to allocate for the pages.
+    */
+    /*************************************************************************/
     static size_t CalculatePageSize(size_t size);
     /*************************************************************************/
     /*!
@@ -249,10 +264,82 @@ namespace Barrage
     /*************************************************************************/
     static void* GetPositionInPage(void* page, size_t size);
   };
+  //! The starter for the memory manager.
+  class MemoryDebugger
+  {
+  public:
+
+    MemoryDebugger()
+    {
+      if (++referenceCount_ == 1)
+      {
+        // Manually call the constructor for the symbol manager.
+        debugger_ = static_cast<MemoryDebuggerImpl*>(malloc(sizeof(MemoryDebuggerImpl)));
+        debugger_ = new (debugger_) MemoryDebuggerImpl;
+      }
+    }
+
+    ~MemoryDebugger()
+    {
+      if (referenceCount_-- == 1)
+      {
+        // Print out any memory leaks by this point.
+        debugger_->DumpMemoryStats("memory_log.csv", Barrage::MemStat::ALL /*& ~Barrage::MemStat::CURRENTLY_DELETED*/);
+        // Manually release the resources called by the manager.
+        debugger_->~MemoryDebuggerImpl();
+        free(debugger_);
+        debugger_ = nullptr;
+      }
+    }
+
+    /*************************************************************************/
+    /*!
+      \brief
+        Allocates a page and returns a memory address n bytes away from
+        a page boundary.
+      \param type
+        The type of memory allocation being made.
+      \param n
+        The distance away from the memory boundary in bytes.
+      \param allocAddress
+        The instruction address which called the allocation function.
+      \throws std::bad_alloc
+        Whenever the user allocates for a size the operating system
+        cannot not offer.
+    */
+    /*************************************************************************/
+    static void* Allocate(AllocType type, size_t n, const void* allocAddress) noexcept(false)
+    {
+      assert(debugger_);
+      return debugger_->Allocate(type, n, allocAddress);
+    }
+    /*************************************************************************/
+    /*!
+      \brief
+        Frees the memory address specified and uncommiting the page
+        associated with it.
+      \param type
+        The type of memory allocation being released.
+      \param address
+        The memory address to free.
+    */
+    /*************************************************************************/
+    static void Release(AllocType type, const void* address)
+    {
+      assert(debugger_);
+      debugger_->Release(type, address);
+    }
+
+  private:
+    // Create the memory necessary to store a manager but not actually create one.
+    static MemoryDebuggerImpl* debugger_;
+    static int referenceCount_;
+  };
+
+  //! The single instance of the memory debugger.
+  static MemoryDebugger memoryDebugger;
 }
 
-//! The single instance of the memory debugger.
-static Barrage::MemoryDebuggerImpl memoryDebugger;
 ////////////////////////////////////////////////////////////////////////////////
 #endif // MemoryDebugger_MODULE_H
 ////////////////////////////////////////////////////////////////////////////////

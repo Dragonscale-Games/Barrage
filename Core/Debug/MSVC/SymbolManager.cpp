@@ -25,6 +25,7 @@
 namespace Barrage
 {
   int SymbolManager::referenceCount_ = 0;
+  SymbolManagerImpl* SymbolManager::manager_ = nullptr;
 
   SymbolManagerImpl::SymbolManagerImpl()
   {
@@ -38,7 +39,7 @@ namespace Barrage
       std::cout << "Failed to initialize symbol loading in Windows (error code: "
         << error << ")" << std::endl;
       // Failed to load symbols on this process.
-      __debugbreak();
+      BREAKPOINT();
     }
   }
 
@@ -67,7 +68,7 @@ namespace Barrage
     else
     {
       // We passed a memory address not within our code base.
-      __debugbreak();
+      BREAKPOINT();
     }
 
     return info;

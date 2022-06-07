@@ -24,9 +24,6 @@
 
 namespace Barrage
 {
-  //! The type defintion for the mallocator string.
-  using MallocString = std::basic_string<char, std::char_traits<char>, Mallocator<char> >;
-
   //! The structure maintaining symbol information for a single memory address.
   struct SymbolInfo
   {
@@ -40,7 +37,7 @@ namespace Barrage
   //! The class responsible for managing symbol information.
   class SymbolManagerImpl
   {
-  private:
+  public:
     //! Forward declaration to the symbol manager that drives this implementation.
     friend class SymbolManager;
 
@@ -76,13 +73,13 @@ namespace Barrage
   {
   public:
     
-    SymbolManager() : manager_(nullptr)
+    SymbolManager()
     {
       if (++referenceCount_ == 1)
       {
         // Manually call the constructor for the symbol manager.
-        manager_ = static_cast<SymbolManagerImpl*>(malloc(sizeof(SymbolManagerImpl)));
-        new (&manager_) SymbolManagerImpl;
+        SymbolManager::manager_ = static_cast<SymbolManagerImpl*>(malloc(sizeof(SymbolManagerImpl)));
+        SymbolManager::manager_ = new (SymbolManager::manager_) SymbolManagerImpl;
       }
     }
 
@@ -91,20 +88,20 @@ namespace Barrage
       if (referenceCount_-- == 1)
       {
         // Manually release the resources called by the manager.
-        manager_->~SymbolManagerImpl();
-        free(manager_);
-        manager_ = nullptr;
+        SymbolManager::manager_->~SymbolManagerImpl();
+        free(SymbolManager::manager_);
+        SymbolManager::manager_ = nullptr;
       }
     }
 
-    SymbolInfo GetSymbolInfo(const void* address) const
+    static SymbolInfo GetSymbolInfo(const void* address)
     {
-      return (*manager_).GetSymbolInfo(address);
+      return manager_->GetSymbolInfo(address);
     }
 
   private:
     // Create the memory necessary to store a manager but not actually create one.
-    SymbolManagerImpl* manager_;
+    static SymbolManagerImpl* manager_;
     static int referenceCount_;
   };
 

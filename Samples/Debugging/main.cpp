@@ -55,9 +55,11 @@ int main()
 
 void SymbolDemo()
 {
+  /*
   Barrage::SymbolInfo info = Barrage::symbolManager.GetSymbolInfo(RETURN_ADDRESS());
   // Print out the symbol information for this function.
   std::cout << "Symbols for the return address in SymbolDemo: " << info.filepath_ << std::endl;
+  */
 }
 
 void MemoryDemo()
@@ -65,11 +67,11 @@ void MemoryDemo()
   int* allocated = new int[4]();
   UNREFERENCED(allocated);
   // and whoops there goes some memory...
-  memoryDebugger.DumpMemoryStats("memory_stats-01.csv");
+  allocated = new int[4]();
   //memoryDebugger.Release(address);
   // ... hopefully this will get tracked c:
-  delete[] allocated;
-  memoryDebugger.DumpMemoryStats("memory_stats-02.csv");
+  //allocated[5] = 0;
+  delete allocated;
 }
 
 #else
