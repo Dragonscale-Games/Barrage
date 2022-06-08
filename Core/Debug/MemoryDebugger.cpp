@@ -259,12 +259,22 @@ namespace Barrage
   void* MemoryDebugger::Allocate(AllocType type, size_t n, const void* allocAddress) noexcept(false)
   {
     assert(debugger_);
-    return debugger_->Allocate(type, n, allocAddress);
+    if (debugger_)
+    {
+      return debugger_->Allocate(type, n, allocAddress);
+    }
+    else
+    {
+      throw std::bad_alloc();
+    }
   }
 
   void MemoryDebugger::Release(AllocType type, const void* address)
   {
     assert(debugger_);
-    debugger_->Release(type, address);
+    if (debugger_)
+    {
+      debugger_->Release(type, address);
+    }
   }
 }
