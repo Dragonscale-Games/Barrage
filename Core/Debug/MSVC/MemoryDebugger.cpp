@@ -26,7 +26,7 @@ namespace Barrage
   void* MemoryDebuggerImpl::AllocatePage(size_t size)
   {
     // Get a page from the windows operating system.
-    const size_t pageSize = CalculatePageCount(size) * FourK;
+    const size_t pageSize = CalculatePageSize(size);
     void* page = VirtualAlloc(NULL, pageSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     return page;
   }

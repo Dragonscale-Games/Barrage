@@ -56,31 +56,12 @@ namespace Barrage
 
   GfxManager2D::ResourceID::~ResourceID()
   {
-    if (objectsUsingThis_)
-    {
-      // Decrease the reference counter.
-      --* objectsUsingThis_;
-      // If there are no other objects that are going to use this
-      // then we need to delete the resource.
-      if (*objectsUsingThis_ == 0)
-      {
-        Invalidate();
-      }
-    }
+    Invalidate();
   }
 
   GfxManager2D::ResourceID& GfxManager2D::ResourceID::operator=(const ResourceID& rhs)
   {
-    // Decrease the pointer to the reference.
-    if (objectsUsingThis_)
-    {
-      --* objectsUsingThis_;
-    }
-    // If no one is using this resource after copying then we invalidate.
-    if (*objectsUsingThis_ == 0)
-    {
-      Invalidate();
-    }
+    Invalidate();
     // Copy over the pointers to the new resource.
     objectsUsingThis_ = rhs.objectsUsingThis_;
     internalResource_ = rhs.internalResource_;
@@ -103,15 +84,24 @@ namespace Barrage
 
   void GfxManager2D::ResourceID::Invalidate()
   {
-    delete objectsUsingThis_;
-    delete internalResource_;
-    // Make sure to clean up the pointers in debug mode.
-    // Just to make sure we at least know of any improper 
-    // uses of these resources involving their deletion.
-//#if defined(DEBUG) || defined(_DEBUG)
-    objectsUsingThis_ = nullptr;
-    internalResource_ = nullptr;
-//#endif
+    // Decrease the pointer to the reference.
+    if (objectsUsingThis_)
+    {
+      --* objectsUsingThis_;
+      // If no one is using this resource after copying then we invalidate.
+      if (*objectsUsingThis_ == 0)
+      {
+        delete objectsUsingThis_;
+        delete internalResource_;
+        // Make sure to clean up the pointers in debug mode.
+        // Just to make sure we at least know of any improper 
+        // uses of these resources involving their deletion.
+        //#if defined(DEBUG) || defined(_DEBUG)
+        //#endif
+      }
+      objectsUsingThis_ = nullptr;
+      internalResource_ = nullptr;
+    }
   }
 
   bool GfxManager2D::ResourceID::IsValid() const
