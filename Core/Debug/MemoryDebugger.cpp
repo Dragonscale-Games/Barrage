@@ -111,7 +111,7 @@ namespace Barrage
           mismatched_.push_back(*allocatedIter);
           BREAKPOINT();
         }
-        // Removoe the allocated entry from the list.
+        // Remove the allocated entry from the list.
         allocated_.erase(allocatedIter);
       }
     }
@@ -232,5 +232,39 @@ namespace Barrage
   {
     return static_cast<unsigned char*>(page) + CalculatePageSize(size) - size;
   }
-}
 
+  MemoryDebugger::MemoryDebugger()
+  {
+    if (++referenceCount_ == 1)
+    {
+      // Manually call the constructor for the symbol manager.
+      debugger_ = static_cast<MemoryDebuggerImpl*>(malloc(sizeof(MemoryDebuggerImpl)));
+      debugger_ = new (debugger_) MemoryDebuggerImpl;
+    }
+  }
+
+  MemoryDebugger::~MemoryDebugger()
+  {
+    if (referenceCount_-- == 1)
+    {
+      // Print out any memory leaks by this point.
+      debugger_->DumpMemoryStats("memory_log.csv", Barrage::MemStat::ALL & ~Barrage::MemStat::CURRENTLY_DELETED);
+      // Manually release the resources called by the manager.
+      debugger_->~MemoryDebuggerImpl();
+      free(debugger_);
+      debugger_ = nullptr;
+    }
+  }
+
+  void* MemoryDebugger::Allocate(AllocType type, size_t n, const void* allocAddress) noexcept(false)
+  {
+    assert(debugger_);
+    return debugger_->Allocate(type, n, allocAddress);
+  }
+
+  void MemoryDebugger::Release(AllocType type, const void* address)
+  {
+    assert(debugger_);
+    debugger_->Release(type, address);
+  }
+}

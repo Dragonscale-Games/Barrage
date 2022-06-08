@@ -73,6 +73,11 @@ namespace Barrage
     static const size_t FourK = 4096u;
 
     /*************************************************************************/
+    /*!
+      \brief
+        Creates a default constructor for the implementation for
+        the memory debugger.
+    */
     /*************************************************************************/
     MemoryDebuggerImpl();
     /*************************************************************************/
@@ -268,30 +273,22 @@ namespace Barrage
   class MemoryDebugger
   {
   public:
-
-    MemoryDebugger()
-    {
-      if (++referenceCount_ == 1)
-      {
-        // Manually call the constructor for the symbol manager.
-        debugger_ = static_cast<MemoryDebuggerImpl*>(malloc(sizeof(MemoryDebuggerImpl)));
-        debugger_ = new (debugger_) MemoryDebuggerImpl;
-      }
-    }
-
-    ~MemoryDebugger()
-    {
-      if (referenceCount_-- == 1)
-      {
-        // Print out any memory leaks by this point.
-        debugger_->DumpMemoryStats("memory_log.csv", Barrage::MemStat::ALL /*& ~Barrage::MemStat::CURRENTLY_DELETED*/);
-        // Manually release the resources called by the manager.
-        debugger_->~MemoryDebuggerImpl();
-        free(debugger_);
-        debugger_ = nullptr;
-      }
-    }
-
+    /*************************************************************************/
+    /*!
+      \brief
+        Initializes the local instance of the memory debugger.
+        Creates the static global implementation of the debugger.
+    */
+    /*************************************************************************/
+    MemoryDebugger();
+    /*************************************************************************/
+    /*!
+      \brief
+        Destroys the local instance of the memory debugger.
+        Destroys the static global implementation of the debugger.
+    */
+    /*************************************************************************/
+    ~MemoryDebugger();
     /*************************************************************************/
     /*!
       \brief
@@ -308,11 +305,7 @@ namespace Barrage
         cannot not offer.
     */
     /*************************************************************************/
-    static void* Allocate(AllocType type, size_t n, const void* allocAddress) noexcept(false)
-    {
-      assert(debugger_);
-      return debugger_->Allocate(type, n, allocAddress);
-    }
+    static void* Allocate(AllocType type, size_t n, const void* allocAddress) noexcept(false);
     /*************************************************************************/
     /*!
       \brief
@@ -324,18 +317,14 @@ namespace Barrage
         The memory address to free.
     */
     /*************************************************************************/
-    static void Release(AllocType type, const void* address)
-    {
-      assert(debugger_);
-      debugger_->Release(type, address);
-    }
+    static void Release(AllocType type, const void* address);
 
   private:
-    // Create the memory necessary to store a manager but not actually create one.
+    // Create the memory necessary to store one debugger but not actually create one yet.
     static MemoryDebuggerImpl* debugger_;
+    //! The reference count to make sure we only make one debugger.
     static int referenceCount_;
   };
-
   //! The single instance of the memory debugger.
   static MemoryDebugger memoryDebugger;
 }

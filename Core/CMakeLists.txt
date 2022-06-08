@@ -106,7 +106,7 @@ add_library(BarrageCore STATIC
   "Objects/SpawnFuncs/Position/PositionFuncs.hpp" "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
   "Objects/Components/SharedComponents/BoundaryBox.hpp"
   
-  "Debug/SymbolManager.hpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
+  "Debug/SymbolManager.hpp" "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
   "Debug/MemoryDebugger.hpp" "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
   "Debug/MemoryOverrides.hpp"
 )

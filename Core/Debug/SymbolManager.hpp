@@ -73,38 +73,44 @@ namespace Barrage
   {
   public:
     
-    SymbolManager()
-    {
-      if (++referenceCount_ == 1)
-      {
-        // Manually call the constructor for the symbol manager.
-        SymbolManager::manager_ = static_cast<SymbolManagerImpl*>(malloc(sizeof(SymbolManagerImpl)));
-        SymbolManager::manager_ = new (SymbolManager::manager_) SymbolManagerImpl;
-      }
-    }
-
-    ~SymbolManager()
-    {
-      if (referenceCount_-- == 1)
-      {
-        // Manually release the resources called by the manager.
-        SymbolManager::manager_->~SymbolManagerImpl();
-        free(SymbolManager::manager_);
-        SymbolManager::manager_ = nullptr;
-      }
-    }
-
-    static SymbolInfo GetSymbolInfo(const void* address)
-    {
-      return manager_->GetSymbolInfo(address);
-    }
+    /*************************************************************************/
+    /*!
+      \brief
+        Creates a single local instance of the symbol manager.
+        Initializes the global instance of the symbol manager if it hasn't
+        already.
+    */
+    /*************************************************************************/
+    SymbolManager();
+    /*************************************************************************/
+    /*!
+      \brief
+        Destroys a single local instance of the symbol manager.
+        Destroys the global one if there are no other local instances
+        to use it.
+    */
+    /*************************************************************************/
+    ~SymbolManager();
+    /*************************************************************************/
+    /*!
+      \brief
+        Provides the symbol information given an instruction address.
+      \param address
+        The instruction address to query symbol information for.
+      \returns
+        A structure containing the symbol information for a
+        given instruction address.
+    */
+    /*************************************************************************/
+    static SymbolInfo GetSymbolInfo(const void* address);
 
   private:
-    // Create the memory necessary to store a manager but not actually create one.
+    //! Create the memory necessary to store a manager but not actually create one.
     static SymbolManagerImpl* manager_;
+    //! The reference count to make sure we only make one manager.
     static int referenceCount_;
   };
-
+  //! The local instance of the symbol manager.
   static SymbolManager symbolManager;
 }
 
