@@ -97,6 +97,7 @@ add_library(BarrageCore STATIC
   "Rendering/GfxPrimitives.hpp" "Rendering/GfxPrimitives.cpp"
   "Rendering/GfxDraw2D.hpp" "Rendering/GfxDraw2D.cpp"
   "Rendering/GfxFactory2D.hpp" "Rendering/GfxFactory2D.cpp"
+  "Rendering/GfxRegistry2D.hpp"
   "Rendering/GLError.hpp"
 
   "Objects/Systems/Movement/MovementSystem.hpp" "Objects/Systems/Movement/MovementSystem.cpp"
