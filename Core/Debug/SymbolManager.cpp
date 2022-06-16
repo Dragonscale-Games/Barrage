@@ -19,6 +19,9 @@
 
 namespace Barrage
 {
+  int SymbolManager::referenceCount_ = 0;
+  SymbolManagerImpl* SymbolManager::manager_ = nullptr;
+
   SymbolManager::SymbolManager()
   {
     if (++referenceCount_ == 1)

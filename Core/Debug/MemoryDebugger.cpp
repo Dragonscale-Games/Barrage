@@ -24,6 +24,7 @@
 #include <Debug/MemoryDebugger.hpp>
 #include <Debug/SymbolManager.hpp>
 
+#include <algorithm>
 #include <sstream>
 #include <fstream>
 #include <cstdlib>

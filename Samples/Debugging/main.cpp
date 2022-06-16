@@ -13,8 +13,6 @@
 /* Includes */
 /* ======================================================================== */
 
-#ifdef _WIN32
-
 #include <stdafx.h>
 #include <Debug/SymbolManager.hpp>
 #include <Debug/MemoryDebugger.hpp>
@@ -23,7 +21,6 @@
 /*****************************************************************************/
 #include <Debug/MemoryOverrides.hpp>
 #include <iostream>
-#include <intrin.h>
 
 /****************************************************************************/
 /*!
@@ -73,12 +70,3 @@ void MemoryDemo()
   //allocated[5] = 0;
   delete allocated;
 }
-
-#else
-
-int main()
-{
-  return 0;
-}
-
-#endif

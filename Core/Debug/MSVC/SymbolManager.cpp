@@ -24,9 +24,6 @@
 
 namespace Barrage
 {
-  int SymbolManager::referenceCount_ = 0;
-  SymbolManagerImpl* SymbolManager::manager_ = nullptr;
-
   SymbolManagerImpl::SymbolManagerImpl()
   {
     SymSetOptions(SYMOPT_UNDNAME | SYMOPT_DEFERRED_LOADS);

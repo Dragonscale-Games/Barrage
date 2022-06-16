@@ -138,7 +138,6 @@ namespace Barrage
     void DumpMemoryStats(const char* filepath, int flags = MemStat::ALL);
 
   private:
-    static MemoryDebuggerImpl* instance_;
     //! The list keeping track of currently allocated objects.
     AllocList allocated_;
     //! The list keeping track of all deleted objects.

@@ -380,11 +380,11 @@ namespace Barrage
   {
     // This function is in charge of invalidating
     // the resources.
+    /*
     auto invalidation = [](ResourceID& resource)
     {
       resource.Invalidate();
     };
-    /*
     // Clean up the smart pointers.
     std::for_each(meshes_.begin(), meshes_.end(), invalidation);
     std::for_each(shaderPrograms_.begin(), shaderPrograms_.end(), invalidation);

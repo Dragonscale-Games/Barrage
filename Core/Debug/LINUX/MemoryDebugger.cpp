@@ -17,27 +17,34 @@
 #include <stdafx.h>
 #include <Debug/MemoryDebugger.hpp>
 
+#include <sys/mman.h>
+
 namespace Barrage
 {
   PageAllocation MemoryDebuggerImpl::AllocatePage(size_t size)
   {
     PageAllocation pageData = { };
-    pageData.pageSize_ = 0;
-    pageData.page_ = nullptr;
+    pageData.pageSize_ = CalculatePageSize(size);
+    pageData.page_ = 
+      mmap(NULL, pageData.pageSize_, PROT_WRITE | PROT_READ, MAP_SHARED, 0, 0);
+    // If there was an error, the kernel returns -1 as a pointer.
+    if(pageData.page_ == reinterpret_cast<void*>(-1))
+    {
+      // For the debugger to know there was an error, we return a nullptr.
+      pageData.page_ = nullptr;
+    }
     return pageData;
   }
 
   bool MemoryDebuggerImpl::DecommisionPage(PageAllocation& page)
   {
-    NO_IMPL();
-    UNREFERENCED(page);
-    return false;
+    void* pageCode = mmap(page.page_, page.pageSize_, 0, MAP_SHARED, 0, 0);
+    return pageCode != reinterpret_cast<void*>(-1);
   }
 
   bool MemoryDebuggerImpl::ReleasePage(PageAllocation& page)
   {
-    NO_IMPL();
-    UNREFERENCED(page);
-    return false;
+    int errorCode = munmap(page.page_, page.pageSize_);
+    return errorCode != -1;
   }
 }

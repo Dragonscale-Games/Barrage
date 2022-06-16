@@ -67,7 +67,7 @@ FetchContent_MakeAvailable(glfw3 glm)
 if(MSVC)
   set(CMAKE_CXX_FLAGS "/W4 /std:c++17 /EHsc /wd4201") # /WX
 else()
-  set(CMAKE_CXX_FLAGS "-Wall -Werror -Wextra -std=c++17")
+  set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++17") # -Werror
 endif()
 
 # Add the subdirectories for building the Barrage libraries.
