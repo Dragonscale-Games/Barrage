@@ -47,18 +47,18 @@ namespace Barrage
   MemoryDebuggerImpl::~MemoryDebuggerImpl()
   {
     // Finally, release all of our allocated pages.
-    for (const Allocation& allocation : deleted_)
+    for (Allocation& allocation : deleted_)
     {
-      ReleasePage(allocation.page_);
+      ReleasePage(allocation.pageData_);
     }
   }
 
   void* MemoryDebuggerImpl::Allocate(AllocType type, size_t n, const void* allocAddress) noexcept(false)
   {
     Allocation allocation = {};
-    void* page = AllocatePage(n);
+    PageAllocation pageAllocation = AllocatePage(n);
     // Check if we successfully made an allocation.
-    if (!page)
+    if (!pageAllocation.page_)
     {
       throw std::bad_alloc();
     }
@@ -72,8 +72,8 @@ namespace Barrage
       // structure.
       allocation.type_ = type;
       allocation.allocSize_ = n;
-      allocation.page_ = page;
-      allocation.allocation_ = GetPositionInPage(page, n);
+      allocation.pageData_ = pageAllocation;
+      allocation.allocation_ = GetPositionInPage(pageAllocation.page_, n);
       allocation.file_ = symbolNameBuild.str().c_str();
     }
     // Upon success, we add our allocation to a list and return the allocation.
@@ -98,7 +98,7 @@ namespace Barrage
       else
       {
         // Otherwise, we decommision page storing it and keep track of our allocation.
-        bool isDecommisionSuccess = DecommisionPage(allocatedIter->page_);
+        bool isDecommisionSuccess = DecommisionPage(allocatedIter->pageData_);
         if (!isDecommisionSuccess)
         {
           BREAKPOINT();
@@ -207,14 +207,14 @@ namespace Barrage
     statFile << std::endl;
   }
 
-  AllocList::const_iterator MemoryDebuggerImpl::FindAddressIn(const AllocList& list, const void* address)
+  AllocList::iterator MemoryDebuggerImpl::FindAddressIn(AllocList& list, const void* address)
   {
-    const auto findOnAddressMatch = [&address](const Allocation& allocation)
+    const auto findOnAddressMatch = [&address](Allocation& allocation)
     {
       return allocation.allocation_ == address;
     };
     // Find the allocation address within our list.
-    auto iter = std::find_if(list.cbegin(), list.cend(), findOnAddressMatch);
+    auto iter = std::find_if(list.begin(), list.end(), findOnAddressMatch);
     return iter;
   }
 

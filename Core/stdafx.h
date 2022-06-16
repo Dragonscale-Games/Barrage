@@ -13,8 +13,6 @@
 #include <cassert>
 #include <csignal>
 
-#include <intrin.h>
-
 /****************************************************************************/
 /*!
   \brief
@@ -22,10 +20,15 @@
     function.
 */
 /****************************************************************************/
-#ifdef __clang__
+#ifdef _MSC_VER
+#if defined(__clang__) || defined(__GNUC__)
 #define RETURN_ADDRESS() __builtin_return_address(0)
 #else
+#include <intrin.h>
 #define RETURN_ADDRESS() _ReturnAddress()
+#endif
+#else
+#define RETURN_ADDRESS() __builtin_return_address(0)
 #endif
 
 /****************************************************************************/

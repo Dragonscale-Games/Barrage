@@ -23,22 +23,25 @@
 
 namespace Barrage
 {
-  void* MemoryDebuggerImpl::AllocatePage(size_t size)
+  PageAllocation MemoryDebuggerImpl::AllocatePage(size_t size)
   {
     // Get a page from the windows operating system.
     const size_t pageSize = CalculatePageSize(size);
     void* page = VirtualAlloc(NULL, pageSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-    return page;
+    PageAllocation pageData = { };
+    pageData.pageSize_ = pageSize;
+    pageData.page_ = page;
+    return pageData;
   }
 
-  bool MemoryDebuggerImpl::DecommisionPage(void* page)
+  bool MemoryDebuggerImpl::DecommisionPage(PageAllocation& page)
   {
-    return VirtualFree(page, 0u, MEM_DECOMMIT);
+    return VirtualFree(page.page_, 0u, MEM_DECOMMIT);
   }
 
-  bool MemoryDebuggerImpl::ReleasePage(void* page)
+  bool MemoryDebuggerImpl::ReleasePage(PageAllocation& page)
   {
-    return VirtualFree(page, 0u, MEM_RELEASE);
+    return VirtualFree(page.page_, 0u, MEM_RELEASE);
   }
 }
 

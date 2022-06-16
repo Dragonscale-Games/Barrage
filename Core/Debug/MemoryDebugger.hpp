@@ -48,6 +48,14 @@ namespace Barrage
     SINGLE,
     ARRAY,
   };
+  //! A structure containing the data about page allocations.
+  struct PageAllocation
+  {
+    //! The size of the allocation made for the page.
+    size_t pageSize_;
+    //! The pointer to the actual page.
+    void* page_;
+  };
   //! The structure to encapsulate the metadata of each allocation.
   struct Allocation
   {
@@ -55,8 +63,8 @@ namespace Barrage
     AllocType type_;
     //! The size of the allocation made.
     size_t allocSize_;
-    //! The pointer to the page made for this allocation.
-    void* page_;
+    //! The structure containing the data about the page allocated.
+    PageAllocation pageData_;
     //! The pointer to the allocation.
     void* allocation_;
     //! The name of the file that allocated the object.
@@ -192,19 +200,19 @@ namespace Barrage
         field on the structure will be a null pointer.
     */
     /*************************************************************************/
-    static void* AllocatePage(size_t size);
+    static PageAllocation AllocatePage(size_t size);
     /*************************************************************************/
     /*!
       \brief
         Decommisions a page. If the user attempts to access the 
         memory from this page again, they will get a hardware exception.
       \param page
-        The page to decommision.
+        The data of the page to decommision.
       \returns
         True if successful, false if errors were created in the attempt.
     */
     /*************************************************************************/
-    static bool DecommisionPage(void* page);
+    static bool DecommisionPage(PageAllocation& page);
     /*************************************************************************/
     /*!
       \brief
@@ -212,12 +220,12 @@ namespace Barrage
         there is no safety nets for the user if they access the memory
         again.
       \param page
-        The page to release.
+        The data of the page to release.
       \returns
         True if successful, otherwise there were errors.
     */
     /*************************************************************************/
-    static bool ReleasePage(void* page);
+    static bool ReleasePage(PageAllocation& page);
     /*************************************************************************/
     /*!
       \brief
@@ -232,7 +240,7 @@ namespace Barrage
         Otherwise, it returns one element past the end of the list.
     */
     /*************************************************************************/
-    AllocList::const_iterator FindAddressIn(const AllocList& list, const void* address);
+    AllocList::iterator FindAddressIn(AllocList& list, const void* address);
     /*************************************************************************/
     /*!
       \brief

@@ -37,15 +37,13 @@ namespace Barrage
 
   static const int INVALID_RESOURCE = -1;
 
-  GfxManager2D::ResourceID::ResourceID() :
-    internalResource_(new int(INVALID_RESOURCE)), objectsUsingThis_(new int(1))
+  GfxManager2D::ResourceID::ResourceID() : ResourceID(INVALID_RESOURCE)
   {
   }
 
   GfxManager2D::ResourceID::ResourceID(int index) :
     internalResource_(new int(index)), objectsUsingThis_(new int(1))
   {
-    UNREFERENCED(index);
   }
 
   GfxManager2D::ResourceID::ResourceID(const ResourceID& rhs) :
@@ -333,7 +331,8 @@ namespace Barrage
   GfxManager2D::ShaderID GfxManager2D::CreateShader()
   {
     // First create the program and the shader objects associated with it.
-    GLuint program = CHECK_GL( glCreateProgram() );
+    GLuint program = glCreateProgram();
+    CHECK_GL((void)0);
     StageList list = {
       glCreateShader(GL_VERTEX_SHADER),
       glCreateShader(GL_FRAGMENT_SHADER),
