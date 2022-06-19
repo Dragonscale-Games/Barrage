@@ -19,8 +19,9 @@
 #include <Rendering/GfxPrimitives.hpp>
 #include <Rendering/GfxManager2D.hpp>
 #include <Rendering/GfxRenderer2D.hpp>
-#include <Rendering/GfxDraw2D.hpp>
 #include <Rendering/GfxFactory2D.hpp>
+#include <Rendering/GfxRegistry2D.hpp>
+#include <Rendering/GfxDraw2D.hpp>
 
 #include <Rendering/WindowManager.hpp>
 
@@ -58,43 +59,39 @@ int main()
   // resources for the graphics modules from files.
   Barrage::GfxFactory2D factory;
   factory.Initialize(manager);
+  // The registry module so users can store resources created
+  // from disk.
+  Barrage::GfxRegistry2D registry;
+  registry.Initialize(factory);
+  // Register the assets wanted.
+  const std::array<const char*, GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE> filepaths = {
+    "Assets/instanced.vs", "Assets/instanced.fs"
+  };
+  registry.RegisterShader(filepaths.data(), "instanced");
+  // The drawing module that simplifies rendering.
+  Barrage::GfxDraw2D drawing;
+  drawing.Initialize(manager, renderer, registry);
+  drawing.ApplyShader("instanced");
 
+  // Tell the drawing system to draw a couple of squares on the screen.
+  constexpr int size = 2;
+  glm::vec2 positions[size] = { glm::vec2(-150.0f, 0.0f), glm::vec2(150.0f, 0.0f) };
+  glm::vec2 scales[size] = { glm::vec2(150.0f), glm::vec2(50.0f, 120.0f) };
+  RADIAN rotations[size] = { 0.25f * (22.0f / 7.0f), 0.0f };
+  drawing.DrawInstancedQuad(size, positions, scales, rotations);
+  
+  // Update the window while it's open.
+  while(!glfwWindowShouldClose(windowing.GetInternalHandle())) 
   {
-    // The drawing module that simplifies rendering.
-    Barrage::GfxDraw2D drawing;
-    drawing.Initialize(manager, renderer);
-    // Create the assets needed to render a scene.
-    // Attempt to create our shaders from files.
-    const std::array<const char*, GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE> filepaths = {
-      "instanced.vs", "instanced.fs"
-    };
-    GfxManager2D::ShaderID shader = factory.CreateShader(filepaths.data());
-    if(!shader.IsValid())
-    {
-      shader = CreateSampleShader(manager);
-    }
-  
-    drawing.ApplyShader(shader);
-    // Tell the drawing system to draw a couple of squares on the screen.
-    constexpr int size = 2;
-    glm::vec2 positions[size] = { glm::vec2(-150.0f, 0.0f), glm::vec2(150.0f, 0.0f) };
-    glm::vec2 scales[size] = { glm::vec2(150.0f), glm::vec2(50.0f, 120.0f) };
-    RADIAN rotations[size] = { 0.25f * (22.0f / 7.0f), 0.0f };
-    drawing.DrawInstancedQuad(size, positions, scales, rotations);
-  
-    // Update the window while it's open.
-    while(!glfwWindowShouldClose(windowing.GetInternalHandle())) 
-    {
-      glfwPollEvents();
-      // Note that you don't have to resubmit requests if
-      // don't need to.
-      const WindowManager::WindowData& settings = windowing.GetSettings();
-      const glm::vec2 dimensions(settings.width_, settings.height_);
-      renderer.SetViewportSpace(dimensions);
-      renderer.RenderRequests();
-      glfwSwapBuffers(windowing.GetInternalHandle());
-      glfwSwapInterval(1);
-    }
+    glfwPollEvents();
+    // Note that you don't have to resubmit requests if
+    // don't need to.
+    const WindowManager::WindowData& settings = windowing.GetSettings();
+    const glm::vec2 dimensions(settings.width_, settings.height_);
+    renderer.SetViewportSpace(dimensions);
+    renderer.RenderRequests();
+    glfwSwapBuffers(windowing.GetInternalHandle());
+    glfwSwapInterval(1);
   }
   
   renderer.Shutdown();

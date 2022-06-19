@@ -21,6 +21,7 @@
 // Includes
 // ============================================================================
 #include <map>
+#include <string>
 #include "GfxFactory2D.hpp"
 
 namespace Barrage
@@ -30,7 +31,7 @@ namespace Barrage
   public:
 
     //! Define the data structure to hold our resources.
-    using ResourceBook = std::map<std::string, ResourceID>;
+    using ResourceBook = std::map<std::string, GfxManager2D::ResourceID>;
 
     /*************************************************************************/
     /*!
@@ -41,6 +42,13 @@ namespace Barrage
     */
     /*************************************************************************/
     void Initialize(GfxFactory2D& factory);
+    /*************************************************************************/
+    /*!
+      \brief
+        Shuts down the system by releasing the resources this holds.
+    */
+    /*************************************************************************/
+    void Shutdown();
 
     /*************************************************************************/
     /*!
@@ -52,7 +60,7 @@ namespace Barrage
         The name to register the texture with.
     */
     /*************************************************************************/
-    void RegisterTexture(GfxManager2D::TextureID texture, const char* keyname);
+    void RegisterTexture(const GfxManager2D::TextureID& texture, const char* keyname);
     /*************************************************************************/
     /*!
       \brief
@@ -62,7 +70,7 @@ namespace Barrage
         The path to look up and register the texture with.
     */
     /*************************************************************************/
-    void RegisterTexture(const char* path);
+    void RegisterTexture(const char* path, const char* keyname = nullptr);
     /*************************************************************************/
     /*!
       \brief
@@ -73,17 +81,20 @@ namespace Barrage
         The name to register the texture with.
     */
     /*************************************************************************/
-    void RegisterShader(GfxManager2D::TextureID texture, const char* keyname);
+    void RegisterShader(const GfxManager2D::TextureID& texture, const char* keyname);
     /*************************************************************************/
     /*!
       \brief
         Loads a shader with the given path and registers it with the
         same path.
-      \param path
-        The path to look up and register the shader with.
+      \param paths
+        The paths to look up and register the shader with.
     */
     /*************************************************************************/
-    void RegisterShader(const char* path);
+    void RegisterShader(
+      const char* const paths[GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE], 
+      const char* keyname = nullptr
+    );
 
     /*************************************************************************/
     /*!
@@ -132,7 +143,21 @@ namespace Barrage
     */
     /*************************************************************************/
     void Register(
-      GfxManager2D::ResourceID resource, 
+      const GfxManager2D::ResourceID& resource,
+      const char* keyname,
+      ResourceBook& resourceBook
+    );
+    /*************************************************************************/
+    /*!
+      \brief
+        Finds a resource from a given particular map.
+      \param keyname
+        The key to register the resource with.
+      \param resourceBook
+        The structure to register the resource.
+    */
+    /*************************************************************************/
+    GfxManager2D::ResourceID Find(
       const char* keyname,
       ResourceBook& resourceBook
     );

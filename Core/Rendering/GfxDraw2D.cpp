@@ -22,7 +22,7 @@
 
 namespace Barrage
 {
-  GfxDraw2D::GfxDraw2D() : manager_(nullptr), renderer_(nullptr)
+  GfxDraw2D::GfxDraw2D() : manager_(nullptr), renderer_(nullptr), registry_(nullptr)
   {
   }
 
@@ -45,6 +45,22 @@ namespace Barrage
     specs.indicesElementSize_ = sizeof(faces.front());
     quad_ = manager_->CreateMesh(specs);
   }
+
+  void GfxDraw2D::Initialize(
+    GfxManager2D& manager, GfxRenderer2D& renderer, GfxRegistry2D& registry)
+  {
+    Initialize(manager, renderer);
+    registry_ = &registry;
+  }
+
+  void GfxDraw2D::Shutdown()
+  {
+    quad_.Invalidate();
+    registry_ = nullptr;
+    renderer_ = nullptr;
+    manager_ = nullptr;
+  }
+
 
   void GfxDraw2D::DrawQuad(
     const glm::vec2& position, const glm::vec2& scale, const RADIAN& rotation,
@@ -80,8 +96,27 @@ namespace Barrage
     renderer_->AddRequest(request);
   }
 
+  void GfxDraw2D::DrawInstancedQuad(
+    int count,
+    const glm::vec2* positions, const glm::vec2* scales,
+    const RADIAN* rotations, const char* textureKey)
+  {
+    assert(renderer_);
+    assert(registry_);
+    const GfxManager2D::TextureID texture(registry_->FindTexture(textureKey));
+    DrawInstancedQuad(count, positions, scales, rotations, texture);
+  }
+
   void GfxDraw2D::ApplyShader(const GfxManager2D::ShaderID& shader)
   {
+    boundShader_ = shader;
+  }
+
+  void GfxDraw2D::ApplyShader(const char* keyname)
+  {
+    assert(registry_);
+    GfxManager2D::ShaderID shader = registry_->FindShader(keyname);
+    assert(shader.IsValid());
     boundShader_ = shader;
   }
 
@@ -90,6 +125,4 @@ namespace Barrage
     UNREFERENCED(framebuffer);
     NO_IMPL();
   }
-
-
 }

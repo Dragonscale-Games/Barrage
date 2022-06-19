@@ -56,6 +56,8 @@ namespace Barrage
     CHECK_GL( glDeleteBuffers(GfxRenderer2D::BUFFER_COUNT, instancedBuffers_) );
     // Delete the Vertex Array Object.
     CHECK_GL( glDeleteVertexArrays(1, &renderState_));
+    // Release previous handles to other modules.
+    manager_ = nullptr;
   }
 
   void GfxRenderer2D::SetExpectedRequests(size_t requests)
@@ -102,7 +104,6 @@ namespace Barrage
   {
     // Clear the backbuffer, for now hardcoded.
     CHECK_GL( glClearBufferfv(GL_COLOR, 0, glm::value_ptr(clearColor_)) );
-    //CHECK_GL( glClear(GL_COLOR_BUFFER_BIT) );
 
     // Render all the requests.
     // Get the list of shaders.
