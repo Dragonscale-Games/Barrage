@@ -19,6 +19,7 @@
 
 #include <sstream>
 #include <fstream>
+#include <stb_image/stb_image.h>
 
 namespace Barrage
 {
@@ -83,9 +84,24 @@ namespace Barrage
 
   GfxManager2D::TextureID GfxFactory2D::CreateTexture(const char* filepath)
   {
-    UNREFERENCED(filepath);
+    // Reads 2D images but not necessarily 3D ones.
+    // TODO: Figure out a solution to read a cubemap if necessary.
+    int width, height, channels;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* pixels = stbi_load(filepath, &width, &height, &channels, 4);
+
+    GfxManager2D::TextureSpecs textureSpecs = { 0 };
+    textureSpecs.createMipmaps_ = true;
+    textureSpecs.dimensions_ = 2;
+    textureSpecs.format_ = TextureFormat::R8G8B8A8;
+    textureSpecs.width_ = width;
+    textureSpecs.height_ = height;
+    textureSpecs.pixels_ = reinterpret_cast<const unsigned char* const>(pixels);
+
     assert(manager_);
-    NO_IMPL();
-    return GfxManager2D::TextureID();
+    GfxManager2D::TextureID newTexture = manager_->CreateTexture(textureSpecs);
+    stbi_image_free(pixels);
+
+    return newTexture;
   }
 }

@@ -13,8 +13,10 @@
 /* Includes */
 /* ======================================================================== */
 
+/*
 #include <Debug/MemoryDebugger.hpp>
 #include <Debug/MemoryOverrides.hpp>
+*/
 
 #include <Rendering/GfxPrimitives.hpp>
 #include <Rendering/GfxManager2D.hpp>
@@ -25,7 +27,7 @@
 
 #include <Rendering/WindowManager.hpp>
 
-Barrage::GfxManager2D::ShaderID CreateSampleShader(Barrage::GfxManager2D& manager);
+Barrage::GfxManager2D::TextureID CreateSampleTexture(Barrage::GfxManager2D& manager);
 
 /****************************************************************************/
 /*!
@@ -63,11 +65,14 @@ int main()
   // from disk.
   Barrage::GfxRegistry2D registry;
   registry.Initialize(factory);
-  // Register the assets wanted.
+  // Register a sample shader from a file.
   const std::array<const char*, GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE> filepaths = {
     "Assets/instanced.vs", "Assets/instanced.fs"
   };
   registry.RegisterShader(filepaths.data(), "instanced");
+  // Register the texture wanted from a file.
+  const Barrage::GfxManager2D::TextureID sampleTexture = CreateSampleTexture(manager);
+  registry.RegisterTexture(sampleTexture, "sample");
   // The drawing module that simplifies rendering.
   Barrage::GfxDraw2D drawing;
   drawing.Initialize(manager, renderer, registry);
@@ -78,7 +83,7 @@ int main()
   glm::vec2 positions[size] = { glm::vec2(-150.0f, 0.0f), glm::vec2(150.0f, 0.0f) };
   glm::vec2 scales[size] = { glm::vec2(150.0f), glm::vec2(50.0f, 120.0f) };
   RADIAN rotations[size] = { 0.25f * (22.0f / 7.0f), 0.0f };
-  drawing.DrawInstancedQuad(size, positions, scales, rotations);
+  drawing.DrawInstancedQuad(size, positions, scales, rotations, "sample");
   
   // Update the window while it's open.
   while(!glfwWindowShouldClose(windowing.GetInternalHandle())) 
@@ -101,32 +106,28 @@ int main()
   return 0;
 }
 
-Barrage::GfxManager2D::ShaderID CreateSampleShader(Barrage::GfxManager2D& manager)
+Barrage::GfxManager2D::ShaderID CreateSampleTexture(Barrage::GfxManager2D& manager)
 {
   using namespace Barrage;
-  GfxManager2D::ShaderSpecs specs = {};
-  // The source code for the vertex shader.
-  specs.stageSources_[GfxManager2D::ShaderStage::VERTEX_SHADER] =
-  "#version 330 core\n"
-  "layout (location = 0) in vec2 vertex;\n"
-  "layout (location = 2) in vec2 position;\n"
-  "layout (location = 3) in vec2 scale;\n"
-  "layout (location = 4) in float rotation;\n"
-  "uniform mat4 projection;\n"
-  "void main(void)\n"
-  "{\n"
-  "  vec2 v = scale * vertex;"
-  "  v = vec2( v.x * cos(rotation) - v.y * sin(rotation), v.x * sin(rotation) + v.y * cos(rotation) );\n"
-  "  v += position;"
-  "  gl_Position = projection * vec4(v, 0.0, 1.0);\n"
-  "}\n";
-  // The source code for the pixel shader.
-  specs.stageSources_[GfxManager2D::ShaderStage::PIXEL_SHADER] =
-  "#version 330 core\n"
-  "out vec4 color;\n"
-  "void main(void)\n"
-  "{\n"
-  "  color = vec4(vec3(1), 1);\n"
-  "}\n";
-  return manager.CreateShader(specs);
+  // The constant data about this texture.
+  const uint8_t width = 3;
+  const uint8_t height = 3;
+  const uint8_t dimensions = 2;
+  // The pixel data for the texture.
+  unsigned int pixels[width * height] = {
+    0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+    0x00000000, 0xFFFFFFFF, 0x00000000,
+    0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
+  };
+  // The specifications for the sample texture.
+  GfxManager2D::TextureSpecs specs{};
+  specs.width_ = width;
+  specs.height_ = height;
+  specs.dimensions_ = dimensions;
+  specs.createMipmaps_ = true;
+  specs.format_ = TextureFormat::R8G8B8A8;
+  specs.filter_ = TextureFilter::FILTER_NONE;
+  specs.pixels_ = reinterpret_cast<unsigned char*>(pixels);
+  // Create the texture.
+  return manager.CreateTexture(specs);
 }

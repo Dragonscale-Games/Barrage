@@ -140,11 +140,16 @@ namespace Barrage
         int shaderID = static_cast<int>(resourceShaders[current_.shaderIndex_]);
         CHECK_GL( glUseProgram(shaderID) );
         // Set the uniform for the projection matrix.
-        GLint projectionUniform = glGetUniformLocation(shaderID, "projection");
-        CHECK_GL((void)0);
+        GLint projectionUniform = glGetUniformLocation(shaderID, "projection"); CHECK_GL((void)0);
         if (projectionUniform != -1)
         {
           CHECK_GL( glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(viewport_.projection_)) );
+        }
+        // Set the uniform for the color texture if it exists.
+        GLint colorTextureUniform = glGetUniformLocation(shaderID, "colorTex"); CHECK_GL((void)0);
+        if(colorTextureUniform != -1)
+        {
+          CHECK_GL( glUniform1i(colorTextureUniform, 0) );
         }
       }
       // If the previous mesh is not the same ID as the current one.
