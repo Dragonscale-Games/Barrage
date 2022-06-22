@@ -14,13 +14,13 @@
 /* ======================================================================== */
 
 #include <stdafx.h>
+#include <iostream>
 #include <Debug/SymbolManager.hpp>
 #include <Debug/MemoryDebugger.hpp>
 /*****************************************************************************/
 /* The overrides for the new and delete operators offered by C++ */
 /*****************************************************************************/
 #include <Debug/MemoryOverrides.hpp>
-#include <iostream>
 
 /****************************************************************************/
 /*!

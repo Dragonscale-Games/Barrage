@@ -24,6 +24,12 @@
 #include <stdafx.h>
 #include "MemoryDebugger.hpp"
 
+namespace Barrage
+{
+  int MemoryDebugger::referenceCount_ = 0;
+  MemoryDebuggerImpl* MemoryDebugger::debugger_ = nullptr;
+}
+
 void* operator new(std::size_t count)
 {
   return Barrage::MemoryDebugger::Allocate(Barrage::AllocType::SINGLE, count, RETURN_ADDRESS());

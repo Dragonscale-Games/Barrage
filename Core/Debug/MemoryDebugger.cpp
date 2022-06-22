@@ -38,9 +38,6 @@ namespace
 
 namespace Barrage
 {
-  int MemoryDebugger::referenceCount_ = 0;
-  MemoryDebuggerImpl* MemoryDebugger::debugger_ = nullptr;
-
   MemoryDebuggerImpl::MemoryDebuggerImpl()
   {
   }
