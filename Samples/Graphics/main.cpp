@@ -94,6 +94,8 @@ int main()
     glfwSwapInterval(1);
   }
   
+  drawing.Shutdown();
+  registry.Shutdown();
   renderer.Shutdown();
   manager.Shutdown();
   windowing.Shutdown();

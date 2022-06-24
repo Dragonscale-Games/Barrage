@@ -32,34 +32,17 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-find_package(rttr CONFIG REQUIRED)
+find_package(rttr CONFIG REQUIRED Core)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
-set(NEED_PULLING_DEPENDENCIES )
+set(NEED_PULLING_DEPENDENCIES "${rttr_FOUND} ${glfw3_FOUND} ${glm_FOUND}")
 
 # Use FetchContent to find the dependencies which were not found through
 # CMake's default find_package.
 include(FetchContent)
-# Download GLFW if necessary.
-if(${glfw3_FOUND} STREQUAL "")
-  FetchContent_Declare(
-    glfw3
-    GIT_REPOSITORY "https://www.github.com/glfw/glfw"
-    GIT_TAG "b716ff5b975b7cda1b35f8aceba8bcbb2f919fe8"
-  )
-  FetchContent_MakeAvailable(glfw3)
-endif()
-# Download GLM if necessary.
-if(${glm_FOUND} STREQUAL "")
-  FetchContent_Declare(
-    glm
-    GIT_REPOSITORY "https://www.github.com/g-truc/glm"
-    GIT_TAG "6ad79aae3eb5bf809c30bf1168171e9e55857e45"
-  )
-  FetchContent_MakeAvailable(glm)
-endif()
 # Download RTTR
-if(${rttr_FOUND} STREQUAL "")
+message(${NEED_PULLING_DEPENDENCIES})
+if(NOT (${NEED_PULLING_DEPENDENCIES} STREQUAL ""))
   # Which is special because RTTR needs be reinstalled.
   if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     FetchContent_Declare(
@@ -69,7 +52,10 @@ if(${rttr_FOUND} STREQUAL "")
     )
     FetchContent_Populate(vcpkg)
     set(CMAKE_TOOLCHAIN_FILE "${vcpkg_SOURCE_DIR}/scripts/buildsystems/vcpkg.cmake")
+    # Reinstall the dependencies we need.
     find_package(rttr CONFIG REQUIRED)
+    find_package(glfw3 REQUIRED)
+    find_package(glm REQUIRED)
   endif()
 endif()
 
