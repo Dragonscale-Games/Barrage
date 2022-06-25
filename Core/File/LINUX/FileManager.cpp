@@ -20,17 +20,21 @@
 #include <stdafx.h>
 #include <File/FileManager.hpp>
 
+#include <unistd.h>
+#include <pwd.h>
+
 namespace Barrage
 {
   std::string FileManager::QueryContentPath()
   {
-    NO_IMPL();
-    return "";
+    static std::string relativeContentPath = "./Assets/";
+    assert(!relativeContentPath.empty());
+    return relativeContentPath;
   }
 
   std::string FileManager::QueryUserPath()
   {
-    NO_IMPL();
-    return "";
+    std::string userPath = getenv("HOME");
+    return userPath + "/";
   }
 }
