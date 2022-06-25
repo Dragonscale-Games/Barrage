@@ -30,6 +30,7 @@ namespace Barrage
   SymbolInfo SymbolManagerImpl::GetSymbolInfo(const void* address) const
   {
     UNREFERENCED(address);
+    NO_IMPL();
     SymbolInfo info = {};
     return info;
   }
