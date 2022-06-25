@@ -30,6 +30,7 @@ namespace Barrage
   std::string FileManager::QueryContentPath()
   {
     static std::string relativeContentPath = "./Assets/";
+    assert(!relativeContentPath.empty());
     return relativeContentPath;
   }
 
@@ -60,6 +61,8 @@ namespace Barrage
     assert(userDirBuffer[endPosSlash + 1] == '\0');
     userDirBuffer[endPosSlash] = '/';
     // Create a string user this buffer.
-    return std::string(userDirBuffer.data());
+    std::string stringifiedDir = userDirBuffer.data();
+    assert(!stringifiedDir.empty());
+    return stringifiedDir;
   }
 }
