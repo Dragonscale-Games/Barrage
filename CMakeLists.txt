@@ -39,7 +39,6 @@ add_subdirectory(ThirdParty)
 find_package(rttr CONFIG REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
-#FetchContent_MakeAvailable(glfw3 glm)
 
 # Set the compiler flags before building our own code.
 if(MSVC)
