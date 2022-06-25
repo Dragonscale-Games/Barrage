@@ -157,7 +157,7 @@ namespace Barrage
         The header of the statistics file.
     */
     /*************************************************************************/
-    static void DumpStatHeader(std::ofstream& statFile);
+    static void DumpStatHeader(FILE* statFile);
     /*************************************************************************/
     /*!
       \brief
@@ -170,7 +170,7 @@ namespace Barrage
         The status label for every entry on this list.
     */
     /*************************************************************************/
-    static void DumpList(std::ofstream& statFile, const AllocList& list, const char* entryLabel);
+    static void DumpList(FILE* statFile, const AllocList& list, const char* entryLabel);
     /*************************************************************************/
     /*!
       \brief
@@ -183,7 +183,7 @@ namespace Barrage
         The label for the allocationo entry being written.
     */
     /*************************************************************************/
-    static void DumpAllocation(std::ofstream& statFile, const Allocation& allocation, const char* entryLabel);
+    static void DumpAllocation(FILE* statFile, const Allocation& allocation, const char* entryLabel);
 
     /*************************************************************************/
     /*!

@@ -23,7 +23,7 @@ namespace Barrage
     // Load the resource before it crashes and dies.
     try
     {
-      resource = Create(path, filename);
+      resource = Create<T>(path, filename);
       resource->Load();
     }
     catch(RuntimeError& e)
@@ -33,7 +33,7 @@ namespace Barrage
     }
 
     // Cache the resource on a successful load.
-    assert(cachedResources_.find(path + filename) == cachedResources.cend());
+    assert(cachedResources_.find(path + filename) == cachedResources_.cend());
     cachedResources_[path + filename] = resource;
     return *resource;
   }

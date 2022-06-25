@@ -22,6 +22,7 @@
 //  ===========================================================================
 #include <string>
 #include <map>
+#include <Utilities/RuntimeError.hpp>
 
 namespace Barrage
 {

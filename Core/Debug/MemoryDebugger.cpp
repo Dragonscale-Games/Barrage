@@ -155,8 +155,7 @@ namespace Barrage
     };
     assert(statList.size() == availableStats.size());
     // Create the file to dump our statistics.
-    std::ofstream statFile;
-    statFile.open(filepath);
+    FILE* statFile = fopen(filepath, "wt");
     if (statFile)
     {
       size_t length = statList.size();
@@ -175,10 +174,10 @@ namespace Barrage
     {
       std::cout << "Failed to create the statistics file." << std::endl;
     }
-    statFile.close();
+    fclose(statFile);
   }
 
-  void MemoryDebuggerImpl::DumpList(std::ofstream& statFile, const AllocList& list, const char* entryLabel)
+  void MemoryDebuggerImpl::DumpList(FILE* statFile, const AllocList& list, const char* entryLabel)
   {
     assert(statFile);
     assert(entryLabel);
@@ -189,20 +188,18 @@ namespace Barrage
     }
   }
 
-  void MemoryDebuggerImpl::DumpStatHeader(std::ofstream& statFile)
+  void MemoryDebuggerImpl::DumpStatHeader(FILE* statFile)
   {
     assert(statFile);
-    statFile << "Status, Allocation Size, Memory Address, File" << std::endl;
+    fprintf(statFile, "Status, Allocation Size, Memory Address, File\nimage.png");
   }
 
   void MemoryDebuggerImpl::DumpAllocation(
-    std::ofstream& statFile, const Allocation& allocation, const char* entryLabel)
+    FILE* statFile, const Allocation& allocation, const char* entryLabel)
   {
-    statFile << entryLabel << ", ";
-    statFile << allocation.allocSize_ << ", ";
-    statFile << allocation.allocation_ << ", ";
-    statFile << allocation.file_.c_str() << ", ";
-    statFile << std::endl;
+    fprintf(statFile, "%s, %lu, %p, %s\n",
+      entryLabel, allocation.allocSize_, allocation.allocation_,
+      allocation.file_.c_str());
   }
 
   AllocList::iterator MemoryDebuggerImpl::FindAddressIn(AllocList& list, const void* address)
