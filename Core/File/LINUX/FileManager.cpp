@@ -17,17 +17,20 @@
 //  ===========================================================================
 // Includes
 //  ===========================================================================
+#include <stdafx.h>
 #include <File/FileManager.hpp>
 
 namespace Barrage
 {
   std::string FileManager::QueryContentPath()
   {
+    NO_IMPL();
     return "";
   }
 
   std::string FileManager::QueryUserPath()
   {
+    NO_IMPL();
     return "";
   }
 }
