@@ -23,10 +23,17 @@
 #include <UserEnv.h>
 #include <cassert>
 #include <vector>
+#include <algorithm>
 
 namespace Barrage
 {
   std::string FileManager::QueryContentPath()
+  {
+    static std::string relativeContentPath = "./Assets/";
+    return relativeContentPath;
+  }
+
+  std::string FileManager::QueryUserPath()
   {
     // Get the process token so we can query the user directory.
     BOOL success = true;
@@ -38,20 +45,21 @@ namespace Barrage
     assert(success);
     assert(tokenHandle);
     // Query for the size of the user directory.
-    DWORD userDirBufferSize;
-    std::vector<char> userDirBuffer;
-    GetUserProfileDirectory(NULL, NULL, &userDirBufferSize);
+    DWORD userDirBufferSize = 4096;
+    std::vector<TCHAR> userDirBuffer(userDirBufferSize);
+    GetUserProfileDirectoryA(tokenHandle, NULL, &userDirBufferSize);
     // Resize the buffer and get the user directory for real.
     userDirBuffer.resize(userDirBufferSize);
-    success = GetUserProfileDirectory(tokenHandle, userDirBuffer.data(), &userDirBufferSize);
+    success = GetUserProfileDirectoryA(tokenHandle, userDirBuffer.data(), &userDirBufferSize);
     assert(success);
+    // Replace all back slashes by forward slashes.
+    std::replace(userDirBuffer.begin(), userDirBuffer.end(), '\\', '/');
+    // Append an additional forward slash.
+    size_t endPosSlash = std::find(userDirBuffer.begin(), userDirBuffer.end(), '\0') - userDirBuffer.begin();
+    assert(endPosSlash < userDirBuffer.size() - 1);
+    assert(userDirBuffer[endPosSlash + 1] == '\0');
+    userDirBuffer[endPosSlash] = '/';
     // Create a string user this buffer.
     return std::string(userDirBuffer.data());
-  }
-
-  std::string FileManager::QueryUserPath()
-  {
-    static std::string relativeContentPath = "Assets/";
-    return relativeContentPath;
   }
 }

@@ -144,7 +144,7 @@ namespace Barrage
         by the operating systemm.
     */
     /*************************************************************************/
-    void Initialize(const std::string& userPathAppend = "Barrage");
+    void Initialize(const std::string& userPathAppend = "Barrage/");
     /*************************************************************************/
     /*!
       \brief

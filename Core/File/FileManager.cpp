@@ -55,8 +55,8 @@ namespace Barrage
 
   void FileManager::Initialize(const std::string& userPathAppend)
   {
-    contentPath_ = GetContentPath();
-    userPath_ = GetUserPath() + userPathAppend;
+    contentPath_ = QueryContentPath();
+    userPath_ = QueryUserPath() + userPathAppend;
   }
 
   void FileManager::Shutdown()
