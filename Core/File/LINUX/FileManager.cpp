@@ -25,13 +25,6 @@
 
 namespace Barrage
 {
-  std::string FileManager::QueryContentPath()
-  {
-    static std::string relativeContentPath = "./Assets/";
-    assert(!relativeContentPath.empty());
-    return relativeContentPath;
-  }
-
   std::string FileManager::QueryUserPath()
   {
     std::string userPath = getenv("HOME");

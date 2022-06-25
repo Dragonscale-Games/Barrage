@@ -27,13 +27,6 @@
 
 namespace Barrage
 {
-  std::string FileManager::QueryContentPath()
-  {
-    static std::string relativeContentPath = "./Assets/";
-    assert(!relativeContentPath.empty());
-    return relativeContentPath;
-  }
-
   std::string FileManager::QueryUserPath()
   {
     // Get the process token so we can query the user directory.
