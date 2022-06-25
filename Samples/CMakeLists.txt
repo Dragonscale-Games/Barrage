@@ -34,3 +34,4 @@
 add_subdirectory(Graphics)
 add_subdirectory(Debugging)
 add_subdirectory(DemoGame)
+add_subdirectory(FileManagement)

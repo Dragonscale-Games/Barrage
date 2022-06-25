@@ -1,7 +1,7 @@
 /* ========================================================================= */
 /*!
  *
- * \file            SymbolManager.cpp
+ * \file            Debug/SymbolManager.cpp
  * \author          David Wong Cascante
  * \par             dragonscale.games.llc\@gmail.com
 

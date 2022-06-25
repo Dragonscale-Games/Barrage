@@ -1,7 +1,7 @@
 ﻿/* ========================================================================= */
 /*!
  *
- * \file            SymbolManager.cpp
+ * \file            LINUX/SymbolManager.cpp
  * \author          David Wong Cascante
  * \par             dragonscale.games.llc\@gmail.com
 
@@ -30,6 +30,7 @@ namespace Barrage
   SymbolInfo SymbolManagerImpl::GetSymbolInfo(const void* address) const
   {
     UNREFERENCED(address);
+    NO_IMPL();
     SymbolInfo info = {};
     return info;
   }

@@ -1,7 +1,7 @@
 /* ========================================================================= */
 /*!
  *
- * \file            MemoryDebugger.cpp
+ * \file            Debug/MemoryDebugger.cpp
  * \author          David Wong Cascante
  * \par             dragonscale.games.llc\@gmail.com
 

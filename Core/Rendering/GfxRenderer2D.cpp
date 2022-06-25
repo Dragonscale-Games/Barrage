@@ -113,12 +113,6 @@ namespace Barrage
     // Get the list of textures.
     const std::vector<GfxManager2D::TextureData>& resourceTextures = manager_->GetOpenGLTextures();
 
-    // Quit out early if empty.
-    if (requests_.empty())
-    {
-      return;
-    }
-
     // Clear the set of resources being used so they are bound.
     current_.meshIndex_ = -1;
     current_.shaderIndex_ = -1;

@@ -43,10 +43,20 @@ add_library(BarrageCore STATIC
   "stdafx.h"
   "Random/Random.cpp" "Random/Random.hpp"
   "Engine/Engine.cpp" "Engine/Engine.hpp"
+
   "GameStates/GameStateManager.cpp" "GameStates/GameStateManager.hpp" 
   "GameStates/GameState.cpp" "GameStates/GameState.hpp" 
+
+  "File/FileManager.hpp" "File/FileManager.cpp" "File/${OS_IMPL_FOLDER}/FileManager.cpp"
+  "File/FileManager.tpp"
+
   "Utilities/Utilities.hpp" 
   "Utilities/Mallocator.hpp"
+  "Utilities/RuntimeError.hpp"
+
+  "Debug/SymbolManager.hpp" "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
+  "Debug/MemoryDebugger.hpp" "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
+  "Debug/MemoryOverrides.hpp"
   
   "TempRenderer/TestRenderer.cpp" "TempRenderer/TestRenderer.hpp" 
   "TempRenderer/TempShader/TestShader.cpp" "TempRenderer/TempShader/TestShader.hpp" 
@@ -106,16 +116,14 @@ add_library(BarrageCore STATIC
   "Objects/SpawnFuncs/Direction/DirectionFuncs.hpp" "Objects/SpawnFuncs/Direction/DirectionFuncs.cpp"
   "Objects/SpawnFuncs/Position/PositionFuncs.hpp" "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
   "Objects/Components/SharedComponents/BoundaryBox.hpp"
-  
-  "Debug/SymbolManager.hpp" "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
-  "Debug/MemoryDebugger.hpp" "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
-  "Debug/MemoryOverrides.hpp"
 )
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
-target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
+# target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
+target_link_libraries(BarrageCore LINK_PUBLIC glad glfw glm::glm rapidjson stb_image)
+target_include_directories(BarrageCore PUBLIC ${RTTR_DIR})
 if(WIN32)
-  target_link_libraries(BarrageCore PUBLIC DbgHelp)
+  target_link_libraries(BarrageCore PUBLIC DbgHelp Userenv)
 endif()
 target_include_directories(BarrageCore PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
