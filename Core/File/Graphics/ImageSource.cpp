@@ -47,7 +47,7 @@ namespace Barrage
       specs_.format_ = TextureFormat::R8G8B8A8;
       specs_.width_ = width;
       specs_.height_ = height;
-      specs_.pixels_ = reinterpret_cast<const unsigned char* const>(pixels);
+      specs_.pixels_ = pixelBuffer_.data();
     }
     else
     {
