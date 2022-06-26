@@ -38,7 +38,7 @@ namespace Barrage
     Load(path_ + filename_);
   }
 
-  void Resource::Save() noexcept(false)
+  void Resource::Save() const noexcept(false)
   {
     Save(path_ + filename_);
   }

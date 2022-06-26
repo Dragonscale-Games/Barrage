@@ -75,7 +75,7 @@ namespace Barrage
         If this failed to save the resource as a file.
     */
     /*************************************************************************/
-    void Save() noexcept(false);
+    void Save() const noexcept(false);
     /*************************************************************************/
     /*!
       \brief
@@ -85,7 +85,7 @@ namespace Barrage
         for exception-safe code.
     */
     /*************************************************************************/
-    virtual ~Resource() noexcept = 0;
+    virtual ~Resource() noexcept = default;
 
   protected:
     //! The path in disk to find the file.
@@ -106,7 +106,7 @@ namespace Barrage
         If this failed to save the resource.
     */
     /*************************************************************************/
-    virtual void Save(const std::string& filepath) noexcept(false) = 0;
+    virtual void Save(const std::string& filepath) const noexcept(false) = 0;
     /*************************************************************************/
     /*!
       \brief
@@ -209,28 +209,6 @@ namespace Barrage
     //! repeatedly.
     std::map<std::string, Resource*> cachedResources_;
 
-    /*************************************************************************/
-    /*!
-      \brief
-        Creates a resource using the given file name and path.
-      \param path
-        The path where the resource would get saved.
-      \param filename
-        The name of the file.
-      \returns
-        A reference to the resource loaded.
-      \remark
-        Using a file extension is allowed to specify a
-        more specific resource.
-        For example using a "image.png" might give the resource
-        a hint to look for that image specifically instead of an "image.jpg".
-        Otherwise an "image" might look for either.
-        For more details on search paths, check the documentation for
-        the resource being loaded.
-    */
-    /*************************************************************************/
-    template <typename T>
-    T& Create(const std::string& path, const std::string& filename);
     /*************************************************************************/
     /*!
       \brief

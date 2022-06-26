@@ -27,6 +27,7 @@
 */
 /****************************************************************************/
 void DirectoryDemo(Barrage::FileManager& manager);
+void LoadResourceDemo(Barrage::FileManager& manager);
 /****************************************************************************/
 /*!
   \brief
@@ -40,6 +41,7 @@ int main()
   fileManager.Initialize();
   // Run the demos!
   DirectoryDemo(fileManager);
+  LoadResourceDemo(fileManager);
   // Shut down the system and quit.
   fileManager.Shutdown();
   return 0;
@@ -50,4 +52,12 @@ void DirectoryDemo(Barrage::FileManager& manager)
   using Barrage::FileManager;
   std::cout << "User Path: " << manager.GetUserPath() << std::endl;
   std::cout << "Content Path: " << manager.GetContentPath() << std::endl;
+}
+
+#include <File/Graphics/ImageSource.hpp>
+void LoadResourceDemo(Barrage::FileManager& manager)
+{
+  using Barrage::ImageSource;
+  const ImageSource& image = manager.Load<ImageSource>(manager.GetUserPath(), "image.png");
+  UNREFERENCED(image);
 }

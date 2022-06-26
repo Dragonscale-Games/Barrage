@@ -50,6 +50,8 @@ add_library(BarrageCore STATIC
   "File/FileManager.hpp" "File/FileManager.cpp" "File/${OS_IMPL_FOLDER}/FileManager.cpp"
   "File/FileManager.tpp"
 
+  "File/Graphics/ImageSource.hpp" "File/Graphics/ImageSource.cpp"
+
   "Utilities/Utilities.hpp" 
   "Utilities/Mallocator.hpp"
   "Utilities/RuntimeError.hpp"

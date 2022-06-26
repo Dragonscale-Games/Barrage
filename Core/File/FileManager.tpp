@@ -23,8 +23,8 @@ namespace Barrage
     // Load the resource before it crashes and dies.
     try
     {
-      resource = Create<T>(path, filename);
-      resource->Load();
+      resource = new T(path, filename);
+      static_cast<Resource*>(resource)->Load();
     }
     catch(RuntimeError& e)
     {
@@ -36,11 +36,5 @@ namespace Barrage
     assert(cachedResources_.find(path + filename) == cachedResources_.cend());
     cachedResources_[path + filename] = resource;
     return *resource;
-  }
-
-  template <typename T>
-  T& FileManager::Create(const std::string& path, const std::string& filename)
-  {
-    return new T(path, filename);
   }
 }
