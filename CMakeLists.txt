@@ -35,10 +35,10 @@ cmake_minimum_required(VERSION 3.16)
 # Create the project.
 project(Barrage)
 # Add the subdirectories for third party libraries.
-add_subdirectory(ThirdParty)
 find_package(rttr CONFIG REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
+add_subdirectory(ThirdParty)
 
 # Set the compiler flags before building our own code.
 if(MSVC)

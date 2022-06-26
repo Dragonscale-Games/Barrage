@@ -34,3 +34,4 @@
 add_subdirectory(src)
 # Add the directory for the header files.
 target_include_directories(imgui PUBLIC "includes")
+target_link_libraries(imgui LINK_PUBLIC glfw)
