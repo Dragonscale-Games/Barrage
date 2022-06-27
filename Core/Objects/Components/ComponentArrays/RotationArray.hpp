@@ -30,6 +30,8 @@ namespace Barrage
   };
 
   typedef ComponentArrayT<Rotation> RotationArray;
+
+  inline std::string RotationArray::GetClassName() { return "RotationArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -38,6 +38,8 @@ namespace Barrage
       std::vector<SpawnType> spawnTypes_; //!< List of the object types that will be spawned
 
       inline Spawner() : spawnTypes_() {}
+
+      inline std::string GetClassName() override { return "Spawner"; }
   };
 }
 

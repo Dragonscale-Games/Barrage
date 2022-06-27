@@ -144,6 +144,18 @@ namespace Barrage
       /**************************************************************/
       T& operator[](int i);
 
+      /**************************************************************/
+      /*!
+        \brief
+          Allows user to determine the name of the component's child
+          class (for use with reflection).
+
+        \return
+          Returns the name of the component's child class.
+      */
+      /**************************************************************/
+      std::string GetClassName() override;
+
     public:
       T* data_;
   };

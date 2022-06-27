@@ -29,6 +29,8 @@ namespace Barrage
   };
 
   typedef ComponentArrayT<Scale> ScaleArray;
+
+  inline std::string ScaleArray::GetClassName() { return "ScaleArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

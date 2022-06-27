@@ -29,6 +29,8 @@ namespace Barrage
   };
 
   typedef ComponentArrayT<Destructible> DestructibleArray;
+
+  inline std::string DestructibleArray::GetClassName() { return "DestructibleArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

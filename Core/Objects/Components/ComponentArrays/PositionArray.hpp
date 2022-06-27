@@ -29,6 +29,8 @@ namespace Barrage
   };
 
   typedef ComponentArrayT<Position> PositionArray;
+
+  inline std::string PositionArray::GetClassName() { return "PositionArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

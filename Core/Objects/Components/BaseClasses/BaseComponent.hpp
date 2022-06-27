@@ -50,6 +50,18 @@ namespace Barrage
       */
       /**************************************************************/
       virtual Type GetType() = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Allows user to determine the name of the component's child
+          class (for use with reflection).
+
+        \return
+          Returns the name of the component's child class.
+      */
+      /**************************************************************/
+      virtual std::string GetClassName() = 0;
   };
 
   //! Associates components with their names

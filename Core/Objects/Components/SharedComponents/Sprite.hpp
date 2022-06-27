@@ -28,6 +28,8 @@ namespace Barrage
       unsigned layer_;      //!< Layer of the drawn object (lower layers are drawn beneath higher ones)
 
       inline Sprite() : texture_(), layer_(0) {}
+
+      inline std::string GetClassName() override { return "Sprite"; }
   };
 }
 
