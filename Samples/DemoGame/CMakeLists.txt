@@ -25,30 +25,18 @@
 
 # =====================================================================================================================
 # File:         CMakeLists.txt
-# Author:       David Wong Cascante
+# Author:       David Cruse
 # Email:        dragonscale.games.llc@gmail.com
-# Date:         1/4/2022
+# Date:         5/4/2022
 # =====================================================================================================================
 
-cmake_minimum_required(VERSION 3.16)
-
-# Create the project.
-project(Barrage)
-# Add the subdirectories for third party libraries.
-find_package(rttr CONFIG REQUIRED)
-find_package(glfw3 CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
-add_subdirectory(ThirdParty)
-
-# Set the compiler flags before building our own code.
-if(MSVC)
-  set(CMAKE_CXX_FLAGS "/W4 /std:c++17 /EHsc /wd4201") # /WX
-else()
-  set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++17") # -Werror
-endif()
-
-# Add the subdirectories for building the Barrage libraries.
-add_subdirectory(Core)
-add_subdirectory(Tests)
-add_subdirectory(Samples)
-add_subdirectory(Editor)
+add_executable(DemoGame "Source/main.cpp" 
+"Source/Game/DemoGame.cpp" "Source/Game/DemoGame.hpp" 
+"Source/Registration.cpp" 
+"Source/GameStates/GS_DemoGame.cpp" "Source/GameStates/GS_DemoGame.hpp" 
+"Source/Archetypes/DemoArchetypes.cpp" "Source/Archetypes/DemoArchetypes.hpp" 
+"Source/Systems/SpawnSystem.cpp" "Source/Systems/SpawnSystem.hpp")
+target_link_libraries(DemoGame PUBLIC BarrageCore)
+target_include_directories(DemoGame PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(DemoGame PUBLIC "${CMAKE_SOURCE_DIR}/Core")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

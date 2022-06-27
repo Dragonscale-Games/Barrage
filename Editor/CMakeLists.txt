@@ -25,30 +25,24 @@
 
 # =====================================================================================================================
 # File:         CMakeLists.txt
-# Author:       David Wong Cascante
+# Author:       David Cruse
 # Email:        dragonscale.games.llc@gmail.com
-# Date:         1/4/2022
+# Date:         5/5/2022
 # =====================================================================================================================
 
-cmake_minimum_required(VERSION 3.16)
+add_executable(Editor "Source/main.cpp" 
+"Source/GUI/GUI.cpp" "Source/GUI/GUI.hpp" 
+"Source/Editor/Editor.cpp" "Source/Editor/Editor.hpp"
+"${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/GameStates/GS_DemoGame.cpp" "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/GameStates/GS_DemoGame.hpp" 
+"${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Registration.cpp"
+"${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Systems/SpawnSystem.cpp" "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Systems/SpawnSystem.hpp"
+"${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Archetypes/DemoArchetypes.cpp" "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Archetypes/DemoArchetypes.hpp"
+)
 
-# Create the project.
-project(Barrage)
-# Add the subdirectories for third party libraries.
-find_package(rttr CONFIG REQUIRED)
-find_package(glfw3 CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
-add_subdirectory(ThirdParty)
-
-# Set the compiler flags before building our own code.
-if(MSVC)
-  set(CMAKE_CXX_FLAGS "/W4 /std:c++17 /EHsc /wd4201") # /WX
-else()
-  set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++17") # -Werror
-endif()
-
-# Add the subdirectories for building the Barrage libraries.
-add_subdirectory(Core)
-add_subdirectory(Tests)
-add_subdirectory(Samples)
-add_subdirectory(Editor)
+target_link_libraries(Editor PUBLIC BarrageCore imgui)
+target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source")
+target_include_directories(Editor PUBLIC "${CMAKE_SOURCE_DIR}/Core")
+target_include_directories(Editor PUBLIC "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/GameStates/")
+target_include_directories(Editor PUBLIC "${CMAKE_SOURCE_DIR}/Samples/DemoGame")
+file(COPY "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

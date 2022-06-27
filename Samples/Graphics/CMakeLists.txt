@@ -27,28 +27,12 @@
 # File:         CMakeLists.txt
 # Author:       David Wong Cascante
 # Email:        dragonscale.games.llc@gmail.com
-# Date:         1/4/2022
+# Date:         4/28/2022
 # =====================================================================================================================
 
-cmake_minimum_required(VERSION 3.16)
+# Create the program for graphics sample.
+add_executable(GraphicsSample "main.cpp")
+target_link_libraries(GraphicsSample PRIVATE BarrageCore)
+# Copy over the text files from here to the binary output file.
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
-# Create the project.
-project(Barrage)
-# Add the subdirectories for third party libraries.
-find_package(rttr CONFIG REQUIRED)
-find_package(glfw3 CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
-add_subdirectory(ThirdParty)
-
-# Set the compiler flags before building our own code.
-if(MSVC)
-  set(CMAKE_CXX_FLAGS "/W4 /std:c++17 /EHsc /wd4201") # /WX
-else()
-  set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++17") # -Werror
-endif()
-
-# Add the subdirectories for building the Barrage libraries.
-add_subdirectory(Core)
-add_subdirectory(Tests)
-add_subdirectory(Samples)
-add_subdirectory(Editor)

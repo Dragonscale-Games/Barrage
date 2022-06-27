@@ -22,7 +22,7 @@ jobs:
           cmake ..
           make
           # Run all unit tests, under Valgrind and not.
-          cd tests
+          cd Tests
           for i in $(find . -maxdepth 1 -type f -not -name '*.pdb' -not -name '*.ilk' -not -name '*.cmake' -not -name 'Makefile'); do
             echo "Executing Test: $i"
             ./"$i"
