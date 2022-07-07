@@ -97,6 +97,20 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
+        Displays the current back buffer.
+    */
+    /*************************************************************************/
+    void FlipWindowBuffers();
+    /*************************************************************************/
+    /*!
+      \brief
+        Polls the system events for this window.
+    */
+    /*************************************************************************/
+    void PollEvents();
+    /*************************************************************************/
+    /*!
+      \brief
         Changes the window settings accordingly to position
         and resize the window to fullscreen.
     */
@@ -170,6 +184,15 @@ namespace Barrage
     /*************************************************************************/
     void MakeWindow(const WindowData& settings);
 
+    /*************************************************************************/
+    /*!
+      \brief
+        Checks whether the window is closing or not.
+      \returns
+        - True if the window is closing, false otherwise.
+    */
+    /*************************************************************************/
+    bool IsOpen() const;
     /*************************************************************************/
     /*!
       \brief

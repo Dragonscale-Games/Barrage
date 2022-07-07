@@ -30,6 +30,8 @@ namespace Barrage
   void GfxFactory2D::Initialize(GfxManager2D& manager)
   {
     manager_ = &manager;
+    // Tell STB to automatically flip all images it loads vertically.
+    stbi_set_flip_vertically_on_load(true);
   }
 
   void GfxFactory2D::Shutdown()
@@ -87,7 +89,6 @@ namespace Barrage
     // Reads 2D images but not necessarily 3D ones.
     // TODO: Figure out a solution to read a cubemap if necessary.
     int width, height, channels;
-    stbi_set_flip_vertically_on_load(true);
     unsigned char* pixels = stbi_load(filepath, &width, &height, &channels, 4);
 
     GfxManager2D::TextureSpecs textureSpecs = { 0 };

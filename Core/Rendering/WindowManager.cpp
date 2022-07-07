@@ -88,8 +88,22 @@ namespace Barrage
     glfwTerminate();
   }
 
+  void WindowManager::FlipWindowBuffers()
+  {
+    assert(window_);
+    glfwSwapBuffers(window_);
+    glfwSwapInterval(1);
+  }
+
+  void WindowManager::PollEvents()
+  {
+    assert(window_);
+    glfwPollEvents();
+  }
+
   void WindowManager::ResizeToFullscreen()
   {
+    assert(window_);
     // Get the parent monitor the window resides in.
     GLFWmonitor* monitor = GetParentMonitor();
     // Undecorate the window and resize to the window specifcations.
@@ -105,6 +119,7 @@ namespace Barrage
 
   void WindowManager::ResizeToWindowed()
   {
+    assert(window_);
     // Get the parent monitor the window resides in.
     GLFWmonitor* monitor = GetParentMonitor();
     // Undecorate the window and resize to the window specifcations.
@@ -121,11 +136,13 @@ namespace Barrage
 
   void WindowManager::Focus()
   {
+    assert(window_);
     glfwFocusWindow(window_);
   }
 
   void WindowManager::Resize(int width, int height)
   {
+    assert(window_);
     data_.width_ = width;
     data_.height_ = height;
     glfwSetWindowSize(window_, width, height);
@@ -133,12 +150,14 @@ namespace Barrage
 
   void WindowManager::ChangeDecoration(bool decorated)
   {
+    assert(window_);
     data_.decorated_ = decorated;
     glfwSetWindowAttrib(window_, GLFW_DECORATED, decorated);
   }
 
   void WindowManager::ChangeTitle(const std::string& title)
   {
+    assert(window_);
     data_.title_ = title;
     glfwSetWindowTitle(window_, title.c_str());
   }
@@ -176,7 +195,14 @@ namespace Barrage
 
   bool WindowManager::IsFocused() const
   {
+    assert(window_);
     return glfwGetWindowAttrib(window_, GLFW_FOCUSED);
+  }
+
+  bool WindowManager::IsOpen() const
+  {
+    assert(window_);
+    return !glfwWindowShouldClose(window_);
   }
 
   const WindowManager::WindowData& WindowManager::GetSettings() const
@@ -196,6 +222,7 @@ namespace Barrage
 
   const GLFWmonitor* WindowManager::GetParentMonitor() const
   {
+    assert(window_);
     // Get the monitors the user has plugged in.
     int count = 0;
     GLFWmonitor** monitors = nullptr;
@@ -228,6 +255,7 @@ namespace Barrage
 
   GLFWmonitor* WindowManager::GetParentMonitor()
   {
+    assert(window_);
     // Get the monitors the user has plugged in.
     int count = 0;
     GLFWmonitor** monitors = nullptr;

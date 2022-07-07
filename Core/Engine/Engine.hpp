@@ -22,6 +22,9 @@
 #include "TempRenderer/TestRenderer.hpp"
 #include "Random/Random.hpp"
 
+#include "Rendering/GfxDraw2D.hpp"
+#include "Rendering/WindowManager.hpp"
+
 namespace Barrage
 {   
   //! The core engine class for a Barrage bullet hell game
@@ -114,7 +117,46 @@ namespace Barrage
       /**************************************************************/
       Random& RNG();
 
+      // ===================================================================
+      // Graphics Modules
+      // ===================================================================
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's windowing module.
+        \returns
+          Returns a reference to the engine's windowing module.
+      */
+      /**************************************************************/
+      WindowManager& Windowing();
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's drawing module.
+        \returns
+          Returns a reference to the engine's drawing module.
+      */
+      /**************************************************************/
+      GfxDraw2D& Drawing();
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's graphics registry module.
+        \returns
+          Returns a reference to the engine's registry module.
+      */
+      /**************************************************************/
+      GfxRegistry2D& Registry();
+
     private:
+      WindowManager windowManager_; //!< The windowing manager.
+      GfxManager2D gfxManager_;
+      GfxRenderer2D gfxRenderer_;
+      GfxFactory2D gfxFactory_;
+      GfxRegistry2D gfxRegistry_;
+      GfxDraw2D gfxDrawSystem_;     //!< The drawing system.
+
       GameStateManager gsManager_;  //!< Game state manager
       InputManager inputManager_;   //!< Input manager
       ObjectManager objectManager_; //!< Object manager

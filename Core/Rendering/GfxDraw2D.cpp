@@ -61,6 +61,26 @@ namespace Barrage
     manager_ = nullptr;
   }
 
+  void GfxDraw2D::SetViewportSpace(const glm::ivec2& dimensions)
+  {
+    assert(renderer_);
+    renderer_->SetViewportSpace(dimensions);
+  }
+
+  void GfxDraw2D::StartFrame()
+  {
+    assert(renderer_);
+    renderer_->FlushRequests();
+    renderer_->ClearFramebuffer();
+  }
+
+  void GfxDraw2D::EndFrame()
+  {
+    assert(manager_);
+    assert(renderer_);
+    renderer_->RenderRequests();
+    manager_->FlipWindowBuffers();
+  }
 
   void GfxDraw2D::DrawQuad(
     const glm::vec2& position, const glm::vec2& scale, const RADIAN& rotation,

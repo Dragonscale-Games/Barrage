@@ -77,26 +77,24 @@ int main()
   Barrage::GfxDraw2D drawing;
   drawing.Initialize(manager, renderer, registry);
   drawing.ApplyShader("instanced");
-
-  // Tell the drawing system to draw a couple of squares on the screen.
-  constexpr int size = 2;
-  glm::vec2 positions[size] = { glm::vec2(-150.0f, 0.0f), glm::vec2(150.0f, 0.0f) };
-  glm::vec2 scales[size] = { glm::vec2(150.0f), glm::vec2(50.0f, 120.0f) };
-  RADIAN rotations[size] = { 0.25f * (22.0f / 7.0f), 0.0f };
-  drawing.DrawInstancedQuad(size, positions, scales, rotations, "sample");
   
   // Update the window while it's open.
-  while(!glfwWindowShouldClose(windowing.GetInternalHandle())) 
+  while(windowing.IsOpen()) 
   {
-    glfwPollEvents();
+    windowing.PollEvents();
     // Note that you don't have to resubmit requests if
     // don't need to.
     const WindowManager::WindowData& settings = windowing.GetSettings();
     const glm::vec2 dimensions(settings.width_, settings.height_);
     renderer.SetViewportSpace(dimensions);
-    renderer.RenderRequests();
-    glfwSwapBuffers(windowing.GetInternalHandle());
-    glfwSwapInterval(1);
+    // Tell the drawing system to draw a couple of squares on the screen.
+    constexpr int size = 2;
+    glm::vec2 positions[size] = { glm::vec2(-150.0f, 0.0f), glm::vec2(150.0f, 0.0f) };
+    glm::vec2 scales[size] = { glm::vec2(150.0f), glm::vec2(50.0f, 120.0f) };
+    RADIAN rotations[size] = { 0.25f * (22.0f / 7.0f), 0.0f };
+    drawing.StartFrame();
+    drawing.DrawInstancedQuad(size, positions, scales, rotations, "sample");
+    drawing.EndFrame();
   }
   
   drawing.Shutdown();

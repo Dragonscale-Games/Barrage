@@ -28,15 +28,37 @@ namespace Barrage
 
   void Engine::Initialize()
   {
-    TestRenderer::Instance().Initialize();
+    //TestRenderer::Instance().Initialize();
 
-    inputManager_.Initialize(TestRenderer::Instance().GetWindowHandle());
+    // Initialize the window.
+    WindowManager::WindowData data = {};
+    data.decorated_ = true;
+    data.width_ = 1280;
+    data.height_ = 720;
+    data.title_ = u8"Barrage Engine";
+    windowManager_.Initialize(data);
+    // Initialize the graphics modules.
+    gfxManager_.Initialize(windowManager_);
+    gfxRenderer_.Initialize(gfxManager_);
+    gfxFactory_.Initialize(gfxManager_);
+    gfxRegistry_.Initialize(gfxFactory_);
+    gfxDrawSystem_.Initialize(gfxManager_, gfxRenderer_, gfxRegistry_);
+
+    //inputManager_.Initialize(TestRenderer::Instance().GetWindowHandle());
+    inputManager_.Initialize(windowManager_.GetInternalHandle());
 
     objectManager_.Initialize();
   }
 
   void Engine::Shutdown()
   {
+    gfxDrawSystem_.Shutdown();
+    gfxRegistry_.Shutdown();
+    gfxFactory_.Shutdown();
+    gfxRenderer_.Shutdown();
+    gfxManager_.Shutdown();
+    windowManager_.Shutdown();
+
     inputManager_.Shutdown();
 
     TestRenderer::Instance().Shutdown();
@@ -60,5 +82,20 @@ namespace Barrage
   Random& Engine::RNG()
   {
     return rng_;
+  }
+
+  WindowManager& Engine::Windowing()
+  {
+    return windowManager_;
+  }
+
+  GfxDraw2D& Engine::Drawing()
+  {
+    return gfxDrawSystem_;
+  }
+
+  GfxRegistry2D& Engine::Registry()
+  {
+    return gfxRegistry_;
   }
 }

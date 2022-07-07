@@ -442,6 +442,12 @@ namespace Barrage
     internalFramebuffers_.clear();
   }
 
+  void GfxManager2D::FlipWindowBuffers()
+  {
+    assert(windowing_);
+    windowing_->FlipWindowBuffers();
+  }
+
   const std::vector<GfxManager2D::MeshID>& GfxManager2D::GetMeshes() const
   {
     return meshes_;
