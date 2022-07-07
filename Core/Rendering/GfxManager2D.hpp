@@ -25,6 +25,7 @@
 #include <glad/gl.h>
 #include <vector>
 #include <array>
+
 #include "GfxTypes.hpp"
 
 namespace Barrage
@@ -166,24 +167,6 @@ namespace Barrage
       GLenum textureType_;       //!< The OpenGL texture type.
     };
 
-    struct MeshSpecs //! Represents the specifications for mesh creation.
-    {
-      size_t bufferLength_;
-      size_t bufferElementSize_;
-      size_t indicesLength_;
-      size_t indicesElementSize_;
-      const void* buffer_;
-      const void* indices_;
-    };
-
-    enum ShaderStage //! Enumerates the available shader stages.
-    {
-      VERTEX_SHADER = 0,
-      PIXEL_SHADER,
-      // This one always goes last.
-      NUM_SHADERS_POSSIBLE,
-    };
-
     enum MeshBuffer //! Enumerates the available buffers written by this system.
     {
       VERTICES,
@@ -191,22 +174,6 @@ namespace Barrage
       FACES,
       // This one always goes last.
       NUM_BUFFERS,
-    };
-
-    struct TextureSpecs //! Represents the specifications for the textures.
-    {
-      int width_;                       //!< The width of the mesh.
-      int height_;                      //!< The height of the mesh.
-      int dimensions_;                  //!< The number of dimensions the textures should have.
-      bool createMipmaps_;              //!< Whether mipmaps should be created for this texture.
-      TextureFormat format_;            //!< The format the pixels are arranged.
-      TextureFilter filter_;            //!< The type of filter to apply to this texture.
-      const unsigned char* pixels_;     //!< The pixels of the mesh.
-    };
-
-    struct ShaderSpecs //! Represents the specifications for the shaders used.
-    {
-      const char* stageSources_[ShaderStage::NUM_SHADERS_POSSIBLE]; //!< Used to specify the code for the shader stages available.
     };
     
     struct FramebufferSpecs //! Represents the specifications used for framebuffers.

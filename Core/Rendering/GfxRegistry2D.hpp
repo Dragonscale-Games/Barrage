@@ -92,7 +92,7 @@ namespace Barrage
     */
     /*************************************************************************/
     void RegisterShader(
-      const char* const paths[GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE], 
+      const char* const paths[ShaderStage::NUM_SHADERS_POSSIBLE], 
       const char* keyname = nullptr
     );
 

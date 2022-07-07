@@ -20,7 +20,7 @@
 // Includes
 //  ===========================================================================
 #include <File/FileManager.hpp>
-#include <Rendering/GfxManager2D.hpp>
+#include <Rendering/GfxTypes.hpp>
 #include <vector>
 
 namespace Barrage
@@ -63,7 +63,7 @@ namespace Barrage
     //! The vector container storing the image as a byte buffer.
     std::vector<unsigned char> pixelBuffer_;
     //! The specifications of the file loaoded.
-    GfxManager2D::TextureSpecs specs_;
+    TextureSpecs specs_;
   };
 }
 

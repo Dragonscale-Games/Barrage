@@ -39,16 +39,16 @@ namespace Barrage
     manager_ = nullptr;
   }
 
-  GfxManager2D::ShaderID GfxFactory2D::CreateShader(const char* const filepaths[GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE]) const
+  GfxManager2D::ShaderID GfxFactory2D::CreateShader(const char* const filepaths[ShaderStage::NUM_SHADERS_POSSIBLE]) const
   {
     // Read the shader code from the files specified in the filepaths.
     // Store the strings read from the files in the array.
-    std::array<std::stringstream, GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE> codes;
+    std::array<std::stringstream, ShaderStage::NUM_SHADERS_POSSIBLE> codes;
     // Create containers to store the codes.
-    std::array<std::string, GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE> codeContainers;
+    std::array<std::string, ShaderStage::NUM_SHADERS_POSSIBLE> codeContainers;
     // The file handle to read shader code from.
     std::ifstream file;
-    for(unsigned i = 0; i < GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE; ++i)
+    for(unsigned i = 0; i < ShaderStage::NUM_SHADERS_POSSIBLE; ++i)
     {
       // Open the file and read from it.
       file.open(filepaths[i], std::ifstream::in);
@@ -68,14 +68,14 @@ namespace Barrage
       }
     }
     // Start filling out the form to create the shader.
-    GfxManager2D::ShaderSpecs specs = {};
+    ShaderSpecs specs = {};
     // After reading all the files without getting any errors, we start attempting to compile
     // the shader.
-    for(unsigned i = 0; i < GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE; ++i)
+    for(unsigned i = 0; i < ShaderStage::NUM_SHADERS_POSSIBLE; ++i)
     {
       codeContainers[i] = codes[i].str();
     }
-    for(unsigned i = 0; i < GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE; ++i)
+    for(unsigned i = 0; i < ShaderStage::NUM_SHADERS_POSSIBLE; ++i)
     {
       specs.stageSources_[i] = codeContainers[i].c_str();
     }
@@ -91,7 +91,7 @@ namespace Barrage
     int width, height, channels;
     unsigned char* pixels = stbi_load(filepath, &width, &height, &channels, 4);
 
-    GfxManager2D::TextureSpecs textureSpecs = { 0 };
+    TextureSpecs textureSpecs = { 0 };
     textureSpecs.createMipmaps_ = true;
     textureSpecs.dimensions_ = 2;
     textureSpecs.format_ = TextureFormat::R8G8B8A8;

@@ -36,7 +36,7 @@ namespace Barrage
     std::vector<Face> faces;
     GenQuadInfo(vertices, faces);
     // Create the mesh using the vertex information.
-    GfxManager2D::MeshSpecs specs = {};
+    MeshSpecs specs = {};
     specs.buffer_ = vertices.data();
     specs.indices_ = faces.data();
     specs.bufferLength_ = vertices.size();
