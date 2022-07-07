@@ -117,7 +117,7 @@ namespace Barrage
     const std::vector<GfxManager2D::TextureData>& resourceTextures = manager_->GetOpenGLTextures();
 
     // Clear the set of resources being used so they are bound.
-    const int invalidIndex = -1;
+    const int invalidIndex = GfxManager2D::ResourceID::InvalidResourceID;
     current_.meshIndex_ = invalidIndex;
     current_.shaderIndex_ = invalidIndex;
     current_.textureIndex_ = invalidIndex;

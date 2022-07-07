@@ -35,9 +35,7 @@ namespace Barrage
   // Resource IDs
   // ==========================================================================
 
-  static const int INVALID_RESOURCE = -1;
-
-  GfxManager2D::ResourceID::ResourceID() : ResourceID(INVALID_RESOURCE)
+  GfxManager2D::ResourceID::ResourceID() : ResourceID(InvalidResourceID)
   {
   }
 
@@ -104,7 +102,7 @@ namespace Barrage
 
   bool GfxManager2D::ResourceID::IsValid() const
   {
-    return *internalResource_ != INVALID_RESOURCE;
+    return *internalResource_ != InvalidResourceID;
   }
 
   // ==========================================================================

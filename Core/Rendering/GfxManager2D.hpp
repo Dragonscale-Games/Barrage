@@ -62,6 +62,7 @@ namespace Barrage
     class ResourceID
     {
     public:
+      static const int InvalidResourceID= -1;
       /***********************************************************************/
       /*!
         \brief
