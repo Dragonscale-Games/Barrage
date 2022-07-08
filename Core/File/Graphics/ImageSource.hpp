@@ -42,6 +42,9 @@ namespace Barrage
     /*************************************************************************/
     ImageSource(const std::string& path, const std::string& filename);
     /*************************************************************************/
+    /*************************************************************************/
+    ImageSource(ImageSource&& other) noexcept = default;
+    /*************************************************************************/
     /*!
       \brief
         Releases all resources upon destruction.
@@ -69,6 +72,7 @@ namespace Barrage
     /*************************************************************************/
     const TextureSpecs& GetSpecs() const;
 
+    void Load();
     void Save() const;
 
   protected:

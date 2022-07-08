@@ -14,27 +14,48 @@
  */
 /* ========================================================================= */
 
+#include <utility>
+
 namespace Barrage
 {
   template <typename T>
   const T& FileManager::Load(const std::string& path, const std::string& filename) noexcept(false)
   {
-    T* resource = nullptr;
-    // Load the resource before it crashes and dies.
-    try
+    const std::string filepath = path + filename;
+    if(cachedResources_.find(filepath) != cachedResources_.cend())
     {
-      resource = new T(path, filename);
-      static_cast<Resource*>(resource)->Load();
+        return *dynamic_cast<T*>(cachedResources_[filepath]);
     }
-    catch(RuntimeError& e)
+    else
     {
-      delete resource;
-      throw e;
+        T* resourceHandle = nullptr;
+        {
+            // First, attempt to create and load the resource.
+            T resource(path, filename);
+            resource.Load();
+            // Then, if we succeeded, create a handle to a resource we can store
+            // and do a std::move to that handle.
+            resourceHandle = new T(std::move(resource));
+        }
+        // Cache the resource on a successful load.
+        cachedResources_[filepath] = resourceHandle;
+        return *resourceHandle;
     }
+  }
 
-    // Cache the resource on a successful load.
-    assert(cachedResources_.find(path + filename) == cachedResources_.cend());
-    cachedResources_[path + filename] = resource;
-    return *resource;
+  template <typename T>
+  T& FileManager::Create(const std::string& path, const std::string& filename)
+  {
+    const std::string filepath = path + filename;
+    if(cachedResources_.find(filepath) == cachedResources_.cend())
+    {
+      T* resource = new T(path, filename);
+      cachedResources_[filepath] = resource;
+      return *resource;
+    }
+    else
+    {
+      throw RuntimeError("Attempted to create a resource with the same filepath as an existing resource.");
+    }
   }
 }

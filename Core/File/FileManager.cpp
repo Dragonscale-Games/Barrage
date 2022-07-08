@@ -28,9 +28,24 @@ namespace Barrage
   {
   }
 
+  FileResource::FileResource(FileResource&& other) noexcept :
+    path_(std::move(other.path_)), filename_(std::move(other.filename_))
+  {
+  }
+
   FileResource::FileResource(const std::string& path, const std::string& filename) :
     path_(path), filename_(filename)
   {
+  }
+
+  const std::string& FileResource::GetPath() const
+  {
+    return path_;
+  }
+
+  const std::string& FileResource::GetFileName() const
+  {
+    return filename_;
   }
 
   void FileResource::Load() noexcept(false)

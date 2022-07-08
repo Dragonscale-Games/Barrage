@@ -28,6 +28,7 @@
 /****************************************************************************/
 void DirectoryDemo(Barrage::FileManager& manager);
 void SaveResourceDemo(Barrage::FileManager& manager);
+void LoadResourceDemo(Barrage::FileManager& manager);
 
 /****************************************************************************/
 /*!
@@ -43,6 +44,7 @@ int main()
   // Run the demos!
   DirectoryDemo(fileManager);
   SaveResourceDemo(fileManager);
+  LoadResourceDemo(fileManager);
   // Shut down the system and quit.
   fileManager.Shutdown();
   return 0;
@@ -64,9 +66,6 @@ void SaveResourceDemo(Barrage::FileManager& manager)
   using Barrage::TextureFormat;
   using Barrage::FileManager;
 
-  // Creates a file manager.
-  FileManager fileManager;
-  fileManager.Initialize();
   // The constant data about this texture.
   const uint8_t width = 3;
   const uint8_t height = 3;
@@ -87,11 +86,16 @@ void SaveResourceDemo(Barrage::FileManager& manager)
   specs.filter_ = TextureFilter::FILTER_NONE;
   specs.pixels_ = reinterpret_cast<unsigned char*>(pixels);
   // Creates an image source, updates it with texture data, and saving it.
-  ImageSource image(manager.GetUserPath(), "image.png");
-  //ImageSource image(manager.GetContentPath(), "image.png");
-  //ImageSource image("./", "image.png");
+  //ImageSource image(manager.GetUserPath(), "image.png");
+  ImageSource& image = manager.Create<ImageSource>(manager.GetUserPath(), "image.png");
   image.Update(specs);
   image.Save();
+}
 
-  UNREFERENCED(image);
+void LoadResourceDemo(Barrage::FileManager& manager)
+{
+  using Barrage::ImageSource;
+
+  const ImageSource& image = manager.Load<ImageSource>(manager.GetUserPath(), "image.png");
+  (void)image;
 }

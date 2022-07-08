@@ -54,7 +54,7 @@ add_library(BarrageCore STATIC
 
   "Utilities/Utilities.hpp" 
   "Utilities/Mallocator.hpp"
-  "Utilities/RuntimeError.hpp"
+  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp"
 
   "Debug/SymbolManager.hpp" "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
   "Debug/MemoryDebugger.hpp" "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"

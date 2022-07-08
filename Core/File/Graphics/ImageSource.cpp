@@ -19,6 +19,7 @@
 
 #include <stdexcept>
 #include <algorithm>
+#include <utility>
 #include <stb_image/stb_image.h>
 #include <stb_image/stb_image_write.h>
 
@@ -44,6 +45,11 @@ namespace Barrage
   const TextureSpecs& ImageSource::GetSpecs() const
   {
     return specs_;
+  }
+
+  void ImageSource::Load()
+  {
+    FileResource::Load();
   }
 
   void ImageSource::Save() const
@@ -74,7 +80,7 @@ namespace Barrage
     }
     else
     {
-      throw std::runtime_error("Failed to load the image at filepath: " + filepath);
+      throw RuntimeError("Failed to load the image at filepath.");
     }
   }
 
@@ -87,7 +93,7 @@ namespace Barrage
     // Throw an exception if we failed to save the image.
     if (!success)
     {
-      throw std::runtime_error("Failed to save the image at filepath: " + filepath);
+      throw RuntimeError("Failed to save the image at filepath.");
     }
   }
 }

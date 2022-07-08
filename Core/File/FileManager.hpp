@@ -40,6 +40,16 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
+        A move constructor for file resources. Used when loading
+        resources in the manager.
+      \param other
+        The resource being moved over to this instance.
+    */
+    /*************************************************************************/
+    FileResource(FileResource&& other) noexcept;
+    /*************************************************************************/
+    /*!
+      \brief
         Creates a resource using a given path and filename.
       \param path
         The path to find the file.
@@ -60,6 +70,16 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
+        Define a virtual destructor for resources so they get deleted
+        appropriately.
+        This function cannot throw because we are using RAII semantics
+        for exception-safe code.
+    */
+    /*************************************************************************/
+    virtual ~FileResource() noexcept = default;
+    /*************************************************************************/
+    /*!
+      \brief
         Loads a resource using the saved path and filename.
       \throws Barrage::RuntimeError
         If we failed to load the resource at the given file name and path.
@@ -76,22 +96,27 @@ namespace Barrage
     */
     /*************************************************************************/
     void Save() const noexcept(false);
+
     /*************************************************************************/
     /*!
       \brief
-        Define a virtual destructor for resources so they get deleted
-        appropriately.
-        This function cannot throw because we are using RAII semantics
-        for exception-safe code.
+        Gets the file path for this resource.
+      \returns
+        The string for the path this resource is in.
     */
     /*************************************************************************/
-    virtual ~FileResource() noexcept = default;
+    const std::string& GetPath() const;
+    /*************************************************************************/
+    /*!
+      \brief
+        Gets the file name for this resource.
+      \returns
+        The string for the resource's file name.
+    */
+    /*************************************************************************/
+    const std::string& GetFileName() const;
 
   protected:
-    //! The path in disk to find the file.
-    const std::string path_;
-    //! The name of the file.
-    const std::string filename_;
 
     /*************************************************************************/
     /*!
@@ -130,6 +155,13 @@ namespace Barrage
     */
     /*************************************************************************/
     bool HasFilenameExtension() const;
+
+  private:
+    //! The path in disk to find the file.
+    std::string path_;
+    //! The name of the file.
+    std::string filename_;
+
   };
   //! The file manager which provides utility for saving and loading files
   //! In the appropriate places.
@@ -181,6 +213,24 @@ namespace Barrage
     /*************************************************************************/
     template <typename T>
     const T& Load(const std::string& path, const std::string& filename) noexcept(false);
+    /*************************************************************************/
+    /*!
+      \brief
+        Creates a resource given the path to save it to and it's file
+        name.
+      \param path
+        The path this resource would save to.
+      \param filename
+        The file name for this resource.
+      \returns
+        A reference to the resource created.
+      \throws Barrage::RuntimeError
+        If the user attempted to create a resource with the same
+        path and filename as another, existing, resource.
+    */
+    /*************************************************************************/
+    template <typename T>
+    T& Create(const std::string& path, const std::string& filename) noexcept(false);
     /*************************************************************************/
     /*!
       \brief
