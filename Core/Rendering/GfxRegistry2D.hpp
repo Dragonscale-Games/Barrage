@@ -36,6 +36,13 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
+        Sets a registry object in a safe state.
+    */
+    /*************************************************************************/
+    GfxRegistry2D();
+    /*************************************************************************/
+    /*!
+      \brief
         Initializes the registry with the manager and factory used.
       \param factory
         The factory to use for this registry.

@@ -66,7 +66,7 @@ int main()
   Barrage::GfxRegistry2D registry;
   registry.Initialize(factory);
   // Register a sample shader from a file.
-  const std::array<const char*, GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE> filepaths = {
+  const std::array<const char*, ShaderStage::NUM_SHADERS_POSSIBLE> filepaths = {
     "Assets/instanced.vs", "Assets/instanced.fs"
   };
   registry.RegisterShader(filepaths.data(), "instanced");
@@ -79,7 +79,7 @@ int main()
   drawing.ApplyShader("instanced");
   
   // Update the window while it's open.
-  while(windowing.IsOpen()) 
+  while(windowing.IsOpen())
   {
     windowing.PollEvents();
     // Note that you don't have to resubmit requests if
@@ -89,7 +89,7 @@ int main()
     renderer.SetViewportSpace(dimensions);
     // Tell the drawing system to draw a couple of squares on the screen.
     constexpr int size = 2;
-    glm::vec2 positions[size] = { glm::vec2(-150.0f, 0.0f), glm::vec2(150.0f, 0.0f) };
+    glm::vec2 positions[size] = { glm::vec2(-100 + settings.width_ / 2, settings.height_ / 2), glm::vec2(100 + settings.width_ / 2, settings.height_ / 2) };
     glm::vec2 scales[size] = { glm::vec2(150.0f), glm::vec2(50.0f, 120.0f) };
     RADIAN rotations[size] = { 0.25f * (22.0f / 7.0f), 0.0f };
     drawing.StartFrame();
@@ -120,7 +120,7 @@ Barrage::GfxManager2D::ShaderID CreateSampleTexture(Barrage::GfxManager2D& manag
     0xFFFFFFFF, 0x00000000, 0xFFFFFFFF,
   };
   // The specifications for the sample texture.
-  GfxManager2D::TextureSpecs specs{};
+  TextureSpecs specs{};
   specs.width_ = width;
   specs.height_ = height;
   specs.dimensions_ = dimensions;

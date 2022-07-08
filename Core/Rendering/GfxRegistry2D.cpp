@@ -22,6 +22,10 @@
 
 namespace Barrage
 {
+  GfxRegistry2D::GfxRegistry2D() : factory_(nullptr)
+  {
+  }
+
   void GfxRegistry2D::Initialize(GfxFactory2D& factory)
   {
     factory_ = &factory;

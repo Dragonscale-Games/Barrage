@@ -27,7 +27,7 @@
 namespace Barrage
 {
   //! The interface for the resource type.
-  class Resource
+  class FileResource
   {
   public:
     /*************************************************************************/
@@ -36,7 +36,7 @@ namespace Barrage
         Defines a default constructor when a suer
     */
     /*************************************************************************/
-    Resource();
+    FileResource();
     /*************************************************************************/
     /*!
       \brief
@@ -47,7 +47,7 @@ namespace Barrage
         The name of the file being loaded.
     */
     /*************************************************************************/
-    Resource(const std::string& path, const std::string& filename);
+    FileResource(const std::string& path, const std::string& filename);
     /*************************************************************************/
     /*!
       \brief
@@ -56,7 +56,7 @@ namespace Barrage
         The original resource to copy over.
     */
     /*************************************************************************/
-    Resource(const Resource& original);
+    FileResource(const FileResource& original);
     /*************************************************************************/
     /*!
       \brief
@@ -85,7 +85,7 @@ namespace Barrage
         for exception-safe code.
     */
     /*************************************************************************/
-    virtual ~Resource() noexcept = default;
+    virtual ~FileResource() noexcept = default;
 
   protected:
     //! The path in disk to find the file.
@@ -207,7 +207,7 @@ namespace Barrage
     std::string contentPath_;
     //! The resources cached by this system in case things get loaded
     //! repeatedly.
-    std::map<std::string, Resource*> cachedResources_;
+    std::map<std::string, FileResource*> cachedResources_;
 
     /*************************************************************************/
     /*!

@@ -24,26 +24,26 @@ namespace Barrage
   // Resource
   //  ===========================================================================
 
-  Resource::Resource()
+  FileResource::FileResource()
   {
   }
 
-  Resource::Resource(const std::string& path, const std::string& filename) :
+  FileResource::FileResource(const std::string& path, const std::string& filename) :
     path_(path), filename_(filename)
   {
   }
 
-  void Resource::Load() noexcept(false)
+  void FileResource::Load() noexcept(false)
   {
     Load(path_ + filename_);
   }
 
-  void Resource::Save() const noexcept(false)
+  void FileResource::Save() const noexcept(false)
   {
     Save(path_ + filename_);
   }
 
-  bool Resource::HasFilenameExtension() const
+  bool FileResource::HasFilenameExtension() const
   {
     NO_IMPL();
     return false;

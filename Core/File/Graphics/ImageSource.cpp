@@ -20,12 +20,35 @@
 #include <stdexcept>
 #include <algorithm>
 #include <stb_image/stb_image.h>
+#include <stb_image/stb_image_write.h>
 
 namespace Barrage
 {
   ImageSource::ImageSource(const std::string& path, const std::string& filename) :
-    Resource(path, filename), pixelBuffer_(), specs_{}
+    FileResource(path, filename), pixelBuffer_(), specs_{}
   {
+  }
+
+  void ImageSource::Update(const TextureSpecs& specs)
+  {
+    specs_ = specs;
+    // Hard copy the pixel data.
+    const TextureFormat& format = specs.format_;
+    const size_t pixelBufferSize = GetFormatSize(format) * specs.width_ * specs.height_;
+    pixelBuffer_.resize(pixelBufferSize);
+    std::copy(specs.pixels_, specs.pixels_ + pixelBufferSize, pixelBuffer_.data());
+    // Reassign the pointer for the pixel data in the specs.
+    specs_.pixels_ = pixelBuffer_.data();
+  }
+
+  const TextureSpecs& ImageSource::GetSpecs() const
+  {
+    return specs_;
+  }
+
+  void ImageSource::Save() const
+  {
+    FileResource::Save();
   }
 
   void ImageSource::Load(const std::string& filepath) noexcept(false)
@@ -57,8 +80,14 @@ namespace Barrage
 
   void ImageSource::Save(const std::string& filepath) const noexcept(false)
   {
-    UNREFERENCED(filepath);
-    NO_IMPL();
-    throw std::runtime_error("Failed to save the image at filepath: " + filepath);
+    const uint8_t channelCount = GetChannelCount(specs_.format_);
+    const size_t stride = GetFormatSize(specs_.format_);
+    bool success = stbi_write_png(filepath.data(), specs_.width_, specs_.height_, channelCount, 
+      static_cast<const void*>(specs_.pixels_), stride);
+    // Throw an exception if we failed to save the image.
+    if (!success)
+    {
+      throw std::runtime_error("Failed to save the image at filepath: " + filepath);
+    }
   }
 }

@@ -7,4 +7,4 @@
 # =============================================================================
 
 # Create the library with the only source file known.
-add_library(stb_image "stb_image.cpp")
+add_library(stb_image "stb_image.cpp" "stb_image_write.cpp")

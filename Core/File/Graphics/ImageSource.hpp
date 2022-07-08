@@ -26,10 +26,19 @@
 namespace Barrage
 {
   //! Represents an image loaded as a resource.
-  class ImageSource : public Resource
+  class ImageSource : public FileResource
   {
   public:
     /*************************************************************************/
+    /*!
+      \brief
+        Creates an image source given a path to the image file
+        and it's file name.
+      \param path
+        The path to the image to where the image is saved.
+      \param filename
+        The name of the image.
+    */
     /*************************************************************************/
     ImageSource(const std::string& path, const std::string& filename);
     /*************************************************************************/
@@ -39,6 +48,28 @@ namespace Barrage
     */
     /*************************************************************************/
     virtual ~ImageSource() = default;
+
+    /*************************************************************************/
+    /*!
+      \brief
+        Updates the image source using a new set of specs.
+      \param specs
+        The specs to update this image source with.
+    */
+    /*************************************************************************/
+    void Update(const TextureSpecs& specs);
+    /*************************************************************************/
+    /*!
+      \brief
+        Gets the specifications of the currently loaded
+        image source.
+      \returns
+        The texture specs for this image.
+    */
+    /*************************************************************************/
+    const TextureSpecs& GetSpecs() const;
+
+    void Save() const;
 
   protected:
     /*************************************************************************/

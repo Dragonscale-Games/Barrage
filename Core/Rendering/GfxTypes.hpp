@@ -131,6 +131,29 @@ namespace Barrage
   {
     const char* stageSources_[ShaderStage::NUM_SHADERS_POSSIBLE]; //!< Used to specify the code for the shader stages available.
   };
+
+  /***************************************************************************/
+  /*!
+    \brief
+      Gets the number of channels a particular texture format has.
+    \param format
+      The format to query the number of channels for.
+    \returns
+      The channel count for a particular format.
+  */
+  /***************************************************************************/
+  uint8_t GetChannelCount(const TextureFormat& format);
+  /***************************************************************************/
+  /*!
+    \brief
+      Gets the size (in bytes) of a particular format.
+    \param format
+      The format to query the size for.
+    \returns
+      The size of a format in bytes.
+  */
+  /***************************************************************************/
+  size_t GetFormatSize(const TextureFormat& format);
 }
 
 #endif // GfxUtil_MODULE_H
