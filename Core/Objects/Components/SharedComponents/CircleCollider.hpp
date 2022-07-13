@@ -17,6 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../BaseClasses/SharedComponent.hpp"
+#include <rttr/rttr_enable.h>
 
 namespace Barrage
 {
@@ -29,6 +30,8 @@ namespace Barrage
       inline CircleCollider() : radius_(50.0f) {}
 
       inline std::string GetClassName() override { return "CircleCollider"; }
+
+      RTTR_ENABLE()
   };
 }
 

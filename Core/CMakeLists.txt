@@ -51,6 +51,10 @@ add_library(BarrageCore STATIC
   "File/FileManager.tpp"
 
   "File/Graphics/ImageSource.hpp" "File/Graphics/ImageSource.cpp"
+  "File/Objects/ObjectSource.hpp" "File/Objects/ObjectSource.cpp"
+
+  "Serialization/ComponentRefl.cpp"
+  "Serialization/Serializer.hpp"
 
   "Utilities/Utilities.hpp" 
   "Utilities/Mallocator.hpp"
@@ -65,6 +69,17 @@ add_library(BarrageCore STATIC
   "TempRenderer/TempShader/TestShaderManager.cpp" "TempRenderer/TempShader/TestShaderManager.hpp" 
   "TempRenderer/TempTexture/TestTexture.cpp" "TempRenderer/TempTexture/TestTexture.hpp" 
   "TempRenderer/TempTexture/TestTextureManager.cpp" "TempRenderer/TempTexture/TestTextureManager.hpp" 
+
+  "Rendering/WindowManager.hpp" "Rendering/WindowManager.cpp"
+  "Rendering/GfxManager2D.hpp" "Rendering/GfxManager2D.cpp"
+  "Rendering/GfxRenderer2D.hpp" "Rendering/GfxRenderer2D.cpp"
+  "Rendering/GfxTypes.hpp" "Rendering/GfxTypes.cpp"
+  "Rendering/GfxPrimitives.hpp" "Rendering/GfxPrimitives.cpp"
+  "Rendering/GfxDraw2D.hpp" "Rendering/GfxDraw2D.cpp"
+  "Rendering/GfxFactory2D.hpp" "Rendering/GfxFactory2D.cpp"
+  "Rendering/GfxRegistry2D.hpp" "Rendering/GfxRegistry2D.cpp"
+  "Rendering/GLError.hpp"
+
   "Input/InputManager.cpp" "Input/InputManager.hpp" 
   "Input/KeyMap.hpp" 
   
@@ -101,16 +116,6 @@ add_library(BarrageCore STATIC
   "Objects/Components/ComponentArrays/VelocityArray.hpp" 
   "Objects/Components/SharedComponents/CircleCollider.hpp" 
   "Objects/Components/ComponentArrays/AngularSpeedArray.hpp" 
-
-  "Rendering/WindowManager.hpp" "Rendering/WindowManager.cpp"
-  "Rendering/GfxManager2D.hpp" "Rendering/GfxManager2D.cpp"
-  "Rendering/GfxRenderer2D.hpp" "Rendering/GfxRenderer2D.cpp"
-  "Rendering/GfxTypes.hpp" "Rendering/GfxTypes.cpp"
-  "Rendering/GfxPrimitives.hpp" "Rendering/GfxPrimitives.cpp"
-  "Rendering/GfxDraw2D.hpp" "Rendering/GfxDraw2D.cpp"
-  "Rendering/GfxFactory2D.hpp" "Rendering/GfxFactory2D.cpp"
-  "Rendering/GfxRegistry2D.hpp" "Rendering/GfxRegistry2D.cpp"
-  "Rendering/GLError.hpp"
 
   "Objects/Systems/Movement/MovementSystem.hpp" "Objects/Systems/Movement/MovementSystem.cpp"
   "Objects/Systems/Collision/CollisionSystem.hpp" "Objects/Systems/Collision/CollisionSystem.cpp" 

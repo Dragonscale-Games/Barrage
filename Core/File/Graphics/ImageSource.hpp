@@ -42,6 +42,12 @@ namespace Barrage
     /*************************************************************************/
     ImageSource(const std::string& path, const std::string& filename);
     /*************************************************************************/
+    /*!
+      \brief
+        The move constructor for Image Sources.
+      \param other
+        The ImageSource data being placed onto this instance.
+    */
     /*************************************************************************/
     ImageSource(ImageSource&& other) noexcept = default;
     /*************************************************************************/

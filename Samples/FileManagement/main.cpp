@@ -17,6 +17,7 @@
 #include <stdafx.h>
 #include <iostream>
 #include <File/FileManager.hpp>
+#include <Serialization/ComponentRefl.cpp>
 
 /****************************************************************************/
 /*!
@@ -27,8 +28,10 @@
 */
 /****************************************************************************/
 void DirectoryDemo(Barrage::FileManager& manager);
-void SaveResourceDemo(Barrage::FileManager& manager);
-void LoadResourceDemo(Barrage::FileManager& manager);
+void SaveImageDemo(Barrage::FileManager& manager);
+void LoadImageDemo(Barrage::FileManager& manager);
+void SaveJSONDemo(Barrage::FileManager& manager);
+void SerializationDemo(Barrage::FileManager& manager);
 
 /****************************************************************************/
 /*!
@@ -43,8 +46,10 @@ int main()
   fileManager.Initialize();
   // Run the demos!
   DirectoryDemo(fileManager);
-  SaveResourceDemo(fileManager);
-  LoadResourceDemo(fileManager);
+  SaveJSONDemo(fileManager);
+  SaveImageDemo(fileManager);
+  LoadImageDemo(fileManager);
+  SerializationDemo(fileManager);
   // Shut down the system and quit.
   fileManager.Shutdown();
   return 0;
@@ -58,7 +63,7 @@ void DirectoryDemo(Barrage::FileManager& manager)
 }
 
 #include <File/Graphics/ImageSource.hpp>
-void SaveResourceDemo(Barrage::FileManager& manager)
+void SaveImageDemo(Barrage::FileManager& manager)
 {
   using Barrage::ImageSource;
   using Barrage::TextureSpecs;
@@ -92,10 +97,49 @@ void SaveResourceDemo(Barrage::FileManager& manager)
   image.Save();
 }
 
-void LoadResourceDemo(Barrage::FileManager& manager)
+void LoadImageDemo(Barrage::FileManager& manager)
 {
   using Barrage::ImageSource;
 
   const ImageSource& image = manager.Load<ImageSource>(manager.GetUserPath(), "image.png");
   (void)image;
+}
+
+#include <File/Objects/ObjectSource.hpp>
+void SaveJSONDemo(Barrage::FileManager& manager)
+{
+  using Barrage::ObjectSource;
+  // Create an ObjectSource file and create a bogus object.
+  ObjectSource& objectSource = manager.Create<ObjectSource>(manager.GetUserPath(), "Sample.json");
+  rapidjson::Document& doc = objectSource.GetDocument();
+  doc.SetObject();
+
+  rapidjson::Value root(rapidjson::kObjectType);
+
+  root.AddMember("Boolean", false, doc.GetAllocator());
+  doc.AddMember("Root", root, doc.GetAllocator());
+
+  ((Barrage::FileResource&)objectSource).Save();
+}
+
+#include <Serialization/Serializer.hpp>
+#include <Objects/Components/SharedComponents/CircleCollider.hpp>
+void SerializationDemo(Barrage::FileManager& manager)
+{
+  using Barrage::ObjectSource;
+  // Create a sample circle collider to test.
+  
+  using Barrage::CircleCollider;
+  CircleCollider collider;
+  collider.radius_ = 50.0f;
+  
+  // Create an ObjectSource file and create a bogus object.
+  ObjectSource& objectSource = manager.Create<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");
+  rapidjson::Document& doc = objectSource.GetDocument();
+  doc.SetObject();
+
+  rapidjson::Value root = Barrage::Serialize(collider, doc.GetAllocator());
+  doc.AddMember("CircleCollider", root, doc.GetAllocator());
+
+  ((Barrage::FileResource&)objectSource).Save();
 }
