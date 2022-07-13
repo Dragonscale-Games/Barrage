@@ -31,6 +31,7 @@ namespace Barrage
 
   typedef ComponentArrayT<AngularSpeed> AngularSpeedArray;
 
+  template <>
   inline std::string AngularSpeedArray::GetClassName() { return "AngularSpeedArray"; }
 }
 

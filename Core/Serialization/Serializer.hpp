@@ -36,8 +36,12 @@ namespace Barrage
       A rapidjson value representing the serialized object.
   */
   /*************************************************************************/
+  /*
   template <typename T>
-  rapidjson::Value Serialize(const T& object, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) noexcept(false);
+  rapidjson::Value Serialize(
+    const T& object, const std::string_view& className, 
+    rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) noexcept(false);
+  */
 }
 
 #include "Serializer.tpp"

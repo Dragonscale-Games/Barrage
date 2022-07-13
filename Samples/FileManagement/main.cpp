@@ -47,9 +47,9 @@ int main()
   // Run the demos!
   DirectoryDemo(fileManager);
   SaveJSONDemo(fileManager);
+  SerializationDemo(fileManager);
   SaveImageDemo(fileManager);
   LoadImageDemo(fileManager);
-  SerializationDemo(fileManager);
   // Shut down the system and quit.
   fileManager.Shutdown();
   return 0;
@@ -124,22 +124,33 @@ void SaveJSONDemo(Barrage::FileManager& manager)
 
 #include <Serialization/Serializer.hpp>
 #include <Objects/Components/SharedComponents/CircleCollider.hpp>
+#include <Objects/Components/SharedComponents/BoundaryBox.hpp>
 void SerializationDemo(Barrage::FileManager& manager)
 {
   using Barrage::ObjectSource;
   // Create a sample circle collider to test.
   
   using Barrage::CircleCollider;
-  CircleCollider collider;
-  collider.radius_ = 50.0f;
-  
+  CircleCollider circle;
+  circle.radius_ = 50.0f;
+
+  using Barrage::BoundaryBox;
+  BoundaryBox box;
+  box.xMin_ = 0.0f;
+  box.yMin_ = 0.0f;
+  box.xMax_ = 50.0f;
+  box.yMax_ = 30.0f;
+
   // Create an ObjectSource file and create a bogus object.
   ObjectSource& objectSource = manager.Create<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");
   rapidjson::Document& doc = objectSource.GetDocument();
   doc.SetObject();
 
-  rapidjson::Value root = Barrage::Serialize(collider, doc.GetAllocator());
-  doc.AddMember("CircleCollider", root, doc.GetAllocator());
+  rapidjson::Value root(rapidjson::kObjectType);
+  root.AddMember("CircleCollider", Barrage::Serialize(circle, "CircleCollider", doc.GetAllocator()), doc.GetAllocator());
+  root.AddMember("BoundaryBox", Barrage::Serialize(box, "BoundaryBox", doc.GetAllocator()), doc.GetAllocator());
+
+  doc.AddMember("SampleObject", root, doc.GetAllocator());
 
   ((Barrage::FileResource&)objectSource).Save();
 }

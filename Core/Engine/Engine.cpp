@@ -60,8 +60,6 @@ namespace Barrage
     windowManager_.Shutdown();
 
     inputManager_.Shutdown();
-
-    TestRenderer::Instance().Shutdown();
   }
 
   GameStateManager& Engine::GSM()

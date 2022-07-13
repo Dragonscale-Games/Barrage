@@ -16,6 +16,8 @@
 
 #include <rttr/registration.h>
 #include <Objects/Components/SharedComponents/CircleCollider.hpp>
+#include <Objects/Components/SharedComponents/BoundaryBox.hpp>
+
 #include <iostream>
 
 #define STRINGIFY(X) #X
@@ -27,4 +29,12 @@ RTTR_REGISTRATION
   using Barrage::CircleCollider;
   rttr::registration::class_<CircleCollider>("CircleCollider")
     .property("radius", &CircleCollider::radius_);
+
+  // Box Collider
+  using Barrage::BoundaryBox;
+  rttr::registration::class_<BoundaryBox>("BoundaryBox")
+    .property("xMin", &BoundaryBox::xMin_)
+    .property("yMin", &BoundaryBox::yMin_)
+    .property("xMax", &BoundaryBox::xMax_)
+    .property("yMax", &BoundaryBox::yMax_);
 }
