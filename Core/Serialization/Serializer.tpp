@@ -35,11 +35,12 @@ namespace Barrage
     };
     */
 
+    // The metadata about the property coming from RTTR.
+    const rttr::variant variant = property.get_value(object);
+    const rttr::type variantType = property.get_type();
+    // The converted property as a RapidJSON value.
     rapidjson::Value value;
-    rttr::variant variant = property.get_value(object);
-    rttr::type variantType = property.get_type();
-    std::cout << "Property \"" << property.get_name() << "\" is type " << variantType.get_name() << std::endl;
-
+    
     // I genuinely don't know how to do this any other way
     // because of the templating.
     if (variantType == rttr::type::get<int>())
@@ -66,37 +67,34 @@ namespace Barrage
     {
       value = variant.get_value<long>();
     }
-    /*
-
-    else if (variantType == rttr::type::get<unsigned long>())
+    else if (variantType == rttr::type::get<size_t>())
     {
-      value = variant.get_value<unsigned long>();
+      value = variant.get_value<size_t>();
     }
-    */
 
     return value;
   }
 
-  template <typename T>
-  rapidjson::Value Serialize(const T& object, const std::string_view& className,
+  rapidjson::Value Serialize(const rttr::variant& object,
     rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
   {
     // Get the component through RTTR if possible.
     rapidjson::Value value(rapidjson::kObjectType);
-    std::string_view trimmedClassName = className.substr(className.find_last_of("::") + 1);
-    rttr::type type = rttr::type::get_by_name(trimmedClassName.data());
+    const std::string_view className = object.get_type().get_name().data();
+    const std::string_view trimmedClassName = className.substr(className.find_last_of("::") + 1);
+    const rttr::type type = rttr::type::get_by_name(trimmedClassName.data());
     if (type)
     {
       // Go through all properties and attempt to serialize them.
       rttr::array_range properties = type.get_properties();
-      for (auto property : properties)
+      for (const auto property : properties)
       {
         // If the class is a type then we call this function recursively.
         // Otherwise, we get whatever base type we got.
         rapidjson::Value propertyValue;
         if (property.get_type().is_class())
         {
-          //NO_IMPL();
+          propertyValue = Serialize(property.get_value(object), allocator);
         }
         else
         {
@@ -111,11 +109,9 @@ namespace Barrage
     return value;
   }
 
-  /*
   template <typename T>
-  rapidjson::Value Serialize(const T& object, const std::string_view& className, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) noexcept(false)
+  rapidjson::Value Serialize(const T& object, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) noexcept(false)
   {
-    return Serialize(&object, className, allocator);
+    return Serialize(rttr::variant(object), allocator);
   }
-  */
 }

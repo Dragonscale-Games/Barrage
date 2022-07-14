@@ -125,11 +125,12 @@ namespace Barrage
     /* Make the window's context current */
     glfwMakeContextCurrent(windowing.GetInternalHandle());
     /* Initialize the modern OpenGL functions using the context. */
-    glVersion_ = gladLoadGL(glfwGetProcAddress);
+    
+    glVersion_ = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)); //gladLoadGL(glfwGetProcAddress);
     // Check we can use OpenGL.
     assert(glVersion_);
     // TODO: Replace this with a proper logger message.
-    std::cout << "Loading OpenGL Version " << GLAD_VERSION_MAJOR(glVersion_) << "." << GLAD_VERSION_MINOR(glVersion_) << std::endl;
+    //std::cout << "Loading OpenGL Version " << GLAD_VERSION_MAJOR(glVersion_) << "." << GLAD_VERSION_MINOR(glVersion_) << std::endl;
   }
 
   void GfxManager2D::Shutdown()

@@ -127,7 +127,7 @@ add_library(BarrageCore STATIC
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
-target_link_libraries(BarrageCore PUBLIC glad glfw glm::glm rapidjson stb_image RTTR::Core)
+target_link_libraries(BarrageCore PUBLIC glad::glad glfw glm::glm rapidjson stb_image RTTR::Core)
 if(WIN32)
   target_link_libraries(BarrageCore PUBLIC DbgHelp Userenv)
 endif()

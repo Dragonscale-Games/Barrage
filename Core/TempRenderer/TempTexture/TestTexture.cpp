@@ -14,7 +14,8 @@
 
 #include "TestTexture.hpp"
 
-#include <glad/gl.h>
+//#include <glad/gl.h>
+#include <glad/glad.h>
 
 namespace Barrage
 {

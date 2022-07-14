@@ -22,6 +22,12 @@
 
 #define STRINGIFY(X) #X
 
+struct Colliders
+{
+  Barrage::CircleCollider circle_;
+  Barrage::BoundaryBox boundary_;
+};
+
 RTTR_REGISTRATION
 {
   std::cout << "Registering Components from RTTR..." << std::endl;
@@ -37,4 +43,9 @@ RTTR_REGISTRATION
     .property("yMin", &BoundaryBox::yMin_)
     .property("xMax", &BoundaryBox::xMax_)
     .property("yMax", &BoundaryBox::yMax_);
+
+  // Temporary Colliders Class.
+  rttr::registration::class_<Colliders>("Colliders")
+    .property("circle", &Colliders::circle_)
+    .property("boundary", &Colliders::boundary_);
 }

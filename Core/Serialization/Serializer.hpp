@@ -37,11 +37,11 @@ namespace Barrage
   */
   /*************************************************************************/
   /*
+  */
   template <typename T>
   rapidjson::Value Serialize(
-    const T& object, const std::string_view& className, 
+    const T& object,
     rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) noexcept(false);
-  */
 }
 
 #include "Serializer.tpp"

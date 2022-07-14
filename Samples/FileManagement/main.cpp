@@ -141,14 +141,19 @@ void SerializationDemo(Barrage::FileManager& manager)
   box.xMax_ = 50.0f;
   box.yMax_ = 30.0f;
 
+  Colliders colliders;
+  colliders.boundary_ = box;
+  colliders.circle_ = circle;
+
   // Create an ObjectSource file and create a bogus object.
   ObjectSource& objectSource = manager.Create<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");
   rapidjson::Document& doc = objectSource.GetDocument();
   doc.SetObject();
 
   rapidjson::Value root(rapidjson::kObjectType);
-  root.AddMember("CircleCollider", Barrage::Serialize(circle, "CircleCollider", doc.GetAllocator()), doc.GetAllocator());
-  root.AddMember("BoundaryBox", Barrage::Serialize(box, "BoundaryBox", doc.GetAllocator()), doc.GetAllocator());
+  root.AddMember("CircleCollider", Barrage::Serialize(circle, doc.GetAllocator()), doc.GetAllocator());
+  root.AddMember("BoundaryBox", Barrage::Serialize(box, doc.GetAllocator()), doc.GetAllocator());
+  root.AddMember("DupedColliders", Barrage::Serialize(colliders, doc.GetAllocator()), doc.GetAllocator());
 
   doc.AddMember("SampleObject", root, doc.GetAllocator());
 
