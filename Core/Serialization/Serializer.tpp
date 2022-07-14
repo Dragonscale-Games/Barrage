@@ -24,8 +24,7 @@
 
 namespace Barrage
 {
-  template <typename T>
-  rapidjson::Value Serialize(const T& object, const rttr::property& property)
+  rapidjson::Value Serialize(const rttr::variant& object, const rttr::property& property)
   {
     /*
     const static std::unordered_map<rttr::type, rapidjson::Type> typeTranslator =
@@ -107,11 +106,5 @@ namespace Barrage
     }
 
     return value;
-  }
-
-  template <typename T>
-  rapidjson::Value Serialize(const T& object, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) noexcept(false)
-  {
-    return Serialize(rttr::variant(object), allocator);
   }
 }
