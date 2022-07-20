@@ -35,7 +35,22 @@ cmake_minimum_required(VERSION 3.16)
 # Create the project.
 project(Barrage)
 # Add the subdirectories for third party libraries.
-find_package(rttr CONFIG REQUIRED)
+if(${DOWNLOAD_DEPENDENCIES})
+
+  include(FetchContent)
+  FetchContent_Declare(
+    vcpkg
+    GIT_REPOSITORY "https://github.com/Microsoft/vcpkg.git"
+    GIT_TAG 8ff168270bc5977384b008bec6e879e15089d850
+  )
+  
+  if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    FetchContent_Populate(vcpkg)
+    set(CMAKE_TOOLCHAIN_FILE "${vcpkg_SOURCE_DIR}/scripts/buildsystems/vcpkg.cmake")
+  endif()
+
+endif()
+find_package(rttr CONFIG REQUIRED Core)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 add_subdirectory(ThirdParty)
