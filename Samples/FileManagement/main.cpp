@@ -128,32 +128,39 @@ void SaveJSONDemo(Barrage::FileManager& manager)
 void SerializationDemo(Barrage::FileManager& manager)
 {
   using Barrage::ObjectSource;
-  // Create a sample circle collider to test.
   
-  using Barrage::CircleCollider;
-  CircleCollider circle;
-  circle.radius_ = 50.0f;
-
-  using Barrage::BoundaryBox;
-  BoundaryBox box;
-  box.xMin_ = 0.0f;
-  box.yMin_ = 0.0f;
-  box.xMax_ = 50.0f;
-  box.yMax_ = 30.0f;
-
+  // Create our write and read test colliders.
   Colliders colliders;
-  colliders.boundary_ = box;
-  colliders.circle_ = circle;
-
-  // Create an ObjectSource file and create a bogus object.
-  ObjectSource& objectSource = manager.Create<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");
-  rapidjson::Document& doc = objectSource.GetDocument();
-  doc.SetObject();
-
-  rapidjson::Value root = Barrage::Serialize(colliders, doc.GetAllocator());
-  doc.AddMember("Collider", root, doc.GetAllocator());
-  ((Barrage::FileResource&)objectSource).Save();
-
   Colliders readColliders;
-  Barrage::Deserialize(readColliders, doc.GetObject()["Collider"]);
+
+  {
+    using Barrage::CircleCollider;
+    CircleCollider circle;
+    circle.radius_ = 25.0f;
+
+    using Barrage::BoundaryBox;
+    BoundaryBox box;
+    box.xMin_ = 0.0f;
+    box.yMin_ = 0.0f;
+    box.xMax_ = 50.0f;
+    box.yMax_ = 30.0f;
+
+    colliders.boundary_ = box;
+    colliders.circle_ = circle;
+
+    // Create an ObjectSource file and create a bogus object.
+    ObjectSource& objectSource = manager.Create<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");
+    rapidjson::Document& doc = objectSource.GetDocument();
+    doc.SetObject();
+
+    rapidjson::Value root = Barrage::Serialize(colliders, doc.GetAllocator());
+    doc.AddMember("Collider", root, doc.GetAllocator());
+    ((Barrage::FileResource&)objectSource).Save();
+  }
+  
+  {
+    const ObjectSource& objectSource = manager.Load<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");
+    const rapidjson::Document& doc = objectSource.GetDocument();
+    Barrage::Deserialize(readColliders, doc.GetObject()["Collider"]);
+  }
 }

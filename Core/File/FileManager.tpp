@@ -32,7 +32,7 @@ namespace Barrage
         {
             // First, attempt to create and load the resource.
             T resource(path, filename);
-            resource.Load();
+            static_cast<FileResource&>(resource).Load();
             // Then, if we succeeded, create a handle to a resource we can store
             // and do a std::move to that handle.
             resourceHandle = new T(std::move(resource));

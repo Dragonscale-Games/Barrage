@@ -149,7 +149,7 @@ namespace Barrage
     return value;
   }
 
-  void Deserialize(rttr::variant object, const rapidjson::Value& data)
+  void Deserialize(rttr::variant& object, const rapidjson::Value& data)
   {
     const std::string_view className = object.get_type().get_name().data();
     const rttr::type type = rttr::type::get_by_name(className.data());
@@ -166,7 +166,10 @@ namespace Barrage
           const rapidjson::Value& propertyData = memberIter->value;
           if(property.get_type().is_class())
           {
-            Deserialize(property.get_value(object), propertyData);
+            rttr::variant propertyVariant = property.get_value(object);
+            Deserialize(propertyVariant, propertyData);
+            // Set the property after reading.
+            property.set_value(object, propertyVariant);
           }
           else
           {

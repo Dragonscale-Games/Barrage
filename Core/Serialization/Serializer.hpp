@@ -47,6 +47,16 @@ namespace Barrage
     rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
   /*************************************************************************/
   /*************************************************************************/
-  void Deserialize(rttr::variant object, const rapidjson::Value& data);
+  //void Deserialize(rttr::variant object, const rapidjson::Value& data);
+  void Deserialize(rttr::variant& object, const rapidjson::Value& data);
+  
+  template <class T>
+  void Deserialize(T& object, const rapidjson::Value& data)
+  {
+    rttr::variant objectVariant(object);
+    Deserialize(objectVariant, data);
+
+    object = objectVariant.get_value<T>();
+  }
 }
 #endif // Serializer_MODULE_H
