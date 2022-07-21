@@ -1,7 +1,0 @@
-{
-  "name": "barrage",
-  "version-string": "0.0.0",
-  "dependencies": [
-    "rttr", "glm"
-  ]
-}
