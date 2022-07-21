@@ -22,8 +22,7 @@
 // Includes
 //  ===========================================================================
 
-//#include <glad/gl.h>
-#include <glad/glad.h>
+#include "GLError.hpp"
 #include <vector>
 #include <array>
 

@@ -14,8 +14,7 @@
 #define GL_Error_HPP
 
 #include <cassert>
-//#include <glad/gl.h>
-#include <glad/glad.h>
+#include <glad/gl.h>
 
 /****************************************************************************/
 /*!

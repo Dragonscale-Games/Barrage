@@ -21,6 +21,7 @@
 //  ===========================================================================
 #include <rapidjson/document.h>
 #include <rapidjson/allocators.h>
+#include <rttr/registration.h>
 
 namespace Barrage
 {
@@ -44,7 +45,8 @@ namespace Barrage
   */
   rapidjson::Value Serialize(const rttr::variant& object,
     rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+  /*************************************************************************/
+  /*************************************************************************/
+  void Deserialize(rttr::variant object, const rapidjson::Value& data);
 }
-
-#include "Serializer.tpp"
 #endif // Serializer_MODULE_H

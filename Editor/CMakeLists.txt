@@ -39,7 +39,7 @@ add_executable(Editor "Source/main.cpp"
 "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Archetypes/DemoArchetypes.cpp" "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Archetypes/DemoArchetypes.hpp"
 )
 
-target_link_libraries(Editor PUBLIC BarrageCore imgui::imgui)
+target_link_libraries(Editor PUBLIC BarrageCore imgui)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source")
 target_include_directories(Editor PUBLIC "${CMAKE_SOURCE_DIR}/Core")

@@ -43,7 +43,7 @@ int main()
 {
   using Barrage::FileManager;
   FileManager fileManager;
-  fileManager.Initialize();
+  fileManager.Initialize("Documents/Barrage/UserContent/");
   // Run the demos!
   DirectoryDemo(fileManager);
   SaveJSONDemo(fileManager);
@@ -152,6 +152,8 @@ void SerializationDemo(Barrage::FileManager& manager)
 
   rapidjson::Value root = Barrage::Serialize(colliders, doc.GetAllocator());
   doc.AddMember("Collider", root, doc.GetAllocator());
-
   ((Barrage::FileResource&)objectSource).Save();
+
+  Colliders readColliders;
+  Barrage::Deserialize(readColliders, doc.GetObject()["Collider"]);
 }

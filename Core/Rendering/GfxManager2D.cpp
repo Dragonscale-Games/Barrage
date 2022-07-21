@@ -18,7 +18,6 @@
 // ============================================================================
 
 //#include "stdafx.h"
-#include "GLError.hpp"
 #include "GfxManager2D.hpp"
 #include "WindowManager.hpp"
 
@@ -125,8 +124,7 @@ namespace Barrage
     /* Make the window's context current */
     glfwMakeContextCurrent(windowing.GetInternalHandle());
     /* Initialize the modern OpenGL functions using the context. */
-    
-    glVersion_ = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)); //gladLoadGL(glfwGetProcAddress);
+    glVersion_ = gladLoadGL(glfwGetProcAddress);
     // Check we can use OpenGL.
     assert(glVersion_);
     // TODO: Replace this with a proper logger message.
