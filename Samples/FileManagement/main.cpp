@@ -16,8 +16,36 @@
 
 #include <stdafx.h>
 #include <iostream>
+#include <string>
 #include <File/FileManager.hpp>
 #include <Serialization/ComponentRefl.cpp>
+
+struct SerializationTest
+{
+  Barrage::CircleCollider circle_;
+  Barrage::BoundaryBox boundary_;
+  std::string s;
+  int i;
+  unsigned u;
+  float f;
+  double d;
+};
+
+RTTR_REGISTRATION
+{
+
+Barrage::ReflectBarrageCore();
+
+// Temporary Colliders Class.
+rttr::registration::class_<SerializationTest>("SerializationTest")
+.property("circle", &SerializationTest::circle_)
+.property("boundary", &SerializationTest::boundary_)
+.property("s", &SerializationTest::s)
+.property("i", &SerializationTest::i)
+.property("u", &SerializationTest::u)
+.property("f", &SerializationTest::f)
+.property("d", &SerializationTest::d);
+}
 
 /****************************************************************************/
 /*!
@@ -130,8 +158,8 @@ void SerializationDemo(Barrage::FileManager& manager)
   using Barrage::ObjectSource;
   
   // Create our write and read test colliders.
-  Colliders colliders;
-  Colliders readColliders;
+  SerializationTest colliders;
+  SerializationTest readColliders;
 
   {
     using Barrage::CircleCollider;
@@ -145,6 +173,11 @@ void SerializationDemo(Barrage::FileManager& manager)
     box.xMax_ = 50.0f;
     box.yMax_ = 30.0f;
 
+    colliders.i = 1;
+    colliders.u = 2u;
+    colliders.f = 3.0f;
+    colliders.d = 4.0;
+    colliders.s = "Hello World!";
     colliders.boundary_ = box;
     colliders.circle_ = circle;
 
@@ -154,13 +187,13 @@ void SerializationDemo(Barrage::FileManager& manager)
     doc.SetObject();
 
     rapidjson::Value root = Barrage::Serialize(colliders, doc.GetAllocator());
-    doc.AddMember("Collider", root, doc.GetAllocator());
+    doc.AddMember("SerializationTest", root, doc.GetAllocator());
     ((Barrage::FileResource&)objectSource).Save();
   }
   
   {
     const ObjectSource& objectSource = manager.Load<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");
     const rapidjson::Document& doc = objectSource.GetDocument();
-    Barrage::Deserialize(readColliders, doc.GetObject()["Collider"]);
+    Barrage::Deserialize(readColliders, doc.GetObject()["SerializationTest"]);
   }
 }

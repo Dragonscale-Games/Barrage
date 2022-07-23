@@ -24,9 +24,19 @@
 #include <unordered_map>
 #include <iostream>
 
+namespace
+{
+  bool CanRapidJsonHandle(const rttr::property& property)
+  {
+    rttr::type type = property.get_type();
+    return !type.is_class() || type == rttr::type::get<std::string>();
+  }
+}
 namespace Barrage
 {
-  rapidjson::Value Serialize(const rttr::variant& object, const rttr::property& property)
+
+  rapidjson::Value Serialize(const rttr::variant& object, const rttr::property& property, 
+    rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
   {
     /*
     const static std::unordered_map<rttr::type, rapidjson::Type> typeTranslator =
@@ -72,6 +82,11 @@ namespace Barrage
     {
       value = variant.get_value<size_t>();
     }
+    else if (variantType == rttr::type::get<std::string>())
+    {
+      const std::string text = variant.get_value<std::string>();
+      value.SetString(rapidjson::GenericStringRef(text.c_str()), allocator);
+    }
 
     return value;
   }
@@ -85,13 +100,13 @@ namespace Barrage
     {
       property.set_value(object, value.Get<int>());
     }
-    else if (value.Is<bool>())
-    {
-      property.set_value(object, value.Get<bool>());
-    }
     else if (value.Is<unsigned int>())
     {
       property.set_value(object, value.Get<unsigned int>());
+    }
+    else if (value.Is<bool>())
+    {
+      property.set_value(object, value.Get<bool>());
     }
     else if (value.Is<float>())
     {
@@ -108,6 +123,10 @@ namespace Barrage
     else if (value.Is<size_t>())
     {
       property.set_value(object, value.Get<size_t>());
+    }
+    else if (value.IsString())
+    {
+      property.set_value(object, std::string(value.GetString()));
     }
     else
     {
@@ -132,13 +151,13 @@ namespace Barrage
         // If the class is a type then we call this function recursively.
         // Otherwise, we get whatever base type we got.
         rapidjson::Value propertyValue;
-        if (property.get_type().is_class())
+        if (CanRapidJsonHandle(property))
         {
-          propertyValue = Serialize(property.get_value(object), allocator);
+          propertyValue = Serialize(object, property, allocator);
         }
         else
         {
-          propertyValue = Serialize(object, property);
+          propertyValue = Serialize(property.get_value(object), allocator);
         }
         // Set whatever value we got from RTTR to RapidJSON.
         const std::string_view properyName = property.get_name().data();
@@ -164,16 +183,16 @@ namespace Barrage
         if (memberIter != data.MemberEnd())
         {
           const rapidjson::Value& propertyData = memberIter->value;
-          if(property.get_type().is_class())
+          if(CanRapidJsonHandle(property))
+          {
+            Deserialize(object, property, propertyData);
+          }
+          else
           {
             rttr::variant propertyVariant = property.get_value(object);
             Deserialize(propertyVariant, propertyData);
             // Set the property after reading.
             property.set_value(object, propertyVariant);
-          }
-          else
-          {
-            Deserialize(object, property, propertyData);
           }
         }
       }

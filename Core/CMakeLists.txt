@@ -53,7 +53,7 @@ add_library(BarrageCore STATIC
   "File/Graphics/ImageSource.hpp" "File/Graphics/ImageSource.cpp"
   "File/Objects/ObjectSource.hpp" "File/Objects/ObjectSource.cpp"
 
-  "Serialization/ComponentRefl.cpp"
+  "Serialization/ComponentRefl.hpp" "Serialization/ComponentRefl.cpp"
   "Serialization/Serializer.hpp" "Serialization/Serializer.cpp"
 
   "Utilities/Utilities.hpp" 

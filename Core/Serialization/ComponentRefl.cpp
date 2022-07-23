@@ -22,30 +22,21 @@
 
 #define STRINGIFY(X) #X
 
-struct Colliders
+namespace Barrage
 {
-  Barrage::CircleCollider circle_;
-  Barrage::BoundaryBox boundary_;
-};
+  void ReflectBarrageCore()
+  {
+    // Circle Collider
+    using Barrage::CircleCollider;
+    rttr::registration::class_<CircleCollider>("CircleCollider")
+      .property("radius", &CircleCollider::radius_);
 
-RTTR_REGISTRATION
-{
-  std::cout << "Registering Components from RTTR..." << std::endl;
-  // Circle Collider
-  using Barrage::CircleCollider;
-  rttr::registration::class_<CircleCollider>("CircleCollider")
-    .property("radius", &CircleCollider::radius_);
-
-  // Box Collider
-  using Barrage::BoundaryBox;
-  rttr::registration::class_<BoundaryBox>("BoundaryBox")
-    .property("xMin", &BoundaryBox::xMin_)
-    .property("yMin", &BoundaryBox::yMin_)
-    .property("xMax", &BoundaryBox::xMax_)
-    .property("yMax", &BoundaryBox::yMax_);
-
-  // Temporary Colliders Class.
-  rttr::registration::class_<Colliders>("Colliders")
-    .property("circle", &Colliders::circle_)
-    .property("boundary", &Colliders::boundary_);
+    // Box Collider
+    using Barrage::BoundaryBox;
+    rttr::registration::class_<BoundaryBox>("BoundaryBox")
+      .property("xMin", &BoundaryBox::xMin_)
+      .property("yMin", &BoundaryBox::yMin_)
+      .property("xMax", &BoundaryBox::xMax_)
+      .property("yMax", &BoundaryBox::yMax_);
+  }
 }
