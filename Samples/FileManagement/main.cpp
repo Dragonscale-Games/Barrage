@@ -29,6 +29,12 @@ struct SerializationTest
   unsigned u;
   float f;
   double d;
+
+  //! Create a constructor for this test object to avoid a
+  //! compiler warning.
+  SerializationTest() :
+    i(), u(), f(), d()
+  {};
 };
 
 RTTR_REGISTRATION

@@ -91,40 +91,50 @@ namespace Barrage
     return value;
   }
 
-  void Deserialize(rttr::variant& object, rttr::property& property, const rapidjson::Value& value)
+  void Deserialize(rttr::variant& object, const rttr::property& property, const rapidjson::Value& value)
   {
     // Do a massive branching statement until we can figure out a better
     // way of doing this.
-
-    if (value.Is<int>())
+    rttr::type propertyType = property.get_type();
+    if (propertyType == rttr::type::get<int>())
     {
-      property.set_value(object, value.Get<int>());
+      assert(value.IsInt());
+      property.set_value(object, value.GetInt());
     }
-    else if (value.Is<unsigned int>())
+    else if (propertyType == rttr::type::get<unsigned int>())
     {
-      property.set_value(object, value.Get<unsigned int>());
+      // Manually convert integers to unsigned integers
+      // should we need to.
+      assert(value.IsUint());
+      property.set_value(object, value.GetUint());
     }
-    else if (value.Is<bool>())
+    else if (propertyType == rttr::type::get<bool>())
     {
-      property.set_value(object, value.Get<bool>());
+      assert(value.IsBool());
+      property.set_value(object, value.GetBool());
     }
-    else if (value.Is<float>())
+    else if (propertyType == rttr::type::get<float>())
     {
-      property.set_value(object, value.Get<float>());
+      assert(value.IsFloat());
+      property.set_value(object, value.GetFloat());
     }
-    else if (value.Is<double>())
+    else if (propertyType == rttr::type::get<double>())
     {
-      property.set_value(object, value.Get<double>());
+      // Manually convert the single precision floating point
+      // value to a double precision type... shouldn't be
+      // a bad conversion.
+      assert(value.IsDouble());
+      property.set_value(object, value.GetDouble());
     }
-    else if (value.Is<long>())
+    else if (propertyType == rttr::type::get<long>())
     {
       property.set_value(object, value.Get<long>());
     }
-    else if (value.Is<size_t>())
+    else if (propertyType == rttr::type::get<size_t>())
     {
       property.set_value(object, value.Get<size_t>());
     }
-    else if (value.IsString())
+    else if (propertyType == rttr::type::get<std::string>())
     {
       property.set_value(object, std::string(value.GetString()));
     }
