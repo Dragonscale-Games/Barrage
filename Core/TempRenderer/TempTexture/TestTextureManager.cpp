@@ -15,8 +15,8 @@
 #include "TestTextureManager.hpp"
 
 #include <stb_image/stb_image.h>
-//#include <glad/gl.h>
-#include <glad/glad.h>
+#include <glad/gl.h>
+//#include <glad/glad.h>
 #include <stdexcept>
 
 namespace Barrage

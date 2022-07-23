@@ -18,8 +18,8 @@
 #include "TempShader/TestShaderManager.hpp"
 #include "TempTexture/TestTextureManager.hpp"
 
-//#include <glad/gl.h>
-#include <glad/glad.h>
+#include <glad/gl.h>
+//#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -188,7 +188,7 @@ namespace Barrage
 
   void TestRenderer::LoadGLFunctions()
   {
-    int version = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+    int version = gladLoadGL(glfwGetProcAddress);
 
     if (!version)
     {
