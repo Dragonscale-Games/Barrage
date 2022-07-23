@@ -47,16 +47,6 @@ namespace Barrage
     return specs_;
   }
 
-  void ImageSource::Load()
-  {
-    FileResource::Load();
-  }
-
-  void ImageSource::Save() const
-  {
-    FileResource::Save();
-  }
-
   void ImageSource::Load(const std::string& filepath) noexcept(false)
   {
     // Load the image from file.

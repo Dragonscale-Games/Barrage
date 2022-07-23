@@ -128,7 +128,7 @@ void SaveImageDemo(Barrage::FileManager& manager)
   //ImageSource image(manager.GetUserPath(), "image.png");
   ImageSource& image = manager.Create<ImageSource>(manager.GetUserPath(), "image.png");
   image.Update(specs);
-  image.Save();
+  manager.Save(image);
 }
 
 void LoadImageDemo(Barrage::FileManager& manager)

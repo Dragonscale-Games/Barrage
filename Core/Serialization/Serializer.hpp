@@ -37,26 +37,35 @@ namespace Barrage
       A rapidjson value representing the serialized object.
   */
   /*************************************************************************/
-  /*
-  template <typename T>
-  rapidjson::Value Serialize(
-    const T& object,
-    rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator) noexcept(false);
-  */
   rapidjson::Value Serialize(const rttr::variant& object,
     rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
   /*************************************************************************/
+  /*!
+    \brief
+      Deserializes an object given the JSON data for it.
+    \param object
+      The object to deserialize from JSON data.
+    \param data
+      The object representing the JSON data being read.
+  */
   /*************************************************************************/
-  //void Deserialize(rttr::variant object, const rapidjson::Value& data);
   void Deserialize(rttr::variant& object, const rapidjson::Value& data);
-  
+  /*************************************************************************/
+  /*!
+    \brief
+      A helper class that sets up some initial conditions for the
+      main `Deserialize` function to work.
+    \param object
+      The object to being written to with JSON data.
+    \param data
+      The object representing the JSON data being read.
+    \tparam T
+      The type of object being deserialized.
+  */
+  /*************************************************************************/
   template <class T>
-  void Deserialize(T& object, const rapidjson::Value& data)
-  {
-    rttr::variant objectVariant(object);
-    Deserialize(objectVariant, data);
-
-    object = objectVariant.get_value<T>();
-  }
+  void Deserialize(T& object, const rapidjson::Value& data);
 }
+
+#include "Serializer.tpp"
 #endif // Serializer_MODULE_H

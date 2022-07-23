@@ -79,6 +79,11 @@ namespace Barrage
     cachedResources_.clear();
   }
 
+  void FileManager::Save(const FileResource& file) const
+  {
+    file.Save();
+  }
+
   const std::string& FileManager::GetContentPath() const
   {
     return contentPath_;
