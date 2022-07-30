@@ -171,12 +171,9 @@ namespace Barrage
   rapidjson::Value Serialize(const rttr::variant& object,
     rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
   {
-    // Get the component through RTTR if possible.
-    rapidjson::Value value;// (rapidjson::kObjectType);
-    /*
-    const std::string_view className = object.get_type().get_name().data();
-    const rttr::type type = rttr::type::get_by_name(className.data());
-    */
+    // Establish the JSON value to serialize.
+    rapidjson::Value value;
+    // Get the type of thing we are trying to serialize.
     const rttr::type type = object.get_type();
     // Handle array-like types.
     if (type.is_sequential_container())
@@ -206,7 +203,6 @@ namespace Barrage
       {
         rapidjson::Value translatedValue;
         rttr::variant propertyAsValue = property.get_value(object);
-        rttr::type propertyType = property.get_type();
         // Serialize the variant's properties.
         translatedValue = Serialize(propertyAsValue, allocator);
         // Set whatever value we got from RTTR to RapidJSON.
@@ -225,9 +221,45 @@ namespace Barrage
 
   void Deserialize(rttr::variant& object, const rapidjson::Value& data)
   {
+    /*
     const std::string_view className = object.get_type().get_name().data();
     const rttr::type type = rttr::type::get_by_name(className.data());
-    if (type)
+    */
+    // Get the type of object serialized.
+    const rttr::type type = object.get_type();
+    if (!type)
+    {
+      BREAKPOINT();
+      return;
+    }
+    // Handle array-like objects.
+    if (type.is_sequential_container())
+    {
+      // The array from the JSON data.
+      const rapidjson::GenericArray dataAsArray = data.GetArray();
+      const size_t arraySize = dataAsArray.Size();
+      // The propery we are constructing.
+      rttr::variant_sequential_view objectAsArray = object.create_sequential_view();
+      objectAsArray.set_size(arraySize);
+      // Search through all the elements of the array data and copy them over to our data.
+      for (size_t i = 0; i < arraySize; ++i)
+      {
+        // Deserialize each member of this array and then slot them into
+        // our newly created array.
+        rttr::variant arrayElement = objectAsArray.get_value(i);
+        rttr::type arrayElementType = arrayElement.get_type();
+        // Get the contents of the wrapper if that's what we got.
+        DeserializePrimitive(arrayElement, dataAsArray[i]);
+        objectAsArray.set_value(i, arrayElement);
+      }
+    }
+    // Handle primitive types.
+    else if (IsRapidJsonPrimitive(type))
+    {
+      DeserializePrimitive(object, data);
+    }
+    // Handle classes.
+    else if (type.is_class())
     {
       // Go through all properties and attempt to serialize them.
       rttr::array_range properties = type.get_properties();
@@ -241,39 +273,15 @@ namespace Barrage
         if (memberIter != data.MemberEnd())
         {
           const rapidjson::Value& propertyData = memberIter->value;
-          if (propertyType.is_sequential_container())
-          {
-            // The array from the JSON data.
-            const rapidjson::GenericArray dataAsArray = propertyData.GetArray();
-            const size_t arraySize = dataAsArray.Size();
-            // The propery we are constructing.
-            rttr::variant_sequential_view propertyAsArray = propertyVariant.create_sequential_view();
-            propertyAsArray.set_size(arraySize);
-            // Search through all the elements of the array data and copy them over to our data.
-            for (size_t i = 0; i < arraySize; ++i)
-            {
-              // Deserialize each member of this array and then slot them into
-              // our newly created array.
-              rttr::variant arrayElement = propertyAsArray.get_value(i);
-              rttr::type arrayElementType = arrayElement.get_type();
-              // Get the contents of the wrapper if that's what we got.
-              DeserializePrimitive(arrayElement, dataAsArray[i]);
-              propertyAsArray.set_value(i, arrayElement);
-            }
-            //propertyVariant = propertyAsArray;
-          }
-          else if(IsRapidJsonPrimitive(propertyType))
-          {
-            DeserializePrimitive(propertyVariant, propertyData);
-          }
-          else
-          {
-            Deserialize(propertyVariant, propertyData);
-            // Set the property after reading.
-          }
+          Deserialize(propertyVariant, propertyData);
           property.set_value(object, propertyVariant);
         }
       }
+    }
+    // Uhhhh... we shouldn't be here.
+    else
+    {
+      BREAKPOINT();
     }
   }
 }
