@@ -18,24 +18,27 @@
 #include <stdafx.h>
 #include "Serializer.hpp"
 
-#include <rttr/type.h>
-#include <rttr/property.h>
-#include <rapidjson/document.h>
 #include <unordered_map>
 #include <iostream>
+
+#include <rttr/type.h>
+#include <rttr/property.h>
+#include <rttr/variant.h>
+#include <rapidjson/document.h>
+
 
 namespace
 {
   bool CanRapidJsonHandle(const rttr::property& property)
   {
     rttr::type type = property.get_type();
-    return !type.is_class() || type == rttr::type::get<std::string>();
+    return !type.is_class() || type.is_sequential_container() || type == rttr::type::get<std::string>();
   }
 }
 namespace Barrage
 {
 
-  rapidjson::Value Serialize(const rttr::variant& object, const rttr::property& property, 
+  rapidjson::Value Serialize(const rttr::variant& object, const rttr::variant& property,
     rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
   {
     /*
@@ -47,45 +50,66 @@ namespace Barrage
     */
 
     // The metadata about the property coming from RTTR.
-    const rttr::variant variant = property.get_value(object);
-    const rttr::type variantType = property.get_type();
+    rttr::variant localVariant = property;
+    rttr::type variantType = property.get_type();
+
+    if (variantType.is_wrapper())
+    {
+      variantType = variantType.get_wrapped_type();
+      localVariant = property.extract_wrapped_value();
+    }
     // The converted property as a RapidJSON value.
     rapidjson::Value value;
     
-    // I genuinely don't know how to do this any other way
-    // because of the templating.
-    if (variantType == rttr::type::get<int>())
+    if (variantType.is_sequential_container())
     {
-      value = variant.get_value<int>();
+      const rttr::variant_sequential_view& asArray = localVariant.create_sequential_view();
+      // Make this value an array.
+      value.SetArray();
+      // Go through all the possible values of this.
+      for (auto& element : asArray)
+      {
+        rapidjson::Value elemValue = Serialize(object, element, allocator);
+        value.PushBack(elemValue, allocator);
+      }
     }
-    else if (variantType == rttr::type::get<bool>())
+    else
     {
-      value = variant.get_value<bool>();
-    }
-    else if (variantType == rttr::type::get<unsigned int>())
-    {
-      value = variant.get_value<unsigned int>();
-    }
-    else if (variantType == rttr::type::get<float>())
-    {
-      value = variant.get_value<float>();
-    }
-    else if (variantType == rttr::type::get<double>())
-    {
-      value = variant.get_value<double>();
-    }
-    else if (variantType == rttr::type::get<long>())
-    {
-      value = variant.get_value<long>();
-    }
-    else if (variantType == rttr::type::get<size_t>())
-    {
-      value = variant.get_value<size_t>();
-    }
-    else if (variantType == rttr::type::get<std::string>())
-    {
-      const std::string text = variant.get_value<std::string>();
-      value.SetString(rapidjson::GenericStringRef(text.c_str()), allocator);
+      // I genuinely don't know how to do this any other way
+      // because of the templating.
+      if (variantType == rttr::type::get<int>())
+      {
+        value = localVariant.get_value<int>();
+      }
+      else if (variantType == rttr::type::get<bool>())
+      {
+        value = localVariant.get_value<bool>();
+      }
+      else if (variantType == rttr::type::get<unsigned int>())
+      {
+        value = localVariant.get_value<unsigned int>();
+      }
+      else if (variantType == rttr::type::get<float>())
+      {
+        value = localVariant.get_value<float>();
+      }
+      else if (variantType == rttr::type::get<double>())
+      {
+        value = localVariant.get_value<double>();
+      }
+      else if (variantType == rttr::type::get<long>())
+      {
+        value = localVariant.get_value<long>();
+      }
+      else if (variantType == rttr::type::get<size_t>())
+      {
+        value = localVariant.get_value<size_t>();
+      }
+      else if (variantType == rttr::type::get<std::string>())
+      {
+        const std::string text = localVariant.get_value<std::string>();
+        value.SetString(rapidjson::GenericStringRef(text.c_str()), allocator);
+      }
     }
 
     return value;
@@ -160,18 +184,19 @@ namespace Barrage
       {
         // If the class is a type then we call this function recursively.
         // Otherwise, we get whatever base type we got.
-        rapidjson::Value propertyValue;
+        rapidjson::Value translatedValue;
         if (CanRapidJsonHandle(property))
         {
-          propertyValue = Serialize(object, property, allocator);
+          const rttr::variant propertyAsValue = property.get_value(object);
+          translatedValue = Serialize(object, propertyAsValue, allocator);
         }
         else
         {
-          propertyValue = Serialize(property.get_value(object), allocator);
+          translatedValue = Serialize(property.get_value(object), allocator);
         }
         // Set whatever value we got from RTTR to RapidJSON.
         const std::string_view properyName = property.get_name().data();
-        value.AddMember(rapidjson::GenericStringRef(properyName.data()), propertyValue, allocator);
+        value.AddMember(rapidjson::GenericStringRef(properyName.data()), translatedValue, allocator);
       }
     }
 

@@ -16,14 +16,18 @@
 
 #include <stdafx.h>
 #include <iostream>
+#include <vector>
 #include <string>
 #include <File/FileManager.hpp>
 #include <Serialization/ComponentRefl.cpp>
 
 struct SerializationTest
 {
-  Barrage::CircleCollider circle_;
-  Barrage::BoundaryBox boundary_;
+  Barrage::CircleCollider circle;
+  Barrage::BoundaryBox boundary;
+  std::vector<int> iVector;
+  std::vector<float> fVector;
+  std::vector<std::string> sVector;
   std::string s;
   int i;
   unsigned u;
@@ -44,8 +48,11 @@ Barrage::ReflectBarrageCore();
 
 // Temporary Colliders Class.
 rttr::registration::class_<SerializationTest>("SerializationTest")
-.property("circle", &SerializationTest::circle_)
-.property("boundary", &SerializationTest::boundary_)
+.property("circle", &SerializationTest::circle)
+.property("boundary", &SerializationTest::boundary)
+.property("iVector", &SerializationTest::iVector)
+.property("fVector", &SerializationTest::fVector)
+.property("sVector", &SerializationTest::sVector)
 .property("s", &SerializationTest::s)
 .property("i", &SerializationTest::i)
 .property("u", &SerializationTest::u)
@@ -179,13 +186,17 @@ void SerializationDemo(Barrage::FileManager& manager)
     box.xMax_ = 50.0f;
     box.yMax_ = 30.0f;
 
+    colliders.iVector = { 1, 2, 3, 4, 5 };
+    colliders.fVector = { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f };
+    colliders.sVector = { "one", "two", "three", "four", "five" };
+
     colliders.i = 1;
     colliders.u = 2u;
     colliders.f = 3.0f;
     colliders.d = 4.0;
     colliders.s = "Hello World!";
-    colliders.boundary_ = box;
-    colliders.circle_ = circle;
+    colliders.boundary = box;
+    colliders.circle = circle;
 
     // Create an ObjectSource file and create a bogus object.
     ObjectSource& objectSource = manager.Create<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");
