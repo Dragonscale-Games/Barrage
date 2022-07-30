@@ -29,9 +29,8 @@
 
 namespace
 {
-  bool IsRapidJsonPrimitive(const rttr::property& property)
+  bool IsRapidJsonPrimitive(const rttr::type& type)
   {
-    rttr::type type = property.get_type();
     return !type.is_class() || type == rttr::type::get<std::string>();
   }
 }
@@ -173,11 +172,34 @@ namespace Barrage
     rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
   {
     // Get the component through RTTR if possible.
-    rapidjson::Value value(rapidjson::kObjectType);
+    rapidjson::Value value;// (rapidjson::kObjectType);
+    /*
     const std::string_view className = object.get_type().get_name().data();
     const rttr::type type = rttr::type::get_by_name(className.data());
-    if (type)
+    */
+    const rttr::type type = object.get_type();
+    // Handle array-like types.
+    if (type.is_sequential_container())
     {
+      const rttr::variant_sequential_view& asArray = object.create_sequential_view();
+      // Make this value an array.
+      value.SetArray();
+      // Go through all the possible values of this.
+      for (auto& element : asArray)
+      {
+        rapidjson::Value elemValue = SerializePrimitive(element, allocator);
+        value.PushBack(elemValue, allocator);
+      }
+    }
+    // Handle primitive types (including strings).
+    else if (IsRapidJsonPrimitive(type))
+    {
+      value = SerializePrimitive(object, allocator);
+    }
+    // Handle classes.
+    else if (type.is_class())
+    {
+      value.SetObject();
       // Go through all properties and attempt to serialize them.
       const rttr::array_range properties = type.get_properties();
       for (const auto property : properties)
@@ -185,48 +207,19 @@ namespace Barrage
         rapidjson::Value translatedValue;
         rttr::variant propertyAsValue = property.get_value(object);
         rttr::type propertyType = property.get_type();
-
-        /*
-        // We care about the contents of all wrapper types.
-        if (propertyType.is_wrapper())
-        {
-          propertyType = propertyType.get_wrapped_type();
-          propertyAsValue = propertyAsValue.extract_wrapped_value();
-        }
-        */
-
-        // If the class is a type then we call this function recursively.
-        // Otherwise, we get whatever base type we got.
-
-        // Serialize array-like types.
-        if (propertyType.is_sequential_container())
-        {
-          const rttr::variant_sequential_view& asArray = propertyAsValue.create_sequential_view();
-          // Make this value an array.
-          translatedValue.SetArray();
-          // Go through all the possible values of this.
-          for (auto& element : asArray)
-          {
-            rapidjson::Value elemValue = SerializePrimitive(element, allocator);
-            translatedValue.PushBack(elemValue, allocator);
-          }
-        }
-        // Serialize primitive types.
-        else if(IsRapidJsonPrimitive(property))
-        {
-          translatedValue = SerializePrimitive(propertyAsValue, allocator);
-        }
-        // Serialize structures.
-        else
-        {
-          translatedValue = Serialize(propertyAsValue, allocator);
-        }
+        // Serialize the variant's properties.
+        translatedValue = Serialize(propertyAsValue, allocator);
         // Set whatever value we got from RTTR to RapidJSON.
         const std::string_view properyName = property.get_name().data();
         value.AddMember(rapidjson::GenericStringRef(properyName.data()), translatedValue, allocator);
       }
     }
-
+    // We really shouldn't be here...
+    else
+    {
+      BREAKPOINT();
+    }
+    // Return whatever JSON value we constructed.
     return value;
   }
 
@@ -269,7 +262,7 @@ namespace Barrage
             }
             //propertyVariant = propertyAsArray;
           }
-          else if(IsRapidJsonPrimitive(property))
+          else if(IsRapidJsonPrimitive(propertyType))
           {
             DeserializePrimitive(propertyVariant, propertyData);
           }
