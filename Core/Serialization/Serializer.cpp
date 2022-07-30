@@ -29,16 +29,16 @@
 
 namespace
 {
-  bool CanRapidJsonHandle(const rttr::property& property)
+  bool IsRapidJsonPrimitive(const rttr::property& property)
   {
     rttr::type type = property.get_type();
-    return !type.is_class() || type.is_sequential_container() || type == rttr::type::get<std::string>();
+    return !type.is_class() || type == rttr::type::get<std::string>();
   }
 }
 namespace Barrage
 {
 
-  rapidjson::Value Serialize(const rttr::variant& object, const rttr::variant& property,
+  rapidjson::Value SerializePrimitive(const rttr::variant& property,
     rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
   {
     /*
@@ -50,97 +50,97 @@ namespace Barrage
     */
 
     // The metadata about the property coming from RTTR.
-    rttr::variant localVariant = property;
-    rttr::type variantType = property.get_type();
-
-    if (variantType.is_wrapper())
-    {
-      variantType = variantType.get_wrapped_type();
-      localVariant = property.extract_wrapped_value();
-    }
-    // The converted property as a RapidJSON value.
     rapidjson::Value value;
-    
-    if (variantType.is_sequential_container())
+    rttr::variant propertyVariant = property;
+    rttr::type propertyType = property.get_type();
+
+    // We care about the contents of all wrapper types.
+    if (propertyType.is_wrapper())
     {
-      const rttr::variant_sequential_view& asArray = localVariant.create_sequential_view();
-      // Make this value an array.
-      value.SetArray();
-      // Go through all the possible values of this.
-      for (auto& element : asArray)
-      {
-        rapidjson::Value elemValue = Serialize(object, element, allocator);
-        value.PushBack(elemValue, allocator);
-      }
+      propertyType = propertyType.get_wrapped_type();
+      propertyVariant = propertyVariant.extract_wrapped_value();
     }
-    else
+
+    // I genuinely don't know how to do this any other way
+    // because of the templating.
+    if (propertyType == rttr::type::get<int>())
     {
-      // I genuinely don't know how to do this any other way
-      // because of the templating.
-      if (variantType == rttr::type::get<int>())
-      {
-        value = localVariant.get_value<int>();
-      }
-      else if (variantType == rttr::type::get<bool>())
-      {
-        value = localVariant.get_value<bool>();
-      }
-      else if (variantType == rttr::type::get<unsigned int>())
-      {
-        value = localVariant.get_value<unsigned int>();
-      }
-      else if (variantType == rttr::type::get<float>())
-      {
-        value = localVariant.get_value<float>();
-      }
-      else if (variantType == rttr::type::get<double>())
-      {
-        value = localVariant.get_value<double>();
-      }
-      else if (variantType == rttr::type::get<long>())
-      {
-        value = localVariant.get_value<long>();
-      }
-      else if (variantType == rttr::type::get<size_t>())
-      {
-        value = localVariant.get_value<size_t>();
-      }
-      else if (variantType == rttr::type::get<std::string>())
-      {
-        const std::string text = localVariant.get_value<std::string>();
-        value.SetString(rapidjson::GenericStringRef(text.c_str()), allocator);
-      }
+      value = propertyVariant.get_value<int>();
+    }
+    else if (propertyType == rttr::type::get<bool>())
+    {
+      value = propertyVariant.get_value<bool>();
+    }
+    else if (propertyType == rttr::type::get<unsigned int>())
+    {
+      value = propertyVariant.get_value<unsigned int>();
+    }
+    else if (propertyType == rttr::type::get<float>())
+    {
+      value = propertyVariant.get_value<float>();
+    }
+    else if (propertyType == rttr::type::get<double>())
+    {
+      value = propertyVariant.get_value<double>();
+    }
+    else if (propertyType == rttr::type::get<char>())
+    {
+      value = propertyVariant.get_value<char>();
+    }
+    else if (propertyType == rttr::type::get<unsigned char>())
+    {
+      value = propertyVariant.get_value<unsigned char>();
+    }
+    else if (propertyType == rttr::type::get<long>())
+    {
+      value = propertyVariant.get_value<long>();
+    }
+    else if (propertyType == rttr::type::get<size_t>())
+    {
+      value = propertyVariant.get_value<size_t>();
+    }
+    else if (propertyType == rttr::type::get<std::string>())
+    {
+      const std::string text = propertyVariant.get_value<std::string>();
+      value.SetString(rapidjson::GenericStringRef(text.c_str()), allocator);
     }
 
     return value;
   }
 
-  void Deserialize(rttr::variant& object, const rttr::property& property, const rapidjson::Value& value)
+  void DeserializePrimitive(rttr::variant& property, const rapidjson::Value& value)
   {
     // Do a massive branching statement until we can figure out a better
     // way of doing this.
     rttr::type propertyType = property.get_type();
+
+    // We care about the contents of all wrapper types.
+    if (propertyType.is_wrapper())
+    {
+      propertyType = propertyType.get_wrapped_type();
+    }
+
     if (propertyType == rttr::type::get<int>())
     {
       assert(value.IsInt());
-      property.set_value(object, value.GetInt());
+      property = value.GetInt();
     }
     else if (propertyType == rttr::type::get<unsigned int>())
     {
       // Manually convert integers to unsigned integers
       // should we need to.
       assert(value.IsUint());
-      property.set_value(object, value.GetUint());
+      property = value.GetUint();
     }
     else if (propertyType == rttr::type::get<bool>())
     {
       assert(value.IsBool());
-      property.set_value(object, value.GetBool());
+      property = value.GetBool();
     }
     else if (propertyType == rttr::type::get<float>())
     {
       assert(value.IsFloat());
-      property.set_value(object, value.GetFloat());
+      property = value.GetFloat();
     }
     else if (propertyType == rttr::type::get<double>())
     {
@@ -148,19 +148,19 @@ namespace Barrage
       // value to a double precision type... shouldn't be
       // a bad conversion.
       assert(value.IsDouble());
-      property.set_value(object, value.GetDouble());
+      property = value.GetDouble();
     }
     else if (propertyType == rttr::type::get<long>())
     {
-      property.set_value(object, value.Get<long>());
+      property = value.Get<long>();
     }
     else if (propertyType == rttr::type::get<size_t>())
     {
-      property.set_value(object, value.Get<size_t>());
+      property = value.Get<size_t>();
     }
     else if (propertyType == rttr::type::get<std::string>())
     {
-      property.set_value(object, std::string(value.GetString()));
+      property = std::string(value.GetString());
     }
     else
     {
@@ -182,17 +182,44 @@ namespace Barrage
       const rttr::array_range properties = type.get_properties();
       for (const auto property : properties)
       {
+        rapidjson::Value translatedValue;
+        rttr::variant propertyAsValue = property.get_value(object);
+        rttr::type propertyType = property.get_type();
+
+        /*
+        // We care about the contents of all wrapper types.
+        if (propertyType.is_wrapper())
+        {
+          propertyType = propertyType.get_wrapped_type();
+          propertyAsValue = propertyAsValue.extract_wrapped_value();
+        }
+        */
+
         // If the class is a type then we call this function recursively.
         // Otherwise, we get whatever base type we got.
-        rapidjson::Value translatedValue;
-        if (CanRapidJsonHandle(property))
+
+        // Serialize array-like types.
+        if (propertyType.is_sequential_container())
         {
-          const rttr::variant propertyAsValue = property.get_value(object);
-          translatedValue = Serialize(object, propertyAsValue, allocator);
+          const rttr::variant_sequential_view& asArray = propertyAsValue.create_sequential_view();
+          // Make this value an array.
+          translatedValue.SetArray();
+          // Go through all the possible values of this.
+          for (auto& element : asArray)
+          {
+            rapidjson::Value elemValue = SerializePrimitive(element, allocator);
+            translatedValue.PushBack(elemValue, allocator);
+          }
         }
+        // Serialize primitive types.
+        else if(IsRapidJsonPrimitive(property))
+        {
+          translatedValue = SerializePrimitive(propertyAsValue, allocator);
+        }
+        // Serialize structures.
         else
         {
-          translatedValue = Serialize(property.get_value(object), allocator);
+          translatedValue = Serialize(propertyAsValue, allocator);
         }
         // Set whatever value we got from RTTR to RapidJSON.
         const std::string_view properyName = property.get_name().data();
@@ -215,20 +242,43 @@ namespace Barrage
       {
         const std::string_view propertyName = property.get_name().data();
         const rapidjson::GenericMemberIterator memberIter = data.FindMember(propertyName.data());
+        const rttr::type propertyType = property.get_type();
+        rttr::variant propertyVariant = property.get_value(object);
+
         if (memberIter != data.MemberEnd())
         {
           const rapidjson::Value& propertyData = memberIter->value;
-          if(CanRapidJsonHandle(property))
+          if (propertyType.is_sequential_container())
           {
-            Deserialize(object, property, propertyData);
+            // The array from the JSON data.
+            const rapidjson::GenericArray dataAsArray = propertyData.GetArray();
+            const size_t arraySize = dataAsArray.Size();
+            // The propery we are constructing.
+            rttr::variant_sequential_view propertyAsArray = propertyVariant.create_sequential_view();
+            propertyAsArray.set_size(arraySize);
+            // Search through all the elements of the array data and copy them over to our data.
+            for (size_t i = 0; i < arraySize; ++i)
+            {
+              // Deserialize each member of this array and then slot them into
+              // our newly created array.
+              rttr::variant arrayElement = propertyAsArray.get_value(i);
+              rttr::type arrayElementType = arrayElement.get_type();
+              // Get the contents of the wrapper if that's what we got.
+              DeserializePrimitive(arrayElement, dataAsArray[i]);
+              propertyAsArray.set_value(i, arrayElement);
+            }
+            //propertyVariant = propertyAsArray;
+          }
+          else if(IsRapidJsonPrimitive(property))
+          {
+            DeserializePrimitive(propertyVariant, propertyData);
           }
           else
           {
-            rttr::variant propertyVariant = property.get_value(object);
             Deserialize(propertyVariant, propertyData);
             // Set the property after reading.
-            property.set_value(object, propertyVariant);
           }
+          property.set_value(object, propertyVariant);
         }
       }
     }
