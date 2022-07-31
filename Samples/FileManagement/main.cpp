@@ -23,37 +23,64 @@
 
 struct SerializationTest
 {
-  Barrage::CircleCollider circle;
-  Barrage::BoundaryBox boundary;
+  std::vector<std::string> sVector;
   std::vector<int> iVector;
   std::vector<float> fVector;
-  std::vector<std::string> sVector;
+  std::vector<double> dVector;
+
+  Barrage::CircleCollider circle;
+  Barrage::BoundaryBox boundary;
   std::string s;
+  
   int i;
   unsigned u;
   float f;
   double d;
 
-  //! Create a constructor for this test object to avoid a
-  //! compiler warning.
+  // Create a constructor for this test object to avoid a
+  // compiler warning.
   SerializationTest() :
     i(), u(), f(), d()
   {};
 };
 
+struct GameFrameTest
+{
+  size_t frameID_;
+  Barrage::CircleCollider circle_;
+};
+
+struct SimulationTest
+{
+  std::vector<GameFrameTest> frames_;
+};
+
 RTTR_REGISTRATION
 {
 
+// Reflect all the core Barrage objects.
 Barrage::ReflectBarrageCore();
+
+// A temporary test of what a frame might look like.
+rttr::registration::class_<GameFrameTest>("GameFrameTest")
+.property("frameID", &GameFrameTest::frameID_)
+.property("circle", &GameFrameTest::circle_);
+
+// A structure that simulates frames of simulation.
+rttr::registration::class_<SimulationTest>("SimulationTest")
+.property("frames", &SimulationTest::frames_);
 
 // Temporary Colliders Class.
 rttr::registration::class_<SerializationTest>("SerializationTest")
-.property("circle", &SerializationTest::circle)
-.property("boundary", &SerializationTest::boundary)
+.property("sVector", &SerializationTest::sVector)
 .property("iVector", &SerializationTest::iVector)
 .property("fVector", &SerializationTest::fVector)
-.property("sVector", &SerializationTest::sVector)
+.property("dVector", &SerializationTest::dVector)
+
 .property("s", &SerializationTest::s)
+.property("circle", &SerializationTest::circle)
+.property("boundary", &SerializationTest::boundary)
+
 .property("i", &SerializationTest::i)
 .property("u", &SerializationTest::u)
 .property("f", &SerializationTest::f)
@@ -174,6 +201,8 @@ void SerializationDemo(Barrage::FileManager& manager)
   SerializationTest colliders;
   SerializationTest readColliders;
 
+  SimulationTest readSimulation;
+
   {
     using Barrage::CircleCollider;
     CircleCollider circle;
@@ -186,9 +215,10 @@ void SerializationDemo(Barrage::FileManager& manager)
     box.xMax_ = 50.0f;
     box.yMax_ = 30.0f;
 
+    colliders.sVector = { "one", "two", "three", "four", "five" };
     colliders.iVector = { 1, 2, 3, 4, 5 };
     colliders.fVector = { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f };
-    colliders.sVector = { "one", "two", "three", "four", "five" };
+    colliders.dVector = { 0.01, 0.02, 0.03, 0.04, 0.05 };
 
     colliders.i = 1;
     colliders.u = 2u;
@@ -198,19 +228,43 @@ void SerializationDemo(Barrage::FileManager& manager)
     colliders.boundary = box;
     colliders.circle = circle;
 
+    SimulationTest simulation = {};
+    size_t simulationLength = 5u;
+
+    simulation.frames_.reserve(simulationLength);
+    for (size_t frame = 0; frame < simulationLength; ++frame)
+    {
+      GameFrameTest frameData = {};
+      frameData.frameID_ = frame;
+      // Do a fake simulation of this circle collider expanding.
+      const float dt = 1.0f / 16.0f;
+      const float velocity = 2.0f;
+      circle.radius_ += dt * velocity;
+      frameData.circle_ = circle;
+      // Add the frame to the simulation.
+      simulation.frames_.push_back(frameData);
+    }
+
     // Create an ObjectSource file and create a bogus object.
     ObjectSource& objectSource = manager.Create<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");
     rapidjson::Document& doc = objectSource.GetDocument();
     doc.SetObject();
 
-    rapidjson::Value root = Barrage::Serialize(colliders, doc.GetAllocator());
-    doc.AddMember("SerializationTest", root, doc.GetAllocator());
+    // Serialize a core test.
+    rapidjson::Value coreTest = Barrage::Serialize(colliders, doc.GetAllocator());
+    doc.AddMember("SerializationTest", coreTest, doc.GetAllocator());
+    // Serialize a simulation.
+    rapidjson::Value simulationTest = Barrage::Serialize(simulation, doc.GetAllocator());
+    doc.AddMember("Simulation", simulationTest, doc.GetAllocator());
+
     ((Barrage::FileResource&)objectSource).Save();
   }
   
   {
     const ObjectSource& objectSource = manager.Load<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");
     const rapidjson::Document& doc = objectSource.GetDocument();
-    Barrage::Deserialize(readColliders, doc.GetObject()["SerializationTest"]);
+    const rapidjson::Value& root = doc.GetObject();
+    Barrage::Deserialize(readColliders, root["SerializationTest"]);
+    Barrage::Deserialize(readSimulation, root["Simulation"]);
   }
 }

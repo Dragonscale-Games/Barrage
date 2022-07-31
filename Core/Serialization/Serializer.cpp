@@ -172,26 +172,42 @@ namespace Barrage
     rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
   {
     // Establish the JSON value to serialize.
-    rapidjson::Value value;
-    // Get the type of thing we are trying to serialize.
-    const rttr::type type = object.get_type();
+    rapidjson::Value value(rapidjson::kNullType);
+
+    // The object being serialized as an unwrapped object.
+    rttr::variant unwrappedObject = object;
+    rttr::type type = object.get_type();
+
+    if (!type)
+    {
+      BREAKPOINT();
+      return value;
+    }
+
+    // We care about the contents of all wrapper types.
+    if (type.is_wrapper())
+    {
+      type = type.get_wrapped_type();
+      unwrappedObject = unwrappedObject.extract_wrapped_value();
+    }
+
     // Handle array-like types.
     if (type.is_sequential_container())
     {
-      const rttr::variant_sequential_view& asArray = object.create_sequential_view();
+      const rttr::variant_sequential_view& asArray = unwrappedObject.create_sequential_view();
       // Make this value an array.
       value.SetArray();
       // Go through all the possible values of this.
       for (auto& element : asArray)
       {
-        rapidjson::Value elemValue = SerializePrimitive(element, allocator);
+        rapidjson::Value elemValue = Serialize(element, allocator);
         value.PushBack(elemValue, allocator);
       }
     }
     // Handle primitive types (including strings).
     else if (IsRapidJsonPrimitive(type))
     {
-      value = SerializePrimitive(object, allocator);
+      value = SerializePrimitive(unwrappedObject, allocator);
     }
     // Handle classes.
     else if (type.is_class())
@@ -202,7 +218,7 @@ namespace Barrage
       for (const auto property : properties)
       {
         rapidjson::Value translatedValue;
-        rttr::variant propertyAsValue = property.get_value(object);
+        rttr::variant propertyAsValue = property.get_value(unwrappedObject);
         // Serialize the variant's properties.
         translatedValue = Serialize(propertyAsValue, allocator);
         // Set whatever value we got from RTTR to RapidJSON.
@@ -221,17 +237,23 @@ namespace Barrage
 
   void Deserialize(rttr::variant& object, const rapidjson::Value& data)
   {
-    /*
-    const std::string_view className = object.get_type().get_name().data();
-    const rttr::type type = rttr::type::get_by_name(className.data());
-    */
-    // Get the type of object serialized.
-    const rttr::type type = object.get_type();
+    // The object being serialized as an unwrapped object.
+    rttr::variant unwrappedObject = object;
+    rttr::type type = object.get_type();
+
     if (!type)
     {
       BREAKPOINT();
       return;
     }
+
+    // We care about the contents of all wrapper types.
+    if (type.is_wrapper())
+    {
+      type = type.get_wrapped_type();
+      unwrappedObject = unwrappedObject.extract_wrapped_value();
+    }
+
     // Handle array-like objects.
     if (type.is_sequential_container())
     {
@@ -249,7 +271,7 @@ namespace Barrage
         rttr::variant arrayElement = objectAsArray.get_value(i);
         rttr::type arrayElementType = arrayElement.get_type();
         // Get the contents of the wrapper if that's what we got.
-        DeserializePrimitive(arrayElement, dataAsArray[i]);
+        Deserialize(arrayElement, dataAsArray[i]);
         objectAsArray.set_value(i, arrayElement);
       }
     }
