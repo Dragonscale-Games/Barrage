@@ -27,7 +27,6 @@ namespace Barrage
   void ReflectBarrageCore()
   {
     // Circle Collider
-    using Barrage::CircleCollider;
     rttr::registration::class_<CircleCollider>("CircleCollider")
       .property("radius", &CircleCollider::radius_);
 

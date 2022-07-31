@@ -8,6 +8,10 @@
  * \brief
  * Defines helper functions for serializing Barrage objects (registered
  * through RTTR).
+ * 
+ * Source for some of the ideas used for this serializer: 
+ * https://0x00000000.dev/reflection-serializer/
+ * 
 */
 /* ========================================================================= */
 
@@ -269,7 +273,6 @@ namespace Barrage
         // Deserialize each member of this array and then slot them into
         // our newly created array.
         rttr::variant arrayElement = objectAsArray.get_value(i);
-        rttr::type arrayElementType = arrayElement.get_type();
         // Get the contents of the wrapper if that's what we got.
         Deserialize(arrayElement, dataAsArray[i]);
         objectAsArray.set_value(i, arrayElement);
@@ -289,12 +292,12 @@ namespace Barrage
       {
         const std::string_view propertyName = property.get_name().data();
         const rapidjson::GenericMemberIterator memberIter = data.FindMember(propertyName.data());
-        const rttr::type propertyType = property.get_type();
-        rttr::variant propertyVariant = property.get_value(object);
 
         if (memberIter != data.MemberEnd())
         {
           const rapidjson::Value& propertyData = memberIter->value;
+          rttr::variant propertyVariant = property.get_value(object);
+
           Deserialize(propertyVariant, propertyData);
           property.set_value(object, propertyVariant);
         }
