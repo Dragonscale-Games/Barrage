@@ -29,7 +29,7 @@ namespace Barrage
   public:
     /*************************************************************************/
     /*************************************************************************/
-    ObjectSource(const std::string& path, const std::string& filepath);
+    ObjectSource(const std::string_view& path, const std::string_view& filepath);
     /*************************************************************************/
     /*************************************************************************/
     ObjectSource(ObjectSource&& other) = default;

@@ -19,9 +19,9 @@
 namespace Barrage
 {
   template <typename T>
-  const T& FileManager::Load(const std::string& path, const std::string& filename) noexcept(false)
+  const T& FileManager::Load(const std::string_view& path, const std::string_view& filename) noexcept(false)
   {
-    const std::string filepath = path + filename;
+    const std::string filepath = std::string(path) + std::string(filename);
     if(cachedResources_.find(filepath) != cachedResources_.cend())
     {
         return *dynamic_cast<T*>(cachedResources_[filepath]);
@@ -44,9 +44,9 @@ namespace Barrage
   }
 
   template <typename T>
-  T& FileManager::Create(const std::string& path, const std::string& filename)
+  T& FileManager::Create(const std::string_view& path, const std::string_view& filename)
   {
-    const std::string filepath = path + filename;
+    const std::string filepath = std::string(path) + std::string(filename);
     if(cachedResources_.find(filepath) == cachedResources_.cend())
     {
       T* resource = new T(path, filename);

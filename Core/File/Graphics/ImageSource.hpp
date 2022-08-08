@@ -40,7 +40,7 @@ namespace Barrage
         The name of the image.
     */
     /*************************************************************************/
-    ImageSource(const std::string& path, const std::string& filename);
+    ImageSource(const std::string_view& path, const std::string_view& filename);
     /*************************************************************************/
     /*!
       \brief

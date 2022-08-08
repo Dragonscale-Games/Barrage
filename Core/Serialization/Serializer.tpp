@@ -21,7 +21,7 @@ namespace Barrage
   void Deserialize(T& object, const rapidjson::Value& data)
   {
     rttr::variant objectVariant(object);
-    Deserialize(objectVariant, data);
+    Deserialize(objectVariant, data, objectVariant.get_type());
 
     object = objectVariant.get_value<T>();
   }

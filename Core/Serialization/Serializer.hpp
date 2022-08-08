@@ -49,7 +49,7 @@ namespace Barrage
       The object representing the JSON data being read.
   */
   /*************************************************************************/
-  void Deserialize(rttr::variant& object, const rapidjson::Value& data);
+  void Deserialize(rttr::variant& object, const rapidjson::Value& data, rttr::type type);
   /*************************************************************************/
   /*!
     \brief

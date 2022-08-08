@@ -25,7 +25,7 @@
 
 namespace Barrage
 {
-  ImageSource::ImageSource(const std::string& path, const std::string& filename) :
+  ImageSource::ImageSource(const std::string_view& path, const std::string_view& filename) :
     FileResource(path, filename), pixelBuffer_(), specs_{}
   {
   }

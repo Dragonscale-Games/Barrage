@@ -18,11 +18,14 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 #include <File/FileManager.hpp>
 #include <Serialization/ComponentRefl.cpp>
 
 struct SerializationTest
 {
+  std::map<std::string, int> siMap;
+
   std::vector<std::string> sVector;
   std::vector<int> iVector;
   std::vector<float> fVector;
@@ -53,6 +56,7 @@ struct GameFrameTest
 struct SimulationTest
 {
   std::vector<GameFrameTest> frames_;
+  std::map<std::string, GameFrameTest> saveStates_;
 };
 
 RTTR_REGISTRATION
@@ -64,14 +68,18 @@ Barrage::ReflectBarrageCore();
 // A temporary test of what a frame might look like.
 rttr::registration::class_<GameFrameTest>("GameFrameTest")
 .property("frameID", &GameFrameTest::frameID_)
-.property("circle", &GameFrameTest::circle_);
+.property("circle", &GameFrameTest::circle_)
+.constructor();
 
 // A structure that simulates frames of simulation.
 rttr::registration::class_<SimulationTest>("SimulationTest")
-.property("frames", &SimulationTest::frames_);
+.property("frames", &SimulationTest::frames_)
+.property("saveStates", &SimulationTest::saveStates_)
+.constructor();
 
 // Temporary Colliders Class.
 rttr::registration::class_<SerializationTest>("SerializationTest")
+.property("siMap", &SerializationTest::siMap)
 .property("sVector", &SerializationTest::sVector)
 .property("iVector", &SerializationTest::iVector)
 .property("fVector", &SerializationTest::fVector)
@@ -215,6 +223,8 @@ void SerializationDemo(Barrage::FileManager& manager)
     box.xMax_ = 50.0f;
     box.yMax_ = 30.0f;
 
+    colliders.siMap = { { "one", 1 }, { "two", 2 }, {"three", 3} };
+
     colliders.sVector = { "one", "two", "three", "four", "five" };
     colliders.iVector = { 1, 2, 3, 4, 5 };
     colliders.fVector = { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f };
@@ -244,6 +254,9 @@ void SerializationDemo(Barrage::FileManager& manager)
       // Add the frame to the simulation.
       simulation.frames_.push_back(frameData);
     }
+
+    simulation.saveStates_.insert({ "begin", simulation.frames_.front() });
+    simulation.saveStates_.insert({ "end", simulation.frames_.back() });
 
     // Create an ObjectSource file and create a bogus object.
     ObjectSource& objectSource = manager.Create<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");

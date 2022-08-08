@@ -23,7 +23,7 @@
 
 namespace Barrage
 {
-  ObjectSource::ObjectSource(const std::string& path, const std::string& filename) : 
+  ObjectSource::ObjectSource(const std::string_view& path, const std::string_view& filename) :
     FileResource(path, filename)
   {
   }

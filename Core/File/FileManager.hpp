@@ -21,6 +21,7 @@
 // Includes
 //  ===========================================================================
 #include <string>
+#include <string_view>
 #include <map>
 #include <Utilities/RuntimeError.hpp>
 
@@ -36,7 +37,7 @@ namespace Barrage
         Defines a default constructor when a suer
     */
     /*************************************************************************/
-    FileResource();
+    FileResource() noexcept;
     /*************************************************************************/
     /*!
       \brief
@@ -57,7 +58,7 @@ namespace Barrage
         The name of the file being loaded.
     */
     /*************************************************************************/
-    FileResource(const std::string& path, const std::string& filename);
+    FileResource(const std::string_view& path, const std::string_view& filename) noexcept;
     /*************************************************************************/
     /*!
       \brief
@@ -215,7 +216,7 @@ namespace Barrage
     */
     /*************************************************************************/
     template <typename T>
-    const T& Load(const std::string& path, const std::string& filename) noexcept(false);
+    const T& Load(const std::string_view& path, const std::string_view& filename) noexcept(false);
     /*************************************************************************/
     /*!
       \brief
@@ -233,7 +234,7 @@ namespace Barrage
     */
     /*************************************************************************/
     template <typename T>
-    T& Create(const std::string& path, const std::string& filename) noexcept(false);
+    T& Create(const std::string_view& path, const std::string_view& filename) noexcept(false);
     /*************************************************************************/
     /*!
       \brief

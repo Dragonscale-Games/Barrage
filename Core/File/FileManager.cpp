@@ -24,7 +24,7 @@ namespace Barrage
   // Resource
   //  ===========================================================================
 
-  FileResource::FileResource()
+  FileResource::FileResource() noexcept
   {
   }
 
@@ -33,7 +33,7 @@ namespace Barrage
   {
   }
 
-  FileResource::FileResource(const std::string& path, const std::string& filename) :
+  FileResource::FileResource(const std::string_view& path, const std::string_view& filename) noexcept :
     path_(path), filename_(filename)
   {
   }
