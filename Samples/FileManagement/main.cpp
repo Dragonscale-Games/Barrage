@@ -69,13 +69,17 @@ Barrage::ReflectBarrageCore();
 rttr::registration::class_<GameFrameTest>("GameFrameTest")
 .property("frameID", &GameFrameTest::frameID_)
 .property("circle", &GameFrameTest::circle_)
-.constructor();
+.constructor<>()(
+    rttr::policy::ctor::as_object
+  );
 
 // A structure that simulates frames of simulation.
 rttr::registration::class_<SimulationTest>("SimulationTest")
 .property("frames", &SimulationTest::frames_)
 .property("saveStates", &SimulationTest::saveStates_)
-.constructor();
+.constructor<>()(
+  rttr::policy::ctor::as_object
+  );
 
 // Temporary Colliders Class.
 rttr::registration::class_<SerializationTest>("SerializationTest")
@@ -92,7 +96,10 @@ rttr::registration::class_<SerializationTest>("SerializationTest")
 .property("i", &SerializationTest::i)
 .property("u", &SerializationTest::u)
 .property("f", &SerializationTest::f)
-.property("d", &SerializationTest::d);
+.property("d", &SerializationTest::d)
+.constructor<>()(
+  rttr::policy::ctor::as_object
+  );
 }
 
 /****************************************************************************/

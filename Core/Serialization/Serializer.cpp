@@ -310,6 +310,8 @@ namespace Barrage
       rttr::variant_associative_view objectAsMap = object.create_associative_view();
       const rttr::type keyType = objectAsMap.get_key_type();
       const rttr::type valueType = objectAsMap.get_value_type();
+      const rttr::constructor valueConstructor = valueType.get_constructor();
+      
       for (uint32_t i = 0; i < arraySize; ++i)
       {
         // Deserialize each member of this map.
@@ -322,18 +324,16 @@ namespace Barrage
           const rapidjson::Value& valueContents = valueContentsIter->value;
 
           rttr::variant key, value;
-          value = valueType.create();
-          Deserialize(key, keyContents, keyType);
+          value = valueConstructor.invoke();
 
-          /*
+          Deserialize(key, keyContents, keyType);
           Deserialize(value, valueContents, valueType);
 
-          assert(value.can_convert(valueType));
           auto success = objectAsMap.insert(key, value);
           (void)success;
           assert(success.second);
-          */
           
+          /*
           // If we succeeded in inserting a key for a valid key-value pair
           // then we set the value.
           const rttr::type postKey = key.get_type();
@@ -349,6 +349,7 @@ namespace Barrage
           {
             BREAKPOINT();
           }
+          */
         }
       }
     }
