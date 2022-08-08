@@ -324,7 +324,8 @@ namespace Barrage
           const rapidjson::Value& valueContents = valueContentsIter->value;
 
           rttr::variant key, value;
-          value = valueConstructor.invoke();
+          value = valueType.create();
+          key = keyType.create();
 
           Deserialize(key, keyContents, keyType);
           Deserialize(value, valueContents, valueType);
@@ -332,24 +333,6 @@ namespace Barrage
           auto success = objectAsMap.insert(key, value);
           (void)success;
           assert(success.second);
-          
-          /*
-          // If we succeeded in inserting a key for a valid key-value pair
-          // then we set the value.
-          const rttr::type postKey = key.get_type();
-          objectAsMap.insert(key);
-          auto keyValuePair = objectAsMap.find(key);
-          if (keyValuePair != objectAsMap.end())
-          {
-            rttr::variant reference = keyValuePair.get_value();
-            value = reference.extract_wrapped_value();
-            Deserialize(value, valueContents, valueType);
-          }
-          else
-          {
-            BREAKPOINT();
-          }
-          */
         }
       }
     }
