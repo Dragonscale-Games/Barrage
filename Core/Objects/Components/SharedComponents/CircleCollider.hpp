@@ -31,6 +31,7 @@ namespace Barrage
 
       inline std::string GetClassName() override { return "CircleCollider"; }
 
+      // Notify rttr of the component hierarchy.
       RTTR_ENABLE()
   };
 }

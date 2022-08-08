@@ -15,6 +15,7 @@
 /* ========================================================================= */
 
 #include <utility>
+#include <string_view>
 
 namespace Barrage
 {

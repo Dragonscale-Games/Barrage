@@ -31,7 +31,6 @@
 #include <rttr/variant.h>
 #include <rapidjson/document.h>
 
-
 namespace
 {
   bool IsRapidJsonPrimitive(const rttr::type& type)
@@ -109,7 +108,7 @@ namespace Barrage
     else if (propertyType == rttr::type::get<std::string>())
     {
       const std::string text = propertyVariant.get_value<std::string>();
-      value.SetString(rapidjson::GenericStringRef(text.c_str()), allocator);
+      value.SetString(rapidjson::GenericStringRef<char>(text.c_str()), allocator);
     }
 
     return value;
@@ -226,8 +225,8 @@ namespace Barrage
         rapidjson::Value keyContents = Serialize(objectKey, allocator);
         rapidjson::Value valueContents = Serialize(objectValue, allocator);
         rapidjson::Value entry(rapidjson::kObjectType);
-        entry.AddMember(rapidjson::GenericStringRef(KeyHeader.data()), keyContents, allocator);
-        entry.AddMember(rapidjson::GenericStringRef(ValueHeader.data()), valueContents, allocator);
+        entry.AddMember(rapidjson::GenericStringRef<char>(KeyHeader.data()), keyContents, allocator);
+        entry.AddMember(rapidjson::GenericStringRef<char>(ValueHeader.data()), valueContents, allocator);
         value.PushBack(entry, allocator);
       }
     }
@@ -241,7 +240,7 @@ namespace Barrage
     {
       value.SetObject();
       // Go through all properties and attempt to serialize them.
-      const rttr::array_range properties = type.get_properties();
+      const rttr::array_range<rttr::property> properties = type.get_properties();
       for (const auto property : properties)
       {
         rapidjson::Value translatedValue;
@@ -250,7 +249,7 @@ namespace Barrage
         translatedValue = Serialize(propertyAsValue, allocator);
         // Set whatever value we got from RTTR to RapidJSON.
         const std::string_view properyName = property.get_name().data();
-        value.AddMember(rapidjson::GenericStringRef(properyName.data()), translatedValue, allocator);
+        value.AddMember(rapidjson::GenericStringRef<char>(properyName.data()), translatedValue, allocator);
       }
     }
     // We really shouldn't be here...
@@ -284,7 +283,7 @@ namespace Barrage
     if (type.is_sequential_container())
     {
       // The array from the JSON data.
-      const rapidjson::GenericArray dataAsArray = data.GetArray();
+      const rapidjson::GenericArray<true, rapidjson::Value> dataAsArray = data.GetArray();
       const size_t arraySize = dataAsArray.Size();
       // The propery we are constructing.
       rttr::variant_sequential_view objectAsArray = object.create_sequential_view();
@@ -304,7 +303,7 @@ namespace Barrage
     else if (type.is_associative_container())
     {
       // The array from the JSON data.
-      const rapidjson::GenericArray dataAsArray = data.GetArray();
+      const rapidjson::GenericArray<true, rapidjson::Value> dataAsArray = data.GetArray();
       const size_t arraySize = dataAsArray.Size();
       // The property as an associative container.
       rttr::variant_associative_view objectAsMap = object.create_associative_view();
@@ -314,9 +313,13 @@ namespace Barrage
       for (uint32_t i = 0; i < arraySize; ++i)
       {
         // Deserialize each member of this map.
+        using rapidjson::CrtAllocator;
+        using rapidjson::MemoryPoolAllocator;
+        using Iterator = const rapidjson::GenericMemberIterator < true, rapidjson::UTF8<>, MemoryPoolAllocator<CrtAllocator> >;
+
         const rapidjson::Value& entry = dataAsArray[i];
-        const rapidjson::GenericMemberIterator keyContentsIter = entry.FindMember(KeyHeader.data());
-        const rapidjson::GenericMemberIterator valueContentsIter = entry.FindMember(ValueHeader.data());
+        Iterator keyContentsIter = entry.FindMember(KeyHeader.data());
+        Iterator valueContentsIter = entry.FindMember(ValueHeader.data());
         if (keyContentsIter != entry.MemberEnd() && valueContentsIter != entry.MemberEnd())
         {
           const rapidjson::Value& keyContents = keyContentsIter->value;
@@ -344,12 +347,16 @@ namespace Barrage
     else if (type.is_class())
     {
       // Go through all properties and attempt to serialize them.
-      rttr::array_range properties = type.get_properties();
+      rttr::array_range<rttr::property> properties = type.get_properties();
       assert(properties.size() > 0);
       for (auto property : properties)
       {
+        using rapidjson::CrtAllocator;
+        using rapidjson::MemoryPoolAllocator;
+        using Iterator = const rapidjson::GenericMemberIterator < true, rapidjson::UTF8<>, MemoryPoolAllocator<CrtAllocator> >;
+
         const std::string_view propertyName = property.get_name().data();
-        const rapidjson::GenericMemberIterator memberIter = data.FindMember(propertyName.data());
+        const Iterator memberIter = data.FindMember(propertyName.data());
 
         if (memberIter != data.MemberEnd())
         {

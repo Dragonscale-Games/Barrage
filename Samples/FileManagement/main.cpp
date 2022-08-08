@@ -277,7 +277,7 @@ void SerializationDemo(Barrage::FileManager& manager)
     rapidjson::Value simulationTest = Barrage::Serialize(simulation, doc.GetAllocator());
     doc.AddMember("Simulation", simulationTest, doc.GetAllocator());
 
-    ((Barrage::FileResource&)objectSource).Save();
+    manager.Save(objectSource);
     // Unload the object source to make sure loading from file works.
     manager.Unload(objectSource.GetPath() + objectSource.GetFileName());
   }

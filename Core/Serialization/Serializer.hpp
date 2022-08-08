@@ -65,6 +65,10 @@ namespace Barrage
   /*************************************************************************/
   template <class T>
   void Deserialize(T& object, const rapidjson::Value& data);
+  /*************************************************************************/
+  /*************************************************************************/
+  template <class T>
+  void Deserialize(T& object, const rapidjson::Value& data, const rttr::type& type);
 }
 
 #include "Serializer.tpp"

@@ -25,4 +25,16 @@ namespace Barrage
 
     object = objectVariant.get_value<T>();
   }
+
+  template <class T>
+  void Deserialize(T& object, const rapidjson::Value& data, const rttr::type& type)
+  {
+    rttr::variant objectVariant(object);
+    if (objectVariant.can_convert(type))
+    {
+      objectVariant.convert(type);
+      Deserialize(objectVariant, data, type);
+      object = objectVariant.get_value<T>();
+    }
+  }
 }

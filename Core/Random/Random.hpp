@@ -15,6 +15,8 @@
 #define Random_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <rttr/rttr_enable.h>
+
 namespace Barrage
 {
 	//! Random number generator based on xorshift.

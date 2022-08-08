@@ -17,6 +17,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <rttr/rttr_enable.h>
 
 namespace Barrage
 {
@@ -62,6 +63,9 @@ namespace Barrage
       */
       /**************************************************************/
       virtual std::string GetClassName() = 0;
+
+      // Notify rttr of the component hierarchy.
+      RTTR_ENABLE()
   };
 
   //! Associates components with their names
