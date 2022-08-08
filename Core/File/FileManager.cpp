@@ -84,6 +84,11 @@ namespace Barrage
     file.Save();
   }
 
+  void FileManager::Unload(const std::string_view& filepath)
+  {
+    cachedResources_.erase(filepath.data());
+  }
+
   const std::string& FileManager::GetContentPath() const
   {
     return contentPath_;

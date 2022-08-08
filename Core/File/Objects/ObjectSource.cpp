@@ -17,13 +17,14 @@
 #include "ObjectSource.hpp"
 
 #include <fstream>
-#include <rapidjson/prettywriter.h>
 #include <rapidjson/ostreamwrapper.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/prettywriter.h>
 #include <rapidjson/writer.h>
 
 namespace Barrage
 {
-  ObjectSource::ObjectSource(const std::string_view& path, const std::string_view& filename) :
+  ObjectSource::ObjectSource(const std::string_view& path, const std::string_view& filename) noexcept :
     FileResource(path, filename)
   {
   }
@@ -40,8 +41,10 @@ namespace Barrage
 
   void ObjectSource::Load(const std::string& filepath)
   {
-    NO_IMPL();
-    UNREFERENCED(filepath);
+    // Create a JSON reader for our document.
+    std::ifstream objectFile(filepath);
+    rapidjson::IStreamWrapper objectFileWrapper(objectFile);
+    objectDoc_.ParseStream(objectFileWrapper);
   }
 
   void ObjectSource::Save(const std::string& filepath) const

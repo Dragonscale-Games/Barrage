@@ -11,8 +11,8 @@
  /* ========================================================================= */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef ArchetypeSource_MODULE_H
-#define ArchetypeSource_MODULE_H
+#ifndef ObjectSource_MODULE_H
+#define ObjectSource_MODULE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 //  ===========================================================================
@@ -28,19 +28,50 @@ namespace Barrage
   {
   public:
     /*************************************************************************/
+    /*!
+      \brief
+        Creates an object resource given the path to the file and it's name.
+      \param path
+        The path to load this resource from.
+      \param filename
+        The name of the file containing the object source.
+    */
     /*************************************************************************/
-    ObjectSource(const std::string_view& path, const std::string_view& filepath);
+    ObjectSource(const std::string_view& path, const std::string_view& filename) noexcept;
     /*************************************************************************/
+    /*!
+      \brief
+        Moves the contents of one object source to anoter, used
+        by the file manager when creating and loading resources.
+    */
     /*************************************************************************/
-    ObjectSource(ObjectSource&& other) = default;
+    ObjectSource(ObjectSource&& other) noexcept = default;
     /*************************************************************************/
+    /*!
+      \brief
+        Destroys and release the resources stored in this object.
+    */
     /*************************************************************************/
     virtual ~ObjectSource() override = default;
 
     /*************************************************************************/
+    /*!
+      \brief
+        Gets the internal RapidJson document this object resource
+        loaded.
+      \returns
+        A reference to an read-only version of the document.
+    */
     /*************************************************************************/
     const rapidjson::Document& GetDocument() const;
     /*************************************************************************/
+    /*!
+      \brief
+        Gets the internal RapidJson document this object resource
+      loaded.
+      \returns
+        A reference to a mutable version of the document.
+    */
     /*************************************************************************/
     rapidjson::Document& GetDocument();
 
@@ -69,4 +100,4 @@ namespace Barrage
   };
 }
 
-#endif // ArchetypeSource_MODULE_H
+#endif // ObjectSource_MODULE_H

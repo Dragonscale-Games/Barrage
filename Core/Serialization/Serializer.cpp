@@ -310,7 +310,6 @@ namespace Barrage
       rttr::variant_associative_view objectAsMap = object.create_associative_view();
       const rttr::type keyType = objectAsMap.get_key_type();
       const rttr::type valueType = objectAsMap.get_value_type();
-      const rttr::constructor valueConstructor = valueType.get_constructor();
       
       for (uint32_t i = 0; i < arraySize; ++i)
       {
@@ -342,7 +341,7 @@ namespace Barrage
       DeserializePrimitive(object, data, type);
     }
     // Handle classes.
-    else /* if (type.is_class()) */
+    else if (type.is_class())
     {
       // Go through all properties and attempt to serialize them.
       rttr::array_range properties = type.get_properties();
@@ -364,12 +363,10 @@ namespace Barrage
         }
       }
     }
-    /*
     // Uhhhh... we shouldn't be here.
     else
     {
       BREAKPOINT();
     }
-    */
   }
 }

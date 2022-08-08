@@ -187,6 +187,13 @@ namespace Barrage
     /*************************************************************************/
     void Shutdown();
     /*************************************************************************/
+    /*!
+      \brief
+        Saves a particular resource through this manager.
+      \remark
+        For the meantime, this is equivalent to calling "Save" on the actua
+        resource but that may change in the future.
+    */
     /*************************************************************************/
     void Save(const FileResource& file) const;
     /*************************************************************************/
@@ -213,10 +220,22 @@ namespace Barrage
         Otherwise an "image" might look for either.
         For more details on search paths, check the documentation for
         the resource being loaded.
-    */
+    **/
     /*************************************************************************/
     template <typename T>
     const T& Load(const std::string_view& path, const std::string_view& filename) noexcept(false);
+    /*************************************************************************/
+    /*!
+      \brief
+        Unloads a particular resource from this manager with the given
+        path which includes the file name.
+      \param filepath
+        The file path to the resource to unload.
+      \remark
+        If the resource is not found, this function does nothing.
+    **/
+    /*************************************************************************/
+    void Unload(const std::string_view& filepath);
     /*************************************************************************/
     /*!
       \brief
@@ -231,7 +250,7 @@ namespace Barrage
       \throws Barrage::RuntimeError
         If the user attempted to create a resource with the same
         path and filename as another, existing, resource.
-    */
+    **/
     /*************************************************************************/
     template <typename T>
     T& Create(const std::string_view& path, const std::string_view& filename) noexcept(false);

@@ -278,6 +278,8 @@ void SerializationDemo(Barrage::FileManager& manager)
     doc.AddMember("Simulation", simulationTest, doc.GetAllocator());
 
     ((Barrage::FileResource&)objectSource).Save();
+    // Unload the object source to make sure loading from file works.
+    manager.Unload(objectSource.GetPath() + objectSource.GetFileName());
   }
   
   {
