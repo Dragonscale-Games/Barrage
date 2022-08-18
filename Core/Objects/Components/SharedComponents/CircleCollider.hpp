@@ -27,7 +27,7 @@ namespace Barrage
     public:
       float radius_;
 
-      inline CircleCollider() : radius_(50.0f) {}
+      CircleCollider() : radius_(50.0f) {}
 
       inline std::string GetClassName() override { return "CircleCollider"; }
 

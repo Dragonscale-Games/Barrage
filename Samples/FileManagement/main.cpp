@@ -15,12 +15,18 @@
 /* ======================================================================== */
 
 #include <stdafx.h>
+
+#include <stdlib.h>
 #include <iostream>
 #include <vector>
 #include <string>
 #include <map>
+
 #include <File/FileManager.hpp>
-#include <Serialization/ComponentRefl.cpp>
+#include <Objects/Components/EngineComponents.hpp>
+
+#include <rttr/registration.h>
+#include <Serialization/ComponentRefl.hpp>
 
 struct SerializationTest
 {
@@ -30,6 +36,8 @@ struct SerializationTest
   std::vector<int> iVector;
   std::vector<float> fVector;
   std::vector<double> dVector;
+
+  std::array<int, 5> iArray;
 
   Barrage::CircleCollider circle;
   Barrage::BoundaryBox boundary;
@@ -84,10 +92,13 @@ rttr::registration::class_<SimulationTest>("SimulationTest")
 // Temporary Colliders Class.
 rttr::registration::class_<SerializationTest>("SerializationTest")
 .property("siMap", &SerializationTest::siMap)
+
 .property("sVector", &SerializationTest::sVector)
 .property("iVector", &SerializationTest::iVector)
 .property("fVector", &SerializationTest::fVector)
 .property("dVector", &SerializationTest::dVector)
+
+.property("iArray", &SerializationTest::iArray)
 
 .property("s", &SerializationTest::s)
 .property("circle", &SerializationTest::circle)
@@ -236,6 +247,8 @@ void SerializationDemo(Barrage::FileManager& manager)
     colliders.iVector = { 1, 2, 3, 4, 5 };
     colliders.fVector = { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f };
     colliders.dVector = { 0.01, 0.02, 0.03, 0.04, 0.05 };
+
+    colliders.iArray = { 1, 2, 3, 4, 5 };
 
     colliders.i = 1;
     colliders.u = 2u;

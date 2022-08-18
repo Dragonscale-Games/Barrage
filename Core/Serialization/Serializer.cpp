@@ -284,10 +284,16 @@ namespace Barrage
     {
       // The array from the JSON data.
       const rapidjson::GenericArray<true, rapidjson::Value> dataAsArray = data.GetArray();
-      const size_t arraySize = dataAsArray.Size();
       // The propery we are constructing.
       rttr::variant_sequential_view objectAsArray = object.create_sequential_view();
+
+      // Get the size of the array.
+      size_t arraySize = dataAsArray.Size();
       objectAsArray.set_size(arraySize);
+      // Sometimes, the array may not resize, and therefore we need to make sure
+      // we get an accurate size for this array or we go out of bounds.
+      arraySize = objectAsArray.get_size();
+
       // Search through all the elements of the array data and copy them over to our data.
       for (uint32_t i = 0; i < arraySize; ++i)
       {
