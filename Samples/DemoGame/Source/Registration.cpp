@@ -27,7 +27,7 @@ namespace Barrage
 
   void ObjectManager::RegisterCustomSystems()
   {
-    RegisterSystem<Demo::SpawnSystem>("Spawn System");
+    RegisterSystem<Demo::SpawnSystem>("SpawnSystem");
   }
 
   void ObjectManager::RegisterCustomSpawnFuncs()
