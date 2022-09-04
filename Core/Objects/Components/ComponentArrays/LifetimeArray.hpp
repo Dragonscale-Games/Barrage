@@ -30,6 +30,7 @@ namespace Barrage
 
   typedef ComponentArrayT<Lifetime> LifetimeArray;
 
+  template <>
   inline std::string LifetimeArray::GetClassName() { return "LifetimeArray"; }
 }
 
