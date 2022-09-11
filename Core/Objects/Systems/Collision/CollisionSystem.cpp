@@ -23,22 +23,22 @@ namespace Barrage
     System()
   {
     PoolType circle_bullet_type;
-    circle_bullet_type.AddComponentName("Circle Collider");
-    circle_bullet_type.AddComponentName("Position Array");
-    circle_bullet_type.AddComponentName("Destructible Array");
+    circle_bullet_type.AddComponentName("CircleCollider");
+    circle_bullet_type.AddComponentName("PositionArray");
+    circle_bullet_type.AddComponentName("DestructibleArray");
     circle_bullet_type.AddTag("Bullet");
     poolTypes_[CIRCLE_BULLET_POOLS] = circle_bullet_type;
 
     PoolType bounded_bullet_type;
-    bounded_bullet_type.AddComponentName("Position Array");
-    bounded_bullet_type.AddComponentName("Boundary Box");
-    bounded_bullet_type.AddComponentName("Destructible Array");
+    bounded_bullet_type.AddComponentName("PositionArray");
+    bounded_bullet_type.AddComponentName("BoundaryBox");
+    bounded_bullet_type.AddComponentName("DestructibleArray");
     bounded_bullet_type.AddTag("Bullet");
     poolTypes_[BOUNDED_BULLET_POOLS] = bounded_bullet_type;
 
     PoolType circle_player_type;
-    circle_player_type.AddComponentName("Circle Collider");
-    circle_player_type.AddComponentName("Position Array");
+    circle_player_type.AddComponentName("CircleCollider");
+    circle_player_type.AddComponentName("PositionArray");
     circle_player_type.AddTag("Player");
     poolTypes_[CIRCLE_PLAYER_POOLS] = circle_player_type;
   }
@@ -52,10 +52,10 @@ namespace Barrage
 
   void CollisionSystem::UpdateBoundedBullets(Pool* pool)
   {
-    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("Position Array");
-    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("Destructible Array");
+    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
+    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("DestructibleArray");
 
-    BoundaryBox& boundary_box = *pool->GetSharedComponent<BoundaryBox>("Boundary Box");
+    BoundaryBox& boundary_box = *pool->GetSharedComponent<BoundaryBox>("BoundaryBox");
 
     unsigned num_bullets = pool->size_;
 
@@ -72,13 +72,13 @@ namespace Barrage
 
   void CollisionSystem::UpdatePlayerBulletCollisions(Pool* player_pool, Pool* bullet_pool)
   {
-    CircleCollider& player_collider = *player_pool->GetSharedComponent<CircleCollider>("Circle Collider");
-    CircleCollider& bullet_collider = *bullet_pool->GetSharedComponent<CircleCollider>("Circle Collider");
+    CircleCollider& player_collider = *player_pool->GetSharedComponent<CircleCollider>("CircleCollider");
+    CircleCollider& bullet_collider = *bullet_pool->GetSharedComponent<CircleCollider>("CircleCollider");
 
-    PositionArray& player_positions = *player_pool->GetComponentArray<PositionArray>("Position Array");
-    PositionArray& bullet_positions = *bullet_pool->GetComponentArray<PositionArray>("Position Array");
+    PositionArray& player_positions = *player_pool->GetComponentArray<PositionArray>("PositionArray");
+    PositionArray& bullet_positions = *bullet_pool->GetComponentArray<PositionArray>("PositionArray");
 
-    DestructibleArray& bullet_destructibles = *bullet_pool->GetComponentArray<DestructibleArray>("Destructible Array");
+    DestructibleArray& bullet_destructibles = *bullet_pool->GetComponentArray<DestructibleArray>("DestructibleArray");
 
     float collision_radius = player_collider.radius_ + bullet_collider.radius_;
 

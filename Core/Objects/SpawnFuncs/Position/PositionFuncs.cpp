@@ -19,8 +19,8 @@ namespace Barrage
   {
     void MatchPosition(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, const std::vector<unsigned>& sourceIndices)
     {
-      PositionArray& source_positions = *initPool.GetComponentArray<PositionArray>("Position Array");
-      PositionArray& dest_positions = *destPool.GetComponentArray<PositionArray>("Position Array");
+      PositionArray& source_positions = *initPool.GetComponentArray<PositionArray>("PositionArray");
+      PositionArray& dest_positions = *destPool.GetComponentArray<PositionArray>("PositionArray");
 
       for (unsigned i = 0; i < numNewObjects; ++i)
       {

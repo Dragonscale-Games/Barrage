@@ -31,7 +31,7 @@ namespace Barrage
     RegisterEngineSpawnFuncs();
     SetDefaultSystemUpdateOrder();
 
-    CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_.at("Creation System"));
+    CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_.at("CreationSystem"));
 
     creation_system->SetArchetypeManager(archetypeManager_);
     creation_system->SetSpawnFuncManager(spawnFuncManager_);
@@ -58,7 +58,7 @@ namespace Barrage
     Pool* pool = poolManager_.GetPool(poolName);
     ObjectArchetype* archetype = archetypeManager_.GetObjectArchetype(archetypeName);
 
-    CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_["Creation System"]);
+    CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_["CreationSystem"]);
 
     if (pool && archetype && creation_system)
     {
@@ -168,7 +168,7 @@ namespace Barrage
 
   void ObjectManager::Draw()
   {
-    DrawSystem* draw_system = dynamic_cast<DrawSystem*>(systemManager_.systems_["Draw System"]);
+    DrawSystem* draw_system = dynamic_cast<DrawSystem*>(systemManager_.systems_["DrawSystem"]);
 
     if (draw_system)
     {
@@ -178,16 +178,16 @@ namespace Barrage
 
   void ObjectManager::RegisterEngineComponents()
   {
-    RegisterComponent<AngularSpeedArray>("Angular Speed Array");
-    RegisterComponent<DestructibleArray>("Destructible Array");
-    RegisterComponent<LifetimeArray>("Lifetime Array");
-    RegisterComponent<PositionArray>("Position Array");
-    RegisterComponent<RotationArray>("Rotation Array");
-    RegisterComponent<ScaleArray>("Scale Array");
-    RegisterComponent<VelocityArray>("Velocity Array");
+    RegisterComponent<AngularSpeedArray>("AngularSpeedArray");
+    RegisterComponent<DestructibleArray>("DestructibleArray");
+    RegisterComponent<LifetimeArray>("LifetimeArray");
+    RegisterComponent<PositionArray>("PositionArray");
+    RegisterComponent<RotationArray>("RotationArray");
+    RegisterComponent<ScaleArray>("ScaleArray");
+    RegisterComponent<VelocityArray>("VelocityArray");
 
-    RegisterComponent<BoundaryBox>("Boundary Box");
-    RegisterComponent<CircleCollider>("Circle Collider");
+    RegisterComponent<BoundaryBox>("BoundaryBox");
+    RegisterComponent<CircleCollider>("CircleCollider");
     RegisterComponent<Spawner>("Spawner");
     RegisterComponent<Sprite>("Sprite");
     RegisterComponent<RNG>("RNG");
@@ -195,28 +195,28 @@ namespace Barrage
 
   void ObjectManager::RegisterEngineSystems()
   {
-    RegisterSystem<CreationSystem>("Creation System");
-    RegisterSystem<DestructionSystem>("Destruction System");
-    RegisterSystem<DrawSystem>("Draw System");
-    RegisterSystem<MovementSystem>("Movement System");
-    RegisterSystem<CollisionSystem>("Collision System");
+    RegisterSystem<CreationSystem>("CreationSystem");
+    RegisterSystem<DestructionSystem>("DestructionSystem");
+    RegisterSystem<DrawSystem>("DrawSystem");
+    RegisterSystem<MovementSystem>("MovementSystem");
+    RegisterSystem<CollisionSystem>("CollisionSystem");
   }
 
   void ObjectManager::RegisterEngineSpawnFuncs()
   {
-    RegisterSpawnFunc("Random Direction", Spawn::RandomDirection);
-    RegisterSpawnFunc("Match Position", Spawn::MatchPosition);
+    RegisterSpawnFunc("RandomDirection", Spawn::RandomDirection);
+    RegisterSpawnFunc("MatchPosition", Spawn::MatchPosition);
   }
 
   void ObjectManager::SetDefaultSystemUpdateOrder()
   {
     std::vector<std::string> update_order;
 
-    update_order.push_back("Creation System");
-    update_order.push_back("Destruction System");
-    update_order.push_back("Movement System");
-    update_order.push_back("Creation System");
-    update_order.push_back("Collision System");
+    update_order.push_back("CreationSystem");
+    update_order.push_back("DestructionSystem");
+    update_order.push_back("MovementSystem");
+    update_order.push_back("CreationSystem");
+    update_order.push_back("CollisionSystem");
 
     SetSystemUpdateOrder(update_order);
   }

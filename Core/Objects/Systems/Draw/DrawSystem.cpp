@@ -23,9 +23,9 @@ namespace Barrage
     System()
   {
     PoolType basic_sprite_type;
-    basic_sprite_type.AddComponentName("Position Array");
-    basic_sprite_type.AddComponentName("Scale Array");
-    basic_sprite_type.AddComponentName("Rotation Array");
+    basic_sprite_type.AddComponentName("PositionArray");
+    basic_sprite_type.AddComponentName("ScaleArray");
+    basic_sprite_type.AddComponentName("RotationArray");
     basic_sprite_type.AddComponentName("Sprite");
     poolTypes_[BASIC_2D_SPRITE_POOLS] = basic_sprite_type;
   }
@@ -46,9 +46,9 @@ namespace Barrage
     {
       Pool* pool = it->second;
 
-      PositionArray& position_array = *pool->GetComponentArray<PositionArray>("Position Array");
-      ScaleArray& scale_array = *pool->GetComponentArray<ScaleArray>("Scale Array");
-      RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("Rotation Array");
+      PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
+      ScaleArray& scale_array = *pool->GetComponentArray<ScaleArray>("ScaleArray");
+      RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("RotationArray");
 
       glm::vec2* positions = reinterpret_cast<glm::vec2*>(position_array.data_);
       glm::vec2* scales = reinterpret_cast<glm::vec2*>(scale_array.data_);

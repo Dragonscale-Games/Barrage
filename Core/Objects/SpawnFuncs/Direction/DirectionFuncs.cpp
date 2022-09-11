@@ -23,7 +23,7 @@ namespace Barrage
       UNREFERENCED(sourceIndices);
       
       Random& rng = initPool.GetSharedComponent<RNG>("RNG")->rng_;
-      VelocityArray& dest_velocities = *destPool.GetComponentArray<VelocityArray>("Velocity Array");
+      VelocityArray& dest_velocities = *destPool.GetComponentArray<VelocityArray>("VelocityArray");
 
       for (unsigned i = 0; i < numNewObjects; ++i)
       {
