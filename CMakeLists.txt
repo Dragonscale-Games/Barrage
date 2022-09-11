@@ -40,7 +40,6 @@ endif()
 # Create the project.
 project(Barrage)
 # Add the subdirectories for third party libraries.
-find_package(imgui REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 find_package(rapidjson REQUIRED)
