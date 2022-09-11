@@ -16,6 +16,9 @@ jobs:
           sudo apt-get install doxygen valgrind
           # Install Linux source dependencies for the project.
           sudo apt-get install librttr-dev
+          # get vcpkg submodule
+          git submodule init
+          git submodule update
           # Going into the directory and make sure the project builds.
           mkdir build
           cd build
