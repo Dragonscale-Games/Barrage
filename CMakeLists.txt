@@ -32,6 +32,11 @@
 
 cmake_minimum_required(VERSION 3.16)
 
+# Linux needs the vcpkg toolchain manually set; MSVC uses CMakeSettings.json
+if(!MSVC)
+  set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/vcpkg/scripts/buildsystems/vcpkg.cmake")
+endif()
+
 # Create the project.
 project(Barrage)
 # Add the subdirectories for third party libraries.
