@@ -1,22 +1,42 @@
+/*
+MIT License
+
+Copyright(c) 2022 Dragonscale-Games
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files(the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions :
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 /* ======================================================================== */
 /*!
- * \file            TestRenderer.cpp
+ * \file            SimpleRenderer.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Temporary renderer to make it convenient to test game systems. Will be
-   replaced with David Wong's renderer, cuz it's gonna be dope.
-
+   Simple renderer, good for debugging or demo projects.
  */
  /* ======================================================================== */
 
-#include "stdafx.h"
-
-#include "TestRenderer.hpp"
-#include "TempShader/TestShaderManager.hpp"
-#include "TempTexture/TestTextureManager.hpp"
+#include "SimpleRenderer.hpp"
+#include "SimpleShader/SimpleShaderManager.hpp"
+#include "SimpleTexture/SimpleTextureManager.hpp"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -29,21 +49,18 @@ namespace Barrage
 {
   static void WindowResizeCallback(GLFWwindow* window, int width, int height)
   {
-    (void)window;
+    window;
     glViewport(0, 0, width, height);
   }
 
-  TestRenderer& TestRenderer::Instance()
-  {
-    static TestRenderer instance;
-    return instance;
-  }
-
-  TestRenderer::TestRenderer() :
+  SimpleRenderer::SimpleRenderer() :
     window_(nullptr),
 
-    boundTexture_(nullptr),
+    shaderManager_(),
+    textureManager_(),
+
     boundShader_(nullptr),
+    boundTexture_(nullptr),
 
     viewMat_(),
     projMat_(),
@@ -62,13 +79,11 @@ namespace Barrage
   {
   }
 
-  void TestRenderer::Initialize()
+  void SimpleRenderer::Initialize()
   {
     glfwInit();
 
-    CreateWindow();
-
-    //glfwSwapInterval(0);
+    CreateGLFWWindow();
 
     LoadGLFunctions();
 
@@ -84,7 +99,7 @@ namespace Barrage
     glActiveTexture(GL_TEXTURE0);
   }
 
-  void TestRenderer::Shutdown()
+  void SimpleRenderer::Shutdown()
   {
     glDeleteVertexArrays(1, &vao_);
     glDeleteBuffers(1, &vertexBuffer_);
@@ -93,43 +108,43 @@ namespace Barrage
     glDeleteBuffers(1, &scaleBuffer_);
     glDeleteBuffers(1, &rotationBuffer_);
 
-    TestTextureManager::Instance().UnloadTexture("All");
-    TestShaderManager::Instance().UnloadShaders();
+    textureManager_.UnloadTexture("All");
+    shaderManager_.UnloadShaders();
 
     glfwDestroyWindow(window_);
 
     glfwTerminate();
   }
 
-  void TestRenderer::StartFrame()
+  void SimpleRenderer::StartFrame()
   {
     SetBackgroundColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
   }
 
-  void TestRenderer::EndFrame()
+  void SimpleRenderer::EndFrame()
   {
     glfwSwapBuffers(window_);
   }
 
-  bool TestRenderer::WindowClosed()
+  bool SimpleRenderer::WindowClosed()
   {
     return glfwWindowShouldClose(window_);
   }
 
-  void TestRenderer::Draw(const glm::vec2& position, float rotation, const glm::vec2& scale, const std::string& texture)
+  void SimpleRenderer::Draw(const glm::vec2& position, float rotation, const glm::vec2& scale, const std::string& texture)
   {
     glm::mat4 scale_mat = glm::scale(glm::identity<glm::mat4>(), glm::vec3(scale, 1.0f));
 
     glm::mat4 rotation_mat = glm::rotate(glm::identity <glm::mat4>(), rotation, glm::vec3(0.0f, 0.0f, 1.0f));
 
-    glm::mat4 translation_mat = glm::translate(glm::identity<glm::mat4>(), glm::vec3(position, 0.0f) + glm::vec3(640.0f, 360.0f, 1.0f));
+    glm::mat4 translation_mat = glm::translate(glm::identity<glm::mat4>(), glm::vec3(position, 0.0f));
 
     glm::mat4 transform = translation_mat * rotation_mat * scale_mat;
 
     Draw(transform, texture);
   }
 
-  void TestRenderer::Draw(const glm::mat4& transform, const std::string& texture)
+  void SimpleRenderer::Draw(const glm::mat4& transform, const std::string& texture)
   {
     BindShader("Default");
     BindTexture(texture);
@@ -140,7 +155,7 @@ namespace Barrage
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   }
 
-  void TestRenderer::DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture)
+  void SimpleRenderer::DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture)
   {
     BindShader("Instanced");
     BindTexture(texture);
@@ -158,13 +173,14 @@ namespace Barrage
     glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, instances);
   }
 
-  void TestRenderer::CreateWindow()
+  void SimpleRenderer::CreateGLFWWindow()
   {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    window_ = glfwCreateWindow(1280, 720, "Barrage Test Window", NULL, NULL);
+    window_ = glfwCreateWindow(1280, 720, "Barrage", NULL, NULL);
     if (window_ == NULL)
     {
       throw std::runtime_error("Window could not be created.");
@@ -174,18 +190,18 @@ namespace Barrage
     glfwSetFramebufferSizeCallback(window_, WindowResizeCallback);
   }
 
-  GLFWwindow* TestRenderer::GetWindowHandle()
+  GLFWwindow* SimpleRenderer::GetWindowHandle()
   {
     return window_;
   }
 
-  void TestRenderer::SetBackgroundColor(const glm::vec4& color)
+  void SimpleRenderer::SetBackgroundColor(const glm::vec4& color)
   {
     glClearColor(color.x, color.y, color.z, color.w);
     glClear(GL_COLOR_BUFFER_BIT);
   }
 
-  void TestRenderer::LoadGLFunctions()
+  void SimpleRenderer::LoadGLFunctions()
   {
     int version = gladLoadGL(glfwGetProcAddress);
 
@@ -195,7 +211,7 @@ namespace Barrage
     }
   }
 
-  void TestRenderer::GetUniformLocations()
+  void SimpleRenderer::GetUniformLocations()
   {
     transformUniform_ = glGetUniformLocation(boundShader_->GetID(), "transform_matrix");
     viewUniform_ = glGetUniformLocation(boundShader_->GetID(), "view_matrix");
@@ -203,7 +219,7 @@ namespace Barrage
     textureUniform_ = glGetUniformLocation(boundShader_->GetID(), "tex_sampler");
   }
 
-  void TestRenderer::SetUniforms()
+  void SimpleRenderer::SetUniforms()
   {
     GetUniformLocations();
 
@@ -211,7 +227,7 @@ namespace Barrage
     glUniformMatrix4fv(projectionUniform_, 1, false, &projMat_[0][0]);
   }
 
-  void TestRenderer::CreateQuadMesh()
+  void SimpleRenderer::CreateQuadMesh()
   {
     float vertices[] =
     {
@@ -271,23 +287,23 @@ namespace Barrage
     glBindVertexArray(0);
   }
 
-  void TestRenderer::EnableBlending()
+  void SimpleRenderer::EnableBlending()
   {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
 
-  void TestRenderer::BindTexture(const std::string& textureName)
+  void SimpleRenderer::BindTexture(const std::string& textureName)
   {
-    const TestTexture* texture;
+    const SimpleTexture* texture;
 
     if (textureName.empty())
     {
-      texture = TestTextureManager::Instance().GetTexture("Default");
+      texture = textureManager_.GetTexture("Default");
     }
     else
     {
-      texture = TestTextureManager::Instance().GetTexture(textureName);
+      texture = textureManager_.GetTexture(textureName);
     }
 
     if (texture != boundTexture_)
@@ -298,17 +314,17 @@ namespace Barrage
     }
   }
 
-  void TestRenderer::BindShader(const std::string& shaderName)
+  void SimpleRenderer::BindShader(const std::string& shaderName)
   {
-    const TestShader* shader;
+    const SimpleShader* shader;
 
     if (shaderName.empty())
     {
-      shader = TestShaderManager::Instance().GetShader("Default");
+      shader = shaderManager_.GetShader("Default");
     }
     else
     {
-      shader = TestShaderManager::Instance().GetShader(shaderName);
+      shader = shaderManager_.GetShader(shaderName);
     }
 
     if (shader != boundShader_)

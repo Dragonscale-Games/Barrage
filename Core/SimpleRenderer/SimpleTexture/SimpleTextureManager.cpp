@@ -1,18 +1,40 @@
+/*
+MIT License
+
+Copyright(c) 2022 Dragonscale-Games
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files(the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions :
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 /* ======================================================================== */
 /*!
- * \file            TestTextureManager.cpp
+ * \file            SimpleTextureManager.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Temporary texture manager to make it convenient to test game systems.
+   Texture manager for simple renderer.
  */
  /* ======================================================================== */
 
-#include "stdafx.h"
-
-#include "TestTextureManager.hpp"
+#include "SimpleTextureManager.hpp"
 
 #include <stb_image/stb_image.h>
 #include <glad/gl.h>
@@ -20,19 +42,13 @@
 
 namespace Barrage
 {
-  TestTextureManager& TestTextureManager::Instance()
-  {
-    static TestTextureManager instance;
-    return instance;
-  }
-
-  TestTextureManager::TestTextureManager() :
+  SimpleTextureManager::SimpleTextureManager() :
     library_()
   {
     stbi_set_flip_vertically_on_load(true);
   }
 
-  TestTextureManager::~TestTextureManager()
+  SimpleTextureManager::~SimpleTextureManager()
   {
     for (const auto& i : library_)
     {
@@ -40,7 +56,7 @@ namespace Barrage
     }
   }
 
-  const TestTexture* TestTextureManager::GetTexture(const std::string& name)
+  const SimpleTexture* SimpleTextureManager::GetTexture(const std::string& name)
   {
     auto texture = library_.find(name);
 
@@ -52,7 +68,7 @@ namespace Barrage
     return texture->second;
   }
 
-  void TestTextureManager::LoadTexture(const std::string& name)
+  void SimpleTextureManager::LoadTexture(const std::string& name)
   {
     auto texture = library_.find(name);
 
@@ -62,7 +78,7 @@ namespace Barrage
     }
   }
 
-  void TestTextureManager::UnloadTexture(const std::string& name)
+  void SimpleTextureManager::UnloadTexture(const std::string& name)
   {
     if (name == "All")
     {
@@ -85,7 +101,7 @@ namespace Barrage
     }
   }
 
-  TestTexture* TestTextureManager::CreateTexture(const std::string& name)
+  SimpleTexture* SimpleTextureManager::CreateTexture(const std::string& name)
   {
     int width, height, channels;
 
@@ -112,7 +128,7 @@ namespace Barrage
 
     stbi_image_free(data);
 
-    TestTexture* new_texture = new TestTexture(texture_id);
+    SimpleTexture* new_texture = new SimpleTexture(texture_id);
 
     library_[name] = new_texture;
 

@@ -1,36 +1,52 @@
+/*
+MIT License
+
+Copyright(c) 2022 Dragonscale-Games
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files(the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions :
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 /* ======================================================================== */
 /*!
- * \file            TestShaderManager.cpp
+ * \file            SimpleShaderManager.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Temporary shader manager to make it convenient to test game systems.
+   Shader manager for simple renderer.
  */
  /* ======================================================================== */
 
-#include "stdafx.h"
-
-#include "TestShaderManager.hpp"
+#include "SimpleShaderManager.hpp"
 
 #include <stdexcept>
 #include <fstream>
 
 namespace Barrage
 {
-  TestShaderManager& TestShaderManager::Instance()
-  {
-    static TestShaderManager instance;
-    return instance;
-  }
-
-  TestShaderManager::TestShaderManager() :
+  SimpleShaderManager::SimpleShaderManager() :
     library_()
   {
   }
 
-  TestShaderManager::~TestShaderManager()
+  SimpleShaderManager::~SimpleShaderManager()
   {
     for (const auto& i : library_)
     {
@@ -38,7 +54,7 @@ namespace Barrage
     }
   }
 
-  const TestShader* TestShaderManager::GetShader(const std::string& name)
+  const SimpleShader* SimpleShaderManager::GetShader(const std::string& name)
   {
     auto shader = library_.find(name);
 
@@ -50,7 +66,7 @@ namespace Barrage
     return shader->second;
   }
 
-  void TestShaderManager::UnloadShaders()
+  void SimpleShaderManager::UnloadShaders()
   {
     for (auto shader : library_)
     {
@@ -60,18 +76,18 @@ namespace Barrage
     library_.clear();
   }
 
-  TestShader* TestShaderManager::CreateShader(const std::string& name)
+  SimpleShader* SimpleShaderManager::CreateShader(const std::string& name)
   {
     unsigned program_id = CompileShaderProgram(name);
 
-    TestShader* new_shader = new TestShader(program_id);
+    SimpleShader* new_shader = new SimpleShader(program_id);
 
     library_[name] = new_shader;
 
     return new_shader;
   }
 
-  unsigned TestShaderManager::CompileShaderProgram(const std::string& name)
+  unsigned SimpleShaderManager::CompileShaderProgram(const std::string& name)
   {
     unsigned vertex_id = CompileShader(name, GL_VERTEX_SHADER);
     unsigned fragment_id = CompileShader(name, GL_FRAGMENT_SHADER);
@@ -81,38 +97,18 @@ namespace Barrage
     return program_id;
   }
 
-  unsigned TestShaderManager::CompileShader(const std::string& name, GLenum shaderType)
+  unsigned SimpleShaderManager::CompileShader(const std::string& name, GLenum shaderType)
   {
     std::string shader_source;
 
     switch (shaderType)
     {
     case GL_VERTEX_SHADER:
-      shader_source = /*"#version 330 core\n\
-                       layout(location = 0) in vec3 a_position;\
-                       layout(location = 1) in vec2 a_tex_coord;\
-                       uniform mat4 proj_matrix;\
-                       uniform mat4 view_matrix;\
-                       uniform mat4 transform_matrix;\
-                       out vec2 tex_coord;\
-                       void main()\
-                       {\
-                         gl_Position = proj_matrix * view_matrix * transform_matrix * vec4(a_position, 1.0f);\
-                         tex_coord = a_tex_coord;\
-                       }";*/
-                       GetShaderSource("Assets/Shaders/Temporary/" + name + ".vert");
+      shader_source = GetShaderSource("Assets/Shaders/" + name + ".vert");
       break;
 
     case GL_FRAGMENT_SHADER:
-      shader_source = /*"#version 330 core\n\
-                      out vec4 color;\
-                      in vec2 tex_coord;\
-                      uniform sampler2D tex_sampler;\
-                      void main()\
-                      {\
-                        color = texture(tex_sampler, tex_coord);\
-                      }";*/
-                      GetShaderSource("Assets/Shaders/Temporary/" + name + ".frag");
+      shader_source = GetShaderSource("Assets/Shaders/" + name + ".frag");
       break;
     }
 
@@ -128,16 +124,16 @@ namespace Barrage
     if (status == 0)
     {
       std::string error_message = "Shader could not be compiled: ";
-      char info_buffer[1024];
-      glGetShaderInfoLog(shader_id, 1024, 0, info_buffer);
-      error_message += info_buffer;
+      char error_buffer[1024];
+      glGetShaderInfoLog(shader_id, 1024, 0, error_buffer);
+      error_message += error_buffer;
       throw std::runtime_error(error_message);
     }
 
     return shader_id;
   }
 
-  unsigned TestShaderManager::LinkShaderProgram(unsigned vertexID, unsigned fragmentID)
+  unsigned SimpleShaderManager::LinkShaderProgram(unsigned vertexID, unsigned fragmentID)
   {
     unsigned program_id = glCreateProgram();
     glAttachShader(program_id, vertexID);
@@ -158,7 +154,7 @@ namespace Barrage
     return program_id;
   }
 
-  std::string TestShaderManager::GetShaderSource(const std::string& path)
+  std::string SimpleShaderManager::GetShaderSource(const std::string& path)
   {
     std::string file_string;
     std::ifstream infile(path);

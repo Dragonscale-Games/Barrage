@@ -16,7 +16,7 @@
 #include "Editor.hpp"
 //#include "Objects/Systems/GameSystems.hpp"
 #include "GS_DemoGame.hpp"
-#include "TempRenderer/TestRenderer.hpp"
+#include <Engine/Engine.hpp>
 
 #include <unordered_set>
 #include <chrono>
@@ -59,7 +59,7 @@ namespace Barrage
 
     engine_.GSM().SetGameState(Demo::GS_DemoGame());
 
-    gui_.Initialize(TestRenderer::Instance().GetWindowHandle());
+    gui_.Initialize(Engine::Instance->Render().GetWindowHandle());
   }
 
   void Editor::Update()
@@ -74,7 +74,7 @@ namespace Barrage
 
     gui_.EndWidgets();
 
-    TestRenderer::Instance().StartFrame();
+    Engine::Instance->Render().StartFrame();
 
     if (!statePaused_)
     {
@@ -92,9 +92,9 @@ namespace Barrage
 
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    TestRenderer::Instance().EndFrame();
+    Engine::Instance->Render().EndFrame();
 
-    if (TestRenderer::Instance().WindowClosed())
+    if (Engine::Instance->Render().WindowClosed())
       isRunning_ = false;
 
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);

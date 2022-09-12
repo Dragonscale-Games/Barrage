@@ -53,16 +53,16 @@ namespace Demo
   {
     engine_.Input().Update();
 
-    Barrage::TestRenderer::Instance().StartFrame();
+    engine_.Render().StartFrame();
 
     if (engine_.GSM().GameStateIsRunning())
       engine_.GSM().Update();
     else
       isRunning_ = false;
 
-    Barrage::TestRenderer::Instance().EndFrame();
+    engine_.Render().EndFrame();
 
-    if (Barrage::TestRenderer::Instance().WindowClosed())
+    if (engine_.Render().WindowClosed())
       isRunning_ = false;
   }
 

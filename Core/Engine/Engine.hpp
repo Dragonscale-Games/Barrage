@@ -16,11 +16,11 @@
 #define Engine_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Input/InputManager.hpp"
 #include "GameStates/GameStateManager.hpp"
+#include "Input/InputManager.hpp"
 #include "Objects/ObjectManager.hpp"
-#include "TempRenderer/TestRenderer.hpp"
 #include "Random/Random.hpp"
+#include "SimpleRenderer/SimpleRenderer.hpp"
 
 namespace Barrage
 {   
@@ -54,10 +54,6 @@ namespace Barrage
       /**************************************************************/
       void Shutdown();
 
-      // ===================================================================
-      // Game State Manager
-      // ===================================================================
-
       /**************************************************************/
       /*!
         \brief
@@ -68,10 +64,6 @@ namespace Barrage
       */
       /**************************************************************/
       GameStateManager& GSM();
-
-      // ===================================================================
-      // Input Manager
-      // ===================================================================
 
       /**************************************************************/
       /*!
@@ -84,10 +76,6 @@ namespace Barrage
       /**************************************************************/
       InputManager& Input();
 
-      // ===================================================================
-      // Object Manager
-      // ===================================================================
-
       /**************************************************************/
       /*!
         \brief
@@ -98,10 +86,6 @@ namespace Barrage
       */
       /**************************************************************/
       ObjectManager& Objects();
-
-      // ===================================================================
-      // Random Number Generator
-      // ===================================================================
 
       /**************************************************************/
       /*!
@@ -114,11 +98,23 @@ namespace Barrage
       /**************************************************************/
       Random& RNG();
 
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's renderer.
+
+        \return
+          Returns a reference to the engine's renderer.
+      */
+      /**************************************************************/
+      SimpleRenderer& Render();
+
     private:
       GameStateManager gsManager_;  //!< Game state manager
       InputManager inputManager_;   //!< Input manager
       ObjectManager objectManager_; //!< Object manager
       Random rng_;                  //!< Random number generator
+      SimpleRenderer renderer_;     //!< Renderer
 	};
 }
 

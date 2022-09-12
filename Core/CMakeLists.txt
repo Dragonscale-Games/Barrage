@@ -41,7 +41,11 @@ endif()
 add_library(BarrageCore STATIC 
   "template.cxx"
   "stdafx.h"
-  "Random/Random.cpp" "Random/Random.hpp"
+
+  "Debug/SymbolManager.hpp" "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
+  "Debug/MemoryDebugger.hpp" "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
+  "Debug/MemoryOverrides.hpp"
+
   "Engine/Engine.cpp" "Engine/Engine.hpp"
 
   "GameStates/GameStateManager.cpp" "GameStates/GameStateManager.hpp" 
@@ -52,19 +56,6 @@ add_library(BarrageCore STATIC
 
   "File/Graphics/ImageSource.hpp" "File/Graphics/ImageSource.cpp"
 
-  "Utilities/Utilities.hpp" 
-  "Utilities/Mallocator.hpp"
-  "Utilities/RuntimeError.hpp"
-
-  "Debug/SymbolManager.hpp" "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
-  "Debug/MemoryDebugger.hpp" "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
-  "Debug/MemoryOverrides.hpp"
-  
-  "TempRenderer/TestRenderer.cpp" "TempRenderer/TestRenderer.hpp" 
-  "TempRenderer/TempShader/TestShader.cpp" "TempRenderer/TempShader/TestShader.hpp" 
-  "TempRenderer/TempShader/TestShaderManager.cpp" "TempRenderer/TempShader/TestShaderManager.hpp" 
-  "TempRenderer/TempTexture/TestTexture.cpp" "TempRenderer/TempTexture/TestTexture.hpp" 
-  "TempRenderer/TempTexture/TestTextureManager.cpp" "TempRenderer/TempTexture/TestTextureManager.hpp" 
   "Input/InputManager.cpp" "Input/InputManager.hpp" 
   "Input/KeyMap.hpp" 
   
@@ -102,6 +93,15 @@ add_library(BarrageCore STATIC
   "Objects/Components/SharedComponents/CircleCollider.hpp" 
   "Objects/Components/ComponentArrays/AngularSpeedArray.hpp" 
 
+  "Objects/Systems/Movement/MovementSystem.hpp" "Objects/Systems/Movement/MovementSystem.cpp"
+  "Objects/Systems/Collision/CollisionSystem.hpp" "Objects/Systems/Collision/CollisionSystem.cpp" 
+  "Objects/Components/SharedComponents/RNG.hpp" 
+  "Objects/SpawnFuncs/Direction/DirectionFuncs.hpp" "Objects/SpawnFuncs/Direction/DirectionFuncs.cpp"
+  "Objects/SpawnFuncs/Position/PositionFuncs.hpp" "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
+  "Objects/Components/SharedComponents/BoundaryBox.hpp"
+
+  "Random/Random.cpp" "Random/Random.hpp"
+
   "Rendering/WindowManager.hpp" "Rendering/WindowManager.cpp"
   "Rendering/GfxManager2D.hpp" "Rendering/GfxManager2D.cpp"
   "Rendering/GfxRenderer2D.hpp" "Rendering/GfxRenderer2D.cpp"
@@ -112,12 +112,15 @@ add_library(BarrageCore STATIC
   "Rendering/GfxRegistry2D.hpp" "Rendering/GfxRegistry2D.cpp"
   "Rendering/GLError.hpp"
 
-  "Objects/Systems/Movement/MovementSystem.hpp" "Objects/Systems/Movement/MovementSystem.cpp"
-  "Objects/Systems/Collision/CollisionSystem.hpp" "Objects/Systems/Collision/CollisionSystem.cpp" 
-  "Objects/Components/SharedComponents/RNG.hpp" 
-  "Objects/SpawnFuncs/Direction/DirectionFuncs.hpp" "Objects/SpawnFuncs/Direction/DirectionFuncs.cpp"
-  "Objects/SpawnFuncs/Position/PositionFuncs.hpp" "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
-  "Objects/Components/SharedComponents/BoundaryBox.hpp"
+  "SimpleRenderer/SimpleRenderer.cpp" "SimpleRenderer/SimpleRenderer.hpp" 
+  "SimpleRenderer/SimpleShader/SimpleShader.cpp" "SimpleRenderer/SimpleShader/SimpleShader.hpp" 
+  "SimpleRenderer/SimpleShader/SimpleShaderManager.cpp" "SimpleRenderer/SimpleShader/SimpleShaderManager.hpp" 
+  "SimpleRenderer/SimpleTexture/SimpleTexture.cpp" "SimpleRenderer/SimpleTexture/SimpleTexture.hpp" 
+  "SimpleRenderer/SimpleTexture/SimpleTextureManager.cpp" "SimpleRenderer/SimpleTexture/SimpleTextureManager.hpp" 
+
+  "Utilities/Utilities.hpp" 
+  "Utilities/Mallocator.hpp"
+  "Utilities/RuntimeError.hpp"
 )
 
 add_library(barragecore ALIAS BarrageCore)

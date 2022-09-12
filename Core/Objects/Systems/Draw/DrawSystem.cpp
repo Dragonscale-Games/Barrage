@@ -13,7 +13,7 @@
 #include "stdafx.h"
 #include "DrawSystem.hpp"
 
-#include <TempRenderer/TestRenderer.hpp>
+#include <Engine/Engine.hpp>
 
 namespace Barrage
 {
@@ -56,7 +56,7 @@ namespace Barrage
 
       Sprite& pool_sprite = *pool->GetSharedComponent<Sprite>("Sprite");
 
-      TestRenderer::Instance().DrawInstanced(positions, rotations, scales, pool->size_, pool_sprite.texture_);
+      Engine::Instance->Render().DrawInstanced(positions, rotations, scales, pool->size_, pool_sprite.texture_);
     }
   }
 }

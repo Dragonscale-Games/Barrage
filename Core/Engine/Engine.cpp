@@ -28,18 +28,20 @@ namespace Barrage
 
   void Engine::Initialize()
   {
-    TestRenderer::Instance().Initialize();
-
-    inputManager_.Initialize(TestRenderer::Instance().GetWindowHandle());
-
+    Instance = this;
+    
+    renderer_.Initialize();
+    inputManager_.Initialize(renderer_.GetWindowHandle());
     objectManager_.Initialize();
   }
 
   void Engine::Shutdown()
   {
+    gsManager_.Shutdown();
     inputManager_.Shutdown();
+    renderer_.Shutdown();
 
-    TestRenderer::Instance().Shutdown();
+    Instance = nullptr;
   }
 
   GameStateManager& Engine::GSM()
@@ -60,5 +62,10 @@ namespace Barrage
   Random& Engine::RNG()
   {
     return rng_;
+  }
+
+  SimpleRenderer& Engine::Render()
+  {
+    return renderer_;
   }
 }
