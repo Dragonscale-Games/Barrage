@@ -239,7 +239,7 @@ namespace Barrage
 
     if (ImGui::CollapsingHeader("Active Pools"))
     {
-      PoolList pool_list = engine_.Objects().GetPoolNames();
+      std::vector<std::string> pool_list = engine_.Objects().GetPoolNames();
 
       for (auto it = pool_list.begin(); it != pool_list.end(); ++it)
       {

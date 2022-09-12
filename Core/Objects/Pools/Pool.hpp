@@ -61,6 +61,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the number of available object slots in the pool.
+
+        \return
+          Returns the number of available object slots in the pool.
+      */
+      /**************************************************************/
+      unsigned GetAvailableSlots() const;
+
+      /**************************************************************/
+      /*!
+        \brief
           Get a reference to a given component array. Throws an
           out_of_range exception if no component array matches the
           input name.
@@ -105,6 +116,7 @@ namespace Barrage
       ComponentArrayMap componentArrays_;   //!< Holds component arrays and their names
       SharedComponentMap sharedComponents_; //!< Holds shared components and their names
       unsigned size_;                       //!< Number of currently active objects
+      unsigned queuedObjects_;              //!< Number of objects waiting to be spawned on the next tick
       const unsigned capacity_;             //!< Total number of objects the pool can hold
 
     private:

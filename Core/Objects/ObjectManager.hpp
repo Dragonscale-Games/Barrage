@@ -101,7 +101,7 @@ namespace Barrage
 
       std::vector<std::string> GetPoolArchetypeNames();
 
-      PoolList GetPoolNames();
+      std::vector<std::string> GetPoolNames();
 
       // ===================================================================
       // Objects

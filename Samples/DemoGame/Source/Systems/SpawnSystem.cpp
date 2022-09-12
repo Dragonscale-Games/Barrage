@@ -12,6 +12,8 @@
 
 #include "stdafx.h"
 #include "SpawnSystem.hpp"
+#include <Objects/Systems/SystemManager.hpp>
+#include <Objects/Systems/Creation/CreationSystem.hpp>
 
 namespace Demo
 {
@@ -28,14 +30,15 @@ namespace Demo
 
   void SpawnSystem::Update()
   {
-    UpdatePoolGroup(BULLET_SPAWNER_POOLS, UpdateBulletSpawners);
-  }
+    auto pool_group = pools_.equal_range(BULLET_SPAWNER_POOLS);
 
-  void SpawnSystem::UpdateBulletSpawners(Barrage::Pool* pool)
-  {
-    Barrage::Spawner& spawner = *pool->GetSharedComponent<Barrage::Spawner>("Spawner");
-
-    spawner.spawnTypes_[0].spawnNum_ = 100;
-    spawner.spawnTypes_[0].sourceIndices_.resize(100, 0);
+    for (auto it = pool_group.first; it != pool_group.second; ++it)
+    {
+      Barrage::Pool* pool = (*it).second;
+      Barrage::Spawner& spawner = *pool->GetSharedComponent<Barrage::Spawner>("Spawner");
+      spawner.spawnTypes_["Bullet Spawn"].sourceIndices_.resize(100, 0);
+      Barrage::CreationSystem* creation_system = dynamic_cast<Barrage::CreationSystem*>(systemManager_->GetSystem("CreationSystem"));
+      creation_system->QueueSpawns(pool, spawner.spawnTypes_["Bullet Spawn"]);
+    }
   }
 }

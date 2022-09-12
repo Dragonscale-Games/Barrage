@@ -33,6 +33,8 @@ namespace Barrage
   typedef void (*PoolUpdateFunc)(Pool*);
   typedef void (*InteractionFunc)(Pool*, Pool*);
 
+  class SystemManager;
+
   //! Base object system class that all object systems should inherit from
   class System
   {
@@ -91,6 +93,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Sets the system's parent manager.
+
+        \param manager
+          The parent manager of the system.
+      */
+      /**************************************************************/
+      void SetSystemManager(SystemManager* manager);
+      
+      /**************************************************************/
+      /*!
+        \brief
           Applies the given function to all pools in the given group.
 
         \param group
@@ -121,8 +134,11 @@ namespace Barrage
       void UpdateInteraction(unsigned group1, unsigned group2, InteractionFunc function);
 
     protected:
-      PoolTypeMap poolTypes_; //!< Holds all pool types the system cares about
-      OrderedPoolMap pools_;  //!< Holds all subscribed pools in a specific order
+      PoolTypeMap poolTypes_;        //!< Holds all pool types the system cares about
+      OrderedPoolMap pools_;         //!< Holds all subscribed pools in a specific order
+      SystemManager* systemManager_; //!< Manager that contains this system
+
+    friend class SystemManager;
   };
 }
 

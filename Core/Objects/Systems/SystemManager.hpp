@@ -105,6 +105,18 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the system with the given name.
+
+        \return
+          Returns a pointer to the requested system, or nullptr if 
+          the system is not registered.
+      */
+      /**************************************************************/
+      System* GetSystem(const std::string& name);
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the list of all registered systems.
 
         \return

@@ -143,7 +143,7 @@ namespace Barrage
 
   void ObjectManager::DeleteAllPools()
   {
-    PoolList pool_names = GetPoolNames();
+    std::vector<std::string> pool_names = GetPoolNames();
 
     for (auto it = pool_names.begin(); it != pool_names.end(); ++it)
     {
@@ -151,7 +151,7 @@ namespace Barrage
     }
   }
 
-  PoolList ObjectManager::GetPoolNames()
+  std::vector<std::string> ObjectManager::GetPoolNames()
   {
     return poolManager_.GetPoolNames();
   }

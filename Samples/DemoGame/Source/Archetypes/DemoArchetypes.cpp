@@ -142,14 +142,12 @@ namespace Demo
 
     SpawnType bullet_spawn_type;
     bullet_spawn_type.archetypeName_ = "Bullet Object Archetype";
-    bullet_spawn_type.poolName_ = "Bullet Pool";
-    bullet_spawn_type.spawnNum_ = 0;
-    bullet_spawn_type.sourceIndices_.resize(10000);
+    bullet_spawn_type.destinationPoolName_ = "Bullet Pool";
     bullet_spawn_type.spawnFuncs_.push_back("MatchPosition");
     bullet_spawn_type.spawnFuncs_.push_back("RandomDirection");
 
     Spawner* spawner = new Spawner;
-    spawner->spawnTypes_.push_back(bullet_spawn_type);
+    spawner->spawnTypes_["Bullet Spawn"] = bullet_spawn_type;
     pool_archetype->sharedComponents_["Spawner"] = spawner;
 
     RNG* rng = new RNG;

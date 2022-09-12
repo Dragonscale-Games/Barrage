@@ -21,6 +21,7 @@
 #include "Objects/Archetypes/ArchetypeManager.hpp"
 #include "Objects/SpawnFuncs/SpawnFuncManager.hpp"
 #include "Objects/Pools/PoolManager.hpp"
+#include "Objects/Components/SharedComponents/Spawner.hpp"
 
 namespace Barrage
 {
@@ -39,16 +40,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Clears the spawn type vectors. Hacky way to preserve
-          capacity. Will be fixed in future iterations.
-      */
-      /**************************************************************/
-      void Subscribe(Pool* pool) override;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Creates all objects queued for spawning.
+          Spawns all objects queued for spawning.
       */
       /**************************************************************/
       void Update() override;
@@ -94,16 +86,33 @@ namespace Barrage
       /*!
         \brief
           Creates a new object in an object pool using an object
-          archetype.
+          archetype. 
 
         \param archetype
           The archetype the new object will be created from.
 
-        \param pool
+        \param destinationPool
           The object pool the new object will be created in.
       */
       /**************************************************************/
-      void CreateObject(const ObjectArchetype& archetype, Pool* pool);
+      void CreateObject(const ObjectArchetype& archetype, Pool* destinationPool);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Queues objects for spawn using information from the input
+          SpawnType. The size of the sourceIndices vector is used to 
+          determine how many objects to spawn. This function always 
+          sets the size of the sourceIndices vector to zero. 
+
+        \param sourcePool
+          The pool the spawn command is coming from.
+
+        \param spawnType
+          Holds information about how and where to spawn the objects.
+      */
+      /**************************************************************/
+      void QueueSpawns(Pool* sourcePool, SpawnType& spawnType);
 
     private:
       /**************************************************************/
@@ -115,20 +124,24 @@ namespace Barrage
         \param archetype
           The archetype the new object(s) will be created from.
 
-        \param pool
+        \param destinationPool
           The object pool the new object(s) will be created in.
 
         \param numNewObjects
-          The number of objects to create.
+          The number of objects to attempt to create.
+
+        \param queueObjects
+          If true, the objects will not spawn until the creation
+          system updates. 
       */
       /**************************************************************/
-      void CreateObjects(const ObjectArchetype& archetype, Pool* pool, unsigned numNewObjects);
+      void CreateObjects(const ObjectArchetype& archetype, Pool* destinationPool, unsigned numNewObjects, bool queueObjects);
 
       /**************************************************************/
       /*!
         \brief
-          Applies initialization functions to a number of objects
-          in a destination pool, using information from another pool.
+          Applies spawn functions to objects in a destination pool, 
+          using information from the source pool.
 
         \param initializers
           The list of initializers to apply.
@@ -148,18 +161,18 @@ namespace Barrage
           The number of objects to initialize.
       */
       /**************************************************************/
-      void ApplySpawnFuncs(const std::vector<std::string>& spawnFuncs, Pool* initPool, Pool* destPool, unsigned startIndex, unsigned numObjects, const std::vector<unsigned>& sourceIndices);
+      void ApplySpawnFuncs(const std::vector<std::string>& spawnFuncs, Pool* sourcePool, Pool* destinationPool, unsigned startIndex, unsigned numObjects, const std::vector<unsigned>& sourceIndices);
 
       /**************************************************************/
       /*!
         \brief
-          Update function for a single object pool.
+          Spawns all objects waiting to be spawned in a given pool.
 
         \param pool
           The pool to update.
       */
       /**************************************************************/
-      void UpdateSpawners(Pool* pool);
+      static void SpawnObjects(Pool* pool);
 
     private:
       ArchetypeManager* archetypeManager_;  //!< Used to get object archetypes

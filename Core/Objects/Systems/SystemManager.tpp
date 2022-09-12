@@ -33,6 +33,7 @@ namespace Barrage
       systems_[systemName] = new_system;
       systemNames_.push_back(systemName);
       updateOrderList_.push_back(systemName);
+      new_system->SetSystemManager(this);
     }
     else
     {

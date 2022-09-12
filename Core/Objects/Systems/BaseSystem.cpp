@@ -21,7 +21,8 @@ namespace Barrage
 {
   System::System() :
     poolTypes_(),
-    pools_()
+    pools_(),
+    systemManager_(nullptr)
   {
   }
 
@@ -56,6 +57,11 @@ namespace Barrage
   void System::Update()
   {
     // intentionally empty
+  }
+
+  void System::SetSystemManager(SystemManager* manager)
+  {
+    systemManager_ = manager;
   }
 
   void System::UpdatePoolGroup(unsigned group, PoolUpdateFunc function)
