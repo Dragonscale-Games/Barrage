@@ -25,23 +25,23 @@ namespace Barrage
     System()
   {
     PoolType basic_movement_type;
-    basic_movement_type.AddComponentName("Position Array");
-    basic_movement_type.AddComponentName("Velocity Array");
+    basic_movement_type.AddComponentName("PositionArray");
+    basic_movement_type.AddComponentName("VelocityArray");
     poolTypes_[BASIC_MOVEMENT_POOLS] = basic_movement_type;
 
     PoolType basic_rotation_type;
-    basic_rotation_type.AddComponentName("Rotation Array");
-    basic_rotation_type.AddComponentName("Angular Speed Array");
+    basic_rotation_type.AddComponentName("RotationArray");
+    basic_rotation_type.AddComponentName("AngularSpeedArray");
     poolTypes_[BASIC_ROTATION_POOLS] = basic_rotation_type;
 
     PoolType player_type;
-    player_type.AddComponentName("Position Array");
+    player_type.AddComponentName("PositionArray");
     player_type.AddTag("Player");
     poolTypes_[PLAYER_POOLS] = player_type;
 
     PoolType bounded_player_type;
-    bounded_player_type.AddComponentName("Position Array");
-    bounded_player_type.AddComponentName("Boundary Box");
+    bounded_player_type.AddComponentName("PositionArray");
+    bounded_player_type.AddComponentName("BoundaryBox");
     bounded_player_type.AddTag("Player");
     poolTypes_[BOUNDED_PLAYER_POOLS] = bounded_player_type;
   }
@@ -87,7 +87,7 @@ namespace Barrage
       player_velocity.vy_ = player_velocity.vy_ / 1.4142f;
     }
 
-    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("Position Array");
+    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
 
     unsigned num_objects = pool->size_;
 
@@ -100,8 +100,8 @@ namespace Barrage
 
   void MovementSystem::UpdatePlayerBounds(Pool* pool)
   {
-    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("Position Array");
-    BoundaryBox& bounds = *pool->GetSharedComponent<BoundaryBox>("Boundary Box");
+    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
+    BoundaryBox& bounds = *pool->GetSharedComponent<BoundaryBox>("BoundaryBox");
 
     unsigned num_objects = pool->size_;
 
@@ -123,8 +123,8 @@ namespace Barrage
 
   void MovementSystem::UpdateBasicMovement(Pool* pool)
   {
-    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("Position Array");
-    VelocityArray& velocity_array = *pool->GetComponentArray<VelocityArray>("Velocity Array");
+    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
+    VelocityArray& velocity_array = *pool->GetComponentArray<VelocityArray>("VelocityArray");
 
     unsigned num_objects = pool->size_;
 
@@ -137,8 +137,8 @@ namespace Barrage
 
   void MovementSystem::UpdateBasicRotation(Pool* pool)
   {
-    RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("Rotation Array");
-    AngularSpeedArray& angular_speed_array = *pool->GetComponentArray<AngularSpeedArray>("Angular Speed Array");
+    RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("RotationArray");
+    AngularSpeedArray& angular_speed_array = *pool->GetComponentArray<AngularSpeedArray>("AngularSpeedArray");
 
     unsigned num_objects = pool->size_;
 

@@ -21,7 +21,7 @@ namespace Barrage
     System()
   {
     PoolType destructible_type;
-    destructible_type.AddComponentName("Destructible Array");
+    destructible_type.AddComponentName("DestructibleArray");
     poolTypes_[BASIC_DESTRUCTIBLE_POOLS] = destructible_type;
   }
   
@@ -40,7 +40,7 @@ namespace Barrage
 
   void DestructionSystem::PerObjectDestructionAlgorithm(Pool* pool)
   {
-    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("Destructible Array");
+    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("DestructibleArray");
 
     /*
      *  Objectives:
@@ -87,7 +87,7 @@ namespace Barrage
 
   void DestructionSystem::PerComponentDestructionAlgorithm(Pool* pool)
   {
-    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("Destructible Array");
+    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("DestructibleArray");
 
     /*
      *  Objectives:
@@ -117,7 +117,7 @@ namespace Barrage
     for (auto it = pool->componentArrays_.begin(); it != pool->componentArrays_.end(); ++it)
     {
       // we'll operate on the destructible array last; after the loop finishes
-      if (it->first == "Destructible Array")
+      if (it->first == "DestructibleArray")
         continue;
       
       unsigned alive_end_index = initial_alive_end_index;
