@@ -15,7 +15,6 @@
 /* ======================================================================== */
 
 #include <Objects/ObjectManager.hpp>
-#include <Source/Archetypes/DemoArchetypes.hpp>
 #include <Source/Systems/SpawnSystem.hpp>
 
 namespace Barrage
@@ -38,12 +37,5 @@ namespace Barrage
   void ObjectManager::SetSystemUpdateOrder()
   {
     
-  }
-
-  void ObjectManager::CreateArchetypes()
-  {
-    Demo::CreateBulletArchetypes();
-    Demo::CreatePlayerArchetypes();
-    Demo::CreateSpawnerArchetypes();
   }
 }

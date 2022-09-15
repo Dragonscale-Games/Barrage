@@ -1,30 +1,39 @@
 /* ======================================================================== */
 /*!
- * \file            DemoArchetypes.hpp
+ * \file            Scene.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
-
+   A scene is a list of pools and game objects to spawn in a space.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef Archetypes_DEMO_H
-#define Archetypes_DEMO_H
+#ifndef Scene_BARRAGE_H
+#define Scene_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-namespace Demo
-{
-  void CreatePlayerArchetypes();
+#include <Objects/Pools/PoolInfo.hpp>
 
-  void CreateBulletArchetypes();
+namespace Barrage
+{  
+  //! contains all the information needed for a space to run a simulation
+  class Scene
+	{
+    public:   
+      Scene();
 
-  void CreateSpawnerArchetypes();
+      void AddStartingPool(const PoolInfo& startingPool);
+
+      const std::vector<PoolInfo>& GetStartingPools() const;
+
+    private:
+      std::vector<PoolInfo> startingPools_; //!< List of pools and objects the scene starts with
+	};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // Archetypes_DEMO_H
+#endif // Scene_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

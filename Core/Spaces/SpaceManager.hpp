@@ -17,16 +17,11 @@
 
 #include "Space.hpp"
 
-#include <list>
-
 namespace Barrage
 {
   //! Maps space names to spaces
   typedef std::unordered_map<std::string, Space*> SpaceMap;
   
-  //! An ordered list of space names
-  typedef std::list<std::string> SpaceLinkedList;
-
   //! Manages all existing spaces and allows creation of new spaces
   class SpaceManager
 	{
@@ -35,11 +30,17 @@ namespace Barrage
 
       ~SpaceManager();
 
-      void AddSpace(const std::string name, const std::string scene);
+      void Update();
+
+      void Draw();
+
+      void AddSpace(const std::string& name, Space* space);
+
+      void SetSpacePaused(const std::string& name, bool isPaused);
 
     private:
       SpaceMap spaces_;
-      SpaceLinkedList updateOrder_;
+      std::list<std::string> updateOrder_;
 	};
 }
 

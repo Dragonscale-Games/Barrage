@@ -1,27 +1,65 @@
 /* ======================================================================== */
 /*!
- * \file            DemoArchetypes.cpp
- * \par             Barrage Engine
+ * \file            DemoInitialization.cpp
+ * \par             Demo Game
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
-
+   Sets up scene and space for the demo game.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
-#include "stdafx.h"
-#include "DemoArchetypes.hpp"
+#include "DemoInitialization.hpp"
 
 #include <Engine/Engine.hpp>
 #include <Objects/Components/EngineComponents.hpp>
-
-using namespace Barrage;
+#include <Objects/ObjectManager.hpp>
 
 namespace Demo
 {
-  void CreatePlayerArchetypes()
+  using namespace Barrage;
+  
+  Space* CreateDemoSpace()
+  {
+    Space* demo_space = new Space;
+    ObjectManager& object_manager = demo_space->GetObjectManager();
+
+    CreatePlayerArchetypes(object_manager);
+    CreateBulletArchetypes(object_manager);
+    CreateSpawnerArchetypes(object_manager);
+
+    Scene* demo_scene = CreateDemoScene();
+
+    demo_space->AddScene("Demo Scene", demo_scene);
+    demo_space->SetScene("Demo Scene");
+
+    return demo_space;
+  }
+  
+  Scene* CreateDemoScene()
+  {
+    const unsigned MAX_BULLETS = 100000;
+
+    PoolInfo player_pool("Player Pool", "Player Pool Archetype");
+    player_pool.objects_.push_back("Player Object Archetype");
+
+    PoolInfo spawner_pool("Spawner Pool", "Spawner Pool Archetype");
+    spawner_pool.objects_.push_back("Spawner Object Archetype");
+
+    PoolInfo bullet_pool("Bullet Pool", "Bullet Pool Archetype", MAX_BULLETS);
+    bullet_pool.objects_.push_back("Bullet Object Archetype");
+
+    Scene* demo_scene = new Scene;
+
+    demo_scene->AddStartingPool(player_pool);
+    demo_scene->AddStartingPool(spawner_pool);
+    demo_scene->AddStartingPool(bullet_pool);
+
+    return demo_scene;
+  }
+
+  void CreatePlayerArchetypes(Barrage::ObjectManager& objectManager)
   {
     PoolArchetype* pool_archetype = new PoolArchetype;
 
@@ -48,7 +86,7 @@ namespace Demo
     pool_archetype->componentArrayNames_.push_back("ScaleArray");
     pool_archetype->componentArrayNames_.push_back("VelocityArray");
 
-    Engine::Instance->Objects().AddPoolArchetype("Player Pool Archetype", pool_archetype);
+    objectManager.AddPoolArchetype("Player Pool Archetype", pool_archetype);
 
     ObjectArchetype* object_archetype = new ObjectArchetype;
 
@@ -72,10 +110,10 @@ namespace Demo
     velocity_array->Allocate(1);
     object_archetype->components_["VelocityArray"] = velocity_array;
 
-    Engine::Instance->Objects().AddObjectArchetype("Player Object Archetype", object_archetype);
+    objectManager.AddObjectArchetype("Player Object Archetype", object_archetype);
   }
 
-  void CreateBulletArchetypes()
+  void CreateBulletArchetypes(Barrage::ObjectManager& objectManager)
   {
     PoolArchetype* pool_archetype = new PoolArchetype;
 
@@ -103,7 +141,7 @@ namespace Demo
     pool_archetype->componentArrayNames_.push_back("VelocityArray");
     pool_archetype->componentArrayNames_.push_back("DestructibleArray");
 
-    Engine::Instance->Objects().AddPoolArchetype("Bullet Pool Archetype", pool_archetype);
+    objectManager.AddPoolArchetype("Bullet Pool Archetype", pool_archetype);
 
     ObjectArchetype* object_archetype = new ObjectArchetype;
 
@@ -131,10 +169,10 @@ namespace Demo
     destructible_array->Allocate(1);
     object_archetype->components_["DestructibleArray"] = destructible_array;
 
-    Engine::Instance->Objects().AddObjectArchetype("Bullet Object Archetype", object_archetype);
+    objectManager.AddObjectArchetype("Bullet Object Archetype", object_archetype);
   }
 
-  void CreateSpawnerArchetypes()
+  void CreateSpawnerArchetypes(Barrage::ObjectManager& objectManager)
   {
     PoolArchetype* pool_archetype = new PoolArchetype;
 
@@ -155,7 +193,7 @@ namespace Demo
 
     pool_archetype->componentArrayNames_.push_back("PositionArray");
 
-    Engine::Instance->Objects().AddPoolArchetype("Spawner Pool Archetype", pool_archetype);
+    objectManager.AddPoolArchetype("Spawner Pool Archetype", pool_archetype);
 
     ObjectArchetype* object_archetype = new ObjectArchetype;
 
@@ -165,6 +203,6 @@ namespace Demo
     position_array->data_->y_ = 600.0f;
     object_archetype->components_["PositionArray"] = position_array;
 
-    Engine::Instance->Objects().AddObjectArchetype("Spawner Object Archetype", object_archetype);
+    objectManager.AddObjectArchetype("Spawner Object Archetype", object_archetype);
   }
 }

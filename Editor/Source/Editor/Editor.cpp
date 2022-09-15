@@ -14,8 +14,7 @@
 #include "stdafx.h"
 
 #include "Editor.hpp"
-//#include "Objects/Systems/GameSystems.hpp"
-#include "GS_DemoGame.hpp"
+#include <DemoInitialization.hpp>
 #include <Engine/Engine.hpp>
 
 #include <unordered_set>
@@ -57,9 +56,11 @@ namespace Barrage
 
     engine_.Initialize();
 
-    engine_.GSM().SetGameState(Demo::GS_DemoGame());
+    gui_.Initialize(engine_.Render().GetWindowHandle());
 
-    gui_.Initialize(Engine::Instance->Render().GetWindowHandle());
+    Space* demo_space = Demo::CreateDemoSpace();
+
+    engine_.Spaces().AddSpace("Demo Space", demo_space);
   }
 
   void Editor::Update()
@@ -74,28 +75,21 @@ namespace Barrage
 
     gui_.EndWidgets();
 
-    Engine::Instance->Render().StartFrame();
+    engine_.Render().StartFrame();
 
-    if (!statePaused_)
-    {
-      if (engine_.GSM().GameStateIsRunning())
-      {
-        engine_.GSM().Update();
-      }
-      else
-        isRunning_ = false;
-    }
-
-    engine_.Objects().Draw();
+    engine_.Spaces().Update();
+    engine_.Spaces().Draw();
 
     gui_.DrawWidgets();
 
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    Engine::Instance->Render().EndFrame();
+    engine_.Render().EndFrame();
 
-    if (Engine::Instance->Render().WindowClosed())
+    if (engine_.Render().WindowClosed())
       isRunning_ = false;
+
+    engine_.Spaces().SetSpacePaused("Demo Space", statePaused_);
 
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
     
@@ -106,7 +100,7 @@ namespace Barrage
   {
     gui_.Shutdown();
     
-    engine_.Instance->Shutdown();
+    engine_.Shutdown();
 
     Barrage::Engine::Instance = nullptr;
   }
@@ -126,128 +120,6 @@ namespace Barrage
     frametime = frametime + std::to_string(frameTime_) + " milliseconds";
     ImGui::Text(frametime.c_str());
     ImGui::Text("");
-
-    ImGui::Text("Currently registered:");
-    ImGui::Text("----------------------");
-
-    if (ImGui::CollapsingHeader("Pool Components"))
-    {
-      std::vector<std::string> pool_component_list = engine_.Objects().GetSharedComponentNames();
-
-      for (auto it = pool_component_list.begin(); it != pool_component_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-    
-    if (ImGui::CollapsingHeader("Object Components"))
-    {
-      std::vector<std::string> object_component_list = engine_.Objects().GetComponentArrayNames();
-
-      for (auto it = object_component_list.begin(); it != object_component_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-
-    if (ImGui::CollapsingHeader("Initializers"))
-    {
-      std::vector<std::string> initializer_list = engine_.Objects().GetSpawnFuncNames();
-
-      for (auto it = initializer_list.begin(); it != initializer_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-
-    if (ImGui::CollapsingHeader("Systems"))
-    {
-      std::vector<std::string> registered_system_list = engine_.Objects().GetRegisteredSystemNames();
-      std::vector<std::string> update_order_list = engine_.Objects().GetSystemUpdateOrder();
-      std::vector<std::string> unused_system_list;
-
-      std::unordered_set<std::string> used_system_set;
-
-      used_system_set.insert(update_order_list.begin(), update_order_list.end());
-
-      for (auto it = registered_system_list.begin(); it != registered_system_list.end(); ++it)
-      {
-        if (used_system_set.count(*it) == 0)
-        {
-          unused_system_list.push_back(*it);
-        }
-      }
-
-      ImGui::Text("Update order:");
-      ImGui::Text("--------------");
-
-      for (auto it = update_order_list.begin(); it != update_order_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-      
-      ImGui::Text("");
-
-      ImGui::Text("Non-updating systems:");
-      ImGui::Text("----------------------");
-
-      for (auto it = unused_system_list.begin(); it != unused_system_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-
-    ImGui::Text("");
-    ImGui::Text("Archetypes:");
-    ImGui::Text("------------");
-
-    if (ImGui::CollapsingHeader("Pool Archetypes"))
-    {
-      std::vector<std::string> archetype_list = engine_.Objects().GetPoolArchetypeNames();
-
-      for (auto it = archetype_list.begin(); it != archetype_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-
-    if (ImGui::CollapsingHeader("Object Archetypes"))
-    {
-      std::vector<std::string> archetype_list = engine_.Objects().GetObjectArchetypeNames();
-
-      for (auto it = archetype_list.begin(); it != archetype_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-
-    ImGui::Text("");
-    ImGui::Text("Objects:");
-    ImGui::Text("---------");
-
-    if (ImGui::CollapsingHeader("Active Pools"))
-    {
-      std::vector<std::string> pool_list = engine_.Objects().GetPoolNames();
-
-      for (auto it = pool_list.begin(); it != pool_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
 
     ImGui::End();
   }

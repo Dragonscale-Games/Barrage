@@ -11,7 +11,7 @@
  /* ======================================================================== */
 
 #include "DemoGame.hpp"
-#include "Source/GameStates/GS_DemoGame.hpp"
+#include "../Initialization/DemoInitialization.hpp"
 
 namespace Demo
 {
@@ -46,7 +46,9 @@ namespace Demo
 
     engine_.Initialize();
 
-    engine_.GSM().SetGameState(GS_DemoGame());
+    Barrage::Space* demo_space = CreateDemoSpace();
+
+    engine_.Spaces().AddSpace("Demo Space", demo_space);
   }
 
   void Game::Update()
@@ -55,10 +57,8 @@ namespace Demo
 
     engine_.Render().StartFrame();
 
-    if (engine_.GSM().GameStateIsRunning())
-      engine_.GSM().Update();
-    else
-      isRunning_ = false;
+    engine_.Spaces().Update();
+    engine_.Spaces().Draw();
 
     engine_.Render().EndFrame();
 
@@ -68,7 +68,7 @@ namespace Demo
 
   void Game::Shutdown()
   {
-    engine_.Instance->Shutdown();
+    engine_.Shutdown();
 
     Barrage::Engine::Instance = nullptr;
   }

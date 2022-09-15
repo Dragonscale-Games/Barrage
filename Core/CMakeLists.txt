@@ -82,6 +82,7 @@ add_library(BarrageCore STATIC
   "Objects/Archetypes/PoolArchetype/PoolArchetype.hpp"     "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
   "Objects/SpawnFuncs/EngineSpawnFuncs.hpp" 
   "Objects/Pools/PoolType.cpp" "Objects/Pools/PoolType.hpp" 
+  "Objects/Pools/PoolInfo.cpp" "Objects/Pools/PoolInfo.hpp"
   "Objects/Components/ComponentArrays/DestructibleArray.hpp" 
   "Objects/Components/ComponentArrays/PositionArray.hpp" 
   "Objects/Components/ComponentArrays/ScaleArray.hpp" 
@@ -112,16 +113,21 @@ add_library(BarrageCore STATIC
   "Rendering/GfxRegistry2D.hpp" "Rendering/GfxRegistry2D.cpp"
   "Rendering/GLError.hpp"
 
+  "Scenes/Scene.cpp" "Scenes/Scene.hpp"
+
   "SimpleRenderer/SimpleRenderer.cpp" "SimpleRenderer/SimpleRenderer.hpp" 
   "SimpleRenderer/SimpleShader/SimpleShader.cpp" "SimpleRenderer/SimpleShader/SimpleShader.hpp" 
   "SimpleRenderer/SimpleShader/SimpleShaderManager.cpp" "SimpleRenderer/SimpleShader/SimpleShaderManager.hpp" 
   "SimpleRenderer/SimpleTexture/SimpleTexture.cpp" "SimpleRenderer/SimpleTexture/SimpleTexture.hpp" 
   "SimpleRenderer/SimpleTexture/SimpleTextureManager.cpp" "SimpleRenderer/SimpleTexture/SimpleTextureManager.hpp" 
 
+  "Spaces/Space.cpp" "Spaces/Space.hpp"
+  "Spaces/SpaceManager.cpp" "Spaces/SpaceManager.hpp"
+
   "Utilities/Utilities.hpp" 
   "Utilities/Mallocator.hpp"
   "Utilities/RuntimeError.hpp"
-)
+ )
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

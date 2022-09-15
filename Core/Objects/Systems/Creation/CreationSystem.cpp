@@ -63,7 +63,7 @@ namespace Barrage
   {
     ObjectArchetype* object_archetype = archetypeManager_->GetObjectArchetype(spawnType.archetypeName_);
     Pool* destination_pool = poolManager_->GetPool(spawnType.destinationPoolName_);
-    unsigned num_spawns = spawnType.sourceIndices_.size();
+    unsigned num_spawns = static_cast<unsigned>(spawnType.sourceIndices_.size());
     unsigned available_slots = destination_pool->GetAvailableSlots();
     unsigned start_index = destination_pool->size_ + destination_pool->queuedObjects_;
 

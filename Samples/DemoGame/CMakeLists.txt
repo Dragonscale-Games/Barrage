@@ -33,9 +33,8 @@
 add_executable(DemoGame "Source/main.cpp" 
 "Source/Game/DemoGame.cpp" "Source/Game/DemoGame.hpp" 
 "Source/Registration.cpp" 
-"Source/GameStates/GS_DemoGame.cpp" "Source/GameStates/GS_DemoGame.hpp" 
-"Source/Archetypes/DemoArchetypes.cpp" "Source/Archetypes/DemoArchetypes.hpp" 
-"Source/Systems/SpawnSystem.cpp" "Source/Systems/SpawnSystem.hpp")
+"Source/Initialization/DemoInitialization.cpp" "Source/Initialization/DemoInitialization.hpp" 
+"Source/Systems/SpawnSystem.cpp" "Source/Systems/SpawnSystem.hpp"  )
 target_link_libraries(DemoGame PUBLIC BarrageCore)
 target_include_directories(DemoGame PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(DemoGame PUBLIC "${CMAKE_SOURCE_DIR}/Core")

@@ -42,15 +42,20 @@ namespace Barrage
     RegisterCustomSpawnFuncs();
     SetSystemUpdateOrder();
   }
-  
-  void ObjectManager::Initialize()
-  {
-    CreateArchetypes();
-  }
 
   void ObjectManager::Update()
   {
     systemManager_.Update();
+  }
+
+  void ObjectManager::Draw()
+  {
+    DrawSystem* draw_system = dynamic_cast<DrawSystem*>(systemManager_.systems_["DrawSystem"]);
+
+    if (draw_system)
+    {
+      draw_system->Draw();
+    }
   }
 
   void ObjectManager::CreateObject(const std::string& poolName, const std::string& archetypeName)
@@ -125,6 +130,16 @@ namespace Barrage
     }
   }
 
+  void ObjectManager::CreatePoolAndObjects(const PoolInfo& poolInfo)
+  {
+    CreatePool(poolInfo.poolName_, poolInfo.archetypeName_, poolInfo.capacity_);
+
+    for (auto it = poolInfo.objects_.begin(); it != poolInfo.objects_.end(); ++it)
+    {
+      CreateObject(poolInfo.poolName_, *it);
+    }
+  }
+
   Pool* ObjectManager::GetPool(const std::string& name) const
   {
     return poolManager_.GetPool(name);
@@ -164,16 +179,6 @@ namespace Barrage
   void ObjectManager::RegisterSpawnFunc(const std::string name, SpawnFunc initializer)
   {
     spawnFuncManager_.RegisterSpawnFunc(name, initializer);
-  }
-
-  void ObjectManager::Draw()
-  {
-    DrawSystem* draw_system = dynamic_cast<DrawSystem*>(systemManager_.systems_["DrawSystem"]);
-
-    if (draw_system)
-    {
-      draw_system->Draw();
-    }
   }
 
   void ObjectManager::RegisterEngineComponents()

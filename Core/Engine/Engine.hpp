@@ -16,11 +16,9 @@
 #define Engine_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "GameStates/GameStateManager.hpp"
 #include "Input/InputManager.hpp"
-#include "Objects/ObjectManager.hpp"
-#include "Random/Random.hpp"
 #include "SimpleRenderer/SimpleRenderer.hpp"
+#include "Spaces/SpaceManager.hpp"
 
 namespace Barrage
 {   
@@ -57,17 +55,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the engine's gamestate manager.
-
-        \return
-          Returns a reference to the engine's gamestate Manager.
-      */
-      /**************************************************************/
-      GameStateManager& GSM();
-
-      /**************************************************************/
-      /*!
-        \brief
           Gets the engine's input manager.
 
         \return
@@ -75,28 +62,6 @@ namespace Barrage
       */
       /**************************************************************/
       InputManager& Input();
-
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the engine's input manager.
-
-        \return
-          Returns a reference to the engine's input manager.
-      */
-      /**************************************************************/
-      ObjectManager& Objects();
-
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the engine's random number generator.
-
-        \return
-          Returns a reference to the engine's random number generator.
-      */
-      /**************************************************************/
-      Random& RNG();
 
       /**************************************************************/
       /*!
@@ -109,12 +74,21 @@ namespace Barrage
       /**************************************************************/
       SimpleRenderer& Render();
 
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's space manager.
+
+        \return
+          Returns a reference to the engine's space manager.
+      */
+      /**************************************************************/
+      SpaceManager& Spaces();
+
     private:
-      GameStateManager gsManager_;  //!< Game state manager
       InputManager inputManager_;   //!< Input manager
-      ObjectManager objectManager_; //!< Object manager
-      Random rng_;                  //!< Random number generator
       SimpleRenderer renderer_;     //!< Renderer
+      SpaceManager spaceManager_;   //!< Space manager
 	};
 }
 

@@ -6,7 +6,8 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <description>
+   A space is a collection of scenes and game objects. Each space represents
+   a unique simulation.
  */
 /* ======================================================================== */
 
@@ -15,23 +16,41 @@
 #define Space_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/ObjectManager.hpp"
-#include "Scenes/SceneManager.hpp"
-#include "Random/Random.hpp"
+#include <Objects/ObjectManager.hpp>
+#include <Scenes/Scene.hpp>
 
 namespace Barrage
 {
-	//! <class description>
+  
+  //! Maps scene names to scenes
+  typedef std::unordered_map<std::string, Scene*> SceneMap;
+  
+  //! A collection of scenes and game objects
   class Space
 	{
     public:   
       Space();
 
+      ~Space();
+
+      void Update();
+
+      void Draw();
+
+      ObjectManager& GetObjectManager();
+
+      void AddScene(const std::string& name, Scene* scene);
+
       void SetScene(const std::string name);
+
+      void SetPaused(bool isPaused);
+
+      bool IsPaused();
 
     private:
       ObjectManager objectManager_;
-      SceneManager sceneManager_;
+      SceneMap scenes_;
+      bool paused_;
 	};
 }
 
