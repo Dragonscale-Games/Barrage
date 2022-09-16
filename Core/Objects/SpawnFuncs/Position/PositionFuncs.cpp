@@ -24,10 +24,11 @@ namespace Barrage
 
       for (unsigned i = 0; i < numNewObjects; ++i)
       {
+        unsigned dest_index = i + firstObjIndex;
         unsigned source_index = sourceIndices[i];
 
-        dest_positions[i + firstObjIndex].x_ = source_positions[source_index].x_;
-        dest_positions[i + firstObjIndex].y_ = source_positions[source_index].y_;
+        dest_positions[dest_index].x_ = source_positions[source_index].x_;
+        dest_positions[dest_index].y_ = source_positions[source_index].y_;
       }
     }
   }
