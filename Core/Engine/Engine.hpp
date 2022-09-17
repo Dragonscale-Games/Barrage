@@ -16,6 +16,7 @@
 #define Engine_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "FramerateController/FramerateController.hpp"
 #include "Input/InputManager.hpp"
 #include "SimpleRenderer/SimpleRenderer.hpp"
 #include "Spaces/SpaceManager.hpp"
@@ -55,6 +56,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the engine's frame rate controller.
+
+        \return
+          Returns a reference to the engine's frame rate controller.
+      */
+      /**************************************************************/
+      FramerateController& Frames();
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the engine's input manager.
 
         \return
@@ -86,10 +98,11 @@ namespace Barrage
       SpaceManager& Spaces();
 
     private:
-      InputManager inputManager_;   //!< Input manager
-      SimpleRenderer renderer_;     //!< Renderer
-      SpaceManager spaceManager_;   //!< Space manager
-	};
+      FramerateController framerateController_; //!< Framerate controller
+      InputManager inputManager_;               //!< Input manager
+      SimpleRenderer renderer_;                 //!< Renderer
+      SpaceManager spaceManager_;               //!< Space manager
+	}; 
 }
 
 ////////////////////////////////////////////////////////////////////////////////

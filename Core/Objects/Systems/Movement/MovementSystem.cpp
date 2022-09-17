@@ -59,7 +59,7 @@ namespace Barrage
 
   void MovementSystem::UpdatePlayerMovement(Pool* pool)
   {
-    float speed = 7.0f;
+    float speed = 3.5f;
     Velocity player_velocity;
 
     if (Engine::Instance->Input().KeyIsDown(KEY_SHIFT_LEFT))

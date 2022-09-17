@@ -53,17 +53,24 @@ namespace Demo
 
   void Game::Update()
   {
+    engine_.Frames().StartFrame();
+    
     engine_.Input().Update();
 
+    unsigned num_ticks = engine_.Frames().ConsumeTicks();
+    for (unsigned i = 0; i < num_ticks; ++i)
+    {
+      engine_.Spaces().Update();
+    }
+
     engine_.Render().StartFrame();
-
-    engine_.Spaces().Update();
     engine_.Spaces().Draw();
-
     engine_.Render().EndFrame();
 
     if (engine_.Render().WindowClosed())
       isRunning_ = false;
+
+    engine_.Frames().EndFrame();
   }
 
   void Game::Shutdown()

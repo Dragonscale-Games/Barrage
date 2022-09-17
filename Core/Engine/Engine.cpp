@@ -19,6 +19,7 @@ namespace Barrage
   Engine* Engine::Instance = nullptr;
 
   Engine::Engine() :
+    framerateController_(),
     inputManager_(),
     renderer_(),
     spaceManager_()
@@ -31,6 +32,7 @@ namespace Barrage
     
     renderer_.Initialize();
     inputManager_.Initialize(renderer_.GetWindowHandle());
+    framerateController_.Initialize(renderer_.GetWindowHandle(), FramerateController::FpsMode::FPS_120);
   }
 
   void Engine::Shutdown()
@@ -39,6 +41,11 @@ namespace Barrage
     renderer_.Shutdown();
 
     Instance = nullptr;
+  }
+
+  FramerateController& Engine::Frames()
+  {
+    return framerateController_;
   }
 
   InputManager& Engine::Input()

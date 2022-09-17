@@ -26,6 +26,7 @@ namespace Barrage
     engine_(),
     gui_(),
     frameTime_(),
+    numTicks_(0),
     statePaused_(false),
     isRunning_(false)
   {
@@ -65,25 +66,23 @@ namespace Barrage
 
   void Editor::Update()
   { 
-    auto t1 = std::chrono::high_resolution_clock::now();
+    engine_.Frames().StartFrame();
     
     engine_.Input().Update();
 
     gui_.StartWidgets();
-
     MakeTestWidget();
-
     gui_.EndWidgets();
 
+    numTicks_ = engine_.Frames().ConsumeTicks();
+    for (unsigned i = 0; i < numTicks_; ++i)
+    {
+      engine_.Spaces().Update();
+    }
+
     engine_.Render().StartFrame();
-
-    engine_.Spaces().Update();
     engine_.Spaces().Draw();
-
     gui_.DrawWidgets();
-
-    auto t2 = std::chrono::high_resolution_clock::now();
-
     engine_.Render().EndFrame();
 
     if (engine_.Render().WindowClosed())
@@ -91,9 +90,8 @@ namespace Barrage
 
     engine_.Spaces().SetSpacePaused("Demo Space", statePaused_);
 
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
-    
-    frameTime_ = duration.count();
+    engine_.Frames().EndFrame();
+    frameTime_ = engine_.Frames().DT();
   }
 
   void Editor::Shutdown()
@@ -117,10 +115,59 @@ namespace Barrage
     ImGui::Text("");
     
     std::string frametime("Frame time: ");
-    frametime = frametime + std::to_string(frameTime_) + " milliseconds";
+    frametime = frametime + std::to_string(frameTime_) + " microseconds";
     ImGui::Text(frametime.c_str());
     ImGui::Text("");
 
+    std::string accumtime("Accumulator: ");
+    accumtime = accumtime + std::to_string(engine_.Frames().Accumulator()) + " microseconds";
+    ImGui::Text(accumtime.c_str());
+    ImGui::Text("");
+
+    double fps;
+
+    if (frameTime_ > 0)
+      fps = 1000000.0 / static_cast<double>(frameTime_);
+    else
+      fps = 0.0;
+
+    std::string fpstime("FPS: ");
+    fpstime = fpstime + std::to_string(fps);
+    ImGui::Text(fpstime.c_str());
+    ImGui::Text("");
+
+    std::string ticksdisplay("Number of ticks per frame: ");
+    ticksdisplay = ticksdisplay + std::to_string(numTicks_);
+    ImGui::Text(ticksdisplay.c_str());
+    ImGui::Text("");
+
+    if (ImGui::Button("60 fps"))
+    {
+      engine_.Frames().SetFPSMode(FramerateController::FpsMode::FPS_60);
+    }
+
+    if (ImGui::Button("120 fps"))
+    {
+      engine_.Frames().SetFPSMode(FramerateController::FpsMode::FPS_120);
+    }
+
+    if (ImGui::Button("240 fps"))
+    {
+      engine_.Frames().SetFPSMode(FramerateController::FpsMode::FPS_240);
+    }
+
+    ImGui::Text("");
+
+    if (ImGui::Button("Enable vsync"))
+    {
+      engine_.Frames().SetVsync(true);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Disable vsync"))
+    {
+      engine_.Frames().SetVsync(false);
+    }
+    
     ImGui::End();
   }
 }

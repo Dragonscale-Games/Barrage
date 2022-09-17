@@ -74,11 +74,12 @@ namespace Barrage
       void MakeTestWidget();
 
     private:
-      Engine engine_;  //!< Barrage game engine
-      GUI gui_;        //!< Contains all widgets/user controls
+      Engine engine_;       //!< Barrage game engine
+      GUI gui_;             //!< Contains all widgets/user controls
       long long frameTime_; //!< TEMPORARY: holds the current frame time in milliseconds
+      unsigned numTicks_;   //!< TEMPORARY: holds number of ticks that should be performed this frame
       bool statePaused_;    //!< TEMPORARY: stores whether game state is paused
-      bool isRunning_; //!< Keeps track of whether the editor is running
+      bool isRunning_;      //!< Keeps track of whether the editor is running
 	};
 }
 

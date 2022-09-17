@@ -53,8 +53,9 @@ add_library(BarrageCore STATIC
 
   "File/FileManager.hpp" "File/FileManager.cpp" "File/${OS_IMPL_FOLDER}/FileManager.cpp"
   "File/FileManager.tpp"
-
   "File/Graphics/ImageSource.hpp" "File/Graphics/ImageSource.cpp"
+
+  "FramerateController/FramerateController.cpp" "FramerateController/FramerateController.hpp"
 
   "Input/InputManager.cpp" "Input/InputManager.hpp" 
   "Input/KeyMap.hpp" 
@@ -126,8 +127,7 @@ add_library(BarrageCore STATIC
 
   "Utilities/Utilities.hpp" 
   "Utilities/Mallocator.hpp"
-  "Utilities/RuntimeError.hpp"
- )
+  "Utilities/RuntimeError.hpp" )
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
