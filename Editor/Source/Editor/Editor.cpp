@@ -70,15 +70,15 @@ namespace Barrage
     
     engine_.Input().Update();
 
-    gui_.StartWidgets();
-    MakeTestWidget();
-    gui_.EndWidgets();
-
     numTicks_ = engine_.Frames().ConsumeTicks();
     for (unsigned i = 0; i < numTicks_; ++i)
     {
       engine_.Spaces().Update();
     }
+
+    gui_.StartWidgets();
+    MakeTestWidget();
+    gui_.EndWidgets();
 
     engine_.Render().StartFrame();
     engine_.Spaces().Draw();
@@ -119,11 +119,6 @@ namespace Barrage
     ImGui::Text(frametime.c_str());
     ImGui::Text("");
 
-    std::string accumtime("Accumulator: ");
-    accumtime = accumtime + std::to_string(engine_.Frames().Accumulator()) + " microseconds";
-    ImGui::Text(accumtime.c_str());
-    ImGui::Text("");
-
     double fps;
 
     if (frameTime_ > 0)
@@ -143,17 +138,27 @@ namespace Barrage
 
     if (ImGui::Button("60 fps"))
     {
-      engine_.Frames().SetFPSMode(FramerateController::FpsMode::FPS_60);
+      engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_60);
     }
 
     if (ImGui::Button("120 fps"))
     {
-      engine_.Frames().SetFPSMode(FramerateController::FpsMode::FPS_120);
+      engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_120);
+    }
+
+    if (ImGui::Button("180 fps"))
+    {
+      engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_180);
     }
 
     if (ImGui::Button("240 fps"))
     {
-      engine_.Frames().SetFPSMode(FramerateController::FpsMode::FPS_240);
+      engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_240);
+    }
+
+    if (ImGui::Button("No cap"))
+    {
+      engine_.Frames().SetFpsCap(FramerateController::FpsCap::NO_CAP);
     }
 
     ImGui::Text("");

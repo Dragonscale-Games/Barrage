@@ -6,7 +6,10 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Controls the game's FPS.
+   Controls the game's tick rate and frame rate. The tick rate of a game is
+   the number of times per second the game simulation is updated. The frame
+   rate is the number of times per second input is polled and the game is
+   rendered.
  */
  /* ======================================================================== */
 
@@ -27,13 +30,13 @@ namespace Barrage
     dt_(0),
     usingVsync_(true)
   {
-    glfwSwapInterval(1);
   }
 
-  void FramerateController::Initialize(GLFWwindow* window, FpsMode fpsMode)
+  void FramerateController::Initialize(GLFWwindow* window, FpsCap fpsCap, bool useVsync)
   {
     window_ = window;
-    SetFPSMode(fpsMode);
+    SetVsync(useVsync);
+    SetFpsCap(fpsCap);
     StartFrame(); // for safety, so the frame start time is never uninitialized
   }
 
@@ -51,29 +54,39 @@ namespace Barrage
     else
       EndFrameSleep();
 
-    if (dt_ >= TICK_TIME * 4)
-      dt_ = TICK_TIME * 4;
+    // clamp dt to prevent weirdness on unexpectedly long frames
+    if (dt_ >= DT_60HZ)
+      dt_ = DT_60HZ;
 
-    if (dt_ % TICK_TIME < 100)
+    // if dt is only slightly longer than a nonzero number of ticks, trim the excess time
+    if (dt_ % TICK_TIME < TICK_TIME / 10 && dt_ >= TICK_TIME)
       dt_ -= dt_ % TICK_TIME;
 
     accumulator_ += dt_;
   }
 
-  void FramerateController::SetFPSMode(FpsMode fpsMode)
+  void FramerateController::SetFpsCap(FpsCap fpsCap)
   {
-    switch (fpsMode)
+    switch (fpsCap)
     {
-      case FpsMode::FPS_60:
-        minimumFrameTime_ = TICK_TIME * 4;
+      case FpsCap::FPS_60:
+        minimumFrameTime_ = DT_60HZ;
         break;
 
-      case FpsMode::FPS_120:
-        minimumFrameTime_ = TICK_TIME * 2;
+      case FpsCap::FPS_120:
+        minimumFrameTime_ = DT_60HZ / 2;
         break;
 
-      case FpsMode::FPS_240:
-        minimumFrameTime_ = TICK_TIME;
+      case FpsCap::FPS_180:
+        minimumFrameTime_ = DT_60HZ / 3;
+        break;
+
+      case FpsCap::FPS_240:
+        minimumFrameTime_ = DT_60HZ / 4;
+        break;
+
+      default:
+        minimumFrameTime_ = 0;
         break;
     }
   }
@@ -97,22 +110,15 @@ namespace Barrage
     return dt_;
   }
 
-  long long FramerateController::Accumulator()
-  {
-    return accumulator_;
-  }
-
   unsigned FramerateController::ConsumeTicks()
   {
-    unsigned num_ticks = 0;
+    unsigned num_ticks = accumulator_ / TICK_TIME;
 
-    for (unsigned i = 0; i < 4; ++i)
+    accumulator_ = accumulator_ % TICK_TIME;
+
+    if (num_ticks > TICKS_PER_FRAME_60HZ)
     {
-      if (accumulator_ >= TICK_TIME)
-      {
-        num_ticks++;
-        accumulator_ -= TICK_TIME;
-      }
+      num_ticks = TICKS_PER_FRAME_60HZ;
     }
 
     return num_ticks;
@@ -139,7 +145,7 @@ namespace Barrage
 
     while (duration.count() < minimumFrameTime_)
     {
-      std::this_thread::sleep_for(std::chrono::microseconds(minimumFrameTime_ - duration.count()));
+      std::this_thread::sleep_for(std::chrono::milliseconds(1));
       
       frameEnd_ = std::chrono::high_resolution_clock::now();
       duration = std::chrono::duration_cast<std::chrono::microseconds>(frameEnd_ - frameStart_);
