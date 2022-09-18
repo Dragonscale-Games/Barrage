@@ -35,8 +35,6 @@ namespace Barrage
       {
         FPS_60,
         FPS_120,
-        FPS_180,
-        FPS_240,
         NO_CAP
       };
 
@@ -63,7 +61,7 @@ namespace Barrage
           If true, vsync is turned on. If false, vsync is turned off.
       */
       /**************************************************************/
-      void Initialize(GLFWwindow* window, FpsCap fpsCap = FpsCap::FPS_120, bool useVsync = true);
+      void Initialize(GLFWwindow* window, FpsCap fpsCap, bool useVsync);
 
       /**************************************************************/
       /*!
@@ -175,7 +173,7 @@ namespace Barrage
       bool usingVsync_;            //!< Keeps track of whether user is using vsync
 
       static const long long DT_60HZ = 16800;                            //!< Microseconds per frame at 60fps (slightly longer)
-      static const long long TICKS_PER_FRAME_60HZ = 4;                   //!< Ticks per frame at 60fps (generally a power of 2)
+      static const long long TICKS_PER_FRAME_60HZ = 2;                   //!< Ticks per frame at 60fps (generally a power of 2)
       static const long long TICK_TIME = DT_60HZ / TICKS_PER_FRAME_60HZ; //!< Microseconds per tick
   };
 }

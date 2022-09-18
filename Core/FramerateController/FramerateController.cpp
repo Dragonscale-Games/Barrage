@@ -77,14 +77,6 @@ namespace Barrage
         minimumFrameTime_ = DT_60HZ / 2;
         break;
 
-      case FpsCap::FPS_180:
-        minimumFrameTime_ = DT_60HZ / 3;
-        break;
-
-      case FpsCap::FPS_240:
-        minimumFrameTime_ = DT_60HZ / 4;
-        break;
-
       default:
         minimumFrameTime_ = 0;
         break;

@@ -32,7 +32,7 @@ namespace Barrage
     
     renderer_.Initialize();
     inputManager_.Initialize(renderer_.GetWindowHandle());
-    framerateController_.Initialize(renderer_.GetWindowHandle(), FramerateController::FpsCap::FPS_120);
+    framerateController_.Initialize(renderer_.GetWindowHandle(), FramerateController::FpsCap::FPS_120, true);
   }
 
   void Engine::Shutdown()

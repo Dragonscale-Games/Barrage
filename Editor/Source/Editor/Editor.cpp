@@ -146,16 +146,6 @@ namespace Barrage
       engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_120);
     }
 
-    if (ImGui::Button("180 fps"))
-    {
-      engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_180);
-    }
-
-    if (ImGui::Button("240 fps"))
-    {
-      engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_240);
-    }
-
     if (ImGui::Button("No cap"))
     {
       engine_.Frames().SetFpsCap(FramerateController::FpsCap::NO_CAP);
