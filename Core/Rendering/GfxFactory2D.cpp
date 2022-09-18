@@ -98,6 +98,7 @@ namespace Barrage
     textureSpecs.width_ = width;
     textureSpecs.height_ = height;
     textureSpecs.pixels_ = reinterpret_cast<const unsigned char* const>(pixels);
+    textureSpecs.filter_ = FILTER_LINEAR;
 
     assert(manager_);
     GfxManager2D::TextureID newTexture = manager_->CreateTexture(textureSpecs);
