@@ -104,7 +104,7 @@ namespace Barrage
 
   unsigned FramerateController::ConsumeTicks()
   {
-    unsigned num_ticks = accumulator_ / TICK_TIME;
+    unsigned num_ticks = static_cast<unsigned>(accumulator_ / TICK_TIME);
 
     accumulator_ = accumulator_ % TICK_TIME;
 

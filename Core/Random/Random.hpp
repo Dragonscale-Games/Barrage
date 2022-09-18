@@ -44,6 +44,18 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Sets a new starting seed for the generator. If a seed of 0
+          is provided, a random seed will be generated. 
+
+        \param seed
+          The new starting seed for the generator.
+      */
+      /**************************************************************/
+      void SetSeed(unsigned long long seed = 0);
+
+      /**************************************************************/
+      /*!
+        \brief
           Generates a random float between min and max (inclusive).
 
         \param min

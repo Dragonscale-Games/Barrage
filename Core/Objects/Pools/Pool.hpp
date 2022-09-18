@@ -61,6 +61,36 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Determines if a pool has a given component array.
+
+        \param componentArrayName
+          The name of the component array to check for.
+
+        \return
+          Returns true if the pool has the component array, returns 
+          false otherwise.
+      */
+      /**************************************************************/
+      bool HasComponentArray(const std::string& componentArrayName);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Determines if a pool has a given shared component.
+
+        \param sharedComponentName
+          The name of the shared component to check for.
+
+        \return
+          Returns true if the pool has the shared component, returns
+          false otherwise.
+      */
+      /**************************************************************/
+      bool HasSharedComponent(const std::string& sharedComponentName);
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the number of available object slots in the pool.
 
         \return

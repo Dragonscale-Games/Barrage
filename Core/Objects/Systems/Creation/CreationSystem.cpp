@@ -17,7 +17,8 @@
 namespace Barrage
 {
   static const unsigned ALL_POOLS = 0;
-  
+  static const unsigned HANDLE_POOLS = 1;
+
   CreationSystem::CreationSystem() :
     System(),
     archetypeManager_(nullptr),
@@ -25,12 +26,18 @@ namespace Barrage
     poolManager_(nullptr)
   {
     PoolType all_pool_type;
-    // pool type has no required tags or components because all pools will be subscribed to the creation system
+    // this pool type has no required tags or components because all pools will be subscribed to the creation system
     poolTypes_[ALL_POOLS] = all_pool_type;
+
+    PoolType handle_pool_type;
+    handle_pool_type.AddComponentName("HandleDirectory");
+    handle_pool_type.AddComponentName("HandleIndexArray");
+    poolTypes_[HANDLE_POOLS] = handle_pool_type;
   }
 
   void CreationSystem::Update()
   {
+    UpdatePoolGroup(HANDLE_POOLS, AssignHandles);
     UpdatePoolGroup(ALL_POOLS, SpawnObjects);
   }
 
@@ -57,6 +64,16 @@ namespace Barrage
       return;
 
     CreateObjects(archetype, destinationPool, 1, false);
+
+    if (destinationPool->HasComponentArray("HandleIndexArray") && destinationPool->HasSharedComponent("HandleDirectory"))
+    {
+      HandleDirectory& handle_directory = *destinationPool->GetSharedComponent<HandleDirectory>("HandleDirectory");
+      HandleIndexArray& handle_index_array = *destinationPool->GetComponentArray<HandleIndexArray>("HandleIndexArray");
+
+      unsigned object_index = destinationPool->size_ - 1;
+      HandleIndex& handle_index = handle_index_array[object_index];
+      handle_index.index_ = handle_directory.CreateHandle(object_index);
+    }
   }
   
   void CreationSystem::QueueSpawns(Pool* sourcePool, SpawnType& spawnType)
@@ -120,5 +137,23 @@ namespace Barrage
   {
     pool->size_ += pool->queuedObjects_;
     pool->queuedObjects_ = 0;
+  }
+
+  void CreationSystem::AssignHandles(Pool* pool)
+  {
+    HandleDirectory& handle_directory = *pool->GetSharedComponent<HandleDirectory>("HandleDirectory");
+    HandleIndexArray& handle_index_array = *pool->GetComponentArray<HandleIndexArray>("HandleIndexArray");
+
+    unsigned start_index = pool->size_;
+    unsigned num_queued_objects = pool->queuedObjects_;
+
+    for (unsigned i = 0; i < num_queued_objects; ++i)
+    {
+      unsigned object_index = start_index + i;
+      
+      HandleIndex& handle_index = handle_index_array[object_index];
+
+      handle_index.index_ = handle_directory.CreateHandle(object_index);
+    }
   }
 }

@@ -174,6 +174,17 @@ namespace Barrage
       /**************************************************************/
       static void SpawnObjects(Pool* pool);
 
+      /**************************************************************/
+      /*!
+        \brief
+          Creates a handle for each object that needs one.
+
+        \param pool
+          The pool to update.
+      */
+      /**************************************************************/
+      static void AssignHandles(Pool* pool);
+
     private:
       ArchetypeManager* archetypeManager_;  //!< Used to get object archetypes
       SpawnFuncManager* spawnFuncManager_;  //!< Used to look up spawn functions

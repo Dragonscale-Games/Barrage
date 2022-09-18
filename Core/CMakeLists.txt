@@ -85,6 +85,7 @@ add_library(BarrageCore STATIC
   "Objects/Pools/PoolType.cpp" "Objects/Pools/PoolType.hpp" 
   "Objects/Pools/PoolInfo.cpp" "Objects/Pools/PoolInfo.hpp"
   "Objects/Components/ComponentArrays/DestructibleArray.hpp" 
+  "Objects/Components/ComponentArrays/HandleIndexArray.hpp" 
   "Objects/Components/ComponentArrays/PositionArray.hpp" 
   "Objects/Components/ComponentArrays/ScaleArray.hpp" 
   "Objects/Components/ComponentArrays/RotationArray.hpp" 
@@ -93,6 +94,7 @@ add_library(BarrageCore STATIC
   "Objects/Components/ComponentArrays/LifetimeArray.hpp" 
   "Objects/Components/ComponentArrays/VelocityArray.hpp" 
   "Objects/Components/SharedComponents/CircleCollider.hpp" 
+  "Objects/Components/SharedComponents/HandleDirectory.hpp" 
   "Objects/Components/ComponentArrays/AngularSpeedArray.hpp" 
 
   "Objects/Systems/Movement/MovementSystem.hpp" "Objects/Systems/Movement/MovementSystem.cpp"

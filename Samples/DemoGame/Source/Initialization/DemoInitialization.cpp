@@ -48,7 +48,6 @@ namespace Demo
     spawner_pool.objects_.push_back("Spawner Object Archetype");
 
     PoolInfo bullet_pool("Bullet Pool", "Bullet Pool Archetype", MAX_BULLETS);
-    bullet_pool.objects_.push_back("Bullet Object Archetype");
 
     Scene* demo_scene = new Scene;
 

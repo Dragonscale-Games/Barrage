@@ -35,6 +35,19 @@ namespace Barrage
     return startSeed_;
   }
 
+  void Random::SetSeed(unsigned long long seed)
+  {
+    if (seed == 0)
+    {
+      GenerateRandomSeed();
+    }
+    else
+    {
+      currentSeed_ = seed;
+      startSeed_ = seed;
+    }
+  }
+
   float Random::RangeFloat(float min, float max)
   {
     return min + Float() * (max - min);

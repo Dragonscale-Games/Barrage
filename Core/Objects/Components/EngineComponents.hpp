@@ -17,6 +17,7 @@
 
 #include "ComponentArrays/AngularSpeedArray.hpp"
 #include "ComponentArrays/DestructibleArray.hpp"
+#include "ComponentArrays/HandleIndexArray.hpp"
 #include "ComponentArrays/LifetimeArray.hpp"
 #include "ComponentArrays/PositionArray.hpp"
 #include "ComponentArrays/RotationArray.hpp"
@@ -25,6 +26,7 @@
 
 #include "SharedComponents/BoundaryBox.hpp"
 #include "SharedComponents/CircleCollider.hpp"
+#include "SharedComponents/HandleDirectory.hpp"
 #include "SharedComponents/RNG.hpp"
 #include "SharedComponents/Spawner.hpp"
 #include "SharedComponents/Sprite.hpp"
