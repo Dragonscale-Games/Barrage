@@ -17,6 +17,7 @@
 #include <rttr/registration.h>
 #include <rttr/constructor.h>
 #include <Objects/Components/EngineComponents.hpp>
+#include <Objects/Archetypes/PoolArchetype/PoolArchetype.hpp>
 
 namespace Barrage
 {
