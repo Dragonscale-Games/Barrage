@@ -16,7 +16,7 @@
 namespace Barrage
 {
   static const unsigned BASIC_DESTRUCTIBLE_POOLS = 0;
-  static const unsigned HANDLE_POOLS = 1;
+  static const unsigned DIRECTORY_POOLS = 1;
   
   DestructionSystem::DestructionSystem() :
     System()
@@ -27,23 +27,23 @@ namespace Barrage
 
     PoolType handle_type;
     handle_type.AddComponentName("DestructibleArray");
-    handle_type.AddComponentName("HandleIndexArray");
-    handle_type.AddComponentName("HandleDirectory");
-    poolTypes_[HANDLE_POOLS] = handle_type;
+    handle_type.AddComponentName("ObjectDirectory");
+    handle_type.AddComponentName("DirectoryIndexArray");
+    poolTypes_[DIRECTORY_POOLS] = handle_type;
   }
   
   void DestructionSystem::Update()
   {
-    UpdatePoolGroup(HANDLE_POOLS, UpdateDeadHandles);
+    UpdatePoolGroup(DIRECTORY_POOLS, UpdateDeadHandles);
     UpdatePoolGroup(BASIC_DESTRUCTIBLE_POOLS, DestroyObjects);
-    UpdatePoolGroup(HANDLE_POOLS, UpdateAliveHandles);
+    UpdatePoolGroup(DIRECTORY_POOLS, UpdateAliveHandles);
   }
 
   void DestructionSystem::UpdateDeadHandles(Pool* pool)
   {
     DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("DestructibleArray");
-    HandleIndexArray& handle_index_array = *pool->GetComponentArray<HandleIndexArray>("HandleIndexArray");
-    HandleDirectory& handle_directory = *pool->GetSharedComponent<HandleDirectory>("HandleDirectory");
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
+    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
 
     unsigned num_objects = pool->size_;
 
@@ -51,24 +51,24 @@ namespace Barrage
     {
       if (destructible_array[i].destroyed_)
       {
-        unsigned handle_index = handle_index_array[i].index_;
+        unsigned directory_index = directory_index_array[i].index_;
 
-        handle_directory.FreeHandle(handle_index);
+        object_directory.FreeHandle(directory_index);
       }
     }
   }
 
   void DestructionSystem::UpdateAliveHandles(Pool* pool)
   {
-    HandleIndexArray& handle_index_array = *pool->GetComponentArray<HandleIndexArray>("HandleIndexArray");
-    HandleDirectory& handle_directory = *pool->GetSharedComponent<HandleDirectory>("HandleDirectory");
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
+    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
 
     unsigned num_objects = pool->size_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      unsigned handle_index = handle_index_array[i].index_;
-      Handle& handle = handle_directory.GetHandle(handle_index);
+      unsigned directory_index = directory_index_array[i].index_;
+      ObjectHandle& handle = object_directory.GetHandle(directory_index);
 
       handle.poolIndex_ = i;
     }

@@ -185,7 +185,7 @@ namespace Barrage
   {
     RegisterComponent<AngularSpeedArray>("AngularSpeedArray");
     RegisterComponent<DestructibleArray>("DestructibleArray");
-    RegisterComponent<HandleIndexArray>("HandleIndexArray");
+    RegisterComponent<DirectoryIndexArray>("DirectoryIndexArray");
     RegisterComponent<LifetimeArray>("LifetimeArray");
     RegisterComponent<PositionArray>("PositionArray");
     RegisterComponent<RotationArray>("RotationArray");
@@ -194,7 +194,7 @@ namespace Barrage
 
     RegisterComponent<BoundaryBox>("BoundaryBox");
     RegisterComponent<CircleCollider>("CircleCollider");
-    RegisterComponent<HandleDirectory>("HandleDirectory");
+    RegisterComponent<ObjectDirectory>("ObjectDirectory");
     RegisterComponent<Spawner>("Spawner");
     RegisterComponent<Sprite>("Sprite");
     RegisterComponent<RNG>("RNG");

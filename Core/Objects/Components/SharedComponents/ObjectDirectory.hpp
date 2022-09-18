@@ -1,25 +1,25 @@
 /* ======================================================================== */
 /*!
- * \file            HandleDirectory.hpp
+ * \file            ObjectDirectory.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The HandleDirectory component, together with the HandleIndex component, 
+   The ObjectDirectory component, together with the DirectoryIndex component, 
    allows specific game objects to be located inside a pool.
 
-   The HandleDirectory keeps track of the pool index of each game object.
+   The ObjectDirectory keeps track of the pool index of each game object.
  */
  /* ======================================================================== */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef HandleDirectory_BARRAGE_H
-#define HandleDirectory_BARRAGE_H
+#ifndef ObjectDirectory_BARRAGE_H
+#define ObjectDirectory_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../BaseClasses/SharedComponent.hpp"
-#include "../ComponentArrays/HandleIndexArray.hpp"
+#include "../ComponentArrays/DirectoryIndexArray.hpp"
 
 #include <vector>
 
@@ -27,19 +27,19 @@ namespace Barrage
 {
   static const unsigned long long DEAD_OBJECT_ID = ULLONG_MAX;
   
-  struct Handle
+  struct ObjectHandle
   {
     unsigned long long id_;
     unsigned poolIndex_;
   };
   
   //! Tells which index corresponds to a specific object at any given time
-  class HandleDirectory : public SharedComponent
+  class ObjectDirectory : public SharedComponent
   {
     public:
-      inline HandleDirectory() : handles_(), freeList_(), currentId_(0) {}
+      inline ObjectDirectory() : handles_(), freeList_(), currentId_(0) {}
 
-      inline std::string GetClassName() override { return "HandleDirectory"; }
+      inline std::string GetClassName() override { return "ObjectDirectory"; }
 
       inline unsigned CreateHandle(unsigned poolIndex)
       {
@@ -56,7 +56,7 @@ namespace Barrage
         {
           handle_index = static_cast<unsigned>(handles_.size());
 
-          Handle new_handle;
+          ObjectHandle new_handle;
 
           new_handle.poolIndex_ = poolIndex;
           new_handle.id_ = currentId_++;
@@ -67,19 +67,19 @@ namespace Barrage
         return handle_index;
       }
 
-      inline Handle& GetHandle(unsigned handleIndex)
+      inline ObjectHandle& GetHandle(unsigned directoryIndex)
       {
-        return handles_[handleIndex];
+        return handles_[directoryIndex];
       }
 
-      inline void FreeHandle(unsigned handleIndex)
+      inline void FreeHandle(unsigned directoryIndex)
       {
-        freeList_.push_back(handleIndex);
-        handles_[handleIndex].id_ = DEAD_OBJECT_ID;
+        freeList_.push_back(directoryIndex);
+        handles_[directoryIndex].id_ = DEAD_OBJECT_ID;
       }
 
     public:
-      std::vector<Handle> handles_;
+      std::vector<ObjectHandle> handles_;
       std::vector<unsigned> freeList_;
       unsigned long long currentId_;
 
@@ -87,5 +87,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // Addresser_BARRAGE_H
+#endif // ObjectDirectory_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

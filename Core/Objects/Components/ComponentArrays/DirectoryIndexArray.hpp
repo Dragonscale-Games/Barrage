@@ -1,19 +1,19 @@
 /* ======================================================================== */
 /*!
- * \file            HandleIndexArray.hpp
+ * \file            DirectoryIndexArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The HandleIndex component, together with the HandleDirectory component, allows
-   specific game objects to be located inside a pool.
+   The DirectoryIndex component, together with the ObjectDirectory component, 
+   allows specific game objects to be located inside a pool.
  */
  /* ======================================================================== */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef HandleIndexArray_BARRAGE_H
-#define HandleIndexArray_BARRAGE_H
+#ifndef DirectoryIndexArray_BARRAGE_H
+#define DirectoryIndexArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../BaseClasses/ComponentArray.hpp"
@@ -24,20 +24,20 @@ namespace Barrage
 {
     static const unsigned NO_HANDLE = UINT_MAX;
     
-    //!< An object's index in the HandleDirectory
-    struct HandleIndex
+    //!< An object's index in the ObjectDirectory
+    struct DirectoryIndex
     {
         unsigned index_; //!< An object's index in the HandleDirectory
 
-        inline HandleIndex() : index_(NO_HANDLE) {}
+        inline DirectoryIndex() : index_(NO_HANDLE) {}
     };
 
-    typedef ComponentArrayT<HandleIndex> HandleIndexArray;
+    typedef ComponentArrayT<DirectoryIndex> DirectoryIndexArray;
 
     template <>
-    inline std::string HandleIndexArray::GetClassName() { return "HandleIndexArray"; }
+    inline std::string DirectoryIndexArray::GetClassName() { return "DirectoryIndexArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // HandleIndexArray_BARRAGE_H
+#endif // DirectoryIndexArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -30,8 +30,8 @@ namespace Barrage
     poolTypes_[ALL_POOLS] = all_pool_type;
 
     PoolType handle_pool_type;
-    handle_pool_type.AddComponentName("HandleDirectory");
-    handle_pool_type.AddComponentName("HandleIndexArray");
+    handle_pool_type.AddComponentName("ObjectDirectory");
+    handle_pool_type.AddComponentName("DirectoryIndexArray");
     poolTypes_[HANDLE_POOLS] = handle_pool_type;
   }
 
@@ -65,14 +65,14 @@ namespace Barrage
 
     CreateObjects(archetype, destinationPool, 1, false);
 
-    if (destinationPool->HasComponentArray("HandleIndexArray") && destinationPool->HasSharedComponent("HandleDirectory"))
+    if (destinationPool->HasComponentArray("DirectoryIndexArray") && destinationPool->HasSharedComponent("ObjectDirectory"))
     {
-      HandleDirectory& handle_directory = *destinationPool->GetSharedComponent<HandleDirectory>("HandleDirectory");
-      HandleIndexArray& handle_index_array = *destinationPool->GetComponentArray<HandleIndexArray>("HandleIndexArray");
+      ObjectDirectory& object_directory = *destinationPool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
+      DirectoryIndexArray& directory_index_array = *destinationPool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
 
       unsigned object_index = destinationPool->size_ - 1;
-      HandleIndex& handle_index = handle_index_array[object_index];
-      handle_index.index_ = handle_directory.CreateHandle(object_index);
+      DirectoryIndex& directory_index = directory_index_array[object_index];
+      directory_index.index_ = object_directory.CreateHandle(object_index);
     }
   }
   
@@ -141,8 +141,8 @@ namespace Barrage
 
   void CreationSystem::AssignHandles(Pool* pool)
   {
-    HandleDirectory& handle_directory = *pool->GetSharedComponent<HandleDirectory>("HandleDirectory");
-    HandleIndexArray& handle_index_array = *pool->GetComponentArray<HandleIndexArray>("HandleIndexArray");
+    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
 
     unsigned start_index = pool->size_;
     unsigned num_queued_objects = pool->queuedObjects_;
@@ -151,9 +151,9 @@ namespace Barrage
     {
       unsigned object_index = start_index + i;
       
-      HandleIndex& handle_index = handle_index_array[object_index];
+      DirectoryIndex& directory_index = directory_index_array[object_index];
 
-      handle_index.index_ = handle_directory.CreateHandle(object_index);
+      directory_index.index_ = object_directory.CreateHandle(object_index);
     }
   }
 }
