@@ -39,6 +39,7 @@ SOFTWARE.
 #include "SimpleTexture/SimpleTextureManager.hpp"
 
 #include <glad/gl.h>
+//#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 

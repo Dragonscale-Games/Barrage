@@ -21,6 +21,9 @@
 #include "SimpleRenderer/SimpleRenderer.hpp"
 #include "Spaces/SpaceManager.hpp"
 
+#include "Rendering/GfxDraw2D.hpp"
+#include "Rendering/WindowManager.hpp"
+
 namespace Barrage
 {   
   //! The core engine class for a Barrage bullet hell game
@@ -67,6 +70,25 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the engine's drawing module.
+        \returns
+          Returns a reference to the engine's drawing module.
+      */
+      /**************************************************************/
+      GfxDraw2D& Drawing();
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's graphics registry module.
+        \returns
+          Returns a reference to the engine's registry module.
+      */
+      /**************************************************************/
+      GfxRegistry2D& Registry();
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the engine's input manager.
 
         \return
@@ -74,17 +96,6 @@ namespace Barrage
       */
       /**************************************************************/
       InputManager& Input();
-
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the engine's renderer.
-
-        \return
-          Returns a reference to the engine's renderer.
-      */
-      /**************************************************************/
-      SimpleRenderer& Render();
 
       /**************************************************************/
       /*!
@@ -97,12 +108,27 @@ namespace Barrage
       /**************************************************************/
       SpaceManager& Spaces();
 
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's windowing module.
+        \returns
+          Returns a reference to the engine's windowing module.
+      */
+      /**************************************************************/
+      WindowManager& Windowing();
+
     private:
       FramerateController framerateController_; //!< Framerate controller
       InputManager inputManager_;               //!< Input manager
-      SimpleRenderer renderer_;                 //!< Renderer
       SpaceManager spaceManager_;               //!< Space manager
-	}; 
+      GfxManager2D gfxManager_;
+      GfxRenderer2D gfxRenderer_;
+      GfxFactory2D gfxFactory_;
+      GfxRegistry2D gfxRegistry_;
+      GfxDraw2D gfxDrawSystem_;                 //!< The drawing system.
+      WindowManager windowManager_;             //!< The windowing manager.
+	};
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -44,6 +44,9 @@ namespace Barrage
       inline Spawner() : spawnTypes_() {}
 
       inline std::string GetClassName() override { return "Spawner"; }
+
+      // Notify rttr of the component hierarchy.
+      RTTR_ENABLE()
   };
 }
 

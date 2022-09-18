@@ -22,6 +22,7 @@
 // Includes
 //  ===========================================================================
 #include <stdexcept>
+#include <string_view>
 
 namespace Barrage
 {
@@ -29,6 +30,16 @@ namespace Barrage
   //! separation between the standard library and Barrage.
   class RuntimeError : public std::runtime_error
   {
+  public:
+    /*************************************************************************/
+    /*!
+      \brief
+        Creates an error exception for Barrage.
+      \param errorMsg
+        The error message sent up the stack for this exception.
+    */
+    /*************************************************************************/
+    RuntimeError(const std::string_view& errorMsg);
   };
 }
 

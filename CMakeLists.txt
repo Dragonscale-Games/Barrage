@@ -39,6 +39,10 @@ endif()
 
 # Create the project.
 project(Barrage)
+
+# Set the working directory as the root?
+set(${WORKING_DIRECTORY} ${CMAKE_SOURCE_DIR})
+
 # Add the subdirectories for third party libraries.
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
@@ -50,7 +54,7 @@ add_subdirectory(ThirdParty)
 if(MSVC)
   set(CMAKE_CXX_FLAGS "/W4 /std:c++17 /EHsc /wd4201") # /WX
 else()
-  set(CMAKE_CXX_FLAGS "-Wall -Wextra -std=c++17") # -Werror
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++17") # -Werror
 endif()
 
 # Add the subdirectories for building the Barrage libraries.

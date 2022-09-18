@@ -12,6 +12,7 @@
 
 #include "DemoGame.hpp"
 #include "../Initialization/DemoInitialization.hpp"
+#include <Engine/Engine.hpp>
 
 namespace Demo
 {
@@ -46,8 +47,24 @@ namespace Demo
 
     engine_.Initialize();
 
-    Barrage::Space* demo_space = CreateDemoSpace();
+    Barrage::WindowManager& windowing = engine_.Windowing();
+    Barrage::GfxRegistry2D& registry = engine_.Registry();
+    Barrage::GfxDraw2D& drawing = engine_.Drawing();
+    // Register the assets necessary.
+    const char* instancedShaderPaths[] = {
+      "Assets/Shaders/Default/Instanced.vs",
+      "Assets/Shaders/Default/Instanced.fs",
+    };
+    registry.RegisterShader(instancedShaderPaths, "Instanced");
+    registry.RegisterTexture("Assets/Textures/TestBullet.png", "TestBullet");
+    registry.RegisterTexture("Assets/Textures/TestShip.png", "TestShip");
+    // Set any default resources on the draw system.
+    drawing.ApplyShader("Instanced");
+    // Set the viewport of our game.
+    const Barrage::WindowManager::WindowData& settings = windowing.GetSettings();
+    drawing.SetViewportSpace(glm::ivec2(settings.width_, settings.height_));
 
+    Barrage::Space* demo_space = CreateDemoSpace();
     engine_.Spaces().AddSpace("Demo Space", demo_space);
   }
 
@@ -63,13 +80,20 @@ namespace Demo
       engine_.Spaces().Update();
     }
 
-    engine_.Render().StartFrame();
+    Barrage::WindowManager& windowing = engine_.Windowing();
+    Barrage::GfxDraw2D& drawing = engine_.Drawing();
+
+    
+
+    drawing.StartFrame();
     engine_.Spaces().Draw();
-    engine_.Render().EndFrame();
+    drawing.EndFrame();
 
-    if (engine_.Render().WindowClosed())
+    if(!windowing.IsOpen())
+    {
       isRunning_ = false;
-
+    }
+      
     engine_.Frames().EndFrame();
   }
 

@@ -47,19 +47,20 @@ add_library(BarrageCore STATIC
   "Debug/MemoryOverrides.hpp"
 
   "Engine/Engine.cpp" "Engine/Engine.hpp"
-
-  "GameStates/GameStateManager.cpp" "GameStates/GameStateManager.hpp" 
-  "GameStates/GameState.cpp" "GameStates/GameState.hpp" 
-
+  
   "File/FileManager.hpp" "File/FileManager.cpp" "File/${OS_IMPL_FOLDER}/FileManager.cpp"
   "File/FileManager.tpp"
   "File/Graphics/ImageSource.hpp" "File/Graphics/ImageSource.cpp"
-
+  "File/Objects/ObjectSource.hpp" "File/Objects/ObjectSource.cpp"
+  
   "FramerateController/FramerateController.cpp" "FramerateController/FramerateController.hpp"
-
+  
+  "GameStates/GameStateManager.cpp" "GameStates/GameStateManager.hpp" 
+  "GameStates/GameState.cpp" "GameStates/GameState.hpp" 
+  
   "Input/InputManager.cpp" "Input/InputManager.hpp" 
   "Input/KeyMap.hpp" 
-  
+
   "Objects/Components/BaseClasses/ComponentArray.cpp" "Objects/Components/BaseClasses/ComponentArray.hpp" 
   "Objects/Components/BaseClasses/SharedComponent.cpp"   "Objects/Components/BaseClasses/SharedComponent.hpp"   
   "Objects/Components/BaseClasses/BaseComponent.hpp" 
@@ -115,9 +116,12 @@ add_library(BarrageCore STATIC
   "Rendering/GfxFactory2D.hpp" "Rendering/GfxFactory2D.cpp"
   "Rendering/GfxRegistry2D.hpp" "Rendering/GfxRegistry2D.cpp"
   "Rendering/GLError.hpp"
-
+  
   "Scenes/Scene.cpp" "Scenes/Scene.hpp"
 
+  "Serialization/ComponentRefl.hpp" "Serialization/ComponentRefl.cpp"
+  "Serialization/Serializer.hpp" "Serialization/Serializer.cpp"
+  
   "SimpleRenderer/SimpleRenderer.cpp" "SimpleRenderer/SimpleRenderer.hpp" 
   "SimpleRenderer/SimpleShader/SimpleShader.cpp" "SimpleRenderer/SimpleShader/SimpleShader.hpp" 
   "SimpleRenderer/SimpleShader/SimpleShaderManager.cpp" "SimpleRenderer/SimpleShader/SimpleShaderManager.hpp" 
@@ -129,13 +133,12 @@ add_library(BarrageCore STATIC
 
   "Utilities/Utilities.hpp" 
   "Utilities/Mallocator.hpp"
-  "Utilities/RuntimeError.hpp" )
+  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp" )
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
-target_link_libraries(BarrageCore LINK_PUBLIC glad glfw glm rapidjson stb_image)
-target_include_directories(BarrageCore PUBLIC ${RTTR_DIR})
+target_link_libraries(BarrageCore LINK_PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
 if(WIN32)
   target_link_libraries(BarrageCore PUBLIC DbgHelp Userenv)
 endif()

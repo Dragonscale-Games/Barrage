@@ -32,6 +32,9 @@ namespace Barrage
     inline BoundaryBox() : xMin_(-50.0f), xMax_(50.0f), yMin_(-50.0f), yMax_(50.0f) {}
 
     inline std::string GetClassName() override { return "BoundaryBox"; }
+
+    // Notify rttr of the component hierarchy.
+    RTTR_ENABLE()
   };
 }
 

@@ -18,6 +18,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "BaseComponent.hpp"
+#include <rttr/rttr_enable.h>
 
 namespace Barrage
 {
@@ -43,6 +44,9 @@ namespace Barrage
       */
       /**************************************************************/
       virtual Component::Type GetType() override;
+
+      // Notify rttr of the component hierarchy.
+      RTTR_ENABLE()
   };
 
   //! Associates each shared component with its name

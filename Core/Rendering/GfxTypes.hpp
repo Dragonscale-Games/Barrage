@@ -97,6 +97,63 @@ namespace Barrage
     FILTER_NONE,
     FILTER_LINEAR,
   };
+
+  struct MeshSpecs //! Represents the specifications for mesh creation.
+  {
+    size_t bufferLength_;
+    size_t bufferElementSize_;
+    size_t indicesLength_;
+    size_t indicesElementSize_;
+    const void* buffer_;
+    const void* indices_;
+  };
+
+  struct TextureSpecs //! Represents the specifications for the textures.
+  {
+    int width_;                       //!< The width of the mesh.
+    int height_;                      //!< The height of the mesh.
+    int dimensions_;                  //!< The number of dimensions the textures should have.
+    bool createMipmaps_;              //!< Whether mipmaps should be created for this texture.
+    TextureFormat format_;            //!< The format the pixels are arranged.
+    TextureFilter filter_;            //!< The type of filter to apply to this texture.
+    const unsigned char* pixels_;     //!< The pixels of the mesh.
+  };
+
+  enum ShaderStage //! Enumerates the available shader stages.
+  {
+    VERTEX_SHADER = 0,
+    PIXEL_SHADER,
+    // This one always goes last.
+    NUM_SHADERS_POSSIBLE,
+  };
+
+  struct ShaderSpecs //! Represents the specifications for the shaders used.
+  {
+    const char* stageSources_[ShaderStage::NUM_SHADERS_POSSIBLE]; //!< Used to specify the code for the shader stages available.
+  };
+
+  /***************************************************************************/
+  /*!
+    \brief
+      Gets the number of channels a particular texture format has.
+    \param format
+      The format to query the number of channels for.
+    \returns
+      The channel count for a particular format.
+  */
+  /***************************************************************************/
+  uint8_t GetChannelCount(const TextureFormat& format);
+  /***************************************************************************/
+  /*!
+    \brief
+      Gets the size (in bytes) of a particular format.
+    \param format
+      The format to query the size for.
+    \returns
+      The size of a format in bytes.
+  */
+  /***************************************************************************/
+  size_t GetFormatSize(const TextureFormat& format);
 }
 
 #endif // GfxUtil_MODULE_H

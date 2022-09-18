@@ -1,108 +1,103 @@
 /* ========================================================================= */
 /*!
  *
- * \file            ImageSource.hpp
+ * \file            ObjectSource.hpp
  * \author          David Wong Cascante
  * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
- * Defines the interface used for loading images from disk. 
- * In this specific case we make use of stb_image.
+ * Defines the interface for loading Barrage objects.
  */
-/* ========================================================================= */
+ /* ========================================================================= */
 
-////////////////////////////////////////////////////////////////////////////////
-#ifndef ImageSource_MODULE_H
-#define ImageSource_MODULE_H
+ ////////////////////////////////////////////////////////////////////////////////
+#ifndef ObjectSource_MODULE_H
+#define ObjectSource_MODULE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 //  ===========================================================================
 // Includes
 //  ===========================================================================
 #include <File/FileManager.hpp>
-#include <Rendering/GfxTypes.hpp>
-#include <vector>
+#include <rapidjson/document.h>
 
 namespace Barrage
 {
-  //! Represents an image loaded as a resource.
-  class ImageSource : public FileResource
+  //! Represents a single object as a resource.
+  class ObjectSource : public FileResource
   {
   public:
     /*************************************************************************/
     /*!
       \brief
-        Creates an image source given a path to the image file
-        and it's file name.
+        Creates an object resource given the path to the file and it's name.
       \param path
-        The path to the image to where the image is saved.
+        The path to load this resource from.
       \param filename
-        The name of the image.
+        The name of the file containing the object source.
     */
     /*************************************************************************/
-    ImageSource(const std::string_view& path, const std::string_view& filename);
+    ObjectSource(const std::string_view& path, const std::string_view& filename) noexcept;
     /*************************************************************************/
     /*!
       \brief
-        The move constructor for Image Sources.
-      \param other
-        The ImageSource data being placed onto this instance.
+        Moves the contents of one object source to anoter, used
+        by the file manager when creating and loading resources.
     */
     /*************************************************************************/
-    ImageSource(ImageSource&& other) noexcept = default;
+    ObjectSource(ObjectSource&& other) noexcept = default;
     /*************************************************************************/
     /*!
       \brief
-        Releases all resources upon destruction.
+        Destroys and release the resources stored in this object.
     */
     /*************************************************************************/
-    virtual ~ImageSource() = default;
+    virtual ~ObjectSource() override = default;
 
     /*************************************************************************/
     /*!
       \brief
-        Updates the image source using a new set of specs.
-      \param specs
-        The specs to update this image source with.
+        Gets the internal RapidJson document this object resource
+        loaded.
+      \returns
+        A reference to an read-only version of the document.
     */
     /*************************************************************************/
-    void Update(const TextureSpecs& specs);
+    const rapidjson::Document& GetDocument() const;
     /*************************************************************************/
     /*!
       \brief
-        Gets the specifications of the currently loaded
-        image source.
+        Gets the internal RapidJson document this object resource
+      loaded.
       \returns
-        The texture specs for this image.
+        A reference to a mutable version of the document.
     */
     /*************************************************************************/
-    const TextureSpecs& GetSpecs() const;
+    rapidjson::Document& GetDocument();
 
   protected:
     /*************************************************************************/
     /*!
       \brief
-        Loads the image specified by the filepath.
+        Loads Barrage objects from a JSON file.
       \param filepath
-        The file path to load the image from.
+        The file path to load the JSON from.
     */
     /*************************************************************************/
     virtual void Load(const std::string& filepath) noexcept(false) override;
     /*************************************************************************/
     /*!
       \brief
-        Saves the image stored in this resource as a file on the disk
-        under the specified filepath.
+        Saves Barrage objects as a JSON file.
+      \param filepath
+        The file path to save the JSON to.
     */
     /*************************************************************************/
     virtual void Save(const std::string& filepath) const noexcept(false) override;
-
   private:
-    //! The vector container storing the image as a byte buffer.
-    std::vector<unsigned char> pixelBuffer_;
-    //! The specifications of the file loaoded.
-    TextureSpecs specs_;
+    //! The rapidjson document which represents the file being read/saved.
+    rapidjson::Document objectDoc_;
   };
 }
 
-#endif // ImageSource_MODULE_H
+#endif // ObjectSource_MODULE_H

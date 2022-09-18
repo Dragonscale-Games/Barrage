@@ -21,13 +21,14 @@
 // Includes
 //  ===========================================================================
 #include <string>
+#include <string_view>
 #include <map>
 #include <Utilities/RuntimeError.hpp>
 
 namespace Barrage
 {
   //! The interface for the resource type.
-  class Resource
+  class FileResource
   {
   public:
     /*************************************************************************/
@@ -36,7 +37,17 @@ namespace Barrage
         Defines a default constructor when a suer
     */
     /*************************************************************************/
-    Resource();
+    FileResource() noexcept;
+    /*************************************************************************/
+    /*!
+      \brief
+        A move constructor for file resources. Used when loading
+        resources in the manager.
+      \param other
+        The resource being moved over to this instance.
+    */
+    /*************************************************************************/
+    FileResource(FileResource&& other) noexcept;
     /*************************************************************************/
     /*!
       \brief
@@ -47,7 +58,7 @@ namespace Barrage
         The name of the file being loaded.
     */
     /*************************************************************************/
-    Resource(const std::string& path, const std::string& filename);
+    FileResource(const std::string_view& path, const std::string_view& filename) noexcept;
     /*************************************************************************/
     /*!
       \brief
@@ -56,7 +67,17 @@ namespace Barrage
         The original resource to copy over.
     */
     /*************************************************************************/
-    Resource(const Resource& original);
+    FileResource(const FileResource& original);
+    /*************************************************************************/
+    /*!
+      \brief
+        Define a virtual destructor for resources so they get deleted
+        appropriately.
+        This function cannot throw because we are using RAII semantics
+        for exception-safe code.
+    */
+    /*************************************************************************/
+    virtual ~FileResource() noexcept = default;
     /*************************************************************************/
     /*!
       \brief
@@ -76,22 +97,27 @@ namespace Barrage
     */
     /*************************************************************************/
     void Save() const noexcept(false);
+
     /*************************************************************************/
     /*!
       \brief
-        Define a virtual destructor for resources so they get deleted
-        appropriately.
-        This function cannot throw because we are using RAII semantics
-        for exception-safe code.
+        Gets the file path for this resource.
+      \returns
+        The string for the path this resource is in.
     */
     /*************************************************************************/
-    virtual ~Resource() noexcept = default;
+    const std::string& GetPath() const;
+    /*************************************************************************/
+    /*!
+      \brief
+        Gets the file name for this resource.
+      \returns
+        The string for the resource's file name.
+    */
+    /*************************************************************************/
+    const std::string& GetFileName() const;
 
   protected:
-    //! The path in disk to find the file.
-    const std::string path_;
-    //! The name of the file.
-    const std::string filename_;
 
     /*************************************************************************/
     /*!
@@ -130,6 +156,13 @@ namespace Barrage
     */
     /*************************************************************************/
     bool HasFilenameExtension() const;
+
+  private:
+    //! The path in disk to find the file.
+    std::string path_;
+    //! The name of the file.
+    std::string filename_;
+
   };
   //! The file manager which provides utility for saving and loading files
   //! In the appropriate places.
@@ -156,6 +189,16 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
+        Saves a particular resource through this manager.
+      \remark
+        For the meantime, this is equivalent to calling "Save" on the actua
+        resource but that may change in the future.
+    */
+    /*************************************************************************/
+    void Save(const FileResource& file) const;
+    /*************************************************************************/
+    /*!
+      \brief
         Looks for a resource stored in this file manager. If a resource
         with an identical path and filename is found it just returns that.
         Otherwise, this creates a resource of a given type and loads it 
@@ -177,10 +220,40 @@ namespace Barrage
         Otherwise an "image" might look for either.
         For more details on search paths, check the documentation for
         the resource being loaded.
-    */
+    **/
     /*************************************************************************/
     template <typename T>
-    const T& Load(const std::string& path, const std::string& filename) noexcept(false);
+    const T& Load(const std::string_view& path, const std::string_view& filename) noexcept(false);
+    /*************************************************************************/
+    /*!
+      \brief
+        Unloads a particular resource from this manager with the given
+        path which includes the file name.
+      \param filepath
+        The file path to the resource to unload.
+      \remark
+        If the resource is not found, this function does nothing.
+    **/
+    /*************************************************************************/
+    void Unload(const std::string_view& filepath);
+    /*************************************************************************/
+    /*!
+      \brief
+        Creates a resource given the path to save it to and it's file
+        name.
+      \param path
+        The path this resource would save to.
+      \param filename
+        The file name for this resource.
+      \returns
+        A reference to the resource created.
+      \throws Barrage::RuntimeError
+        If the user attempted to create a resource with the same
+        path and filename as another, existing, resource.
+    **/
+    /*************************************************************************/
+    template <typename T>
+    T& Create(const std::string_view& path, const std::string_view& filename) noexcept(false);
     /*************************************************************************/
     /*!
       \brief
@@ -207,7 +280,7 @@ namespace Barrage
     std::string contentPath_;
     //! The resources cached by this system in case things get loaded
     //! repeatedly.
-    std::map<std::string, Resource*> cachedResources_;
+    std::map<std::string, FileResource*> cachedResources_;
 
     /*************************************************************************/
     /*!

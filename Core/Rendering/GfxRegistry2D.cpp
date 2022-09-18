@@ -22,6 +22,10 @@
 
 namespace Barrage
 {
+  GfxRegistry2D::GfxRegistry2D() : factory_(nullptr)
+  {
+  }
+
   void GfxRegistry2D::Initialize(GfxFactory2D& factory)
   {
     factory_ = &factory;
@@ -57,7 +61,7 @@ namespace Barrage
     Register(shader, keyname, shaderBook_);
   }
 
-  void GfxRegistry2D::RegisterShader(const char* const paths[GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE], const char* keyname)
+  void GfxRegistry2D::RegisterShader(const char* const paths[ShaderStage::NUM_SHADERS_POSSIBLE], const char* keyname)
   {
     assert(factory_);
     // If there is no explicit keyname then just the path as the keyname.
