@@ -84,7 +84,7 @@ namespace Barrage
           Returns a reference to the engine's registry module.
       */
       /**************************************************************/
-      GfxRegistry2D& Registry();
+      GfxRegistry2D& GfxRegistry();
 
       /**************************************************************/
       /*!

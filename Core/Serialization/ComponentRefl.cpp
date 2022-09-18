@@ -44,11 +44,10 @@ namespace Barrage
       )*/;
     // Spawn Type
     rttr::registration::class_<SpawnType>("SpawnType")
-      .property("spawnFuncs", &SpawnType::spawnFuncs_)
-      .property("poolName", &SpawnType::poolName_)
       .property("archetypeName", &SpawnType::archetypeName_)
-      .property("spawnNum", &SpawnType::spawnNum_)
-      .property("sourceIndices", &SpawnType::sourceIndices_)
+      .property("destinationPoolName", &SpawnType::destinationPoolName_)
+      .property("destinationPoolCapacity", &SpawnType::destinationPoolCapacity_)
+      .property("spawnFuncs", &SpawnType::spawnFuncs_)
       /*.constructor<>(
         rttr::policy::ctor::as_object
       )*/;

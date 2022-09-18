@@ -373,6 +373,7 @@ namespace Barrage
           Deserialize(propertyVariant, propertyData, propertyType);
           bool success = property.set_value(object, propertyVariant);
           assert(success);
+          UNREFERENCED(success);
         }
       }
     }

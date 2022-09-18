@@ -145,4 +145,11 @@ namespace Barrage
     UNREFERENCED(framebuffer);
     NO_IMPL();
   }
+
+  void GfxDraw2D::RenderRequests()
+  {
+    assert(renderer_);
+    renderer_->RenderRequests();
+    renderer_->FlushRequests();
+  }
 }

@@ -92,7 +92,6 @@ namespace Barrage
   {
     assert(window_);
     glfwSwapBuffers(window_);
-    glfwSwapInterval(1);
   }
 
   void WindowManager::PollEvents()

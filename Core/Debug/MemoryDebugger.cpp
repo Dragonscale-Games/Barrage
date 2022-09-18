@@ -198,7 +198,7 @@ namespace Barrage
     FILE* statFile, const Allocation& allocation, const char* entryLabel)
   {
     assert(statFile);
-    fprintf(statFile, "%s, %lu, %p, %s\n",
+    fprintf(statFile, "%s, %u, %p, %s\n",
       entryLabel, allocation.allocSize_, allocation.allocation_,
       allocation.file_.c_str());
   }

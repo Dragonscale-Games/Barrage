@@ -72,7 +72,7 @@ namespace Barrage
     return gfxDrawSystem_;
   }
 
-  GfxRegistry2D& Engine::Registry()
+  GfxRegistry2D& Engine::GfxRegistry()
   {
     return gfxRegistry_;
   }

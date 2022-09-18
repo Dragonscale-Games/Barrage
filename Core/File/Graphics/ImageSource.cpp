@@ -79,7 +79,7 @@ namespace Barrage
     const uint8_t channelCount = GetChannelCount(specs_.format_);
     const size_t stride = GetFormatSize(specs_.format_);
     bool success = stbi_write_png(filepath.data(), specs_.width_, specs_.height_, channelCount, 
-      static_cast<const void*>(specs_.pixels_), stride);
+      static_cast<const void*>(specs_.pixels_), static_cast<int>(stride));
     // Throw an exception if we failed to save the image.
     if (!success)
     {

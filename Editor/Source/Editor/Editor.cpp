@@ -56,7 +56,7 @@ namespace Barrage
     engine_.Initialize();
 
     Barrage::WindowManager& windowing = engine_.Windowing();
-    Barrage::GfxRegistry2D& registry = engine_.Registry();
+    Barrage::GfxRegistry2D& registry = engine_.GfxRegistry();
     Barrage::GfxDraw2D& drawing = engine_.Drawing();
 
     // Register the assets necessary.
@@ -100,6 +100,7 @@ namespace Barrage
 
     drawing.StartFrame();
     engine_.Spaces().Draw();
+    drawing.RenderRequests();
     gui_.DrawWidgets();
     drawing.EndFrame();
 

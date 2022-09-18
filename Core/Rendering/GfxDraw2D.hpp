@@ -182,6 +182,13 @@ namespace Barrage
     */
     /*************************************************************************/
     void ApplyFramebuffer(const GfxManager2D::FramebufferID& framebuffer);
+    /*************************************************************************/
+    /*!
+      \brief
+        Consumes and renders all of queued draw requests to the screen.
+    */
+    /*************************************************************************/
+    void RenderRequests();
 
   private:
     GfxManager2D::ShaderID boundShader_;            //!< The currently bound shader.
