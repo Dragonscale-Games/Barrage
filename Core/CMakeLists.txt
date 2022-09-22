@@ -73,8 +73,6 @@ add_library(BarrageCore STATIC
   "Objects/Systems/Creation/CreationSystem.cpp"       "Objects/Systems/Creation/CreationSystem.hpp"  
   "Objects/Systems/Draw/DrawSystem.cpp"               "Objects/Systems/Draw/DrawSystem.hpp" 
   
-  "Objects/Components/EngineComponents.hpp"
-  
   "Objects/SpawnFuncs/SpawnFuncManager.hpp"                "Objects/SpawnFuncs/SpawnFuncManager.cpp"  
   "Objects/Archetypes/ArchetypeManager.cpp"                "Objects/Archetypes/ArchetypeManager.hpp" 
   "Objects/Pools/PoolManager.cpp"                          "Objects/Pools/PoolManager.hpp" 
@@ -82,28 +80,13 @@ add_library(BarrageCore STATIC
   "Objects/Components/ComponentAllocator.cpp"              "Objects/Components/ComponentAllocator.hpp" 
   "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp" "Objects/Archetypes/ObjectArchetype/ObjectArchetype.cpp" 
   "Objects/Archetypes/PoolArchetype/PoolArchetype.hpp"     "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
-  "Objects/SpawnFuncs/EngineSpawnFuncs.hpp" 
   "Objects/Pools/PoolType.cpp" "Objects/Pools/PoolType.hpp" 
   "Objects/Pools/PoolInfo.cpp" "Objects/Pools/PoolInfo.hpp"
-  "Objects/Components/ComponentArrays/DestructibleArray.hpp" 
-  "Objects/Components/ComponentArrays/DirectoryIndexArray.hpp" 
-  "Objects/Components/ComponentArrays/PositionArray.hpp" 
-  "Objects/Components/ComponentArrays/ScaleArray.hpp" 
-  "Objects/Components/ComponentArrays/RotationArray.hpp" 
-  "Objects/Components/SharedComponents/Spawner.hpp"
-  "Objects/Components/SharedComponents/Sprite.hpp"
-  "Objects/Components/ComponentArrays/LifetimeArray.hpp" 
-  "Objects/Components/ComponentArrays/VelocityArray.hpp" 
-  "Objects/Components/SharedComponents/CircleCollider.hpp" 
-  "Objects/Components/SharedComponents/ObjectDirectory.hpp" 
-  "Objects/Components/ComponentArrays/AngularSpeedArray.hpp" 
 
   "Objects/Systems/Movement/MovementSystem.hpp" "Objects/Systems/Movement/MovementSystem.cpp"
   "Objects/Systems/Collision/CollisionSystem.hpp" "Objects/Systems/Collision/CollisionSystem.cpp" 
-  "Objects/Components/SharedComponents/RNG.hpp" 
   "Objects/SpawnFuncs/Direction/DirectionFuncs.hpp" "Objects/SpawnFuncs/Direction/DirectionFuncs.cpp"
   "Objects/SpawnFuncs/Position/PositionFuncs.hpp" "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
-  "Objects/Components/SharedComponents/BoundaryBox.hpp"
 
   "Random/Random.cpp" "Random/Random.hpp"
 

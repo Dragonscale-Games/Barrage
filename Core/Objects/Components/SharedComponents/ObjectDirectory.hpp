@@ -20,6 +20,7 @@
 
 #include "../BaseClasses/SharedComponent.hpp"
 #include "../ComponentArrays/DirectoryIndexArray.hpp"
+#include "../../Pools/Pool.hpp"
 
 #include <vector>
 

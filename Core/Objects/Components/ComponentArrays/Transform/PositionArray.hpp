@@ -1,39 +1,39 @@
 /* ======================================================================== */
 /*!
- * \file            ScaleArray.hpp
+ * \file            PositionArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Scale component keeps track of the world dimensions of a game object.
+   The Position component keeps track of an object's world position.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef ScaleArray_BARRAGE_H
-#define ScaleArray_BARRAGE_H
+#ifndef PositionArray_BARRAGE_H
+#define PositionArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/ComponentArray.hpp"
+#include "../../BaseClasses/ComponentArray.hpp"
 
 namespace Barrage
 {
-  //!< World dimensions of an object
-  struct Scale
+  //!< World position of an object
+  struct Position
   {
-    float w_; //!< width in world units
-    float h_; //!< height in world units
+    float x_; //!< x coord in world units
+    float y_; //!< y coord in world units
 
-    inline Scale() : w_(100.0f), h_(100.0f) {}
+    inline Position() : x_(0.0f), y_(0.0f) {}
   };
 
-  typedef ComponentArrayT<Scale> ScaleArray;
+  typedef ComponentArrayT<Position> PositionArray;
 
   template <>
-  inline std::string ScaleArray::GetClassName() { return "ScaleArray"; }
+  inline std::string PositionArray::GetClassName() { return "PositionArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ScaleArray_BARRAGE_H
+#endif // PositionArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,40 +1,39 @@
 /* ======================================================================== */
 /*!
- * \file            RotationArray.hpp
+ * \file            ScaleArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Rotation component keeps track of the counterclockwise rotation of
-   an object in radians.
+   The Scale component keeps track of the world dimensions of a game object.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef RotationArray_BARRAGE_H
-#define RotationArray_BARRAGE_H
+#ifndef ScaleArray_BARRAGE_H
+#define ScaleArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/ComponentArray.hpp"
-#include "Utilities/Utilities.hpp"
+#include "../../BaseClasses/ComponentArray.hpp"
 
 namespace Barrage
 {
-  //!< Counterclockwise rotation of an object
-  struct Rotation
+  //!< World dimensions of an object
+  struct Scale
   {
-    RADIAN angle_; //!< Rotation angle in radians
+    float w_; //!< width in world units
+    float h_; //!< height in world units
 
-    inline Rotation() : angle_(0.0f) {}
+    inline Scale() : w_(100.0f), h_(100.0f) {}
   };
 
-  typedef ComponentArrayT<Rotation> RotationArray;
+  typedef ComponentArrayT<Scale> ScaleArray;
 
   template <>
-  inline std::string RotationArray::GetClassName() { return "RotationArray"; }
+  inline std::string ScaleArray::GetClassName() { return "ScaleArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // RotationArray_BARRAGE_H
+#endif // ScaleArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -19,9 +19,9 @@
 #include "ComponentArrays/DestructibleArray.hpp"
 #include "ComponentArrays/DirectoryIndexArray.hpp"
 #include "ComponentArrays/LifetimeArray.hpp"
-#include "ComponentArrays/PositionArray.hpp"
-#include "ComponentArrays/RotationArray.hpp"
-#include "ComponentArrays/ScaleArray.hpp"
+#include "ComponentArrays/Transform/PositionArray.hpp"
+#include "ComponentArrays/Transform/RotationArray.hpp"
+#include "ComponentArrays/Transform/ScaleArray.hpp"
 #include "ComponentArrays/VelocityArray.hpp"
 
 #include "SharedComponents/BoundaryBox.hpp"

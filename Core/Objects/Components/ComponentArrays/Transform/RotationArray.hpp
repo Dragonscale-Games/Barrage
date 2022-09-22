@@ -1,39 +1,40 @@
 /* ======================================================================== */
 /*!
- * \file            PositionArray.hpp
+ * \file            RotationArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Position component keeps track of an object's world position.
+   The Rotation component keeps track of the counterclockwise rotation of
+   an object in radians.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef PositionArray_BARRAGE_H
-#define PositionArray_BARRAGE_H
+#ifndef RotationArray_BARRAGE_H
+#define RotationArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/ComponentArray.hpp"
+#include "../../BaseClasses/ComponentArray.hpp"
+#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
-  //!< World position of an object
-  struct Position
+  //!< Counterclockwise rotation of an object
+  struct Rotation
   {
-    float x_; //!< x coord in world units
-    float y_; //!< y coord in world units
+    RADIAN angle_; //!< Rotation angle in radians
 
-    inline Position() : x_(0.0f), y_(0.0f) {}
+    inline Rotation() : angle_(0.0f) {}
   };
 
-  typedef ComponentArrayT<Position> PositionArray;
+  typedef ComponentArrayT<Rotation> RotationArray;
 
   template <>
-  inline std::string PositionArray::GetClassName() { return "PositionArray"; }
+  inline std::string RotationArray::GetClassName() { return "RotationArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // PositionArray_BARRAGE_H
+#endif // RotationArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
