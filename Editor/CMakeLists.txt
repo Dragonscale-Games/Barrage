@@ -30,6 +30,8 @@
 # Date:         5/5/2022
 # =====================================================================================================================
 
+set(BARRAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
 add_executable(Editor "Source/main.cpp" 
 "Source/GUI/GUI.cpp" "Source/GUI/GUI.hpp" 
 "Source/Editor/Editor.cpp" "Source/Editor/Editor.hpp"
