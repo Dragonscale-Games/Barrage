@@ -24,26 +24,41 @@ namespace Barrage
   // Resource
   //  ===========================================================================
 
-  Resource::Resource()
+  FileResource::FileResource() noexcept
   {
   }
 
-  Resource::Resource(const std::string& path, const std::string& filename) :
+  FileResource::FileResource(FileResource&& other) noexcept :
+    path_(std::move(other.path_)), filename_(std::move(other.filename_))
+  {
+  }
+
+  FileResource::FileResource(const std::string_view& path, const std::string_view& filename) noexcept :
     path_(path), filename_(filename)
   {
   }
 
-  void Resource::Load() noexcept(false)
+  const std::string& FileResource::GetPath() const
+  {
+    return path_;
+  }
+
+  const std::string& FileResource::GetFileName() const
+  {
+    return filename_;
+  }
+
+  void FileResource::Load() noexcept(false)
   {
     Load(path_ + filename_);
   }
 
-  void Resource::Save() const noexcept(false)
+  void FileResource::Save() const noexcept(false)
   {
     Save(path_ + filename_);
   }
 
-  bool Resource::HasFilenameExtension() const
+  bool FileResource::HasFilenameExtension() const
   {
     NO_IMPL();
     return false;
@@ -62,6 +77,16 @@ namespace Barrage
   void FileManager::Shutdown()
   {
     cachedResources_.clear();
+  }
+
+  void FileManager::Save(const FileResource& file) const
+  {
+    file.Save();
+  }
+
+  void FileManager::Unload(const std::string_view& filepath)
+  {
+    cachedResources_.erase(filepath.data());
   }
 
   const std::string& FileManager::GetContentPath() const

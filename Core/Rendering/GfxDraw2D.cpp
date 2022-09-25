@@ -36,7 +36,7 @@ namespace Barrage
     std::vector<Face> faces;
     GenQuadInfo(vertices, faces);
     // Create the mesh using the vertex information.
-    GfxManager2D::MeshSpecs specs = {};
+    MeshSpecs specs = {};
     specs.buffer_ = vertices.data();
     specs.indices_ = faces.data();
     specs.bufferLength_ = vertices.size();
@@ -61,6 +61,26 @@ namespace Barrage
     manager_ = nullptr;
   }
 
+  void GfxDraw2D::SetViewportSpace(const glm::ivec2& dimensions)
+  {
+    assert(renderer_);
+    renderer_->SetViewportSpace(dimensions);
+  }
+
+  void GfxDraw2D::StartFrame()
+  {
+    assert(renderer_);
+    renderer_->FlushRequests();
+    renderer_->ClearFramebuffer();
+  }
+
+  void GfxDraw2D::EndFrame()
+  {
+    assert(manager_);
+    assert(renderer_);
+    renderer_->RenderRequests();
+    manager_->FlipWindowBuffers();
+  }
 
   void GfxDraw2D::DrawQuad(
     const glm::vec2& position, const glm::vec2& scale, const RADIAN& rotation,
@@ -124,5 +144,12 @@ namespace Barrage
   {
     UNREFERENCED(framebuffer);
     NO_IMPL();
+  }
+
+  void GfxDraw2D::RenderRequests()
+  {
+    assert(renderer_);
+    renderer_->RenderRequests();
+    renderer_->FlushRequests();
   }
 }

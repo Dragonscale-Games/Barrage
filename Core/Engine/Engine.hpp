@@ -16,11 +16,13 @@
 #define Engine_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "FramerateController/FramerateController.hpp"
 #include "Input/InputManager.hpp"
-#include "GameStates/GameStateManager.hpp"
-#include "Objects/ObjectManager.hpp"
-#include "TempRenderer/TestRenderer.hpp"
-#include "Random/Random.hpp"
+#include "SimpleRenderer/SimpleRenderer.hpp"
+#include "Spaces/SpaceManager.hpp"
+
+#include "Rendering/GfxDraw2D.hpp"
+#include "Rendering/WindowManager.hpp"
 
 namespace Barrage
 {   
@@ -54,24 +56,35 @@ namespace Barrage
       /**************************************************************/
       void Shutdown();
 
-      // ===================================================================
-      // Game State Manager
-      // ===================================================================
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's frame rate controller.
+
+        \return
+          Returns a reference to the engine's frame rate controller.
+      */
+      /**************************************************************/
+      FramerateController& Frames();
 
       /**************************************************************/
       /*!
         \brief
-          Gets the engine's gamestate manager.
-
-        \return
-          Returns a reference to the engine's gamestate Manager.
+          Gets the engine's drawing module.
+        \returns
+          Returns a reference to the engine's drawing module.
       */
       /**************************************************************/
-      GameStateManager& GSM();
-
-      // ===================================================================
-      // Input Manager
-      // ===================================================================
+      GfxDraw2D& Drawing();
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's graphics registry module.
+        \returns
+          Returns a reference to the engine's registry module.
+      */
+      /**************************************************************/
+      GfxRegistry2D& GfxRegistry();
 
       /**************************************************************/
       /*!
@@ -84,41 +97,37 @@ namespace Barrage
       /**************************************************************/
       InputManager& Input();
 
-      // ===================================================================
-      // Object Manager
-      // ===================================================================
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's space manager.
+
+        \return
+          Returns a reference to the engine's space manager.
+      */
+      /**************************************************************/
+      SpaceManager& Spaces();
 
       /**************************************************************/
       /*!
         \brief
-          Gets the engine's input manager.
-
-        \return
-          Returns a reference to the engine's input manager.
+          Gets the engine's windowing module.
+        \returns
+          Returns a reference to the engine's windowing module.
       */
       /**************************************************************/
-      ObjectManager& Objects();
-
-      // ===================================================================
-      // Random Number Generator
-      // ===================================================================
-
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the engine's random number generator.
-
-        \return
-          Returns a reference to the engine's random number generator.
-      */
-      /**************************************************************/
-      Random& RNG();
+      WindowManager& Windowing();
 
     private:
-      GameStateManager gsManager_;  //!< Game state manager
-      InputManager inputManager_;   //!< Input manager
-      ObjectManager objectManager_; //!< Object manager
-      Random rng_;                  //!< Random number generator
+      FramerateController framerateController_; //!< Framerate controller
+      InputManager inputManager_;               //!< Input manager
+      SpaceManager spaceManager_;               //!< Space manager
+      GfxManager2D gfxManager_;
+      GfxRenderer2D gfxRenderer_;
+      GfxFactory2D gfxFactory_;
+      GfxRegistry2D gfxRegistry_;
+      GfxDraw2D gfxDrawSystem_;                 //!< The drawing system.
+      WindowManager windowManager_;             //!< The windowing manager.
 	};
 }
 

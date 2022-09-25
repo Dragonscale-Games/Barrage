@@ -42,15 +42,20 @@ namespace Barrage
     RegisterCustomSpawnFuncs();
     SetSystemUpdateOrder();
   }
-  
-  void ObjectManager::Initialize()
-  {
-    CreateArchetypes();
-  }
 
   void ObjectManager::Update()
   {
     systemManager_.Update();
+  }
+
+  void ObjectManager::Draw()
+  {
+    DrawSystem* draw_system = dynamic_cast<DrawSystem*>(systemManager_.systems_["DrawSystem"]);
+
+    if (draw_system)
+    {
+      draw_system->Draw();
+    }
   }
 
   void ObjectManager::CreateObject(const std::string& poolName, const std::string& archetypeName)
@@ -125,6 +130,16 @@ namespace Barrage
     }
   }
 
+  void ObjectManager::CreatePoolAndObjects(const PoolInfo& poolInfo)
+  {
+    CreatePool(poolInfo.poolName_, poolInfo.archetypeName_, poolInfo.capacity_);
+
+    for (auto it = poolInfo.objects_.begin(); it != poolInfo.objects_.end(); ++it)
+    {
+      CreateObject(poolInfo.poolName_, *it);
+    }
+  }
+
   Pool* ObjectManager::GetPool(const std::string& name) const
   {
     return poolManager_.GetPool(name);
@@ -143,7 +158,7 @@ namespace Barrage
 
   void ObjectManager::DeleteAllPools()
   {
-    PoolList pool_names = GetPoolNames();
+    std::vector<std::string> pool_names = GetPoolNames();
 
     for (auto it = pool_names.begin(); it != pool_names.end(); ++it)
     {
@@ -151,7 +166,7 @@ namespace Barrage
     }
   }
 
-  PoolList ObjectManager::GetPoolNames()
+  std::vector<std::string> ObjectManager::GetPoolNames()
   {
     return poolManager_.GetPoolNames();
   }
@@ -166,20 +181,11 @@ namespace Barrage
     spawnFuncManager_.RegisterSpawnFunc(name, initializer);
   }
 
-  void ObjectManager::Draw()
-  {
-    DrawSystem* draw_system = dynamic_cast<DrawSystem*>(systemManager_.systems_["DrawSystem"]);
-
-    if (draw_system)
-    {
-      draw_system->Draw();
-    }
-  }
-
   void ObjectManager::RegisterEngineComponents()
   {
     RegisterComponent<AngularSpeedArray>("AngularSpeedArray");
     RegisterComponent<DestructibleArray>("DestructibleArray");
+    RegisterComponent<DirectoryIndexArray>("DirectoryIndexArray");
     RegisterComponent<LifetimeArray>("LifetimeArray");
     RegisterComponent<PositionArray>("PositionArray");
     RegisterComponent<RotationArray>("RotationArray");
@@ -188,6 +194,7 @@ namespace Barrage
 
     RegisterComponent<BoundaryBox>("BoundaryBox");
     RegisterComponent<CircleCollider>("CircleCollider");
+    RegisterComponent<ObjectDirectory>("ObjectDirectory");
     RegisterComponent<Spawner>("Spawner");
     RegisterComponent<Sprite>("Sprite");
     RegisterComponent<RNG>("RNG");

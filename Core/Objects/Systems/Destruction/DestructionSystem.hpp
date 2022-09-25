@@ -45,6 +45,29 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Frees the handles of dead objects.
+
+        \param pool
+          The pool to update.
+      */
+      /**************************************************************/
+      static void UpdateDeadHandles(Pool* pool);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Updates the handles of alive objects to reflect their
+          new locations.
+
+        \param pool
+          The pool to update.
+      */
+      /**************************************************************/
+      static void UpdateAliveHandles(Pool* pool);
+
+      /**************************************************************/
+      /*!
+        \brief
           Destroys all objects marked for destruction in a pool, 
           retaining the relative order between alive objects. Indices 
           for alive objects may be changed.
@@ -53,52 +76,7 @@ namespace Barrage
           The pool to update.
       */
       /**************************************************************/
-      static void UpdateBasicDestructibles(Pool* pool);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Algorithm that moves objects by copying each object one at
-          a time, operating on all its components before moving onto 
-          the next object.
-
-        \param pool
-          The pool to update.
-      */
-      /**************************************************************/
-      static void PerObjectDestructionAlgorithm(Pool* pool);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Algorithm that moves objects by focusing on one component
-          array at a time, operating on a single component type for
-          all objects before moving onto the next component type.
-
-        \param pool
-          The pool to update.
-      */
-      /**************************************************************/
-      static void PerComponentDestructionAlgorithm(Pool* pool);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Copies an object from one place in a pool to another place
-          in the pool.
-
-        \param pool
-          The pool containing both objects.
-
-        \param sourceIndex
-          Index of the object that will be copied.
-
-        \param recipientIndex
-          Index of the object that will become a copy of the
-          source object.
-      */
-      /**************************************************************/
-      static void CopyObject(Pool* pool, unsigned sourceIndex, unsigned recipientIndex);
+      static void DestroyObjects(Pool* pool);
 	};
 }
 

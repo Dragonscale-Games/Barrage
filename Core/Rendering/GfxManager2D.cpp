@@ -18,7 +18,6 @@
 // ============================================================================
 
 //#include "stdafx.h"
-#include "GLError.hpp"
 #include "GfxManager2D.hpp"
 #include "WindowManager.hpp"
 
@@ -35,9 +34,7 @@ namespace Barrage
   // Resource IDs
   // ==========================================================================
 
-  static const int INVALID_RESOURCE = -1;
-
-  GfxManager2D::ResourceID::ResourceID() : ResourceID(INVALID_RESOURCE)
+  GfxManager2D::ResourceID::ResourceID() : ResourceID(InvalidResourceID)
   {
   }
 
@@ -104,7 +101,7 @@ namespace Barrage
 
   bool GfxManager2D::ResourceID::IsValid() const
   {
-    return *internalResource_ != INVALID_RESOURCE;
+    return *internalResource_ != InvalidResourceID;
   }
 
   // ==========================================================================
@@ -131,7 +128,7 @@ namespace Barrage
     // Check we can use OpenGL.
     assert(glVersion_);
     // TODO: Replace this with a proper logger message.
-    std::cout << "Loading OpenGL Version " << GLAD_VERSION_MAJOR(glVersion_) << "." << GLAD_VERSION_MINOR(glVersion_) << std::endl;
+    //std::cout << "Loading OpenGL Version " << GLAD_VERSION_MAJOR(glVersion_) << "." << GLAD_VERSION_MINOR(glVersion_) << std::endl;
   }
 
   void GfxManager2D::Shutdown()
@@ -440,6 +437,12 @@ namespace Barrage
     internalPrograms_.clear();
     internalStages_.clear();
     internalFramebuffers_.clear();
+  }
+
+  void GfxManager2D::FlipWindowBuffers()
+  {
+    assert(windowing_);
+    windowing_->FlipWindowBuffers();
   }
 
   const std::vector<GfxManager2D::MeshID>& GfxManager2D::GetMeshes() const

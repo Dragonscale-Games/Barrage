@@ -72,12 +72,18 @@ namespace Barrage
 
   void GfxRenderer2D::SetViewportSpace(const glm::ivec2& dimensions)
   {
+    /*
     viewport_.projection_ =
       glm::ortho(
         static_cast<float>(-dimensions.x) / 2.0f,
         static_cast<float>(dimensions.x) / 2.0f,
         static_cast<float>(-dimensions.y) / 2.0f,
         static_cast<float>(dimensions.y) / 2.0f);
+    */
+    viewport_.projection_ =
+      glm::ortho(
+        static_cast<float>(0), static_cast<float>(dimensions.x), 
+        static_cast<float>(0), static_cast<float>(dimensions.y));
     CHECK_GL( glViewport(0, 0, dimensions.x, dimensions.y) );
   }
 
@@ -102,9 +108,6 @@ namespace Barrage
 
   void GfxRenderer2D::RenderRequests()
   {
-    // Clear the backbuffer, for now hardcoded.
-    CHECK_GL( glClearBufferfv(GL_COLOR, 0, glm::value_ptr(clearColor_)) );
-
     // Render all the requests.
     // Get the list of shaders.
     const std::vector<GLuint>& resourceShaders = manager_->GetOpenGLShaders();
@@ -114,10 +117,11 @@ namespace Barrage
     const std::vector<GfxManager2D::TextureData>& resourceTextures = manager_->GetOpenGLTextures();
 
     // Clear the set of resources being used so they are bound.
-    current_.meshIndex_ = -1;
-    current_.shaderIndex_ = -1;
-    current_.textureIndex_ = -1;
-    current_.framebufferIndex_ = -1;
+    const int invalidIndex = GfxManager2D::ResourceID::InvalidResourceID;
+    current_.meshIndex_ = invalidIndex;
+    current_.shaderIndex_ = invalidIndex;
+    current_.textureIndex_ = invalidIndex;
+    current_.framebufferIndex_ = invalidIndex;
     
     // Bind the rendering state and the attribute formatting.
     CHECK_GL( glBindVertexArray(renderState_) );
@@ -165,6 +169,9 @@ namespace Barrage
 
       const GfxManager2D::MeshData& meshData = resourceMeshes[current_.meshIndex_];
       // Finally, render the correct algorithm.
+      assert(current_.meshIndex_ != invalidIndex);
+      assert(current_.textureIndex_ != invalidIndex);
+      assert(current_.shaderIndex_ != invalidIndex);
       RenderInstancedMesh(resourceShaders[current_.shaderIndex_], meshData, renderState, manager_);
     }
 
@@ -174,6 +181,12 @@ namespace Barrage
   void GfxRenderer2D::FlushRequests()
   {
     requests_.clear();
+  }
+
+  void GfxRenderer2D::ClearFramebuffer()
+  {
+    // Clear the backbuffer, for now hardcoded.
+    CHECK_GL(glClearBufferfv(GL_COLOR, 0, glm::value_ptr(clearColor_)));
   }
 
   const glm::vec4& GfxRenderer2D::GetBackgroundColor() const
@@ -282,10 +295,9 @@ namespace Barrage
     constexpr GLint uvIndex = 1;
     // Setup the input layout for the vertex buffer.
     // Set up the layout for positions.
-    CHECK_GL( glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(0)) );
+    CHECK_GL( glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position_))) );
     // Set up the layout for uvs.
-    CHECK_GL( glVertexAttribPointer(
-      uvIndex, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position_))) );
+    CHECK_GL( glVertexAttribPointer(uvIndex, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, uvCoordinate_))) );
     // Enable the basic attributes for this rendering state.
     CHECK_GL( glEnableVertexAttribArray(positionIndex) );
     CHECK_GL( glEnableVertexAttribArray(uvIndex) );

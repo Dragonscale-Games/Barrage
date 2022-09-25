@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            AngularSpeed.hpp
+ * \file            AngularSpeedArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -12,8 +12,8 @@
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef AngularSpeed_BARRAGE_H
-#define AngularSpeed_BARRAGE_H
+#ifndef AngularSpeedArray_BARRAGE_H
+#define AngularSpeedArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../BaseClasses/ComponentArray.hpp"
@@ -36,5 +36,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // AngularSpeed_BARRAGE_H
+#endif // AngularSpeedArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

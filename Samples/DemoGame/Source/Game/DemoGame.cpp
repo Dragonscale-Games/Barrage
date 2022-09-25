@@ -11,7 +11,8 @@
  /* ======================================================================== */
 
 #include "DemoGame.hpp"
-#include "Source/GameStates/GS_DemoGame.hpp"
+#include "../Initialization/DemoInitialization.hpp"
+#include <Engine/Engine.hpp>
 
 namespace Demo
 {
@@ -46,29 +47,57 @@ namespace Demo
 
     engine_.Initialize();
 
-    engine_.GSM().SetGameState(GS_DemoGame());
+    Barrage::WindowManager& windowing = engine_.Windowing();
+    Barrage::GfxRegistry2D& registry = engine_.GfxRegistry();
+    Barrage::GfxDraw2D& drawing = engine_.Drawing();
+    // Register the assets necessary.
+    const char* instancedShaderPaths[] = {
+      "Assets/Shaders/Default/Instanced.vs",
+      "Assets/Shaders/Default/Instanced.fs",
+    };
+    registry.RegisterShader(instancedShaderPaths, "Instanced");
+    registry.RegisterTexture("Assets/Textures/TestBullet.png", "TestBullet");
+    registry.RegisterTexture("Assets/Textures/TestShip.png", "TestShip");
+    // Set any default resources on the draw system.
+    drawing.ApplyShader("Instanced");
+    // Set the viewport of our game.
+    const Barrage::WindowManager::WindowData& settings = windowing.GetSettings();
+    drawing.SetViewportSpace(glm::ivec2(settings.width_, settings.height_));
+
+    Barrage::Space* demo_space = CreateDemoSpace();
+    engine_.Spaces().AddSpace("Demo Space", demo_space);
   }
 
   void Game::Update()
   {
+    engine_.Frames().StartFrame();
+    
     engine_.Input().Update();
 
-    Barrage::TestRenderer::Instance().StartFrame();
+    unsigned num_ticks = engine_.Frames().ConsumeTicks();
+    for (unsigned i = 0; i < num_ticks; ++i)
+    {
+      engine_.Spaces().Update();
+    }
 
-    if (engine_.GSM().GameStateIsRunning())
-      engine_.GSM().Update();
-    else
+    Barrage::WindowManager& windowing = engine_.Windowing();
+    Barrage::GfxDraw2D& drawing = engine_.Drawing();
+
+    drawing.StartFrame();
+    engine_.Spaces().Draw();
+    drawing.EndFrame();
+
+    if(!windowing.IsOpen())
+    {
       isRunning_ = false;
-
-    Barrage::TestRenderer::Instance().EndFrame();
-
-    if (Barrage::TestRenderer::Instance().WindowClosed())
-      isRunning_ = false;
+    }
+      
+    engine_.Frames().EndFrame();
   }
 
   void Game::Shutdown()
   {
-    engine_.Instance->Shutdown();
+    engine_.Shutdown();
 
     Barrage::Engine::Instance = nullptr;
   }

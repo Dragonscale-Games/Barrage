@@ -30,5 +30,4 @@ namespace Barrage
     indices.push_back(Face(0, 1, 2));
     indices.push_back(Face(2, 3, 0));
   }
-
 }

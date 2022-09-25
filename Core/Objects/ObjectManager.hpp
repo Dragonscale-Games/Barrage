@@ -17,6 +17,7 @@
 
 #include "Archetypes/ArchetypeManager.hpp"
 #include "Pools/PoolManager.hpp"
+#include "Pools/PoolInfo.hpp"
 #include "Systems/SystemManager.hpp"
 #include "SpawnFuncs/SpawnFuncManager.hpp"
 
@@ -38,14 +39,6 @@ namespace Barrage
       // ===================================================================
       // Game loop
       // ===================================================================
-
-      /**************************************************************/
-      /*!
-        \brief
-          Initializes the game object manager.
-      */
-      /**************************************************************/
-      void Initialize();
 
       /**************************************************************/
       /*!
@@ -93,6 +86,8 @@ namespace Barrage
 
       void CreatePool(const std::string& poolName, const std::string& archetypeName, unsigned capacity = 1);
 
+      void CreatePoolAndObjects(const PoolInfo& poolInfo);
+
       Pool* GetPool(const std::string& name) const;
 
       void DeletePool(const std::string& poolName);
@@ -101,7 +96,7 @@ namespace Barrage
 
       std::vector<std::string> GetPoolArchetypeNames();
 
-      PoolList GetPoolNames();
+      std::vector<std::string> GetPoolNames();
 
       // ===================================================================
       // Objects
@@ -139,8 +134,6 @@ namespace Barrage
       void RegisterCustomSpawnFuncs();
 
       void SetSystemUpdateOrder();
-
-      void CreateArchetypes();
 
     private:
       ComponentAllocator componentAllocator_;

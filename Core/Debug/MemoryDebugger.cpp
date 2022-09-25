@@ -169,12 +169,12 @@ namespace Barrage
           DumpList(statFile, *statList[i], labels[i]);
         }
       }
+      fclose(statFile);
     }
     else
     {
       std::cout << "Failed to create the statistics file." << std::endl;
     }
-    fclose(statFile);
   }
 
   void MemoryDebuggerImpl::DumpList(FILE* statFile, const AllocList& list, const char* entryLabel)
@@ -197,7 +197,8 @@ namespace Barrage
   void MemoryDebuggerImpl::DumpAllocation(
     FILE* statFile, const Allocation& allocation, const char* entryLabel)
   {
-    fprintf(statFile, "%s, %lu, %p, %s\n",
+    assert(statFile);
+    fprintf(statFile, "%s, %u, %p, %s\n",
       entryLabel, allocation.allocSize_, allocation.allocation_,
       allocation.file_.c_str());
   }
@@ -254,22 +255,12 @@ namespace Barrage
   void* MemoryDebugger::Allocate(AllocType type, size_t n, const void* allocAddress) noexcept(false)
   {
     assert(debugger_);
-    if (debugger_)
-    {
-      return debugger_->Allocate(type, n, allocAddress);
-    }
-    else
-    {
-      throw std::bad_alloc();
-    }
+    return debugger_->Allocate(type, n, allocAddress);
   }
 
   void MemoryDebugger::Release(AllocType type, const void* address)
   {
     assert(debugger_);
-    if (debugger_)
-    {
-      debugger_->Release(type, address);
-    }
+    debugger_->Release(type, address);
   }
 }

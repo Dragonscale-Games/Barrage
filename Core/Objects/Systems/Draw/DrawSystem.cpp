@@ -13,7 +13,7 @@
 #include "stdafx.h"
 #include "DrawSystem.hpp"
 
-#include <TempRenderer/TestRenderer.hpp>
+#include <Engine/Engine.hpp>
 
 namespace Barrage
 {
@@ -42,6 +42,9 @@ namespace Barrage
 
   void DrawSystem::Draw()
   {
+    // Get the drawing system.
+    GfxDraw2D& drawing = Engine::Instance->Drawing();
+
     for (auto it = pools_.begin(); it != pools_.end(); ++it)
     {
       Pool* pool = it->second;
@@ -56,7 +59,7 @@ namespace Barrage
 
       Sprite& pool_sprite = *pool->GetSharedComponent<Sprite>("Sprite");
 
-      TestRenderer::Instance().DrawInstanced(positions, rotations, scales, pool->size_, pool_sprite.texture_);
+      drawing.DrawInstancedQuad(pool->size_, positions, scales, rotations, pool_sprite.texture_.c_str());
     }
   }
 }

@@ -17,6 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../BaseClasses/SharedComponent.hpp"
+#include <rttr/rttr_enable.h>
 
 namespace Barrage
 {
@@ -26,9 +27,12 @@ namespace Barrage
     public:
       float radius_;
 
-      inline CircleCollider() : radius_(50.0f) {}
+      CircleCollider() : radius_(50.0f) {}
 
       inline std::string GetClassName() override { return "CircleCollider"; }
+
+      // Notify rttr of the component hierarchy.
+      RTTR_ENABLE()
   };
 }
 

@@ -14,9 +14,8 @@
 #include "stdafx.h"
 
 #include "Editor.hpp"
-//#include "Objects/Systems/GameSystems.hpp"
-#include "GS_DemoGame.hpp"
-#include "TempRenderer/TestRenderer.hpp"
+#include <DemoInitialization.hpp>
+#include <Engine/Engine.hpp>
 
 #include <unordered_set>
 #include <chrono>
@@ -27,6 +26,7 @@ namespace Barrage
     engine_(),
     gui_(),
     frameTime_(),
+    numTicks_(0),
     statePaused_(false),
     isRunning_(false)
   {
@@ -53,60 +53,73 @@ namespace Barrage
 
   void Editor::Initialize()
   {
-    Barrage::Engine::Instance = &engine_;
-
     engine_.Initialize();
 
-    engine_.GSM().SetGameState(Demo::GS_DemoGame());
+    Barrage::WindowManager& windowing = engine_.Windowing();
+    Barrage::GfxRegistry2D& registry = engine_.GfxRegistry();
+    Barrage::GfxDraw2D& drawing = engine_.Drawing();
 
-    gui_.Initialize(TestRenderer::Instance().GetWindowHandle());
+    // Register the assets necessary.
+    const char* instancedShaderPaths[] = {
+      "Assets/Shaders/Default/Instanced.vs",
+      "Assets/Shaders/Default/Instanced.fs",
+    };
+    registry.RegisterShader(instancedShaderPaths, "Instanced");
+    registry.RegisterTexture("Assets/Textures/TestBullet.png", "TestBullet");
+    registry.RegisterTexture("Assets/Textures/TestShip.png", "TestShip");
+    // Set any default resources on the draw system.
+    drawing.ApplyShader("Instanced");
+    // Set the viewport of our game.
+    const Barrage::WindowManager::WindowData& settings = windowing.GetSettings();
+    drawing.SetViewportSpace(glm::ivec2(settings.width_, settings.height_));
+
+    gui_.Initialize(windowing.GetInternalHandle());
+
+    Space* demo_space = Demo::CreateDemoSpace();
+    engine_.Spaces().AddSpace("Demo Space", demo_space);
   }
 
   void Editor::Update()
   { 
-    auto t1 = std::chrono::high_resolution_clock::now();
+    engine_.Frames().StartFrame();
     
     engine_.Input().Update();
 
-    gui_.StartWidgets();
-
-    MakeTestWidget();
-
-    gui_.EndWidgets();
-
-    TestRenderer::Instance().StartFrame();
-
-    if (!statePaused_)
+    numTicks_ = engine_.Frames().ConsumeTicks();
+    for (unsigned i = 0; i < numTicks_; ++i)
     {
-      if (engine_.GSM().GameStateIsRunning())
-      {
-        engine_.GSM().Update();
-      }
-      else
-        isRunning_ = false;
+      engine_.Spaces().Update();
     }
 
-    engine_.Objects().Draw();
+    gui_.StartWidgets();
+    MakeTestWidget();
+    gui_.EndWidgets();
 
+    Barrage::WindowManager& windowing = engine_.Windowing();
+    Barrage::GfxDraw2D& drawing = engine_.Drawing();
+
+    drawing.StartFrame();
+    engine_.Spaces().Draw();
+    drawing.RenderRequests();
     gui_.DrawWidgets();
+    drawing.EndFrame();
 
-    auto t2 = std::chrono::high_resolution_clock::now();
-
-    TestRenderer::Instance().EndFrame();
-
-    if (TestRenderer::Instance().WindowClosed())
+    if(!windowing.IsOpen())
+    {
       isRunning_ = false;
+    }
+      
+    engine_.Spaces().SetSpacePaused("Demo Space", statePaused_);
 
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
-    
-    frameTime_ = duration.count();
+    engine_.Frames().EndFrame();
+    frameTime_ = engine_.Frames().DT();
   }
 
   void Editor::Shutdown()
   {
     gui_.Shutdown();
     
-    engine_.Instance->Shutdown();
+    engine_.Shutdown();
 
     Barrage::Engine::Instance = nullptr;
   }
@@ -123,132 +136,54 @@ namespace Barrage
     ImGui::Text("");
     
     std::string frametime("Frame time: ");
-    frametime = frametime + std::to_string(frameTime_) + " milliseconds";
+    frametime = frametime + std::to_string(frameTime_) + " microseconds";
     ImGui::Text(frametime.c_str());
     ImGui::Text("");
 
-    ImGui::Text("Currently registered:");
-    ImGui::Text("----------------------");
+    double fps;
 
-    if (ImGui::CollapsingHeader("Pool Components"))
+    if (frameTime_ > 0)
+      fps = 1000000.0 / static_cast<double>(frameTime_);
+    else
+      fps = 0.0;
+
+    std::string fpstime("FPS: ");
+    fpstime = fpstime + std::to_string(fps);
+    ImGui::Text(fpstime.c_str());
+    ImGui::Text("");
+
+    std::string ticksdisplay("Number of ticks per frame: ");
+    ticksdisplay = ticksdisplay + std::to_string(numTicks_);
+    ImGui::Text(ticksdisplay.c_str());
+    ImGui::Text("");
+
+    if (ImGui::Button("60 fps"))
     {
-      std::vector<std::string> pool_component_list = engine_.Objects().GetSharedComponentNames();
+      engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_60);
+    }
 
-      for (auto it = pool_component_list.begin(); it != pool_component_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
+    if (ImGui::Button("120 fps"))
+    {
+      engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_120);
+    }
 
-      ImGui::Text("");
+    if (ImGui::Button("No cap"))
+    {
+      engine_.Frames().SetFpsCap(FramerateController::FpsCap::NO_CAP);
+    }
+
+    ImGui::Text("");
+
+    if (ImGui::Button("Enable vsync"))
+    {
+      engine_.Frames().SetVsync(true);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Disable vsync"))
+    {
+      engine_.Frames().SetVsync(false);
     }
     
-    if (ImGui::CollapsingHeader("Object Components"))
-    {
-      std::vector<std::string> object_component_list = engine_.Objects().GetComponentArrayNames();
-
-      for (auto it = object_component_list.begin(); it != object_component_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-
-    if (ImGui::CollapsingHeader("Initializers"))
-    {
-      std::vector<std::string> initializer_list = engine_.Objects().GetSpawnFuncNames();
-
-      for (auto it = initializer_list.begin(); it != initializer_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-
-    if (ImGui::CollapsingHeader("Systems"))
-    {
-      std::vector<std::string> registered_system_list = engine_.Objects().GetRegisteredSystemNames();
-      std::vector<std::string> update_order_list = engine_.Objects().GetSystemUpdateOrder();
-      std::vector<std::string> unused_system_list;
-
-      std::unordered_set<std::string> used_system_set;
-
-      used_system_set.insert(update_order_list.begin(), update_order_list.end());
-
-      for (auto it = registered_system_list.begin(); it != registered_system_list.end(); ++it)
-      {
-        if (used_system_set.count(*it) == 0)
-        {
-          unused_system_list.push_back(*it);
-        }
-      }
-
-      ImGui::Text("Update order:");
-      ImGui::Text("--------------");
-
-      for (auto it = update_order_list.begin(); it != update_order_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-      
-      ImGui::Text("");
-
-      ImGui::Text("Non-updating systems:");
-      ImGui::Text("----------------------");
-
-      for (auto it = unused_system_list.begin(); it != unused_system_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-
-    ImGui::Text("");
-    ImGui::Text("Archetypes:");
-    ImGui::Text("------------");
-
-    if (ImGui::CollapsingHeader("Pool Archetypes"))
-    {
-      std::vector<std::string> archetype_list = engine_.Objects().GetPoolArchetypeNames();
-
-      for (auto it = archetype_list.begin(); it != archetype_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-
-    if (ImGui::CollapsingHeader("Object Archetypes"))
-    {
-      std::vector<std::string> archetype_list = engine_.Objects().GetObjectArchetypeNames();
-
-      for (auto it = archetype_list.begin(); it != archetype_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-
-    ImGui::Text("");
-    ImGui::Text("Objects:");
-    ImGui::Text("---------");
-
-    if (ImGui::CollapsingHeader("Active Pools"))
-    {
-      PoolList pool_list = engine_.Objects().GetPoolNames();
-
-      for (auto it = pool_list.begin(); it != pool_list.end(); ++it)
-      {
-        ImGui::Text((*it).c_str());
-      }
-
-      ImGui::Text("");
-    }
-
     ImGui::End();
   }
 }

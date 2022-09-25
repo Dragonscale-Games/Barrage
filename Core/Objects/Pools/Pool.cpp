@@ -21,6 +21,7 @@ namespace Barrage
     componentArrays_(),
     sharedComponents_(),
     size_(0),
+    queuedObjects_(0),
     capacity_(capacity)
   {
   }
@@ -43,5 +44,20 @@ namespace Barrage
   bool Pool::HasTag(const std::string& tag) const
   {
     return tags_.count(tag);
+  }
+
+  bool Pool::HasComponentArray(const std::string& componentArrayName)
+  {
+    return componentArrays_.count(componentArrayName) > 0;
+  }
+
+  bool Pool::HasSharedComponent(const std::string& sharedComponentName)
+  {
+    return sharedComponents_.count(sharedComponentName) > 0;
+  }
+
+  unsigned Pool::GetAvailableSlots() const
+  {
+    return capacity_ - size_ - queuedObjects_;
   }
 }

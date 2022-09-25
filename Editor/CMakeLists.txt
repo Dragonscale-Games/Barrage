@@ -30,19 +30,20 @@
 # Date:         5/5/2022
 # =====================================================================================================================
 
+set(BARRAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
 add_executable(Editor "Source/main.cpp" 
 "Source/GUI/GUI.cpp" "Source/GUI/GUI.hpp" 
 "Source/Editor/Editor.cpp" "Source/Editor/Editor.hpp"
-"${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/GameStates/GS_DemoGame.cpp" "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/GameStates/GS_DemoGame.hpp" 
-"${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Registration.cpp"
-"${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Systems/SpawnSystem.cpp" "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Systems/SpawnSystem.hpp"
-"${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Archetypes/DemoArchetypes.cpp" "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/Archetypes/DemoArchetypes.hpp"
+"${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Registration.cpp"
+"${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Systems/SpawnSystem.cpp" "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Systems/SpawnSystem.hpp"
+"${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization/DemoInitialization.cpp" "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization/DemoInitialization.hpp"
 )
 
 target_link_libraries(Editor PUBLIC BarrageCore imgui)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source")
-target_include_directories(Editor PUBLIC "${CMAKE_SOURCE_DIR}/Core")
-target_include_directories(Editor PUBLIC "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Source/GameStates/")
-target_include_directories(Editor PUBLIC "${CMAKE_SOURCE_DIR}/Samples/DemoGame")
-file(COPY "${CMAKE_SOURCE_DIR}/Samples/DemoGame/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+target_include_directories(Editor PUBLIC "${BARRAGE_SOURCE_DIR}/Core")
+target_include_directories(Editor PUBLIC "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization")
+target_include_directories(Editor PUBLIC "${BARRAGE_SOURCE_DIR}/Samples/DemoGame")
+file(COPY "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

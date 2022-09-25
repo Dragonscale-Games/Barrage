@@ -63,7 +63,7 @@ namespace Barrage
     */
     /*************************************************************************/
     void Initialize(
-      GfxManager2D& manager, GfxRenderer2D& renderer, 
+      GfxManager2D& manager, GfxRenderer2D& renderer,
       GfxRegistry2D& registry);
     /*************************************************************************/
     /*!
@@ -74,6 +74,22 @@ namespace Barrage
     /*************************************************************************/
     void Shutdown();
 
+    /*************************************************************************/
+    /*!
+      \brief
+        The visible viewport space to render all objects with.
+      \param dimensions
+        The pixel dimensions to render everything in.
+    */
+    /*************************************************************************/
+    void SetViewportSpace(const glm::ivec2& dimensions);
+
+    /*************************************************************************/
+    /*************************************************************************/
+    void StartFrame();
+    /*************************************************************************/
+    /*************************************************************************/
+    void EndFrame();
     /*************************************************************************/
     /*!
       \brief
@@ -166,6 +182,13 @@ namespace Barrage
     */
     /*************************************************************************/
     void ApplyFramebuffer(const GfxManager2D::FramebufferID& framebuffer);
+    /*************************************************************************/
+    /*!
+      \brief
+        Consumes and renders all of queued draw requests to the screen.
+    */
+    /*************************************************************************/
+    void RenderRequests();
 
   private:
     GfxManager2D::ShaderID boundShader_;            //!< The currently bound shader.

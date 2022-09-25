@@ -24,9 +24,6 @@ namespace Barrage
 {
   //! Maps system names to systems
   typedef std::unordered_map<std::string, Pool*> PoolMap;
-  
-  //! List of pool names
-  typedef std::vector<std::string> PoolList;
 
   //! <class description>
   class PoolManager
@@ -110,7 +107,7 @@ namespace Barrage
           Returns the names of all currently active pools.
       */
       /**************************************************************/
-      PoolList GetPoolNames();
+      std::vector<std::string> GetPoolNames();
 
     private:
       /**************************************************************/

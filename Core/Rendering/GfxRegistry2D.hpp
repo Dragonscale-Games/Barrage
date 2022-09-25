@@ -36,6 +36,13 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
+        Sets a registry object in a safe state.
+    */
+    /*************************************************************************/
+    GfxRegistry2D();
+    /*************************************************************************/
+    /*!
+      \brief
         Initializes the registry with the manager and factory used.
       \param factory
         The factory to use for this registry.
@@ -92,7 +99,7 @@ namespace Barrage
     */
     /*************************************************************************/
     void RegisterShader(
-      const char* const paths[GfxManager2D::ShaderStage::NUM_SHADERS_POSSIBLE], 
+      const char* const paths[ShaderStage::NUM_SHADERS_POSSIBLE], 
       const char* keyname = nullptr
     );
 

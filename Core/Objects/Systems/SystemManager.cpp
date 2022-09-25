@@ -69,6 +69,14 @@ namespace Barrage
     }
   }
 
+  System* SystemManager::GetSystem(const std::string& name)
+  {
+    if (systems_.find(name) != systems_.end())
+      return systems_.at(name);
+    else
+      return nullptr;
+  }
+
   std::vector<std::string> SystemManager::GetRegisteredSystemNames()
   {
     return systemNames_;

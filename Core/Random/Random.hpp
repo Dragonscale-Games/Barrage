@@ -15,6 +15,8 @@
 #define Random_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <rttr/rttr_enable.h>
+
 namespace Barrage
 {
 	//! Random number generator based on xorshift.
@@ -41,6 +43,18 @@ namespace Barrage
       /**************************************************************/
       unsigned long long GetSeed();
       
+      /**************************************************************/
+      /*!
+        \brief
+          Sets a new starting seed for the generator. If a seed of 0
+          is provided, a random seed will be generated. 
+
+        \param seed
+          The new starting seed for the generator.
+      */
+      /**************************************************************/
+      void SetSeed(unsigned long long seed = 0);
+
       /**************************************************************/
       /*!
         \brief

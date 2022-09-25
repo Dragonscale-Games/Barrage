@@ -16,6 +16,7 @@
 namespace Barrage
 {
   static const unsigned BASIC_DESTRUCTIBLE_POOLS = 0;
+  static const unsigned DIRECTORY_POOLS = 1;
   
   DestructionSystem::DestructionSystem() :
     System()
@@ -23,69 +24,57 @@ namespace Barrage
     PoolType destructible_type;
     destructible_type.AddComponentName("DestructibleArray");
     poolTypes_[BASIC_DESTRUCTIBLE_POOLS] = destructible_type;
+
+    PoolType handle_type;
+    handle_type.AddComponentName("DestructibleArray");
+    handle_type.AddComponentName("ObjectDirectory");
+    handle_type.AddComponentName("DirectoryIndexArray");
+    poolTypes_[DIRECTORY_POOLS] = handle_type;
   }
   
   void DestructionSystem::Update()
   {
-    UpdatePoolGroup(BASIC_DESTRUCTIBLE_POOLS, UpdateBasicDestructibles);
+    UpdatePoolGroup(DIRECTORY_POOLS, UpdateDeadHandles);
+    UpdatePoolGroup(BASIC_DESTRUCTIBLE_POOLS, DestroyObjects);
+    UpdatePoolGroup(DIRECTORY_POOLS, UpdateAliveHandles);
   }
 
-  void DestructionSystem::UpdateBasicDestructibles(Pool* pool)
-  {
-    /* Only use one of these algorithms - profile and see which is faster */ 
-
-    // PerObjectDestructionAlgorithm(pool);
-    PerComponentDestructionAlgorithm(pool);
-  }
-
-  void DestructionSystem::PerObjectDestructionAlgorithm(Pool* pool)
+  void DestructionSystem::UpdateDeadHandles(Pool* pool)
   {
     DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("DestructibleArray");
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
+    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
 
-    /*
-     *  Objectives:
-     *  1. Shift all alive objects to be densely packed at the beginning of the object array.
-     *  2. Make this change in-place, using the original object array (and update the size).
-     *  3. Preserve the relative order of the alive objects.
-     */
+    unsigned num_objects = pool->size_;
 
-    // index that will be one past the end of our alive objects
-    unsigned alive_end_index = 0;
-
-    // starting at the beginning of the object array, find the index of the first destroyed object (if one exists)
-    while (alive_end_index < pool->size_)
+    for (unsigned i = 0; i < num_objects; ++i)
     {
-      if (destructible_array[alive_end_index].destroyed_ == true)
-        break;
-
-      ++alive_end_index;
-    }
-
-    // this keeps track of the next alive object that isn't packed at the beginning of our object array (if one exists)
-    // we'll start searching for this object at the first index where it is possible to have such an object
-    unsigned next_alive_index = alive_end_index + 1;
-
-    // make sure we're only looking for additional alive objects within the original bounds of the array
-    while (next_alive_index < pool->size_)
-    {
-      // if an alive object is found that needs to be packed...
-      if (destructible_array[next_alive_index].destroyed_ == false)
+      if (destructible_array[i].destroyed_)
       {
-        // copy the object to the end of the packed subarray
-        CopyObject(pool, next_alive_index, alive_end_index);
+        unsigned directory_index = directory_index_array[i].index_;
 
-        // update the packed subarray's end index
-        ++alive_end_index;
+        object_directory.FreeHandle(directory_index);
       }
-
-      ++next_alive_index;
     }
-
-    // update the size of the newly packed object array
-    pool->size_ = alive_end_index;
   }
 
-  void DestructionSystem::PerComponentDestructionAlgorithm(Pool* pool)
+  void DestructionSystem::UpdateAliveHandles(Pool* pool)
+  {
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
+    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
+
+    unsigned num_objects = pool->size_;
+
+    for (unsigned i = 0; i < num_objects; ++i)
+    {
+      unsigned directory_index = directory_index_array[i].index_;
+      ObjectHandle& handle = object_directory.GetHandle(directory_index);
+
+      handle.poolIndex_ = i;
+    }
+  }
+
+  void DestructionSystem::DestroyObjects(Pool* pool)
   {
     DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("DestructibleArray");
 
@@ -96,7 +85,7 @@ namespace Barrage
      *  3. Preserve the relative order of the alive objects.
      */
 
-    // keep track of where the first dead object is, this will be reused as a starting place for each component array
+     // keep track of where the first dead object is, this will be reused as a starting place for each component array
     unsigned initial_alive_end_index = 0;
 
     // starting at the beginning of the original object array, find the index of the first destroyed object (if one exists) or one
@@ -119,7 +108,7 @@ namespace Barrage
       // we'll operate on the destructible array last; after the loop finishes
       if (it->first == "DestructibleArray")
         continue;
-      
+
       unsigned alive_end_index = initial_alive_end_index;
       unsigned next_alive_index = alive_end_index + 1;
 
@@ -156,15 +145,5 @@ namespace Barrage
 
     // update the size of the newly packed object array
     pool->size_ = alive_end_index;
-  }
-
-  void DestructionSystem::CopyObject(Pool* pool, unsigned sourceIndex, unsigned recipientIndex)
-  {
-    for (auto it = pool->componentArrays_.begin(); it != pool->componentArrays_.end(); ++it)
-    {
-      ComponentArray* component_array = it->second;
-
-      component_array->CopyToThis(*component_array, sourceIndex, recipientIndex);
-    }
   }
 }

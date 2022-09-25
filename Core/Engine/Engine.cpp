@@ -19,32 +19,62 @@ namespace Barrage
   Engine* Engine::Instance = nullptr;
 
   Engine::Engine() :
-    gsManager_(),
+    framerateController_(),
     inputManager_(),
-    objectManager_(),
-    rng_()
+    spaceManager_()
   {
   }
 
   void Engine::Initialize()
   {
-    TestRenderer::Instance().Initialize();
+    Instance = this;
+    
+    // Initialize the window.
+    WindowManager::WindowData data = {};
+    data.decorated_ = true;
+    data.width_ = 1280;
+    data.height_ = 720;
+    data.title_ = u8"Barrage Engine";
+    windowManager_.Initialize(data);
+    
+    // Initialize the graphics modules.
+    gfxManager_.Initialize(windowManager_);
+    gfxRenderer_.Initialize(gfxManager_);
+    gfxFactory_.Initialize(gfxManager_);
+    gfxRegistry_.Initialize(gfxFactory_);
+    gfxDrawSystem_.Initialize(gfxManager_, gfxRenderer_, gfxRegistry_);
 
-    inputManager_.Initialize(TestRenderer::Instance().GetWindowHandle());
-
-    objectManager_.Initialize();
+    inputManager_.Initialize(windowManager_.GetInternalHandle());
+    framerateController_.Initialize(windowManager_.GetInternalHandle(), FramerateController::FpsCap::FPS_120, true);
   }
 
   void Engine::Shutdown()
   {
     inputManager_.Shutdown();
 
-    TestRenderer::Instance().Shutdown();
+    gfxDrawSystem_.Shutdown();
+    gfxRegistry_.Shutdown();
+    gfxFactory_.Shutdown();
+    gfxRenderer_.Shutdown();
+    gfxManager_.Shutdown();
+    windowManager_.Shutdown();
+
+    Instance = nullptr;
   }
 
-  GameStateManager& Engine::GSM()
+  FramerateController& Engine::Frames()
   {
-    return gsManager_;
+    return framerateController_;
+  }
+
+  GfxDraw2D& Engine::Drawing()
+  {
+    return gfxDrawSystem_;
+  }
+
+  GfxRegistry2D& Engine::GfxRegistry()
+  {
+    return gfxRegistry_;
   }
 
   InputManager& Engine::Input()
@@ -52,13 +82,13 @@ namespace Barrage
     return inputManager_;
   }
 
-  ObjectManager& Engine::Objects()
+  SpaceManager& Engine::Spaces()
   {
-    return objectManager_;
+    return spaceManager_;
   }
 
-  Random& Engine::RNG()
+  WindowManager& Engine::Windowing()
   {
-    return rng_;
+    return windowManager_;
   }
 }

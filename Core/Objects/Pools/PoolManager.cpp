@@ -66,9 +66,9 @@ namespace Barrage
     }
   }
 
-  PoolList PoolManager::GetPoolNames()
+  std::vector<std::string> PoolManager::GetPoolNames()
   {
-    PoolList pool_list;
+    std::vector<std::string> pool_list;
 
     for (auto it = pools_.begin(); it != pools_.end(); ++it)
     {

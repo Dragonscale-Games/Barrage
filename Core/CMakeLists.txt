@@ -41,33 +41,26 @@ endif()
 add_library(BarrageCore STATIC 
   "template.cxx"
   "stdafx.h"
-  "Random/Random.cpp" "Random/Random.hpp"
-  "Engine/Engine.cpp" "Engine/Engine.hpp"
-
-  "GameStates/GameStateManager.cpp" "GameStates/GameStateManager.hpp" 
-  "GameStates/GameState.cpp" "GameStates/GameState.hpp" 
-
-  "File/FileManager.hpp" "File/FileManager.cpp" "File/${OS_IMPL_FOLDER}/FileManager.cpp"
-  "File/FileManager.tpp"
-
-  "File/Graphics/ImageSource.hpp" "File/Graphics/ImageSource.cpp"
-
-  "Utilities/Utilities.hpp" 
-  "Utilities/Mallocator.hpp"
-  "Utilities/RuntimeError.hpp"
 
   "Debug/SymbolManager.hpp" "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
   "Debug/MemoryDebugger.hpp" "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
   "Debug/MemoryOverrides.hpp"
+
+  "Engine/Engine.cpp" "Engine/Engine.hpp"
   
-  "TempRenderer/TestRenderer.cpp" "TempRenderer/TestRenderer.hpp" 
-  "TempRenderer/TempShader/TestShader.cpp" "TempRenderer/TempShader/TestShader.hpp" 
-  "TempRenderer/TempShader/TestShaderManager.cpp" "TempRenderer/TempShader/TestShaderManager.hpp" 
-  "TempRenderer/TempTexture/TestTexture.cpp" "TempRenderer/TempTexture/TestTexture.hpp" 
-  "TempRenderer/TempTexture/TestTextureManager.cpp" "TempRenderer/TempTexture/TestTextureManager.hpp" 
+  "File/FileManager.hpp" "File/FileManager.cpp" "File/${OS_IMPL_FOLDER}/FileManager.cpp"
+  "File/FileManager.tpp"
+  "File/Graphics/ImageSource.hpp" "File/Graphics/ImageSource.cpp"
+  "File/Objects/ObjectSource.hpp" "File/Objects/ObjectSource.cpp"
+  
+  "FramerateController/FramerateController.cpp" "FramerateController/FramerateController.hpp"
+  
+  "GameStates/GameStateManager.cpp" "GameStates/GameStateManager.hpp" 
+  "GameStates/GameState.cpp" "GameStates/GameState.hpp" 
+  
   "Input/InputManager.cpp" "Input/InputManager.hpp" 
   "Input/KeyMap.hpp" 
-  
+
   "Objects/Components/BaseClasses/ComponentArray.cpp" "Objects/Components/BaseClasses/ComponentArray.hpp" 
   "Objects/Components/BaseClasses/SharedComponent.cpp"   "Objects/Components/BaseClasses/SharedComponent.hpp"   
   "Objects/Components/BaseClasses/BaseComponent.hpp" 
@@ -80,8 +73,6 @@ add_library(BarrageCore STATIC
   "Objects/Systems/Creation/CreationSystem.cpp"       "Objects/Systems/Creation/CreationSystem.hpp"  
   "Objects/Systems/Draw/DrawSystem.cpp"               "Objects/Systems/Draw/DrawSystem.hpp" 
   
-  "Objects/Components/EngineComponents.hpp"
-  
   "Objects/SpawnFuncs/SpawnFuncManager.hpp"                "Objects/SpawnFuncs/SpawnFuncManager.cpp"  
   "Objects/Archetypes/ArchetypeManager.cpp"                "Objects/Archetypes/ArchetypeManager.hpp" 
   "Objects/Pools/PoolManager.cpp"                          "Objects/Pools/PoolManager.hpp" 
@@ -89,18 +80,15 @@ add_library(BarrageCore STATIC
   "Objects/Components/ComponentAllocator.cpp"              "Objects/Components/ComponentAllocator.hpp" 
   "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp" "Objects/Archetypes/ObjectArchetype/ObjectArchetype.cpp" 
   "Objects/Archetypes/PoolArchetype/PoolArchetype.hpp"     "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
-  "Objects/SpawnFuncs/EngineSpawnFuncs.hpp" 
   "Objects/Pools/PoolType.cpp" "Objects/Pools/PoolType.hpp" 
-  "Objects/Components/ComponentArrays/DestructibleArray.hpp" 
-  "Objects/Components/ComponentArrays/PositionArray.hpp" 
-  "Objects/Components/ComponentArrays/ScaleArray.hpp" 
-  "Objects/Components/ComponentArrays/RotationArray.hpp" 
-  "Objects/Components/SharedComponents/Spawner.hpp"
-  "Objects/Components/SharedComponents/Sprite.hpp"
-  "Objects/Components/ComponentArrays/LifetimeArray.hpp" 
-  "Objects/Components/ComponentArrays/VelocityArray.hpp" 
-  "Objects/Components/SharedComponents/CircleCollider.hpp" 
-  "Objects/Components/ComponentArrays/AngularSpeedArray.hpp" 
+  "Objects/Pools/PoolInfo.cpp" "Objects/Pools/PoolInfo.hpp"
+
+  "Objects/Systems/Movement/MovementSystem.hpp" "Objects/Systems/Movement/MovementSystem.cpp"
+  "Objects/Systems/Collision/CollisionSystem.hpp" "Objects/Systems/Collision/CollisionSystem.cpp" 
+  "Objects/SpawnFuncs/Direction/DirectionFuncs.hpp" "Objects/SpawnFuncs/Direction/DirectionFuncs.cpp"
+  "Objects/SpawnFuncs/Position/PositionFuncs.hpp" "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
+
+  "Random/Random.cpp" "Random/Random.hpp"
 
   "Rendering/WindowManager.hpp" "Rendering/WindowManager.cpp"
   "Rendering/GfxManager2D.hpp" "Rendering/GfxManager2D.cpp"
@@ -111,20 +99,29 @@ add_library(BarrageCore STATIC
   "Rendering/GfxFactory2D.hpp" "Rendering/GfxFactory2D.cpp"
   "Rendering/GfxRegistry2D.hpp" "Rendering/GfxRegistry2D.cpp"
   "Rendering/GLError.hpp"
+  
+  "Scenes/Scene.cpp" "Scenes/Scene.hpp"
 
-  "Objects/Systems/Movement/MovementSystem.hpp" "Objects/Systems/Movement/MovementSystem.cpp"
-  "Objects/Systems/Collision/CollisionSystem.hpp" "Objects/Systems/Collision/CollisionSystem.cpp" 
-  "Objects/Components/SharedComponents/RNG.hpp" 
-  "Objects/SpawnFuncs/Direction/DirectionFuncs.hpp" "Objects/SpawnFuncs/Direction/DirectionFuncs.cpp"
-  "Objects/SpawnFuncs/Position/PositionFuncs.hpp" "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
-  "Objects/Components/SharedComponents/BoundaryBox.hpp"
-)
+  "Serialization/ComponentRefl.hpp" "Serialization/ComponentRefl.cpp"
+  "Serialization/Serializer.hpp" "Serialization/Serializer.cpp"
+  
+  "SimpleRenderer/SimpleRenderer.cpp" "SimpleRenderer/SimpleRenderer.hpp" 
+  "SimpleRenderer/SimpleShader/SimpleShader.cpp" "SimpleRenderer/SimpleShader/SimpleShader.hpp" 
+  "SimpleRenderer/SimpleShader/SimpleShaderManager.cpp" "SimpleRenderer/SimpleShader/SimpleShaderManager.hpp" 
+  "SimpleRenderer/SimpleTexture/SimpleTexture.cpp" "SimpleRenderer/SimpleTexture/SimpleTexture.hpp" 
+  "SimpleRenderer/SimpleTexture/SimpleTextureManager.cpp" "SimpleRenderer/SimpleTexture/SimpleTextureManager.hpp" 
+
+  "Spaces/Space.cpp" "Spaces/Space.hpp"
+  "Spaces/SpaceManager.cpp" "Spaces/SpaceManager.hpp"
+
+  "Utilities/Utilities.hpp" 
+  "Utilities/Mallocator.hpp"
+  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp" )
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
-target_link_libraries(BarrageCore LINK_PUBLIC glad glfw glm rapidjson stb_image)
-target_include_directories(BarrageCore PUBLIC ${RTTR_DIR})
+target_link_libraries(BarrageCore LINK_PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
 if(WIN32)
   target_link_libraries(BarrageCore PUBLIC DbgHelp Userenv)
 endif()

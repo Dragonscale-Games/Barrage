@@ -16,53 +16,29 @@
 
 namespace Barrage
 {
-  static const unsigned BASIC_SPAWNER_POOLS = 0;
-  
+  static const unsigned ALL_POOLS = 0;
+  static const unsigned HANDLE_POOLS = 1;
+
   CreationSystem::CreationSystem() :
     System(),
     archetypeManager_(nullptr),
     spawnFuncManager_(nullptr),
     poolManager_(nullptr)
   {
-    PoolType spawner_type;
-    spawner_type.AddComponentName("Spawner");
-    poolTypes_[BASIC_SPAWNER_POOLS] = spawner_type;
-  }
+    PoolType all_pool_type;
+    // this pool type has no required tags or components because all pools will be subscribed to the creation system
+    poolTypes_[ALL_POOLS] = all_pool_type;
 
-  void CreationSystem::Subscribe(Pool* pool)
-  {
-    size_t num_pool_types = poolTypes_.size();
-
-    for (size_t i = 0; i < num_pool_types; ++i)
-    {
-      if (poolTypes_[i].MatchesPool(pool))
-      {
-        if (i == 0)
-        {
-          Spawner* spawner = pool->GetSharedComponent<Spawner>("Spawner");
-          std::vector<SpawnType>& spawn_types = spawner->spawnTypes_;
-
-          for (auto it = spawn_types.begin(); it != spawn_types.end(); ++it)
-          {
-            SpawnType& spawn_type = *it;
-
-            spawn_type.sourceIndices_.clear();
-          }
-        }
-        
-        pools_.insert(std::pair<unsigned, Pool*>(static_cast<unsigned>(i), pool));
-      }
-    }
+    PoolType handle_pool_type;
+    handle_pool_type.AddComponentName("ObjectDirectory");
+    handle_pool_type.AddComponentName("DirectoryIndexArray");
+    poolTypes_[HANDLE_POOLS] = handle_pool_type;
   }
 
   void CreationSystem::Update()
   {
-    auto pool_group = pools_.equal_range(BASIC_SPAWNER_POOLS);
-
-    for (auto it = pool_group.first; it != pool_group.second; ++it)
-    {
-      UpdateSpawners((*it).second);
-    }
+    UpdatePoolGroup(HANDLE_POOLS, AssignHandles);
+    UpdatePoolGroup(ALL_POOLS, SpawnObjects);
   }
 
   void CreationSystem::SetArchetypeManager(ArchetypeManager& archetypeManager)
@@ -80,27 +56,50 @@ namespace Barrage
     poolManager_ = &poolManager;
   }
 
-  void CreationSystem::CreateObject(const ObjectArchetype& archetype, Pool* pool)
+  void CreationSystem::CreateObject(const ObjectArchetype& archetype, Pool* destinationPool)
   {
-    CreateObjects(archetype, pool, 1);
+    unsigned available_slots = destinationPool->GetAvailableSlots();
+
+    if (available_slots == 0)
+      return;
+
+    CreateObjects(archetype, destinationPool, 1, false);
+
+    if (destinationPool->HasComponentArray("DirectoryIndexArray") && destinationPool->HasSharedComponent("ObjectDirectory"))
+    {
+      ObjectDirectory& object_directory = *destinationPool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
+      DirectoryIndexArray& directory_index_array = *destinationPool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
+
+      unsigned object_index = destinationPool->size_ - 1;
+      DirectoryIndex& directory_index = directory_index_array[object_index];
+      directory_index.index_ = object_directory.CreateHandle(object_index);
+    }
   }
   
-  void CreationSystem::CreateObjects(const ObjectArchetype& archetype, Pool* pool, unsigned numNewObjects)
+  void CreationSystem::QueueSpawns(Pool* sourcePool, SpawnType& spawnType)
   {
-    unsigned available_slots = pool->capacity_ - pool->size_;
+    ObjectArchetype* object_archetype = archetypeManager_->GetObjectArchetype(spawnType.archetypeName_);
+    Pool* destination_pool = poolManager_->GetPool(spawnType.destinationPoolName_);
+    unsigned num_spawns = static_cast<unsigned>(spawnType.sourceIndices_.size());
+    unsigned available_slots = destination_pool->GetAvailableSlots();
+    unsigned start_index = destination_pool->size_ + destination_pool->queuedObjects_;
 
-    if (available_slots < numNewObjects)
+    if (available_slots < num_spawns)
+      num_spawns = available_slots;
+
+    if (num_spawns != 0)
     {
-      numNewObjects = available_slots;
+      CreateObjects(*object_archetype, destination_pool, num_spawns, true);
+      ApplySpawnFuncs(spawnType.spawnFuncs_, sourcePool, destination_pool, start_index, num_spawns, spawnType.sourceIndices_);
     }
 
-    if (numNewObjects == 0)
-    {
-      return;
-    }
+    spawnType.sourceIndices_.clear();
+  }
 
-    auto begin_it = pool->componentArrays_.begin();
-    auto end_it = pool->componentArrays_.end();
+  void CreationSystem::CreateObjects(const ObjectArchetype& archetype, Pool* destinationPool, unsigned numNewObjects, bool queueObjects)
+  {
+    auto begin_it = destinationPool->componentArrays_.begin();
+    auto end_it = destinationPool->componentArrays_.end();
 
     for (auto it = begin_it; it != end_it; ++it)
     {
@@ -109,18 +108,18 @@ namespace Barrage
 
       for (unsigned i = 0; i < numNewObjects; ++i)
       {
-        destination_array->CopyToThis(*source_component, 0, pool->size_ + i);
+        destination_array->CopyToThis(*source_component, 0, destinationPool->size_ + i);
       }
     }
 
-    pool->size_ += numNewObjects;
+    if (queueObjects)
+      destinationPool->queuedObjects_ += numNewObjects;
+    else
+      destinationPool->size_ += numNewObjects;
   }
 
-  void CreationSystem::ApplySpawnFuncs(const std::vector<std::string>& spawnFuncs, Pool* initPool, Pool* destPool, unsigned startIndex, unsigned numObjects, const std::vector<unsigned>& sourceIndices)
+  void CreationSystem::ApplySpawnFuncs(const std::vector<std::string>& spawnFuncs, Pool* sourcePool, Pool* destinationPool, unsigned startIndex, unsigned numObjects, const std::vector<unsigned>& sourceIndices)
   {
-    if (numObjects == 0)
-      return;
-
     size_t num_spawn_funcs = spawnFuncs.size();
 
     for (size_t i = 0; i < num_spawn_funcs; ++i)
@@ -129,38 +128,32 @@ namespace Barrage
 
       if (spawn_func)
       {
-        spawn_func(*initPool, *destPool, startIndex, numObjects, sourceIndices);
+        spawn_func(*sourcePool, *destinationPool, startIndex, numObjects, sourceIndices);
       }
     }
   }
 
-  void CreationSystem::UpdateSpawners(Pool* pool)
+  void CreationSystem::SpawnObjects(Pool* pool)
   {
-    Spawner* spawner = static_cast<Spawner*>(pool->sharedComponents_["Spawner"]);
-    
-    size_t num_spawn_types = spawner->spawnTypes_.size();
+    pool->size_ += pool->queuedObjects_;
+    pool->queuedObjects_ = 0;
+  }
 
-    for (size_t i = 0; i < num_spawn_types; ++i)
+  void CreationSystem::AssignHandles(Pool* pool)
+  {
+    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
+
+    unsigned start_index = pool->size_;
+    unsigned num_queued_objects = pool->queuedObjects_;
+
+    for (unsigned i = 0; i < num_queued_objects; ++i)
     {
-      SpawnType& spawn_type = spawner->spawnTypes_[i];
+      unsigned object_index = start_index + i;
+      
+      DirectoryIndex& directory_index = directory_index_array[object_index];
 
-      Pool* destination_pool = poolManager_->GetPool(spawn_type.poolName_);
-      ObjectArchetype* object_archetype = archetypeManager_->GetObjectArchetype(spawn_type.archetypeName_);
-      unsigned num_new_objects = spawn_type.spawnNum_;
-      unsigned available_slots = destination_pool->capacity_ - destination_pool->size_;
-      unsigned first_obj_index = destination_pool->size_;
-
-      if (available_slots < num_new_objects)
-      {
-        num_new_objects = available_slots;
-      }
-
-      CreateObjects(*object_archetype, destination_pool, num_new_objects);
-
-      ApplySpawnFuncs(spawn_type.spawnFuncs_, pool, destination_pool, first_obj_index, num_new_objects, spawn_type.sourceIndices_);
-
-      spawn_type.spawnNum_ = 0;
-      spawn_type.sourceIndices_.clear();
+      directory_index.index_ = object_directory.CreateHandle(object_index);
     }
   }
 }
