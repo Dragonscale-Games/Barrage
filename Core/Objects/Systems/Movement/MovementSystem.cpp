@@ -36,13 +36,13 @@ namespace Barrage
 
     PoolType player_type;
     player_type.AddComponentName("PositionArray");
-    player_type.AddTag("Player");
+    player_type.AddComponentName("Player");
     poolTypes_[PLAYER_POOLS] = player_type;
 
     PoolType bounded_player_type;
     bounded_player_type.AddComponentName("PositionArray");
     bounded_player_type.AddComponentName("BoundaryBox");
-    bounded_player_type.AddTag("Player");
+    bounded_player_type.AddComponentName("Player");
     poolTypes_[BOUNDED_PLAYER_POOLS] = bounded_player_type;
   }
 
@@ -56,12 +56,18 @@ namespace Barrage
 
   void MovementSystem::UpdatePlayerMovement(Pool* pool)
   {
-    float speed = 7.0f;
+    Player& player = *pool->GetSharedComponent<Player>("Player");
+
+    float speed = 0.0f;
     Velocity player_velocity;
 
     if (Engine::Instance->Input().KeyIsDown(KEY_SHIFT_LEFT))
     {
-      speed = .5f * speed;
+      speed = player.speedSlow_;
+    }
+    else
+    {
+      speed = player.speedFast_;
     }
 
     if (Engine::Instance->Input().KeyIsDown(KEY_LEFT))

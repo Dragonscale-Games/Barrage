@@ -62,7 +62,10 @@ namespace Demo
   {
     PoolArchetype* pool_archetype = new PoolArchetype;
 
-    pool_archetype->tags_.push_back("Player");
+    Player* player = new Player;
+    player->speedFast_ = 7.0f;
+    player->speedSlow_ = 3.5f;
+    pool_archetype->sharedComponents_["Player"] = player;
 
     CircleCollider* circle_collider = new CircleCollider;
     circle_collider->radius_ = 16.0f;

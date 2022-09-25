@@ -195,6 +195,7 @@ namespace Barrage
     RegisterComponent<BoundaryBox>("BoundaryBox");
     RegisterComponent<CircleCollider>("CircleCollider");
     RegisterComponent<ObjectDirectory>("ObjectDirectory");
+    RegisterComponent<Player>("Player");
     RegisterComponent<Spawner>("Spawner");
     RegisterComponent<Sprite>("Sprite");
     RegisterComponent<RNG>("RNG");

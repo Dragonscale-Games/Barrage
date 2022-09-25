@@ -39,7 +39,7 @@ namespace Barrage
     PoolType circle_player_type;
     circle_player_type.AddComponentName("CircleCollider");
     circle_player_type.AddComponentName("PositionArray");
-    circle_player_type.AddTag("Player");
+    circle_player_type.AddComponentName("Player");
     poolTypes_[CIRCLE_PLAYER_POOLS] = circle_player_type;
   }
 

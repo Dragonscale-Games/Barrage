@@ -27,6 +27,7 @@
 #include "SharedComponents/BoundaryBox.hpp"
 #include "SharedComponents/CircleCollider.hpp"
 #include "SharedComponents/ObjectDirectory.hpp"
+#include "SharedComponents/Player.hpp"
 #include "SharedComponents/RNG.hpp"
 #include "SharedComponents/Spawner.hpp"
 #include "SharedComponents/Sprite.hpp"
