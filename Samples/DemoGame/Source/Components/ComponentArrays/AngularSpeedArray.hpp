@@ -1,40 +1,43 @@
 /* ======================================================================== */
 /*!
- * \file            RotationArray.hpp
+ * \file            AngularSpeedArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Rotation component keeps track of the counterclockwise rotation of
-   an object in radians.
+   The Angular Speed component keeps track of an object's counterclockwise
+   rotation speed.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef RotationArray_BARRAGE_H
-#define RotationArray_BARRAGE_H
+#ifndef AngularSpeedArray_BARRAGE_H
+#define AngularSpeedArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../../BaseClasses/ComponentArray.hpp"
+#include "Objects/Components/BaseClasses/ComponentArray.hpp"
 #include "Utilities/Utilities.hpp"
+
+namespace Demo
+{
+  //!< Counterclockwise rotation of an object
+  struct AngularSpeed
+  {
+    Barrage::RADIAN w_; //!< Counterclockwise rotation speed in radians per tick
+
+    inline AngularSpeed() : w_(0.0f) {}
+  };
+
+  typedef Barrage::ComponentArrayT<AngularSpeed> AngularSpeedArray;
+}
 
 namespace Barrage
 {
-  //!< Counterclockwise rotation of an object
-  struct Rotation
-  {
-    RADIAN angle_; //!< Rotation angle in radians
-
-    inline Rotation() : angle_(0.0f) {}
-  };
-
-  typedef ComponentArrayT<Rotation> RotationArray;
-
   template <>
-  inline std::string RotationArray::GetClassName() { return "RotationArray"; }
+  inline std::string Demo::AngularSpeedArray::GetClassName() { return "AngularSpeedArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // RotationArray_BARRAGE_H
+#endif // AngularSpeedArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

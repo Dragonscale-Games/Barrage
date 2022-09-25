@@ -13,16 +13,17 @@
 #include "DirectionFuncs.hpp"
 #include <Engine/Engine.hpp>
 #include <stdafx.h>
+#include "../../Components/DemoComponents.hpp"
 
-namespace Barrage
+namespace Demo
 {
   namespace Spawn
   {
-    void RandomDirection(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, const std::vector<unsigned>& sourceIndices)
+    void RandomDirection(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, const std::vector<unsigned>& sourceIndices)
     {
       UNREFERENCED(sourceIndices);
       
-      Random& rng = initPool.GetSharedComponent<RNG>("RNG")->rng_;
+      Barrage::Random& rng = initPool.GetSharedComponent<RNG>("RNG")->rng_;
       VelocityArray& dest_velocities = *destPool.GetComponentArray<VelocityArray>("VelocityArray");
 
       for (unsigned i = 0; i < numNewObjects; ++i)

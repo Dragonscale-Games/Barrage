@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            LifetimeArray.hpp
+ * \file            BoundaryBox.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -12,28 +12,32 @@
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef LifetimeArray_BARRAGE_H
-#define LifetimeArray_BARRAGE_H
+#ifndef BoundaryBox_BARRAGE_H
+#define BoundaryBox_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/ComponentArray.hpp"
+#include "Objects/Components/BaseClasses/SharedComponent.hpp"
 
-namespace Barrage
+namespace Demo
 {
-  //!< Destroys an object after a certain number of ticks
-  struct Lifetime
+  //! Holds all information needed to draw the objects in a pool
+  class BoundaryBox : public Barrage::SharedComponent
   {
-    unsigned ticks_; //!< the number of ticks the object has left to live
+  public:
+    float xMin_;
+    float xMax_;
+    float yMin_;
+    float yMax_;
 
-    inline Lifetime() : ticks_(60) {}
+    inline BoundaryBox() : xMin_(-50.0f), xMax_(50.0f), yMin_(-50.0f), yMax_(50.0f) {}
+
+    inline std::string GetClassName() override { return "BoundaryBox"; }
+
+    // Notify rttr of the component hierarchy.
+    RTTR_ENABLE()
   };
-
-  typedef ComponentArrayT<Lifetime> LifetimeArray;
-
-  template <>
-  inline std::string LifetimeArray::GetClassName() { return "LifetimeArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // LifetimeArray_BARRAGE_H
+#endif // BoundaryBox_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

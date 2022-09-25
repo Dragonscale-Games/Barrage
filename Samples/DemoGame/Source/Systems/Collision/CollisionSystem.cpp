@@ -12,9 +12,12 @@
 
 #include "stdafx.h"
 #include "CollisionSystem.hpp"
+#include "Source/Components/DemoComponents.hpp"
 
-namespace Barrage
+namespace Demo
 {
+  using namespace Barrage;
+  
   static const unsigned CIRCLE_BULLET_POOLS = 0;
   static const unsigned CIRCLE_PLAYER_POOLS = 1;
   static const unsigned BOUNDED_BULLET_POOLS = 2;

@@ -15,6 +15,7 @@
 #include <Engine/Engine.hpp>
 #include <Objects/Components/EngineComponents.hpp>
 #include <Objects/ObjectManager.hpp>
+#include "../Components/DemoComponents.hpp"
 
 namespace Demo
 {

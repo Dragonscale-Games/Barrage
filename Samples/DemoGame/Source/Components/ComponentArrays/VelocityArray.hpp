@@ -16,9 +16,9 @@
 #define VelocityArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/ComponentArray.hpp"
+#include "Objects/Components/BaseClasses/ComponentArray.hpp"
 
-namespace Barrage
+namespace Demo
 {
   //!< Speed and direction of a game object
   struct Velocity
@@ -29,10 +29,13 @@ namespace Barrage
     inline Velocity() : vx_(0.0f), vy_(0.0f) {}
   };
 
-  typedef ComponentArrayT<Velocity> VelocityArray;
+  typedef Barrage::ComponentArrayT<Velocity> VelocityArray;
+}
 
+namespace Barrage
+{
   template <>
-  inline std::string VelocityArray::GetClassName() { return "VelocityArray"; }
+  inline std::string Demo::VelocityArray::GetClassName() { return "VelocityArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

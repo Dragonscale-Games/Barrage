@@ -1,39 +1,41 @@
 /* ======================================================================== */
 /*!
- * \file            ScaleArray.hpp
+ * \file            CircleCollider.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Scale component keeps track of the world dimensions of a game object.
+   <put description here> 
+
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef ScaleArray_BARRAGE_H
-#define ScaleArray_BARRAGE_H
+#ifndef CircleCollider_BARRAGE_H
+#define CircleCollider_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../../BaseClasses/ComponentArray.hpp"
+#include "Objects/Components/BaseClasses/SharedComponent.hpp"
+#include <rttr/rttr_enable.h>
 
-namespace Barrage
+namespace Demo
 {
-  //!< World dimensions of an object
-  struct Scale
+  //! Holds all information needed to draw the objects in a pool
+  class CircleCollider : public Barrage::SharedComponent
   {
-    float w_; //!< width in world units
-    float h_; //!< height in world units
+    public:
+      float radius_;
 
-    inline Scale() : w_(100.0f), h_(100.0f) {}
+      CircleCollider() : radius_(50.0f) {}
+
+      inline std::string GetClassName() override { return "CircleCollider"; }
+
+      // Notify rttr of the component hierarchy.
+      RTTR_ENABLE()
   };
-
-  typedef ComponentArrayT<Scale> ScaleArray;
-
-  template <>
-  inline std::string ScaleArray::GetClassName() { return "ScaleArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ScaleArray_BARRAGE_H
+#endif // CircleCollider_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

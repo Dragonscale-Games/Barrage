@@ -15,12 +15,12 @@
 #define MovementSystem_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseSystem.hpp"
+#include "Objects/Systems/BaseSystem.hpp"
 
-namespace Barrage
+namespace Demo
 {
   //! <class description>
-  class MovementSystem : public System
+  class MovementSystem : public Barrage::System
   {
   public:
     /**************************************************************/
@@ -40,13 +40,13 @@ namespace Barrage
     void Update() override;
 
   private:
-    static void UpdatePlayerMovement(Pool* pool);
+    static void UpdatePlayerMovement(Barrage::Pool* pool);
 
-    static void UpdatePlayerBounds(Pool* pool);
+    static void UpdatePlayerBounds(Barrage::Pool* pool);
 
-    static void UpdateBasicMovement(Pool* pool);
+    static void UpdateBasicMovement(Barrage::Pool* pool);
 
-    static void UpdateBasicRotation(Pool* pool);
+    static void UpdateBasicRotation(Barrage::Pool* pool);
   };
 }
 

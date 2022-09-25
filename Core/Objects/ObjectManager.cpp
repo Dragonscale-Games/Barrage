@@ -183,22 +183,15 @@ namespace Barrage
 
   void ObjectManager::RegisterEngineComponents()
   {
-    RegisterComponent<AngularSpeedArray>("AngularSpeedArray");
     RegisterComponent<DestructibleArray>("DestructibleArray");
     RegisterComponent<DirectoryIndexArray>("DirectoryIndexArray");
-    RegisterComponent<LifetimeArray>("LifetimeArray");
     RegisterComponent<PositionArray>("PositionArray");
     RegisterComponent<RotationArray>("RotationArray");
     RegisterComponent<ScaleArray>("ScaleArray");
-    RegisterComponent<VelocityArray>("VelocityArray");
 
-    RegisterComponent<BoundaryBox>("BoundaryBox");
-    RegisterComponent<CircleCollider>("CircleCollider");
     RegisterComponent<ObjectDirectory>("ObjectDirectory");
-    RegisterComponent<Player>("Player");
     RegisterComponent<Spawner>("Spawner");
     RegisterComponent<Sprite>("Sprite");
-    RegisterComponent<RNG>("RNG");
   }
 
   void ObjectManager::RegisterEngineSystems()
@@ -206,13 +199,10 @@ namespace Barrage
     RegisterSystem<CreationSystem>("CreationSystem");
     RegisterSystem<DestructionSystem>("DestructionSystem");
     RegisterSystem<DrawSystem>("DrawSystem");
-    RegisterSystem<MovementSystem>("MovementSystem");
-    RegisterSystem<CollisionSystem>("CollisionSystem");
   }
 
   void ObjectManager::RegisterEngineSpawnFuncs()
   {
-    RegisterSpawnFunc("RandomDirection", Spawn::RandomDirection);
     RegisterSpawnFunc("MatchPosition", Spawn::MatchPosition);
   }
 
@@ -222,9 +212,6 @@ namespace Barrage
 
     update_order.push_back("CreationSystem");
     update_order.push_back("DestructionSystem");
-    update_order.push_back("MovementSystem");
-    update_order.push_back("CreationSystem");
-    update_order.push_back("CollisionSystem");
 
     SetSystemUpdateOrder(update_order);
   }

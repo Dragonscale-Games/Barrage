@@ -15,15 +15,15 @@
 #define Player_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/SharedComponent.hpp"
+#include "Objects/Components/BaseClasses/SharedComponent.hpp"
 
 #include <unordered_map>
 #include <string>
 
-namespace Barrage
+namespace Demo
 {
   //! Basic player component
-  class Player : public SharedComponent
+  class Player : public Barrage::SharedComponent
   {
     public:
       float speedSlow_;

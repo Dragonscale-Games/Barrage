@@ -17,10 +17,10 @@
 
 #include "Objects/Systems/BaseSystem.hpp"
 
-namespace Barrage
+namespace Demo
 {
   //! <class description>
-  class CollisionSystem : public System
+  class CollisionSystem : public Barrage::System
   {
   public:
     /**************************************************************/
@@ -41,9 +41,9 @@ namespace Barrage
     void Update() override;
 
   private:
-    static void UpdateBoundedBullets(Pool* pool);
+    static void UpdateBoundedBullets(Barrage::Pool* pool);
     
-    static void UpdatePlayerBulletCollisions(Pool* player_pool, Pool* bullet_pool);
+    static void UpdatePlayerBulletCollisions(Barrage::Pool* player_pool, Barrage::Pool* bullet_pool);
   };
 }
 

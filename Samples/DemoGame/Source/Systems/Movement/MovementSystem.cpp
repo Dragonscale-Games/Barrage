@@ -13,9 +13,12 @@
 #include "MovementSystem.hpp"
 #include "Engine/Engine.hpp"
 #include "Utilities/Utilities.hpp"
+#include "Source/Components/DemoComponents.hpp"
 
-namespace Barrage
+namespace Demo
 {
+  using namespace Barrage;
+  
   static const unsigned BASIC_MOVEMENT_POOLS = 0;
   static const unsigned BASIC_ROTATION_POOLS = 1;
   static const unsigned PLAYER_POOLS = 2;

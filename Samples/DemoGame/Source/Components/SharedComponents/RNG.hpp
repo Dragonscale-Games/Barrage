@@ -1,41 +1,39 @@
 /* ======================================================================== */
 /*!
- * \file            CircleCollider.hpp
+ * \file            RNG.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
-
+   Random number generator component.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef CircleCollider_BARRAGE_H
-#define CircleCollider_BARRAGE_H
+#ifndef RNG_BARRAGE_H
+#define RNG_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/SharedComponent.hpp"
-#include <rttr/rttr_enable.h>
+#include "Objects/Components/BaseClasses/SharedComponent.hpp"
+#include <Random/Random.hpp>
 
-namespace Barrage
+namespace Demo
 {
-  //! Holds all information needed to draw the objects in a pool
-  class CircleCollider : public SharedComponent
+  //! Random number generator component
+  class RNG : public Barrage::SharedComponent
   {
     public:
-      float radius_;
+      Barrage::Random rng_;
 
-      CircleCollider() : radius_(50.0f) {}
+      inline RNG() : rng_() {}
 
-      inline std::string GetClassName() override { return "CircleCollider"; }
+      inline std::string GetClassName() override { return "RNG"; }
 
-      // Notify rttr of the component hierarchy.
       RTTR_ENABLE()
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // CircleCollider_BARRAGE_H
+#endif // RNG_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -17,11 +17,11 @@
 
 #include <Objects/SpawnFuncs/SpawnFuncManager.hpp>
 
-namespace Barrage
+namespace Demo
 {
   namespace Spawn 
   {
-    void RandomDirection(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, const std::vector<unsigned>& sourceIndices);
+    void RandomDirection(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, const std::vector<unsigned>& sourceIndices);
   }
 }
 

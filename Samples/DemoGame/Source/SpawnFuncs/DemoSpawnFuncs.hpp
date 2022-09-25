@@ -1,24 +1,22 @@
 /* ======================================================================== */
 /*!
- * \file            EngineSystems.hpp
- * \par             Barrage Engine
+ * \file            DemoSpawnFuncs.hpp
+ * \par             Demo Game
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Definitions of each type of built-in system.
+   Definitions of each type of custom spawn function for the Demo Game.
  */
  /* ======================================================================== */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef EngineSystems_BARRAGE_H
-#define EngineSystems_BARRAGE_H
+#ifndef DemoSpawnFuncs_DEMO_H
+#define DemoSpawnFuncs_DEMO_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Creation/CreationSystem.hpp"
-#include "Destruction/DestructionSystem.hpp"
-#include "Draw/DrawSystem.hpp"
+#include "Direction/DirectionFuncs.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // EngineSystems_BARRAGE_H
+#endif // DemoSpawnFuncs_DEMO_H
 ////////////////////////////////////////////////////////////////////////////////

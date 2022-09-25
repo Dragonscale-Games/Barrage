@@ -17,12 +17,14 @@
 
 namespace Demo
 {
+  using namespace Barrage;
+  
   static const unsigned BULLET_SPAWNER_POOLS = 0;
   
   SpawnSystem::SpawnSystem() :
     System()
   {
-    Barrage::PoolType bullet_type;
+    PoolType bullet_type;
     bullet_type.AddTag("Spawner");
     bullet_type.AddComponentName("Spawner");
     poolTypes_[BULLET_SPAWNER_POOLS] = bullet_type;
@@ -34,10 +36,10 @@ namespace Demo
 
     for (auto it = pool_group.first; it != pool_group.second; ++it)
     {
-      Barrage::Pool* pool = (*it).second;
-      Barrage::Spawner& spawner = *pool->GetSharedComponent<Barrage::Spawner>("Spawner");
+      Pool* pool = (*it).second;
+      Spawner& spawner = *pool->GetSharedComponent<Spawner>("Spawner");
       spawner.spawnTypes_["Bullet Spawn"].sourceIndices_.resize(100, 0);
-      Barrage::CreationSystem* creation_system = dynamic_cast<Barrage::CreationSystem*>(systemManager_->GetSystem("CreationSystem"));
+      CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_->GetSystem("CreationSystem"));
       creation_system->QueueSpawns(pool, spawner.spawnTypes_["Bullet Spawn"]);
     }
   }

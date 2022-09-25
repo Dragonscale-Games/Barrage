@@ -1,40 +1,39 @@
 /* ======================================================================== */
 /*!
- * \file            AngularSpeedArray.hpp
+ * \file            ScaleArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Angular Speed component keeps track of an object's counterclockwise
-   rotation speed.
+   The Scale component keeps track of the world dimensions of a game object.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef AngularSpeedArray_BARRAGE_H
-#define AngularSpeedArray_BARRAGE_H
+#ifndef ScaleArray_BARRAGE_H
+#define ScaleArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../BaseClasses/ComponentArray.hpp"
-#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
-  //!< Counterclockwise rotation of an object
-  struct AngularSpeed
+  //!< World dimensions of an object
+  struct Scale
   {
-    RADIAN w_; //!< Counterclockwise rotation speed in radians per tick
+    float w_; //!< width in world units
+    float h_; //!< height in world units
 
-    inline AngularSpeed() : w_(0.0f) {}
+    inline Scale() : w_(100.0f), h_(100.0f) {}
   };
 
-  typedef ComponentArrayT<AngularSpeed> AngularSpeedArray;
+  typedef ComponentArrayT<Scale> ScaleArray;
 
   template <>
-  inline std::string AngularSpeedArray::GetClassName() { return "AngularSpeedArray"; }
+  inline std::string ScaleArray::GetClassName() { return "ScaleArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // AngularSpeedArray_BARRAGE_H
+#endif // ScaleArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

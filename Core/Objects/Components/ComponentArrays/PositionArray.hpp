@@ -1,39 +1,39 @@
 /* ======================================================================== */
 /*!
- * \file            RNG.hpp
+ * \file            PositionArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Random number generator component.
+   The Position component keeps track of an object's world position.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef RNG_BARRAGE_H
-#define RNG_BARRAGE_H
+#ifndef PositionArray_BARRAGE_H
+#define PositionArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/SharedComponent.hpp"
-#include <Random/Random.hpp>
+#include "../BaseClasses/ComponentArray.hpp"
 
 namespace Barrage
 {
-  //! Random number generator component
-  class RNG : public SharedComponent
+  //!< World position of an object
+  struct Position
   {
-    public:
-      Random rng_;
+    float x_; //!< x coord in world units
+    float y_; //!< y coord in world units
 
-      inline RNG() : rng_() {}
-
-      inline std::string GetClassName() override { return "RNG"; }
-
-      RTTR_ENABLE()
+    inline Position() : x_(0.0f), y_(0.0f) {}
   };
+
+  typedef ComponentArrayT<Position> PositionArray;
+
+  template <>
+  inline std::string PositionArray::GetClassName() { return "PositionArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // RNG_BARRAGE_H
+#endif // PositionArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
