@@ -55,9 +55,6 @@ add_library(BarrageCore STATIC
   
   "FramerateController/FramerateController.cpp" "FramerateController/FramerateController.hpp"
   
-  "GameStates/GameStateManager.cpp" "GameStates/GameStateManager.hpp" 
-  "GameStates/GameState.cpp" "GameStates/GameState.hpp" 
-  
   "Input/InputManager.cpp" "Input/InputManager.hpp" 
   "Input/KeyMap.hpp" 
 
@@ -104,12 +101,6 @@ add_library(BarrageCore STATIC
 
   "Serialization/ComponentRefl.hpp" "Serialization/ComponentRefl.cpp"
   "Serialization/Serializer.hpp" "Serialization/Serializer.cpp"
-  
-  "SimpleRenderer/SimpleRenderer.cpp" "SimpleRenderer/SimpleRenderer.hpp" 
-  "SimpleRenderer/SimpleShader/SimpleShader.cpp" "SimpleRenderer/SimpleShader/SimpleShader.hpp" 
-  "SimpleRenderer/SimpleShader/SimpleShaderManager.cpp" "SimpleRenderer/SimpleShader/SimpleShaderManager.hpp" 
-  "SimpleRenderer/SimpleTexture/SimpleTexture.cpp" "SimpleRenderer/SimpleTexture/SimpleTexture.hpp" 
-  "SimpleRenderer/SimpleTexture/SimpleTextureManager.cpp" "SimpleRenderer/SimpleTexture/SimpleTextureManager.hpp" 
 
   "Spaces/Space.cpp" "Spaces/Space.hpp"
   "Spaces/SpaceManager.cpp" "Spaces/SpaceManager.hpp"
