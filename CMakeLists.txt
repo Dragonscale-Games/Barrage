@@ -42,6 +42,7 @@ project(Barrage)
 
 # Set the working directory as the root?
 set(${WORKING_DIRECTORY} ${CMAKE_SOURCE_DIR})
+set(${BARRAGE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Add the subdirectories for third party libraries.
 find_package(glfw3 REQUIRED)

@@ -37,5 +37,5 @@ add_executable(DemoGame "Source/main.cpp"
 "Source/Systems/SpawnSystem.cpp" "Source/Systems/SpawnSystem.hpp"  )
 target_link_libraries(DemoGame PUBLIC BarrageCore)
 target_include_directories(DemoGame PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-target_include_directories(DemoGame PUBLIC "${CMAKE_SOURCE_DIR}/Core")
+target_include_directories(DemoGame PUBLIC "${BARRAGE_SOURCE_DIR}/Core")
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
