@@ -34,5 +34,5 @@
 add_executable(GraphicsSample "main.cpp")
 target_link_libraries(GraphicsSample PRIVATE BarrageCore)
 # Copy over the text files from here to the binary output file.
-file(COPY "${CMAKE_CURRENT_BINARY_DIR}/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
