@@ -18,7 +18,6 @@
 
 #include "FramerateController/FramerateController.hpp"
 #include "Input/InputManager.hpp"
-#include "SimpleRenderer/SimpleRenderer.hpp"
 #include "Spaces/SpaceManager.hpp"
 
 #include "Rendering/GfxDraw2D.hpp"
