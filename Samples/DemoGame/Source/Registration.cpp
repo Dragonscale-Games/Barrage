@@ -42,6 +42,7 @@ namespace Barrage
 
   void ObjectManager::RegisterCustomSpawnFuncs()
   {
+    RegisterSpawnFunc("MatchPosition", Demo::Spawn::MatchPosition);
     RegisterSpawnFunc("RandomDirection", Demo::Spawn::RandomDirection);
   }
 

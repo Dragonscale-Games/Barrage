@@ -38,6 +38,7 @@ add_executable(DemoGame "Source/main.cpp"
 "Source/Systems/Movement/MovementSystem.cpp"
 "Source/Systems/Spawn/SpawnSystem.cpp"
 "Source/SpawnFuncs/Direction/DirectionFuncs.cpp"
+"Source/SpawnFuncs/Position/PositionFuncs.cpp"
 )
 target_link_libraries(DemoGame PUBLIC BarrageCore)
 target_include_directories(DemoGame PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

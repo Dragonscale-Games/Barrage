@@ -13,7 +13,9 @@
 #include "PositionFuncs.hpp"
 #include <Engine/Engine.hpp>
 
-namespace Barrage
+using namespace Barrage;
+
+namespace Demo
 {
   namespace Spawn
   {

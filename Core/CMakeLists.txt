@@ -79,8 +79,6 @@ add_library(BarrageCore STATIC
   "Objects/Pools/PoolType.cpp"  
   "Objects/Pools/PoolInfo.cpp" 
 
-  "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
-
   "Random/Random.cpp" "Random/Random.hpp"
 
   "Rendering/WindowManager.hpp" "Rendering/WindowManager.cpp"

@@ -17,11 +17,11 @@
 
 #include <Objects/SpawnFuncs/SpawnFuncManager.hpp>
 
-namespace Barrage
+namespace Demo
 {
   namespace Spawn
   {
-    void MatchPosition(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, const std::vector<unsigned>& sourceIndices);
+    void MatchPosition(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, const std::vector<unsigned>& sourceIndices);
   }
 }
 

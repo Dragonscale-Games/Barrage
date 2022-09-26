@@ -15,7 +15,6 @@
 
 #include "Components/EngineComponents.hpp"
 #include "Systems/EngineSystems.hpp"
-#include "SpawnFuncs/EngineSpawnFuncs.hpp"
 
 namespace Barrage
 {
@@ -203,7 +202,7 @@ namespace Barrage
 
   void ObjectManager::RegisterEngineSpawnFuncs()
   {
-    RegisterSpawnFunc("MatchPosition", Spawn::MatchPosition);
+
   }
 
   void ObjectManager::SetDefaultSystemUpdateOrder()
