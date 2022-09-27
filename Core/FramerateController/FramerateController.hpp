@@ -175,6 +175,7 @@ namespace Barrage
       static const long long DT_60HZ = 16800;                            //!< Microseconds per frame at 60fps (slightly longer)
       static const long long TICKS_PER_FRAME_60HZ = 2;                   //!< Ticks per frame at 60fps (generally a power of 2)
       static const long long TICK_TIME = DT_60HZ / TICKS_PER_FRAME_60HZ; //!< Microseconds per tick
+      static const long long TICK_EPSILON = 800;                         //!< Allowed error in time measurement (+/-)
   };
 }
 

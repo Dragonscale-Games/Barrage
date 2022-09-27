@@ -48,15 +48,28 @@ namespace Barrage
   void FramerateController::EndFrame()
   {
     if (usingVsync_)
+    {
       EndFrameVsync();
+    }
     else if (glfwGetWindowAttrib(window_, GLFW_FOCUSED))
+    {
       EndFrameBusyWait();
+    }
     else
+    {
       EndFrameSleep();
+    }
 
-    // if dt is only slightly longer than a nonzero number of ticks, trim the excess time
-    if (dt_ % TICK_TIME < TICK_TIME / 10 && dt_ >= TICK_TIME)
+    // if dt is a nonzero number of ticks within the error margin, round it to that many ticks
+    // this allows better syncing when monitors refresh at a rate slightly faster or slower than a multiple of 60Hz
+    if (dt_ % TICK_TIME < TICK_EPSILON && dt_ >= TICK_TIME)
+    {
       dt_ -= dt_ % TICK_TIME;
+    }
+    else if (dt_ % TICK_TIME > TICK_TIME - TICK_EPSILON)
+    {
+      dt_ += TICK_TIME - (dt_ % TICK_TIME);
+    }
 
     accumulator_ += dt_;
   }
