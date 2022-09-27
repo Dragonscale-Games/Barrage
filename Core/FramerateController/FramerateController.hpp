@@ -122,12 +122,12 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Provides the number of times the user should tick their 
-          game/simulation since the last time this function was
-          called. Will be no greater than TICKS_PER_FRAME_60HZ.
+          Provides the number of ticks since the last time this
+          function was called.
 
         \return
-          Returns the number of ticks specified above.
+          Returns the number of ticks since the last time this
+          function was called.
       */
       /**************************************************************/
       unsigned ConsumeTicks();
