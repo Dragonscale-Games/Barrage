@@ -54,10 +54,6 @@ namespace Barrage
     else
       EndFrameSleep();
 
-    // clamp dt to prevent weirdness on unexpectedly long frames
-    /*if (dt_ >= DT_60HZ)
-      dt_ = DT_60HZ;*/
-
     // if dt is only slightly longer than a nonzero number of ticks, trim the excess time
     if (dt_ % TICK_TIME < TICK_TIME / 10 && dt_ >= TICK_TIME)
       dt_ -= dt_ % TICK_TIME;
