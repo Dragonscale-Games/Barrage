@@ -14,6 +14,7 @@
 #include "SpawnSystem.hpp"
 #include <Objects/Systems/SystemManager.hpp>
 #include <Objects/Systems/Creation/CreationSystem.hpp>
+#include "../../SpawnTypes.hpp"
 
 namespace Demo
 {
@@ -38,9 +39,9 @@ namespace Demo
     {
       Pool* pool = (*it).second;
       Spawner& spawner = *pool->GetSharedComponent<Spawner>("Spawner");
-      spawner.spawnTypes_["Bullet Spawn"].sourceIndices_.resize(100, 0);
+      spawner.spawnTypes_[BULLET_SPAWN_TYPE].sourceIndices_.resize(100, 0);
       CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_->GetSystem("CreationSystem"));
-      creation_system->QueueSpawns(pool, spawner.spawnTypes_["Bullet Spawn"]);
+      creation_system->QueueSpawns(pool, spawner.spawnTypes_[BULLET_SPAWN_TYPE]);
     }
   }
 }

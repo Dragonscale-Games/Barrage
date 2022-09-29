@@ -29,7 +29,6 @@ namespace Barrage
     rttr::registration::class_<SpawnType>("SpawnType")
       .property("archetypeName", &SpawnType::archetypeName_)
       .property("destinationPoolName", &SpawnType::destinationPoolName_)
-      .property("destinationPoolCapacity", &SpawnType::destinationPoolCapacity_)
       .property("spawnFuncs", &SpawnType::spawnFuncs_)
       /*.constructor<>(
         rttr::policy::ctor::as_object

@@ -16,6 +16,7 @@
 #include <Objects/Components/EngineComponents.hpp>
 #include <Objects/ObjectManager.hpp>
 #include "../Components/DemoComponents.hpp"
+#include "../SpawnTypes.hpp"
 
 namespace Demo
 {
@@ -188,7 +189,7 @@ namespace Demo
     bullet_spawn_type.spawnFuncs_.push_back("RandomDirection");
 
     Spawner* spawner = new Spawner;
-    spawner->spawnTypes_["Bullet Spawn"] = bullet_spawn_type;
+    spawner->spawnTypes_[BULLET_SPAWN_TYPE] = bullet_spawn_type;
     pool_archetype->sharedComponents_["Spawner"] = spawner;
 
     RNG* rng = new RNG;
