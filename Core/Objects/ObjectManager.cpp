@@ -184,6 +184,7 @@ namespace Barrage
   {
     RegisterComponent<DestructibleArray>("DestructibleArray");
     RegisterComponent<DirectoryIndexArray>("DirectoryIndexArray");
+    RegisterComponent<ParentArray>("ParentArray");
     RegisterComponent<PositionArray>("PositionArray");
     RegisterComponent<RotationArray>("RotationArray");
     RegisterComponent<ScaleArray>("ScaleArray");

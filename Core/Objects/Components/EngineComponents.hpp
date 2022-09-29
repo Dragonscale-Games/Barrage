@@ -17,6 +17,7 @@
 
 #include "ComponentArrays/DestructibleArray.hpp"
 #include "ComponentArrays/DirectoryIndexArray.hpp"
+#include "ComponentArrays/ParentArray.hpp"
 #include "ComponentArrays/PositionArray.hpp"
 #include "ComponentArrays/RotationArray.hpp"
 #include "ComponentArrays/ScaleArray.hpp"
