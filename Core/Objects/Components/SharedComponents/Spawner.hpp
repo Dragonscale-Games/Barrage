@@ -57,6 +57,8 @@ namespace Barrage
       sourceIndices_ = rhs.sourceIndices_;
 
       sourceIndices_.reserve(100);
+
+      return *this;
     }
   };
   
