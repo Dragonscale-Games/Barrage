@@ -75,6 +75,17 @@ namespace Barrage
     }
   }
 
+  void System::UpdatePoolGroup(unsigned group, PoolUpdateMemberFunc function)
+  {
+    auto pool_group = pools_.equal_range(group);
+
+    for (auto it = pool_group.first; it != pool_group.second; ++it)
+    {
+      Pool* pool = (*it).second;
+      CALL_MEMBER_FN(*this, function)(pool);
+    }
+  }
+
   void System::UpdateInteraction(unsigned group1, unsigned group2, InteractionFunc function)
   {
     auto pool_group_1 = pools_.equal_range(group1);
@@ -88,6 +99,23 @@ namespace Barrage
         Pool* pool_2 = (*jt).second;
 
         function(pool_1, pool_2);
+      }
+    }
+  }
+
+  void System::UpdateInteraction(unsigned group1, unsigned group2, InteractionMemberFunc function)
+  {
+    auto pool_group_1 = pools_.equal_range(group1);
+    auto pool_group_2 = pools_.equal_range(group2);
+
+    for (auto it = pool_group_1.first; it != pool_group_1.second; ++it)
+    {
+      for (auto jt = pool_group_2.first; jt != pool_group_2.second; ++jt)
+      {
+        Pool* pool_1 = (*it).second;
+        Pool* pool_2 = (*jt).second;
+
+        CALL_MEMBER_FN(*this, function)(pool_1, pool_2);
       }
     }
   }

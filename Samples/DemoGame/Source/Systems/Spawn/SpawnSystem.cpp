@@ -33,15 +33,14 @@ namespace Demo
 
   void SpawnSystem::Update()
   {
-    auto pool_group = pools_.equal_range(BULLET_SPAWNER_POOLS);
+    UpdatePoolGroup(BULLET_SPAWNER_POOLS, static_cast<PoolUpdateMemberFunc>(&SpawnSystem::SpawnBullets));
+  }
 
-    for (auto it = pool_group.first; it != pool_group.second; ++it)
-    {
-      Pool* pool = (*it).second;
-      Spawner& spawner = *pool->GetSharedComponent<Spawner>("Spawner");
-      spawner.spawnTypes_[BULLET_SPAWN_TYPE].sourceIndices_.resize(100, 0);
-      CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_->GetSystem("CreationSystem"));
-      creation_system->QueueSpawns(pool, spawner.spawnTypes_[BULLET_SPAWN_TYPE]);
-    }
+  void SpawnSystem::SpawnBullets(Pool* pool)
+  {
+    Spawner& spawner = *pool->GetSharedComponent<Spawner>("Spawner");
+    spawner.spawnTypes_[BULLET_SPAWN_TYPE].sourceIndices_.resize(100, 0);
+    CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_->GetSystem("CreationSystem"));
+    creation_system->QueueSpawns(pool, spawner.spawnTypes_[BULLET_SPAWN_TYPE]);
   }
 }

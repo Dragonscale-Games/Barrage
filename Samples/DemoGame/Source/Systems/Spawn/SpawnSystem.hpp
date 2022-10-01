@@ -38,6 +38,9 @@ namespace Demo
       */
       /**************************************************************/
       void Update() override;
+
+    private:
+      void SpawnBullets(Barrage::Pool* pool);
 	};
 }
 
