@@ -19,9 +19,10 @@
 namespace Barrage
 {
   ObjectManager::ObjectManager() :
+    rng_(),
     componentAllocator_(),
     archetypeManager_(componentAllocator_),
-    poolManager_(componentAllocator_),
+    poolManager_(componentAllocator_, rng_),
     systemManager_(),
     spawnFuncManager_()
   {

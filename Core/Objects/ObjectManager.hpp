@@ -20,6 +20,7 @@
 #include "Pools/PoolInfo.hpp"
 #include "Systems/SystemManager.hpp"
 #include "SpawnFuncs/SpawnFuncManager.hpp"
+#include "Random/Random.hpp"
 
 namespace Barrage
 { 
@@ -136,6 +137,7 @@ namespace Barrage
       void SetSystemUpdateOrder();
 
     private:
+      Random rng_;
       ComponentAllocator componentAllocator_;
       ArchetypeManager archetypeManager_;
       PoolManager poolManager_;

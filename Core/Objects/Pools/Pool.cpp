@@ -16,13 +16,14 @@
 
 namespace Barrage
 {
-  Pool::Pool(unsigned capacity) :
+  Pool::Pool(unsigned capacity, Random& rng) :
     tags_(),
     componentArrays_(),
     sharedComponents_(),
     size_(0),
     queuedObjects_(0),
-    capacity_(capacity)
+    capacity_(capacity),
+    rng_(rng)
   {
   }
 

@@ -19,6 +19,7 @@
 #include "Pool.hpp"
 #include "Objects/Components/ComponentAllocator.hpp"
 #include "Objects/Archetypes/PoolArchetype/PoolArchetype.hpp"
+#include "Random/Random.hpp"
 
 namespace Barrage
 {
@@ -35,7 +36,7 @@ namespace Barrage
           Default constructor.
       */
       /**************************************************************/
-      PoolManager(ComponentAllocator& componentAllocator);
+      PoolManager(ComponentAllocator& componentAllocator, Random& rng);
 
       /**************************************************************/
       /*!
@@ -132,6 +133,7 @@ namespace Barrage
     private:
       PoolMap pools_;                          //!< The collection of all object pools
       ComponentAllocator& componentAllocator_; //!< Component allocator the pool manager will use
+      Random& rng_;                            //!< Random number generator that new pools will reference
 	};
 }
 

@@ -16,9 +16,10 @@
 
 namespace Barrage
 {
-  PoolManager::PoolManager(ComponentAllocator& componentAllocator) :
+  PoolManager::PoolManager(ComponentAllocator& componentAllocator, Random& rng) :
     pools_(),
-    componentAllocator_(componentAllocator)
+    componentAllocator_(componentAllocator),
+    rng_(rng)
   {
   }
 
@@ -80,7 +81,7 @@ namespace Barrage
 
   Pool* PoolManager::CreatePoolInternal(const PoolArchetype& archetype, unsigned capacity)
   {
-    Pool* new_pool = new Pool(capacity);
+    Pool* new_pool = new Pool(capacity, rng_);
 
     // add tags
     for (const std::string& tag : archetype.tags_)

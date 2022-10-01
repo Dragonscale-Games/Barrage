@@ -18,6 +18,7 @@
 
 #include "Objects/Components/BaseClasses/SharedComponent.hpp"
 #include "Objects/Components/BaseClasses/ComponentArray.hpp"
+#include "Random/Random.hpp"
 
 #include <unordered_set>
 
@@ -148,6 +149,7 @@ namespace Barrage
       unsigned size_;                       //!< Number of currently active objects
       unsigned queuedObjects_;              //!< Number of objects waiting to be spawned on the next tick
       const unsigned capacity_;             //!< Total number of objects the pool can hold
+      Random& rng_;                         //!< Random number generator the pool will use
 
     private:
       /**************************************************************/
@@ -160,7 +162,7 @@ namespace Barrage
           The number of objects the pool will be able to hold.
       */
       /**************************************************************/
-      Pool(unsigned capacity);
+      Pool(unsigned capacity, Random& rng);
 
     friend class PoolManager;
   };
