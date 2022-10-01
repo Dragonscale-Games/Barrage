@@ -31,7 +31,7 @@ namespace Barrage
   class System;
   
   typedef std::unordered_map<unsigned, PoolType> PoolTypeMap;
-  typedef std::multimap<unsigned, Pool*> OrderedPoolMap;
+  typedef std::map<unsigned, std::vector<Pool*>> OrderedPoolMap;
 
   typedef void (*PoolUpdateFunc)(Pool*);
   typedef void (*InteractionFunc)(Pool*, Pool*);
