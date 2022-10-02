@@ -50,18 +50,6 @@ namespace Barrage
       */
       /**************************************************************/
       void Draw();
-    
-    private:
-      /**************************************************************/
-      /*!
-        \brief
-          Draws a pool with a basic 2D sprite.
-
-        \param pool
-          The pool to draw.
-      */
-      /**************************************************************/
-      void DrawBasic2DSprites(Pool* pool);
 	};
 }
 
