@@ -112,7 +112,7 @@ namespace Barrage
 
       for (unsigned i = 0; i < numNewObjects; ++i)
       {
-        destination_array->CopyToThis(*source_component, 0, destinationPool->size_ + i);
+        destination_array->CopyToThis(*source_component, 0, destinationPool->size_ + destinationPool->queuedObjects_ + i);
       }
     }
 
