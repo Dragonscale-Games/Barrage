@@ -62,7 +62,8 @@ namespace Barrage
     }
   };
   
-  typedef std::unordered_map<unsigned, SpawnType> SpawnTypeMap;
+  typedef unsigned SpawnTypeId;
+  typedef std::unordered_map<SpawnTypeId, SpawnType> SpawnTypeMap;
 
   //! Component that allows objects to spawn other objects
   class Spawner : public SharedComponent
