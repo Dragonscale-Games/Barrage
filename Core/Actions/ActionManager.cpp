@@ -88,17 +88,38 @@ namespace Barrage
 
   bool ActionManager::ActionTriggered(ACTION action) const
   {
-    return !previousState_[action] && currentState_[action];
+    if (action < previousState_.size() && action < currentState_.size())
+    {
+      return !previousState_[action] && currentState_[action];
+    }
+    else
+    {
+      return false;
+    }
   }
 
   bool ActionManager::ActionIsDown(ACTION action) const
   {
-    return currentState_[action];
+    if (action < currentState_.size())
+    {
+      return currentState_[action];
+    }
+    else
+    {
+      return false;
+    }
   }
 
   bool ActionManager::ActionReleased(ACTION action) const
   {
-    return previousState_[action] && !currentState_[action];
+    if (action < previousState_.size() && action < currentState_.size())
+    {
+      return previousState_[action] && !currentState_[action];
+    }
+    else
+    {
+      return false;
+    }
   }
 
   void ActionManager::UpdateRecordMode()
