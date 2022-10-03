@@ -15,17 +15,13 @@
 namespace Barrage
 {
   Scene::Scene() :
-    startingPools_()
+    startingPools_(),
+    rngSeed_(0)
   {
   }
 
   void Scene::AddStartingPool(const PoolInfo& startingPool)
   {
     startingPools_.push_back(startingPool);
-  }
-
-  const std::vector<PoolInfo>& Scene::GetStartingPools() const
-  {
-    return startingPools_;
   }
 }

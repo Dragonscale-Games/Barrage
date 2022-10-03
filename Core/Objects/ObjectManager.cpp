@@ -15,14 +15,15 @@
 
 #include "Components/EngineComponents.hpp"
 #include "Systems/EngineSystems.hpp"
+#include "Spaces/Space.hpp"
 
 namespace Barrage
 {
-  ObjectManager::ObjectManager() :
+  ObjectManager::ObjectManager(Space& space) :
     rng_(),
     componentAllocator_(),
     archetypeManager_(componentAllocator_),
-    poolManager_(componentAllocator_, rng_),
+    poolManager_(componentAllocator_, space),
     systemManager_(),
     spawnFuncManager_()
   {

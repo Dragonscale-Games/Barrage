@@ -101,7 +101,7 @@ add_library(BarrageCore STATIC
 
   "Utilities/Utilities.hpp" 
   "Utilities/Mallocator.hpp"
-  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp" )
+  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp"  "Actions/ActionManager.cpp")
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

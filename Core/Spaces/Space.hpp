@@ -16,7 +16,9 @@
 #define Space_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <Actions/ActionManager.hpp>
 #include <Objects/ObjectManager.hpp>
+#include <Random/Random.hpp>
 #include <Scenes/Scene.hpp>
 
 namespace Barrage
@@ -37,7 +39,11 @@ namespace Barrage
 
       void Draw();
 
+      ActionManager& GetActionManager();
+
       ObjectManager& GetObjectManager();
+
+      Random& GetRNG();
 
       void AddScene(const std::string& name, Scene* scene);
 
@@ -48,7 +54,9 @@ namespace Barrage
       bool IsPaused();
 
     private:
+      ActionManager actionManager_;
       ObjectManager objectManager_;
+      Random rng_;
       SceneMap scenes_;
       bool paused_;
 	};

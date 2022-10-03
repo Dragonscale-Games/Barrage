@@ -24,6 +24,8 @@
 
 namespace Barrage
 { 
+  class Space;
+  
   //! Main point of contact for game object manipulation
   class ObjectManager
 	{
@@ -35,7 +37,7 @@ namespace Barrage
           systems, and initializers.
       */
       /**************************************************************/
-      ObjectManager();
+      ObjectManager(Space& space);
 
       // ===================================================================
       // Game loop
