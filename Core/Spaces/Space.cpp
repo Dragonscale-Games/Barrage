@@ -17,7 +17,9 @@
 namespace Barrage
 {
   Space::Space() :
+    actionManager_(),
     objectManager_(*this),
+    rng_(),
     scenes_(),
     paused_(false)
   {
@@ -34,7 +36,10 @@ namespace Barrage
   void Space::Update()
   {
     if (!paused_)
+    {
+      actionManager_.Update();
       objectManager_.Update();
+    }
   }
 
   void Space::Draw()
