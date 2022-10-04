@@ -51,7 +51,11 @@ namespace Barrage
 
       void SetPaused(bool isPaused);
 
-      bool IsPaused();
+      void SetVisible(bool isVisible);
+
+      bool IsPaused() const;
+      
+      bool IsVisible() const;
 
     private:
       ActionManager actionManager_;
@@ -59,6 +63,7 @@ namespace Barrage
       Random rng_;
       SceneMap scenes_;
       bool paused_;
+      bool visible_;
 	};
 }
 

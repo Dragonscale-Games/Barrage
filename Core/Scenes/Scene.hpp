@@ -28,7 +28,6 @@ namespace Barrage
       void AddStartingPool(const PoolInfo& startingPool);
 
       std::vector<PoolInfo> startingPools_; //!< List of pools and objects the scene starts with
-      unsigned long long rngSeed_;          //!< The starting rng seed of the scene
 	};
 }
 

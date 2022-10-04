@@ -15,8 +15,7 @@
 namespace Barrage
 {
   Scene::Scene() :
-    startingPools_(),
-    rngSeed_(0)
+    startingPools_()
   {
   }
 
