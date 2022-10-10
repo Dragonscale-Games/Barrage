@@ -15,14 +15,17 @@
 #include "ActionManager.hpp"
 #include "Engine/Engine.hpp"
 
+#include <iostream>
+
 namespace Barrage
 {
   ActionManager::ActionManager() :
     currentTick_(0),
-    mode_(Mode::Record),
+    mode_(Mode::Default),
     previousState_(),
     currentState_(),
     replayData_(),
+    replayPos_(0),
     actionKeyMap_()
   {
     replayData_.reserve(10000);
@@ -34,8 +37,8 @@ namespace Barrage
 
     if (action >= previousState_.size())
     {
-      previousState_.resize(action + 1);
-      currentState_.resize(action + 1);
+      previousState_.resize(action + 1, false);
+      currentState_.resize(action + 1, false);
     }
   }
 
@@ -74,13 +77,13 @@ namespace Barrage
   {
     previousState_ = currentState_;
     
-    if (mode_ == Mode::Record)
+    if (mode_ == Mode::Replay)
     {
-      UpdateRecordMode();
+      GetReplayInput();
     }
     else
     {
-      UpdateReplayMode();
+      GetNormalInput();
     }
 
     currentTick_++;
@@ -122,7 +125,7 @@ namespace Barrage
     }
   }
 
-  void ActionManager::UpdateRecordMode()
+  void ActionManager::GetNormalInput()
   {
     for (size_t i = 0; i < currentState_.size(); ++i)
     {
@@ -138,7 +141,7 @@ namespace Barrage
 
       currentState_[action] = input_manager.KeyIsDown(key);
 
-      if (currentState_[action] != previousState_[action])
+      if (mode_ == Mode::Record && currentState_[action] != previousState_[action])
       {
         StateChange state_change;
 
@@ -150,13 +153,16 @@ namespace Barrage
     }
   }
 
-  void ActionManager::UpdateReplayMode()
+  void ActionManager::GetReplayInput()
   {
     while (replayPos_ < replayData_.size() && replayData_[replayPos_].tick_ == currentTick_)
     {
       ACTION action = replayData_[replayPos_].action_;
 
-      currentState_[action] = !currentState_[action];
+      if (action < currentState_.size())
+      {
+        currentState_[action] = !currentState_[action];
+      }
 
       replayPos_++;
     }

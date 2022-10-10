@@ -34,6 +34,7 @@ namespace Barrage
     public:
       enum class Mode
       {
+        Default,
         Record,
         Replay
       };
@@ -61,9 +62,9 @@ namespace Barrage
       bool ActionReleased(ACTION action) const;
 
     private:
-      void UpdateRecordMode();
+      void GetNormalInput();
 
-      void UpdateReplayMode();
+      void GetReplayInput();
 
     private:
       uint32_t currentTick_;
