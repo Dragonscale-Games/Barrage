@@ -15,8 +15,6 @@
 #include "ActionManager.hpp"
 #include "Engine/Engine.hpp"
 
-#include <iostream>
-
 namespace Barrage
 {
   ActionManager::ActionManager() :
