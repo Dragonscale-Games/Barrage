@@ -36,30 +36,34 @@ namespace Barrage
     {
       Sprite* pool_sprite = dynamic_cast<Sprite*>(pool->sharedComponents_.at("Sprite"));
       
-      pools_.insert(std::pair<unsigned, Pool*>(pool_sprite->layer_, pool));
+      pools_[pool_sprite->layer_].push_back(pool);
     }
   }
 
   void DrawSystem::Draw()
   {
-    // Get the drawing system.
     GfxDraw2D& drawing = Engine::Instance->Drawing();
 
     for (auto it = pools_.begin(); it != pools_.end(); ++it)
     {
-      Pool* pool = it->second;
+      std::vector<Pool*>& pool_group = pools_[it->first];
+      
+      for (auto jt = pool_group.begin(); jt != pool_group.end(); ++jt)
+      {
+        Pool* pool = *jt;
 
-      PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
-      ScaleArray& scale_array = *pool->GetComponentArray<ScaleArray>("ScaleArray");
-      RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("RotationArray");
+        PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
+        ScaleArray& scale_array = *pool->GetComponentArray<ScaleArray>("ScaleArray");
+        RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("RotationArray");
 
-      glm::vec2* positions = reinterpret_cast<glm::vec2*>(position_array.data_);
-      glm::vec2* scales = reinterpret_cast<glm::vec2*>(scale_array.data_);
-      float* rotations = reinterpret_cast<float*>(rotation_array.data_);
+        glm::vec2* positions = reinterpret_cast<glm::vec2*>(position_array.data_);
+        glm::vec2* scales = reinterpret_cast<glm::vec2*>(scale_array.data_);
+        float* rotations = reinterpret_cast<float*>(rotation_array.data_);
 
-      Sprite& pool_sprite = *pool->GetSharedComponent<Sprite>("Sprite");
+        Sprite& pool_sprite = *pool->GetSharedComponent<Sprite>("Sprite");
 
-      drawing.DrawInstancedQuad(pool->size_, positions, scales, rotations, pool_sprite.texture_.c_str());
+        drawing.DrawInstancedQuad(pool->size_, positions, scales, rotations, pool_sprite.texture_.c_str());
+      }
     }
   }
 }

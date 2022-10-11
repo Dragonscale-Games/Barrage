@@ -55,9 +55,6 @@ add_library(BarrageCore STATIC
   
   "FramerateController/FramerateController.cpp" "FramerateController/FramerateController.hpp"
   
-  "GameStates/GameStateManager.cpp" "GameStates/GameStateManager.hpp" 
-  "GameStates/GameState.cpp" "GameStates/GameState.hpp" 
-  
   "Input/InputManager.cpp" "Input/InputManager.hpp" 
   "Input/KeyMap.hpp" 
 
@@ -67,26 +64,20 @@ add_library(BarrageCore STATIC
   "Objects/ObjectManager.cpp" "Objects/ObjectManager.hpp" 
   "Objects/Pools/Pool.cpp"    "Objects/Pools/Pool.hpp"  
   
-  "Objects/Systems/EngineSystems.hpp"
-  "Objects/Systems/BaseSystem.cpp"                    "Objects/Systems/BaseSystem.hpp"   
-  "Objects/Systems/Destruction/DestructionSystem.cpp" "Objects/Systems/Destruction/DestructionSystem.hpp"    
-  "Objects/Systems/Creation/CreationSystem.cpp"       "Objects/Systems/Creation/CreationSystem.hpp"  
-  "Objects/Systems/Draw/DrawSystem.cpp"               "Objects/Systems/Draw/DrawSystem.hpp" 
+  "Objects/Systems/BaseSystem.cpp"                    
+  "Objects/Systems/Destruction/DestructionSystem.cpp" 
+  "Objects/Systems/Creation/CreationSystem.cpp"       
+  "Objects/Systems/Draw/DrawSystem.cpp"              
   
-  "Objects/SpawnFuncs/SpawnFuncManager.hpp"                "Objects/SpawnFuncs/SpawnFuncManager.cpp"  
-  "Objects/Archetypes/ArchetypeManager.cpp"                "Objects/Archetypes/ArchetypeManager.hpp" 
-  "Objects/Pools/PoolManager.cpp"                          "Objects/Pools/PoolManager.hpp" 
-  "Objects/Systems/SystemManager.cpp"                      "Objects/Systems/SystemManager.hpp" 
-  "Objects/Components/ComponentAllocator.cpp"              "Objects/Components/ComponentAllocator.hpp" 
-  "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp" "Objects/Archetypes/ObjectArchetype/ObjectArchetype.cpp" 
-  "Objects/Archetypes/PoolArchetype/PoolArchetype.hpp"     "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
-  "Objects/Pools/PoolType.cpp" "Objects/Pools/PoolType.hpp" 
-  "Objects/Pools/PoolInfo.cpp" "Objects/Pools/PoolInfo.hpp"
-
-  "Objects/Systems/Movement/MovementSystem.hpp" "Objects/Systems/Movement/MovementSystem.cpp"
-  "Objects/Systems/Collision/CollisionSystem.hpp" "Objects/Systems/Collision/CollisionSystem.cpp" 
-  "Objects/SpawnFuncs/Direction/DirectionFuncs.hpp" "Objects/SpawnFuncs/Direction/DirectionFuncs.cpp"
-  "Objects/SpawnFuncs/Position/PositionFuncs.hpp" "Objects/SpawnFuncs/Position/PositionFuncs.cpp"
+  "Objects/SpawnFuncs/SpawnFuncManager.cpp"  
+  "Objects/Archetypes/ArchetypeManager.cpp"       
+  "Objects/Pools/PoolManager.cpp"                        
+  "Objects/Systems/SystemManager.cpp"                   
+  "Objects/Components/ComponentAllocator.cpp"              
+  "Objects/Archetypes/ObjectArchetype/ObjectArchetype.cpp" 
+  "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
+  "Objects/Pools/PoolType.cpp"  
+  "Objects/Pools/PoolInfo.cpp" 
 
   "Random/Random.cpp" "Random/Random.hpp"
 
@@ -104,19 +95,13 @@ add_library(BarrageCore STATIC
 
   "Serialization/ComponentRefl.hpp" "Serialization/ComponentRefl.cpp"
   "Serialization/Serializer.hpp" "Serialization/Serializer.cpp"
-  
-  "SimpleRenderer/SimpleRenderer.cpp" "SimpleRenderer/SimpleRenderer.hpp" 
-  "SimpleRenderer/SimpleShader/SimpleShader.cpp" "SimpleRenderer/SimpleShader/SimpleShader.hpp" 
-  "SimpleRenderer/SimpleShader/SimpleShaderManager.cpp" "SimpleRenderer/SimpleShader/SimpleShaderManager.hpp" 
-  "SimpleRenderer/SimpleTexture/SimpleTexture.cpp" "SimpleRenderer/SimpleTexture/SimpleTexture.hpp" 
-  "SimpleRenderer/SimpleTexture/SimpleTextureManager.cpp" "SimpleRenderer/SimpleTexture/SimpleTextureManager.hpp" 
 
   "Spaces/Space.cpp" "Spaces/Space.hpp"
   "Spaces/SpaceManager.cpp" "Spaces/SpaceManager.hpp"
 
   "Utilities/Utilities.hpp" 
   "Utilities/Mallocator.hpp"
-  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp" )
+  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp"  "Actions/ActionManager.cpp" "Scenes/SceneManager.cpp")
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

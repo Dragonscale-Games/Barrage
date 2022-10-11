@@ -61,7 +61,9 @@ namespace Barrage
     unsigned available_slots = destinationPool->GetAvailableSlots();
 
     if (available_slots == 0)
+    {
       return;
+    }
 
     CreateObjects(archetype, destinationPool, 1, false);
 
@@ -85,8 +87,10 @@ namespace Barrage
     unsigned start_index = destination_pool->size_ + destination_pool->queuedObjects_;
 
     if (available_slots < num_spawns)
+    {
       num_spawns = available_slots;
-
+    }
+      
     if (num_spawns != 0)
     {
       CreateObjects(*object_archetype, destination_pool, num_spawns, true);
@@ -108,14 +112,18 @@ namespace Barrage
 
       for (unsigned i = 0; i < numNewObjects; ++i)
       {
-        destination_array->CopyToThis(*source_component, 0, destinationPool->size_ + i);
+        destination_array->CopyToThis(*source_component, 0, destinationPool->size_ + destinationPool->queuedObjects_ + i);
       }
     }
 
     if (queueObjects)
+    {
       destinationPool->queuedObjects_ += numNewObjects;
+    }
     else
+    {
       destinationPool->size_ += numNewObjects;
+    }
   }
 
   void CreationSystem::ApplySpawnFuncs(const std::vector<std::string>& spawnFuncs, Pool* sourcePool, Pool* destinationPool, unsigned startIndex, unsigned numObjects, const std::vector<unsigned>& sourceIndices)

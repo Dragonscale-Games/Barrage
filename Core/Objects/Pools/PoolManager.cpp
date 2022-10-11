@@ -13,12 +13,14 @@
 
 #include "stdafx.h"
 #include "PoolManager.hpp"
+#include "Spaces/Space.hpp"
 
 namespace Barrage
 {
-  PoolManager::PoolManager(ComponentAllocator& componentAllocator) :
+  PoolManager::PoolManager(ComponentAllocator& componentAllocator, Space& space) :
     pools_(),
-    componentAllocator_(componentAllocator)
+    componentAllocator_(componentAllocator),
+    space_(space)
   {
   }
 
@@ -80,7 +82,7 @@ namespace Barrage
 
   Pool* PoolManager::CreatePoolInternal(const PoolArchetype& archetype, unsigned capacity)
   {
-    Pool* new_pool = new Pool(capacity);
+    Pool* new_pool = new Pool(capacity, space_);
 
     // add tags
     for (const std::string& tag : archetype.tags_)

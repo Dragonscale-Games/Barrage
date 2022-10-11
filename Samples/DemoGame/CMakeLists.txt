@@ -31,10 +31,15 @@
 # =====================================================================================================================
 
 add_executable(DemoGame "Source/main.cpp" 
-"Source/Game/DemoGame.cpp" "Source/Game/DemoGame.hpp" 
+"Source/Game/DemoGame.cpp" 
 "Source/Registration.cpp" 
-"Source/Initialization/DemoInitialization.cpp" "Source/Initialization/DemoInitialization.hpp" 
-"Source/Systems/SpawnSystem.cpp" "Source/Systems/SpawnSystem.hpp"  )
+"Source/Initialization/DemoInitialization.cpp"
+"Source/Systems/Collision/CollisionSystem.cpp"
+"Source/Systems/Movement/MovementSystem.cpp"
+"Source/Systems/Spawn/SpawnSystem.cpp"
+"Source/SpawnFuncs/Direction/DirectionFuncs.cpp"
+"Source/SpawnFuncs/Position/PositionFuncs.cpp"
+)
 target_link_libraries(DemoGame PUBLIC BarrageCore)
 target_include_directories(DemoGame PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(DemoGame PUBLIC "${BARRAGE_SOURCE_DIR}/Core")

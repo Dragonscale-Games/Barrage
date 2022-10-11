@@ -15,14 +15,15 @@
 
 #include "Components/EngineComponents.hpp"
 #include "Systems/EngineSystems.hpp"
-#include "SpawnFuncs/EngineSpawnFuncs.hpp"
+#include "Spaces/Space.hpp"
 
 namespace Barrage
 {
-  ObjectManager::ObjectManager() :
+  ObjectManager::ObjectManager(Space& space) :
+    rng_(),
     componentAllocator_(),
     archetypeManager_(componentAllocator_),
-    poolManager_(componentAllocator_),
+    poolManager_(componentAllocator_, space),
     systemManager_(),
     spawnFuncManager_()
   {
@@ -183,21 +184,16 @@ namespace Barrage
 
   void ObjectManager::RegisterEngineComponents()
   {
-    RegisterComponent<AngularSpeedArray>("AngularSpeedArray");
     RegisterComponent<DestructibleArray>("DestructibleArray");
     RegisterComponent<DirectoryIndexArray>("DirectoryIndexArray");
-    RegisterComponent<LifetimeArray>("LifetimeArray");
+    RegisterComponent<ParentArray>("ParentArray");
     RegisterComponent<PositionArray>("PositionArray");
     RegisterComponent<RotationArray>("RotationArray");
     RegisterComponent<ScaleArray>("ScaleArray");
-    RegisterComponent<VelocityArray>("VelocityArray");
 
-    RegisterComponent<BoundaryBox>("BoundaryBox");
-    RegisterComponent<CircleCollider>("CircleCollider");
     RegisterComponent<ObjectDirectory>("ObjectDirectory");
     RegisterComponent<Spawner>("Spawner");
     RegisterComponent<Sprite>("Sprite");
-    RegisterComponent<RNG>("RNG");
   }
 
   void ObjectManager::RegisterEngineSystems()
@@ -205,14 +201,11 @@ namespace Barrage
     RegisterSystem<CreationSystem>("CreationSystem");
     RegisterSystem<DestructionSystem>("DestructionSystem");
     RegisterSystem<DrawSystem>("DrawSystem");
-    RegisterSystem<MovementSystem>("MovementSystem");
-    RegisterSystem<CollisionSystem>("CollisionSystem");
   }
 
   void ObjectManager::RegisterEngineSpawnFuncs()
   {
-    RegisterSpawnFunc("RandomDirection", Spawn::RandomDirection);
-    RegisterSpawnFunc("MatchPosition", Spawn::MatchPosition);
+
   }
 
   void ObjectManager::SetDefaultSystemUpdateOrder()
@@ -221,9 +214,6 @@ namespace Barrage
 
     update_order.push_back("CreationSystem");
     update_order.push_back("DestructionSystem");
-    update_order.push_back("MovementSystem");
-    update_order.push_back("CreationSystem");
-    update_order.push_back("CollisionSystem");
 
     SetSystemUpdateOrder(update_order);
   }

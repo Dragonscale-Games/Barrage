@@ -23,9 +23,4 @@ namespace Barrage
   {
     startingPools_.push_back(startingPool);
   }
-
-  const std::vector<PoolInfo>& Scene::GetStartingPools() const
-  {
-    return startingPools_;
-  }
 }

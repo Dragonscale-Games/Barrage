@@ -15,6 +15,8 @@
 #include <Engine/Engine.hpp>
 #include <Objects/Components/EngineComponents.hpp>
 #include <Objects/ObjectManager.hpp>
+#include "../Components/DemoComponents.hpp"
+#include "../SpawnTypes.hpp"
 
 namespace Demo
 {
@@ -62,7 +64,10 @@ namespace Demo
   {
     PoolArchetype* pool_archetype = new PoolArchetype;
 
-    pool_archetype->tags_.push_back("Player");
+    Player* player = new Player;
+    player->speedFast_ = 7.0f;
+    player->speedSlow_ = 3.5f;
+    pool_archetype->sharedComponents_["Player"] = player;
 
     CircleCollider* circle_collider = new CircleCollider;
     circle_collider->radius_ = 16.0f;
@@ -184,7 +189,7 @@ namespace Demo
     bullet_spawn_type.spawnFuncs_.push_back("RandomDirection");
 
     Spawner* spawner = new Spawner;
-    spawner->spawnTypes_["Bullet Spawn"] = bullet_spawn_type;
+    spawner->spawnTypes_[BULLET_SPAWN_TYPE] = bullet_spawn_type;
     pool_archetype->sharedComponents_["Spawner"] = spawner;
 
     RNG* rng = new RNG;

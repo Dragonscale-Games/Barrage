@@ -36,8 +36,12 @@ add_executable(Editor "Source/main.cpp"
 "Source/GUI/GUI.cpp" "Source/GUI/GUI.hpp" 
 "Source/Editor/Editor.cpp" "Source/Editor/Editor.hpp"
 "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Registration.cpp"
-"${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Systems/SpawnSystem.cpp" "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Systems/SpawnSystem.hpp"
+"../Samples/DemoGame/Source/Systems/Collision/CollisionSystem.cpp"
+"../Samples/DemoGame/Source/Systems/Movement/MovementSystem.cpp"
+"../Samples/DemoGame/Source/Systems/Spawn/SpawnSystem.cpp"
 "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization/DemoInitialization.cpp" "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization/DemoInitialization.hpp"
+"../Samples/DemoGame/Source/SpawnFuncs/Direction/DirectionFuncs.cpp"
+"../Samples/DemoGame/Source/SpawnFuncs/Position/PositionFuncs.cpp"
 )
 
 target_link_libraries(Editor PUBLIC BarrageCore imgui)

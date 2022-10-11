@@ -13,16 +13,18 @@
 
 #include "stdafx.h"
 #include "Pool.hpp"
+#include "Spaces/Space.hpp"
 
 namespace Barrage
 {
-  Pool::Pool(unsigned capacity) :
+  Pool::Pool(unsigned capacity, Space& space) :
     tags_(),
     componentArrays_(),
     sharedComponents_(),
     size_(0),
     queuedObjects_(0),
-    capacity_(capacity)
+    capacity_(capacity),
+    space_(space)
   {
   }
 

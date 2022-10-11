@@ -23,10 +23,16 @@ namespace Barrage
   //!< Keeps track of a game object's parent
   struct Parent
   {
-    Pool* pool_;           //!< the pool where the parent object lives
-    ObjectHandle* handle_; //!< the handle of the parent object within that pool
+    Pool* pool_;                  //!< the pool where the parent object lives
+    ObjectHandle* handle_;        //!< the handle of the parent object within that pool
+    unsigned long long parentId_; //!< the original id of the parent object (used to check if parent still exists)
 
-    inline Parent() : pool_(nullptr), handle_(nullptr) {}
+    inline Parent() : pool_(nullptr), handle_(nullptr), parentId_(INVALID_ID){}
+
+    inline bool Exists()
+    {
+      return handle_->id_ == parentId_;
+    }
   };
 
   typedef ComponentArrayT<Parent> ParentArray;

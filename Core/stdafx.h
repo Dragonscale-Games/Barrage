@@ -6,7 +6,7 @@
  * \par             david.wongcascante\@gmail.com
 
  * \brief
- * All common code and includes to be included by all files.
+ * All common code to be included by all files.
  */
 /* ======================================================================== */
 

@@ -25,6 +25,8 @@ namespace Barrage
   //! Maps system names to systems
   typedef std::unordered_map<std::string, Pool*> PoolMap;
 
+  class Space;
+
   //! <class description>
   class PoolManager
 	{
@@ -35,7 +37,7 @@ namespace Barrage
           Default constructor.
       */
       /**************************************************************/
-      PoolManager(ComponentAllocator& componentAllocator);
+      PoolManager(ComponentAllocator& componentAllocator, Space& space);
 
       /**************************************************************/
       /*!
@@ -132,6 +134,7 @@ namespace Barrage
     private:
       PoolMap pools_;                          //!< The collection of all object pools
       ComponentAllocator& componentAllocator_; //!< Component allocator the pool manager will use
+      Space& space_;                           //!< The space where the pools live
 	};
 }
 

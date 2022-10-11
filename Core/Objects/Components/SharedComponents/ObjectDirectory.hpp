@@ -27,7 +27,8 @@
 namespace Barrage
 {
   static const unsigned long long DEAD_OBJECT_ID = ULLONG_MAX;
-  
+  static const unsigned long long INVALID_ID = ULLONG_MAX - 1;
+
   struct ObjectHandle
   {
     unsigned long long id_;
@@ -79,7 +80,7 @@ namespace Barrage
         handles_[directoryIndex].id_ = DEAD_OBJECT_ID;
       }
 
-    public:
+    private:
       std::vector<ObjectHandle> handles_;
       std::vector<unsigned> freeList_;
       unsigned long long currentId_;

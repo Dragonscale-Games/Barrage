@@ -25,28 +25,10 @@ namespace Barrage
   {
     // Shared Components.
 
-    // Circle Collider
-    rttr::registration::class_<CircleCollider>("CircleCollider")
-      .property("radius", &CircleCollider::radius_)
-      /*
-      .constructor<>(
-        rttr::policy::ctor::as_object
-      )
-      */;
-    // Box Collider
-    rttr::registration::class_<BoundaryBox>("BoundaryBox")
-      .property("xMin", &BoundaryBox::xMin_)
-      .property("yMin", &BoundaryBox::yMin_)
-      .property("xMax", &BoundaryBox::xMax_)
-      .property("yMax", &BoundaryBox::yMax_)
-      /*.constructor<>(
-        rttr::policy::ctor::as_object
-      )*/;
     // Spawn Type
     rttr::registration::class_<SpawnType>("SpawnType")
       .property("archetypeName", &SpawnType::archetypeName_)
       .property("destinationPoolName", &SpawnType::destinationPoolName_)
-      .property("destinationPoolCapacity", &SpawnType::destinationPoolCapacity_)
       .property("spawnFuncs", &SpawnType::spawnFuncs_)
       /*.constructor<>(
         rttr::policy::ctor::as_object
@@ -72,21 +54,9 @@ namespace Barrage
 
     // Component Arrays.
 
-    // Angular Speed.
-    rttr::registration::class_<AngularSpeed>("AngularSpeed")
-      .property("w", &AngularSpeed::w_)
-      /*.constructor<>(
-        rttr::policy::ctor::as_object
-      )*/;
     // Destructible Arrays.
     rttr::registration::class_<Destructible>("Destructible")
       .property("destroyed", &Destructible::destroyed_)
-      /*.constructor<>(
-        rttr::policy::ctor::as_object
-      )*/;
-    // Lifetime Arrays.
-    rttr::registration::class_<Lifetime>("Lifetime")
-      .property("ticks", &Lifetime::ticks_)
       /*.constructor<>(
         rttr::policy::ctor::as_object
       )*/;

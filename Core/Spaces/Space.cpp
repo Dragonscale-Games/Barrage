@@ -17,9 +17,12 @@
 namespace Barrage
 {
   Space::Space() :
-    objectManager_(),
+    actionManager_(),
+    objectManager_(*this),
+    rng_(),
     scenes_(),
-    paused_(false)
+    paused_(false),
+    visible_(true)
   {
   }
 
@@ -34,17 +37,33 @@ namespace Barrage
   void Space::Update()
   {
     if (!paused_)
+    {
+      actionManager_.Update();
       objectManager_.Update();
+    }
   }
 
   void Space::Draw()
   {
-    objectManager_.Draw();
+    if (visible_)
+    {
+      objectManager_.Draw();
+    }
+  }
+
+  ActionManager& Space::GetActionManager()
+  {
+    return actionManager_;
   }
 
   ObjectManager& Space::GetObjectManager()
   {
     return objectManager_;
+  }
+
+  Random& Space::GetRNG()
+  {
+    return rng_;
   }
 
   void Space::AddScene(const std::string& name, Scene* scene)
@@ -67,12 +86,14 @@ namespace Barrage
     objectManager_.DeleteAllPools();
     
     Scene* scene = scenes_.at(name);
-    const std::vector<PoolInfo>& starting_pools = scene->GetStartingPools();
+    const std::vector<PoolInfo>& starting_pools = scene->startingPools_;
 
     for (auto it = starting_pools.begin(); it != starting_pools.end(); ++it)
     {
       objectManager_.CreatePoolAndObjects(*it);
     }
+
+    rng_.SetSeed();
   }
 
   void Space::SetPaused(bool isPaused)
@@ -80,8 +101,18 @@ namespace Barrage
     paused_ = isPaused;
   }
 
-  bool Space::IsPaused()
+  void Space::SetVisible(bool isVisible)
+  {
+    visible_ = isVisible;
+  }
+
+  bool Space::IsPaused() const
   {
     return paused_;
+  }
+
+  bool Space::IsVisible() const
+  {
+    return visible_;
   }
 }

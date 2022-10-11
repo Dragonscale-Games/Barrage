@@ -6,9 +6,11 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
+   Handles destruction for all destructible objects. All destroyed objects
+   are lazy deleted, then all remaining active objects are sorted to the
+   front of the pool and the active object count is updated.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 #include "stdafx.h"
 #include "DestructionSystem.hpp"
@@ -25,11 +27,11 @@ namespace Barrage
     destructible_type.AddComponentName("DestructibleArray");
     poolTypes_[BASIC_DESTRUCTIBLE_POOLS] = destructible_type;
 
-    PoolType handle_type;
-    handle_type.AddComponentName("DestructibleArray");
-    handle_type.AddComponentName("ObjectDirectory");
-    handle_type.AddComponentName("DirectoryIndexArray");
-    poolTypes_[DIRECTORY_POOLS] = handle_type;
+    PoolType directory_type;
+    directory_type.AddComponentName("DestructibleArray");
+    directory_type.AddComponentName("ObjectDirectory");
+    directory_type.AddComponentName("DirectoryIndexArray");
+    poolTypes_[DIRECTORY_POOLS] = directory_type;
   }
   
   void DestructionSystem::Update()

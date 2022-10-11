@@ -28,12 +28,42 @@ namespace Barrage
   {
     std::string archetypeName_;           //!< Name of object archetype that will be spawned
     std::string destinationPoolName_;     //!< Name of pool the new object will spawn in
-    unsigned destinationPoolCapacity_;    //!< Max number of objects the destination pool can hold
     std::vector<std::string> spawnFuncs_; //!< List of spawn functions to apply
     std::vector<unsigned> sourceIndices_; //!< Indices of spawner objects
+
+    inline SpawnType() :
+      archetypeName_(),
+      destinationPoolName_(),
+      spawnFuncs_(),
+      sourceIndices_()
+    {
+      sourceIndices_.reserve(100);
+    }
+
+    inline SpawnType(const SpawnType& rhs) :
+      archetypeName_(rhs.archetypeName_),
+      destinationPoolName_(rhs.destinationPoolName_),
+      spawnFuncs_(rhs.spawnFuncs_),
+      sourceIndices_(rhs.sourceIndices_)
+    {
+      sourceIndices_.reserve(100);
+    }
+
+    inline SpawnType& operator=(const SpawnType& rhs)
+    {
+      archetypeName_ = rhs.archetypeName_;
+      destinationPoolName_ = rhs.destinationPoolName_;
+      spawnFuncs_ = rhs.spawnFuncs_;
+      sourceIndices_ = rhs.sourceIndices_;
+
+      sourceIndices_.reserve(100);
+
+      return *this;
+    }
   };
   
-  typedef std::unordered_map<std::string, SpawnType> SpawnTypeMap;
+  typedef unsigned SpawnTypeId;
+  typedef std::unordered_map<SpawnTypeId, SpawnType> SpawnTypeMap;
 
   //! Component that allows objects to spawn other objects
   class Spawner : public SharedComponent
