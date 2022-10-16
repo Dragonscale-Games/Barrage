@@ -82,8 +82,8 @@ namespace Barrage
     */
     viewport_.projection_ =
       glm::ortho(
-        static_cast<float>(0), static_cast<float>(dimensions.x), 
-        static_cast<float>(0), static_cast<float>(dimensions.y));
+        0.0f, 1920.0f, 
+        0.0f, 1080.0f);
     CHECK_GL( glViewport(0, 0, dimensions.x, dimensions.y) );
   }
 

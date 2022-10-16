@@ -80,9 +80,9 @@ namespace Demo
 
     BoundaryBox* boundary_box = new BoundaryBox;
     boundary_box->xMin_ = 32.0f;
-    boundary_box->xMax_ = 1248.0f;
+    boundary_box->xMax_ = 1920.0f - 32.0f;
     boundary_box->yMin_ = 32.0f;
-    boundary_box->yMax_ = 688.0f;
+    boundary_box->yMax_ = 1080.0f - 32.0f;
     pool_archetype->sharedComponents_["BoundaryBox"] = boundary_box;
 
     pool_archetype->componentArrayNames_.push_back("PositionArray");
@@ -96,8 +96,8 @@ namespace Demo
 
     PositionArray* position_array = new PositionArray;
     position_array->Allocate(1);
-    position_array->data_->x_ = 640.0f;
-    position_array->data_->y_ = 120.0f;
+    position_array->data_->x_ = 960.0f;
+    position_array->data_->y_ = 200.0f;
     object_archetype->components_["PositionArray"] = position_array;
 
     RotationArray* rotation_array = new RotationArray;
@@ -134,9 +134,9 @@ namespace Demo
 
     BoundaryBox* boundary_box = new BoundaryBox;
     boundary_box->xMin_ = -16.0f;
-    boundary_box->xMax_ = 1296.0f;
+    boundary_box->xMax_ = 1920.0f + 16.0f;
     boundary_box->yMin_ = -16.0f;
-    boundary_box->yMax_ = 736.0f;
+    boundary_box->yMax_ = 1080.0f + 16.0f;
     pool_archetype->sharedComponents_["BoundaryBox"] = boundary_box;
 
     pool_archetype->componentArrayNames_.push_back("PositionArray");
@@ -203,8 +203,8 @@ namespace Demo
 
     PositionArray* position_array = new PositionArray;
     position_array->Allocate(1);
-    position_array->data_->x_ = 640.0f;
-    position_array->data_->y_ = 600.0f;
+    position_array->data_->x_ = 960.0f;
+    position_array->data_->y_ = 880.0f;
     object_archetype->components_["PositionArray"] = position_array;
 
     objectManager.AddObjectArchetype("Spawner Object Archetype", object_archetype);

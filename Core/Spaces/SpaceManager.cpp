@@ -59,6 +59,18 @@ namespace Barrage
     }
   }
 
+  Space* SpaceManager::GetSpace(const std::string& name)
+  {
+    if (spaces_.find(name) == spaces_.end())
+    {
+      return nullptr;
+    }
+    else
+    {
+      return spaces_.at(name);
+    }
+  }
+
   void SpaceManager::SetSpacePaused(const std::string& name, bool isPaused)
   {
     if (spaces_.find(name) != spaces_.end())
