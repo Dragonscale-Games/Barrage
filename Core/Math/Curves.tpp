@@ -37,7 +37,8 @@ namespace Barrage
         table[i][j] = (R(1) - t) * table[i - 1][j] + (t) * table[i - 1][j + 1];
       }
     }
+    // Return the last element in the table, containing the interpolating
+    // point in the curve t.
+    return table.Back();
   }
-  // Return the last element in the table, containing the answer.
-  return table.Back();
 }
