@@ -28,9 +28,9 @@ namespace Barrage
   {
   public:
     //! Declares a forward declaration to a constant row in the table.
-    class ConstRow<T>;
+    class ConstRow;
     //! Declares a forward declaration to a row in the table.
-    class Row<T>:
+    class Row;
 
   public:
     /**************************************************************/
@@ -197,7 +197,7 @@ namespace Barrage
           The number of elements in the row.
       */
       /**************************************************************/
-      Row(T* rowPtr, size_t elements);
+      ConstRow(T* rowPtr, size_t elements);
       /**************************************************************/
       /*!
         \brief

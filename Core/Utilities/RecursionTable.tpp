@@ -72,6 +72,7 @@ namespace Barrage
   template <typename T>
   size_t RecursionTable<T>::GetRowOffset(size_t row) const
   {
+    assert(row < rows_);
     // Get the number of elements in table.
     size_t tableSize = GetTableSize();
     // Offset from the end.
@@ -83,6 +84,7 @@ namespace Barrage
   template <typename T>
   RecursionTable<T>::Row::Row(T* rowPtr, size_t elements) : elements_(elements), rowPtr_(rowPtr)
   {
+    assert(rowPtr != nullptr);
   }
 
   template <typename T>
@@ -102,6 +104,7 @@ namespace Barrage
   template <typename T>
   RecursionTable<T>::ConstRow::ConstRow(T* rowPtr, size_t elements) : elements_(elements), rowPtr_(rowPtr)
   {
+    assert(rowPtr != nullptr);
   }
 
   template <typename T>
