@@ -42,6 +42,8 @@ add_library(BarrageCore STATIC
   "template.cxx"
   "stdafx.h"
 
+  "Actions/ActionManager.cpp" "Scenes/SceneManager.cpp"
+
   "Debug/SymbolManager.hpp" "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
   "Debug/MemoryDebugger.hpp" "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
   "Debug/MemoryOverrides.hpp"
@@ -79,6 +81,8 @@ add_library(BarrageCore STATIC
   "Objects/Pools/PoolType.cpp"  
   "Objects/Pools/PoolInfo.cpp" 
 
+  "Math/Curves.hpp" "Math/Curves.tpp"
+
   "Random/Random.cpp" "Random/Random.hpp"
 
   "Rendering/WindowManager.hpp" "Rendering/WindowManager.cpp"
@@ -101,7 +105,10 @@ add_library(BarrageCore STATIC
 
   "Utilities/Utilities.hpp" 
   "Utilities/Mallocator.hpp"
-  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp"  "Actions/ActionManager.cpp" "Scenes/SceneManager.cpp")
+  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp"
+  "Utilities/RecursionTable.hpp" "Utilities/RecursionTable.tpp"
+
+)
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

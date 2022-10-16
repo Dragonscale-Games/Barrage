@@ -85,9 +85,17 @@ namespace Barrage
     void SetViewportSpace(const glm::ivec2& dimensions);
 
     /*************************************************************************/
+    /*!
+      \brief
+        Flushes all render requests and clears the framebuffer.
+    /
     /*************************************************************************/
     void StartFrame();
     /*************************************************************************/
+    /*!
+      \brief
+        Renders the requests to the window and flips the window buffers.
+    */
     /*************************************************************************/
     void EndFrame();
     /*************************************************************************/
