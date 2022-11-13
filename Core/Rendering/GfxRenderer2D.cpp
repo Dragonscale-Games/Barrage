@@ -207,7 +207,7 @@ namespace Barrage
     const std::vector<GfxManager2D::BufferList>& buffers = manager_->GetOpenGLBuffers();
     const GfxManager2D::BufferList instancedMeshBuffers = buffers[instancedMesh_];
 
-    // Start operating on the mesh.
+    // Create the vertex layout for the instanced mesh.
     CHECK_GL( glBindVertexArray(renderState_));
     BindMeshBuffers(instancedMeshBuffers);
     
@@ -227,10 +227,19 @@ namespace Barrage
     CHECK_GL( glVertexAttribPointer(rotationIndex, 1, GL_FLOAT, GL_FALSE, sizeof(float), reinterpret_cast<void*>(0)) );
     CHECK_GL( glVertexAttribDivisor(rotationIndex, 1) );
 
+    const GLint uvMapIndex = 5;
+    CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[UV_BUFFER]) ); 
+    CHECK_GL( glVertexAttribPointer(uvMapIndex, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat2x2), reinterpret_cast<void*>(0)) );
+    CHECK_GL( glVertexAttribDivisor(uvMapIndex, 1) );
+
     // Enable the vertex attributes being used.
     CHECK_GL( glEnableVertexAttribArray(translationIndex) );
     CHECK_GL( glEnableVertexAttribArray(scaleIndex) );
     CHECK_GL( glEnableVertexAttribArray(rotationIndex) );
+    CHECK_GL( glEnableVertexAttribArray(uvMapIndex) );
+
+    int maxAttributes;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxAttributes);
 
     // Unbind the instanced mesh.
     CHECK_GL( glBindVertexArray(0) );
@@ -269,14 +278,17 @@ namespace Barrage
     
     // Set the data for the translation, scale, and rotation buffers.
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[TRANSLATION_BUFFER]) );
-    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * request.transform_.count_,
+    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(decltype(*request.transform_.positions_)) * request.transform_.count_,
       request.transform_.positions_, GL_STREAM_DRAW) );
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[SCALE_BUFFER]) );
-    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * request.transform_.count_,
+    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(decltype(*request.transform_.scales_)) * request.transform_.count_,
       request.transform_.scales_, GL_STREAM_DRAW) );
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[ROTATION_BUFFER]) );
-    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(float) * request.transform_.count_,
+    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(decltype(*request.transform_.rotations_)) * request.transform_.count_,
       request.transform_.rotations_, GL_STREAM_DRAW) );
+    CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[UV_BUFFER]) );
+    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(decltype(*request.transform_.uvMaps_)) * request.transform_.count_,
+      request.transform_.uvMaps_, GL_STREAM_DRAW) );
 
     // Make sure to bind the correct buffer.
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedVertexBuffers[GfxManager2D::VERTICES]) );

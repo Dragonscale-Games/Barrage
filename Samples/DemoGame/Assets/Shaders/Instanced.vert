@@ -6,6 +6,7 @@ layout (location = 1) in vec2 a_tex_coord;
 layout (location = 2) in vec2 a_translation;
 layout (location = 3) in vec2 a_scale;
 layout (location = 4) in float a_rotation;
+layout (location = 5) in mat2 a_uvMap;
 
 uniform mat4 proj_matrix;
 uniform mat4 view_matrix;
@@ -24,5 +25,5 @@ void main()
 
   gl_Position = proj_matrix * view_matrix * transform_matrix * vec4(a_position, 1.0f);
   
-  tex_coord = a_tex_coord;
+  tex_coord = a_uvMap * a_tex_coord;
 }

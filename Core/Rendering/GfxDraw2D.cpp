@@ -112,6 +112,12 @@ namespace Barrage
     request.transform_.positions_ = positions;
     request.transform_.scales_ = scales;
     request.transform_.rotations_ = rotations;
+    // A temporary buffer to store UV transformations
+    // TODO: REMOVE THIS AND OFFICIALLY SUPPORT UVS.
+    //const glm::mat2 defaultUVMap = glm::inverse(glm::mat2x2(glm::vec2(0.25, 0.25), glm::vec2(0.75, 0.75)));
+    const glm::mat2 defaultUVMap = glm::mat2x2(glm::vec2(0, 0), glm::vec2(1, 1));
+    static std::vector<glm::mat2x2> uvs(100000, defaultUVMap);
+    request.transform_.uvMaps_ = uvs.data();
     // And send the request to the renderer.
     renderer_->AddRequest(request);
   }
