@@ -138,8 +138,8 @@ namespace Barrage
       int count,
       const glm::vec2* positions,
       const glm::vec2* scales,
-      const glm::vec4* texCoords,
       const RADIAN* rotations,
+      const glm::vec4* texCoords,
       const GfxManager2D::TextureID& texture = GfxManager2D::TextureID()
     );
     /*************************************************************************/
@@ -162,8 +162,8 @@ namespace Barrage
       int count,
       const glm::vec2* positions,
       const glm::vec2* scales,
-      const glm::vec4* texCoords,
       const RADIAN* rotations,
+      const glm::vec4* texCoords,
       const char* textureKey
     );
     /*************************************************************************/

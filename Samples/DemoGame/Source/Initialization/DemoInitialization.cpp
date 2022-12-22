@@ -177,6 +177,10 @@ namespace Demo
 
     TextureSpaceArray* tex_space_array = new TextureSpaceArray;
     tex_space_array->Allocate(1);
+    tex_space_array->data_->u_ = 0.5f;
+    tex_space_array->data_->v_ = 0.5f;
+    tex_space_array->data_->uSize_ = 0.5f;
+    tex_space_array->data_->vSize_ = 0.5f;
     object_archetype->components_["TextureSpaceArray"] = tex_space_array;
 
     DestructibleArray* destructible_array = new DestructibleArray;

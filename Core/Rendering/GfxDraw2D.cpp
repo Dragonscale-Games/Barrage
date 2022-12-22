@@ -97,10 +97,9 @@ namespace Barrage
   void GfxDraw2D::DrawInstancedQuad(
     int count,
     const glm::vec2* positions, const glm::vec2* scales,
-    const glm::vec4* texCoords, const RADIAN* rotations, 
+    const RADIAN* rotations, const glm::vec4* texCoords,
     const GfxManager2D::TextureID& texture)
   {
-    UNREFERENCED(texCoords);
     assert(renderer_);
     // Fill out a render request form.
     GfxRenderer2D::InstancedRequest request = {};
@@ -114,6 +113,7 @@ namespace Barrage
     request.transform_.positions_ = positions;
     request.transform_.scales_ = scales;
     request.transform_.rotations_ = rotations;
+    request.transform_.texCoords_ = texCoords;
     // And send the request to the renderer.
     renderer_->AddRequest(request);
   }
@@ -121,13 +121,13 @@ namespace Barrage
   void GfxDraw2D::DrawInstancedQuad(
     int count,
     const glm::vec2* positions, const glm::vec2* scales,
-    const glm::vec4* texCoords, const RADIAN* rotations, 
+    const RADIAN* rotations, const glm::vec4* texCoords,
     const char* textureKey)
   {
     assert(renderer_);
     assert(registry_);
     const GfxManager2D::TextureID texture(registry_->FindTexture(textureKey));
-    DrawInstancedQuad(count, positions, scales, texCoords, rotations, texture);
+    DrawInstancedQuad(count, positions, scales, rotations, texCoords, texture);
   }
 
   void GfxDraw2D::ApplyShader(const GfxManager2D::ShaderID& shader)

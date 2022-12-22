@@ -45,6 +45,7 @@ namespace Barrage
       const glm::vec2* positions_;      //!< The positions to all the objects in the render the request.
       const glm::vec2* scales_;         //!< The scales to all the objects in the render the request.
       const RADIAN* rotations_;         //!< The rotations to all the objects in the request.
+      const glm::vec4* texCoords_;      //!< The texture coordinates of all objects in the request.
     };
 
     struct ResourceState //!< Keeps track of the currently bound resources.
@@ -67,11 +68,6 @@ namespace Barrage
       int textureIndex_;      //!< The index to the internal texture in the resources manager.
       int shaderIndex_;       //!< The index to the internal shader in the resources manager.
       int framebufferIndex_;  //!< The index to the internal framebuffer in the resources manager.
-    };
-
-    enum class RequestType //! The type of the request this represents.
-    {
-      REQUEST_SINGLE, REQUEST_INSTANCED,
     };
 
     struct InternalRequest //! The internal data for the single requests.
@@ -238,6 +234,7 @@ namespace Barrage
       TRANSLATION_BUFFER,
       SCALE_BUFFER,
       ROTATION_BUFFER,
+      TEXCOORD_BUFFER,
       BUFFER_COUNT
     };
 

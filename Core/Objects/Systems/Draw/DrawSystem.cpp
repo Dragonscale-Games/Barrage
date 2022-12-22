@@ -68,7 +68,7 @@ namespace Barrage
         drawing.DrawInstancedQuad(
           pool->size_, 
           positions, scales, 
-          tex_coords, rotations, pool_sprite.texture_.c_str());
+          rotations, tex_coords, pool_sprite.texture_.c_str());
       }
     }
   }
