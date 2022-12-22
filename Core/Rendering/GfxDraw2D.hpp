@@ -126,6 +126,8 @@ namespace Barrage
         The position to draw the square in.
       \param scales
         The scale to draw the square in.
+      \param texCoords
+        The texture space coordinates for each square.
       \param rotations
         The rotation to draw the square in.
       \param texture
@@ -136,6 +138,7 @@ namespace Barrage
       int count,
       const glm::vec2* positions,
       const glm::vec2* scales,
+      const glm::vec4* texCoords,
       const RADIAN* rotations,
       const GfxManager2D::TextureID& texture = GfxManager2D::TextureID()
     );
@@ -159,6 +162,7 @@ namespace Barrage
       int count,
       const glm::vec2* positions,
       const glm::vec2* scales,
+      const glm::vec4* texCoords,
       const RADIAN* rotations,
       const char* textureKey
     );
