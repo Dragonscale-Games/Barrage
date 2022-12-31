@@ -19,18 +19,17 @@ namespace Barrage
 {
   Logger::Logger()
   {
+    spdlog::flush_every(std::chrono::seconds(3));
   }
 
-  void Logger::Initialize()
+  void Logger::AddFileLogger(const std::string_view& filepath)
   {
     using spdlog::level::level_enum;
-    using spdlog::sinks::basic_file_sink_st;
+    using spdlog::sinks::basic_file_sink_mt;
 
-    log_ = spdlog::create<basic_file_sink_st>("Default", "engine_log.txt");
+    log_ = spdlog::create<basic_file_sink_mt>(filepath.data(), filepath.data(), true);
     log_->set_level(level_enum::debug);
-    log_->enable_backtrace(10u);
+    log_->enable_backtrace(32u);
     log_->debug("Initialized the Logger class.");
-    log_->dump_backtrace();
-    log_->flush();
   }
 }
