@@ -48,6 +48,7 @@ find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 find_package(rapidjson REQUIRED)
 find_package(rttr REQUIRED Core)
+find_package(spdlog REQUIRED)
 add_subdirectory(ThirdParty)
 
 # Set the compiler flags before building our own code.
