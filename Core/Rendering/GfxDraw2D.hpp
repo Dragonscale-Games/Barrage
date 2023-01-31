@@ -85,9 +85,17 @@ namespace Barrage
     void SetViewportSpace(const glm::ivec2& dimensions);
 
     /*************************************************************************/
+    /*!
+      \brief
+        Flushes all render requests and clears the framebuffer.
+    /
     /*************************************************************************/
     void StartFrame();
     /*************************************************************************/
+    /*!
+      \brief
+        Renders the requests to the window and flips the window buffers.
+    */
     /*************************************************************************/
     void EndFrame();
     /*************************************************************************/
@@ -118,6 +126,8 @@ namespace Barrage
         The position to draw the square in.
       \param scales
         The scale to draw the square in.
+      \param texCoords
+        The texture space coordinates for each square.
       \param rotations
         The rotation to draw the square in.
       \param texture
@@ -129,6 +139,7 @@ namespace Barrage
       const glm::vec2* positions,
       const glm::vec2* scales,
       const RADIAN* rotations,
+      const glm::vec4* texCoords,
       const GfxManager2D::TextureID& texture = GfxManager2D::TextureID()
     );
     /*************************************************************************/
@@ -152,6 +163,7 @@ namespace Barrage
       const glm::vec2* positions,
       const glm::vec2* scales,
       const RADIAN* rotations,
+      const glm::vec4* texCoords,
       const char* textureKey
     );
     /*************************************************************************/

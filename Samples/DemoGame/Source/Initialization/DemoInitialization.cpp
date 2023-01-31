@@ -89,6 +89,7 @@ namespace Demo
     pool_archetype->componentArrayNames_.push_back("RotationArray");
     pool_archetype->componentArrayNames_.push_back("ScaleArray");
     pool_archetype->componentArrayNames_.push_back("VelocityArray");
+    pool_archetype->componentArrayNames_.push_back("TextureSpaceArray");
 
     objectManager.AddPoolArchetype("Player Pool Archetype", pool_archetype);
 
@@ -113,6 +114,10 @@ namespace Demo
     VelocityArray* velocity_array = new VelocityArray;
     velocity_array->Allocate(1);
     object_archetype->components_["VelocityArray"] = velocity_array;
+
+    TextureSpaceArray* tex_space_array = new TextureSpaceArray;
+    tex_space_array->Allocate(1);
+    object_archetype->components_["TextureSpaceArray"] = tex_space_array;
 
     objectManager.AddObjectArchetype("Player Object Archetype", object_archetype);
   }
@@ -143,6 +148,7 @@ namespace Demo
     pool_archetype->componentArrayNames_.push_back("RotationArray");
     pool_archetype->componentArrayNames_.push_back("ScaleArray");
     pool_archetype->componentArrayNames_.push_back("VelocityArray");
+    pool_archetype->componentArrayNames_.push_back("TextureSpaceArray");
     pool_archetype->componentArrayNames_.push_back("DestructibleArray");
 
     objectManager.AddPoolArchetype("Bullet Pool Archetype", pool_archetype);
@@ -168,6 +174,14 @@ namespace Demo
     VelocityArray* velocity_array = new VelocityArray;
     velocity_array->Allocate(1);
     object_archetype->components_["VelocityArray"] = velocity_array;
+
+    TextureSpaceArray* tex_space_array = new TextureSpaceArray;
+    tex_space_array->Allocate(1);
+    tex_space_array->data_->u_ = 0.5f;
+    tex_space_array->data_->v_ = 0.5f;
+    tex_space_array->data_->uSize_ = 0.5f;
+    tex_space_array->data_->vSize_ = 0.5f;
+    object_archetype->components_["TextureSpaceArray"] = tex_space_array;
 
     DestructibleArray* destructible_array = new DestructibleArray;
     destructible_array->Allocate(1);

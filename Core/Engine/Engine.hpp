@@ -24,6 +24,8 @@
 #include "Rendering/GfxDraw2D.hpp"
 #include "Rendering/WindowManager.hpp"
 
+#include "Utilities/Logger.hpp"
+
 namespace Barrage
 {   
   //! The core engine class for a Barrage bullet hell game
@@ -140,6 +142,7 @@ namespace Barrage
       GfxRegistry2D gfxRegistry_;
       GfxDraw2D gfxDrawSystem_;                 //!< The drawing system.
       WindowManager windowManager_;             //!< The windowing manager.
+      Logger logger_;                           //!< The engine logger.
 	};
 }
 

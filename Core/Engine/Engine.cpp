@@ -53,6 +53,8 @@ namespace Barrage
 
     inputManager_.Initialize(windowManager_.GetInternalHandle());
     framerateController_.Initialize(windowManager_.GetInternalHandle(), FramerateController::FpsCap::FPS_120, true);
+
+    logger_.AddFileLogger("logs/trace.txt");
   }
 
   void Engine::Shutdown()

@@ -42,6 +42,8 @@ add_library(BarrageCore STATIC
   "template.cxx"
   "stdafx.h"
 
+  "Actions/ActionManager.cpp" "Scenes/SceneManager.cpp"
+
   "Debug/SymbolManager.hpp" "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
   "Debug/MemoryDebugger.hpp" "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
   "Debug/MemoryOverrides.hpp"
@@ -61,6 +63,7 @@ add_library(BarrageCore STATIC
   "Objects/Components/BaseClasses/ComponentArray.cpp" "Objects/Components/BaseClasses/ComponentArray.hpp" 
   "Objects/Components/BaseClasses/SharedComponent.cpp"   "Objects/Components/BaseClasses/SharedComponent.hpp"   
   "Objects/Components/BaseClasses/BaseComponent.hpp" 
+  "Objects/Components/ComponentArrays/PositionArray.hpp" 
   "Objects/ObjectManager.cpp" "Objects/ObjectManager.hpp" 
   "Objects/Pools/Pool.cpp"    "Objects/Pools/Pool.hpp"  
   
@@ -78,6 +81,8 @@ add_library(BarrageCore STATIC
   "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
   "Objects/Pools/PoolType.cpp"  
   "Objects/Pools/PoolInfo.cpp" 
+
+  "Math/Curves.hpp" "Math/Curves.tpp"
 
   "Random/Random.cpp" "Random/Random.hpp"
 
@@ -101,12 +106,16 @@ add_library(BarrageCore STATIC
 
   "Utilities/Utilities.hpp" 
   "Utilities/Mallocator.hpp"
-  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp"  "Actions/ActionManager.cpp" "Scenes/SceneManager.cpp")
+  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp"
+  "Utilities/RecursionTable.hpp" "Utilities/RecursionTable.tpp"
+  "Utilities/Logger.hpp" "Utilities/Logger.cpp"
+
+)
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
-target_link_libraries(BarrageCore LINK_PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
+target_link_libraries(BarrageCore LINK_PUBLIC spdlog::spdlog glad glfw glm::glm rapidjson stb_image RTTR::Core)
 if(WIN32)
   target_link_libraries(BarrageCore PUBLIC DbgHelp Userenv)
 endif()
