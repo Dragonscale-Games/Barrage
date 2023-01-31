@@ -20,6 +20,7 @@
 //  ===========================================================================
 
 #include <stdafx.h>
+#include <string>
 #include "Serializer.hpp"
 
 #include <iostream>
