@@ -22,7 +22,7 @@ namespace Barrage
   {
   }
 
-  void SpawnFuncManager::RegisterSpawnFunc(const std::string name, SpawnFunc spawnFunction)
+  void SpawnFuncManager::RegisterSpawnFunc(const std::string& name, SpawnFunc spawnFunction)
   {
     if (spawnFuncs_.find(name) != spawnFuncs_.end())
     {
@@ -38,7 +38,7 @@ namespace Barrage
     spawnFuncNames_.push_back(name);
   }
 
-  SpawnFunc SpawnFuncManager::GetSpawnFunc(const std::string name)
+  SpawnFunc SpawnFuncManager::GetSpawnFunc(const std::string& name)
   {
     if (spawnFuncs_.find(name) != spawnFuncs_.end())
     {

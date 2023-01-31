@@ -6,7 +6,8 @@
     "glfw3",
     "glm",
     "rapidjson",
-    "rttr"
+    "rttr",
+    "spdlog"
   ],
   "overrides": [
     {
@@ -24,6 +25,10 @@
     {
       "name": "rttr",
       "version": "0.9.6#4"
+    },
+    {
+      "name": "spdlog",
+      "version": "1.10.0"
     }
   ]
 }

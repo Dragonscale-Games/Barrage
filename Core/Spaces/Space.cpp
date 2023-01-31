@@ -58,7 +58,7 @@ namespace Barrage
     return rng_;
   }
 
-  void Space::SetScene(const std::string name)
+  void Space::SetScene(const std::string& name)
   {
     Scene* new_scene = Engine::Instance->Scenes().GetScene(name);
 

@@ -33,7 +33,7 @@ namespace Demo
 
     Scene* demo_scene = CreateDemoScene();
 
-    demo_space->AddScene("Demo Scene", demo_scene);
+    Engine::Instance->Scenes().AddScene("Demo Scene", demo_scene);
     demo_space->SetScene("Demo Scene");
 
     return demo_space;
@@ -117,6 +117,10 @@ namespace Demo
 
     TextureSpaceArray* tex_space_array = new TextureSpaceArray;
     tex_space_array->Allocate(1);
+    tex_space_array->data_->uSize_ = 1.0f;
+    tex_space_array->data_->vSize_ = 1.0f;
+    tex_space_array->data_->u_ = 0.0f;
+    tex_space_array->data_->v_ = 0.0f;
     object_archetype->components_["TextureSpaceArray"] = tex_space_array;
 
     objectManager.AddObjectArchetype("Player Object Archetype", object_archetype);
@@ -177,10 +181,10 @@ namespace Demo
 
     TextureSpaceArray* tex_space_array = new TextureSpaceArray;
     tex_space_array->Allocate(1);
-    tex_space_array->data_->u_ = 0.5f;
-    tex_space_array->data_->v_ = 0.5f;
-    tex_space_array->data_->uSize_ = 0.5f;
-    tex_space_array->data_->vSize_ = 0.5f;
+    tex_space_array->data_->uSize_ = 1.0f;
+    tex_space_array->data_->vSize_ = 1.0f;
+    tex_space_array->data_->u_ = 0.0f;
+    tex_space_array->data_->v_ = 0.0f;
     object_archetype->components_["TextureSpaceArray"] = tex_space_array;
 
     DestructibleArray* destructible_array = new DestructibleArray;

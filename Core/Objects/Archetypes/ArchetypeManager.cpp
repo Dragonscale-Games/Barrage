@@ -35,7 +35,7 @@ namespace Barrage
     }
   }
 
-  void ArchetypeManager::AddPoolArchetype(const std::string name, PoolArchetype* archetype)
+  void ArchetypeManager::AddPoolArchetype(const std::string& name, PoolArchetype* archetype)
   {
     if (poolArchetypes_.find(name) == poolArchetypes_.end())
     {
@@ -47,7 +47,7 @@ namespace Barrage
     }
   }
 
-  void ArchetypeManager::AddObjectArchetype(const std::string name, ObjectArchetype* archetype)
+  void ArchetypeManager::AddObjectArchetype(const std::string& name, ObjectArchetype* archetype)
   {
     if (objectArchetypes_.find(name) == objectArchetypes_.end())
     {
@@ -59,7 +59,7 @@ namespace Barrage
     }
   }
 
-  PoolArchetype* ArchetypeManager::GetPoolArchetype(const std::string name)
+  PoolArchetype* ArchetypeManager::GetPoolArchetype(const std::string& name)
   {
     if (poolArchetypes_.find(name) == poolArchetypes_.end())
     {
@@ -71,7 +71,7 @@ namespace Barrage
     }
   }
 
-  ObjectArchetype* ArchetypeManager::GetObjectArchetype(const std::string name)
+  ObjectArchetype* ArchetypeManager::GetObjectArchetype(const std::string& name)
   {
     if (objectArchetypes_.find(name) == objectArchetypes_.end())
     {
@@ -107,22 +107,22 @@ namespace Barrage
     return archetype_list;
   }
 
-  void ArchetypeManager::LoadPoolArchetype(const std::string name)
+  void ArchetypeManager::LoadPoolArchetype(const std::string& name)
   {
     UNREFERENCED(name);
   }
 
-  void ArchetypeManager::LoadObjectArchetype(const std::string name)
+  void ArchetypeManager::LoadObjectArchetype(const std::string& name)
   {
     UNREFERENCED(name);
   }
 
-  void ArchetypeManager::SavePoolArchetype(const std::string name)
+  void ArchetypeManager::SavePoolArchetype(const std::string& name)
   {
     UNREFERENCED(name);
   }
 
-  void ArchetypeManager::SaveObjectArchetype(const std::string name)
+  void ArchetypeManager::SaveObjectArchetype(const std::string& name)
   {
     UNREFERENCED(name);
   }

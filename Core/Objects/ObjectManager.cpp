@@ -177,7 +177,7 @@ namespace Barrage
     systemManager_.SetUpdateOrder(updateOrderList);
   }
 
-  void ObjectManager::RegisterSpawnFunc(const std::string name, SpawnFunc initializer)
+  void ObjectManager::RegisterSpawnFunc(const std::string& name, SpawnFunc initializer)
   {
     spawnFuncManager_.RegisterSpawnFunc(name, initializer);
   }
