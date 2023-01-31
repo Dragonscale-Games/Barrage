@@ -21,7 +21,14 @@ namespace Barrage
   Engine::Engine() :
     framerateController_(),
     inputManager_(),
-    spaceManager_()
+    sceneManager_(),
+    spaceManager_(),
+    gfxManager_(),
+    gfxRenderer_(),
+    gfxFactory_(),
+    gfxRegistry_(),
+    gfxDrawSystem_(),
+    windowManager_()
   {
   }
 
@@ -80,6 +87,11 @@ namespace Barrage
   InputManager& Engine::Input()
   {
     return inputManager_;
+  }
+
+  SceneManager& Engine::Scenes()
+  {
+    return sceneManager_;
   }
 
   SpaceManager& Engine::Spaces()

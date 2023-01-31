@@ -118,7 +118,7 @@ namespace Barrage
       template <typename T>
       void RegisterSystem(const std::string& systemName);
 
-      void RegisterSpawnFunc(const std::string name, SpawnFunc spawnFunction);
+      void RegisterSpawnFunc(const std::string& name, SpawnFunc spawnFunction);
 
       void SetSystemUpdateOrder(const std::vector<std::string>& updateOrderList);
 

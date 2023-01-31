@@ -22,18 +22,12 @@
 #include <Scenes/Scene.hpp>
 
 namespace Barrage
-{
-  
-  //! Maps scene names to scenes
-  typedef std::unordered_map<std::string, Scene*> SceneMap;
-  
+{  
   //! A collection of scenes and game objects
   class Space
 	{
     public:   
       Space();
-
-      ~Space();
 
       void Update();
 
@@ -45,9 +39,9 @@ namespace Barrage
 
       Random& GetRNG();
 
-      void AddScene(const std::string& name, Scene* scene);
+      void SetScene(const std::string& name);
 
-      void SetScene(const std::string name);
+      void QueueScene(const std::string& name);
 
       void SetPaused(bool isPaused);
 
@@ -61,7 +55,7 @@ namespace Barrage
       ActionManager actionManager_;
       ObjectManager objectManager_;
       Random rng_;
-      SceneMap scenes_;
+      Scene* nextScene_;
       bool paused_;
       bool visible_;
 	};

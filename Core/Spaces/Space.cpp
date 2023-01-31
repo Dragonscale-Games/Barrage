@@ -13,6 +13,7 @@
 
 #include "stdafx.h"
 #include "Space.hpp"
+#include "Engine/Engine.hpp"
 
 namespace Barrage
 {
@@ -20,18 +21,9 @@ namespace Barrage
     actionManager_(),
     objectManager_(*this),
     rng_(),
-    scenes_(),
     paused_(false),
     visible_(true)
   {
-  }
-
-  Space::~Space()
-  {
-    for (auto it = scenes_.begin(); it != scenes_.end(); ++it)
-    {
-      delete it->second;
-    }
   }
 
   void Space::Update()
@@ -66,27 +58,16 @@ namespace Barrage
     return rng_;
   }
 
-  void Space::AddScene(const std::string& name, Scene* scene)
-  {
-    if (scenes_.find(name) == scenes_.end())
-    {
-      scenes_[name] = scene;
-    }
-    else
-    {
-      delete scene;
-    }
-  }
-
   void Space::SetScene(const std::string name)
   {
-    if (scenes_.find(name) == scenes_.end())
-      return;
+    Scene* new_scene = Engine::Instance->Scenes().GetScene(name);
 
-    objectManager_.DeleteAllPools();
+    if (new_scene == nullptr)
+      return;
     
-    Scene* scene = scenes_.at(name);
-    const std::vector<PoolInfo>& starting_pools = scene->startingPools_;
+    objectManager_.DeleteAllPools();
+
+    const std::vector<PoolInfo>& starting_pools = new_scene->startingPools_;
 
     for (auto it = starting_pools.begin(); it != starting_pools.end(); ++it)
     {

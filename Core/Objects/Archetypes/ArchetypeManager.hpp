@@ -35,25 +35,25 @@ namespace Barrage
 
       ~ArchetypeManager();
 
-      void AddPoolArchetype(const std::string name, PoolArchetype* archetype);
+      void AddPoolArchetype(const std::string& name, PoolArchetype* archetype);
 
-      void AddObjectArchetype(const std::string name, ObjectArchetype* archetype);
+      void AddObjectArchetype(const std::string& name, ObjectArchetype* archetype);
 
-      PoolArchetype* GetPoolArchetype(const std::string name);
+      PoolArchetype* GetPoolArchetype(const std::string& name);
 
-      ObjectArchetype* GetObjectArchetype(const std::string name);
+      ObjectArchetype* GetObjectArchetype(const std::string& name);
 
       std::vector<std::string> GetPoolArchetypeNames();
 
       std::vector<std::string> GetObjectArchetypeNames();
 
-      void LoadPoolArchetype(const std::string name);
+      void LoadPoolArchetype(const std::string& name);
 
-      void LoadObjectArchetype(const std::string name);
+      void LoadObjectArchetype(const std::string& name);
 
-      void SavePoolArchetype(const std::string name);
+      void SavePoolArchetype(const std::string& name);
 
-      void SaveObjectArchetype(const std::string name);
+      void SaveObjectArchetype(const std::string& name);
 
     private:
       PoolArchetypeMap poolArchetypes_;

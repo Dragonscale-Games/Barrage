@@ -55,7 +55,7 @@ namespace Barrage
           The spawn function to add.
       */
       /**************************************************************/
-      void RegisterSpawnFunc(const std::string name, SpawnFunc spawnFunction);
+      void RegisterSpawnFunc(const std::string& name, SpawnFunc spawnFunction);
 
       /**************************************************************/
       /*!
@@ -70,7 +70,7 @@ namespace Barrage
           if it doesn't exist.
       */
       /**************************************************************/
-      SpawnFunc GetSpawnFunc(const std::string name);
+      SpawnFunc GetSpawnFunc(const std::string& name);
 
       /**************************************************************/
       /*!
