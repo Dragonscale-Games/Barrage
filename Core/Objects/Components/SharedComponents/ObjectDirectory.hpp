@@ -41,8 +41,6 @@ namespace Barrage
     public:
       inline ObjectDirectory() : handles_(), freeList_(), currentId_(0) {}
 
-      inline std::string GetClassName() override { return "ObjectDirectory"; }
-
       inline unsigned CreateHandle(unsigned poolIndex)
       {
         unsigned handle_index = NO_HANDLE;

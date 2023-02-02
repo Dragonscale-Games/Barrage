@@ -18,13 +18,13 @@
 namespace Barrage
 {
   template <typename T>
-  T* Pool::GetComponentArray(const std::string& componentName)
+  T* Pool::GetComponentArray(const std::string_view& componentName)
   {
     return dynamic_cast<T*>(componentArrays_.at(componentName));
   }
 
   template <typename T>
-  T* Pool::GetSharedComponent(const std::string& componentName)
+  T* Pool::GetSharedComponent(const std::string_view& componentName)
   {
     return dynamic_cast<T*>(sharedComponents_.at(componentName));
   }

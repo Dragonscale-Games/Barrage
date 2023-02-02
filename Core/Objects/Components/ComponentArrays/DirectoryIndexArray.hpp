@@ -33,9 +33,6 @@ namespace Barrage
     };
 
     typedef ComponentArrayT<DirectoryIndex> DirectoryIndexArray;
-
-    template <>
-    inline std::string DirectoryIndexArray::GetClassName() { return "DirectoryIndexArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

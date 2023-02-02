@@ -14,6 +14,7 @@
 // Includes
 //  ===========================================================================
 
+#include <string>
 #include <rttr/registration.h>
 #include <rttr/constructor.h>
 #include <Objects/Components/EngineComponents.hpp>

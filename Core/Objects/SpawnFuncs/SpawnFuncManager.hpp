@@ -30,7 +30,7 @@ namespace Barrage
   typedef void (*SpawnFunc)(Pool&, Pool&, unsigned, unsigned, const std::vector<unsigned>&);
   
   //! Associates spawn functions with their names
-  typedef std::unordered_map<std::string, SpawnFunc> SpawnFuncMap;
+  typedef std::unordered_map<std::string_view, SpawnFunc> SpawnFuncMap;
 
   //! Keeps track of spawn functions and their names
   class SpawnFuncManager
@@ -56,7 +56,7 @@ namespace Barrage
           The spawn function to add.
       */
       /**************************************************************/
-      void RegisterSpawnFunc(const std::string& name, SpawnFunc spawnFunction);
+      void RegisterSpawnFunc(const std::string_view& name, SpawnFunc spawnFunction);
 
       /**************************************************************/
       /*!
@@ -71,7 +71,7 @@ namespace Barrage
           if it doesn't exist.
       */
       /**************************************************************/
-      SpawnFunc GetSpawnFunc(const std::string& name);
+      SpawnFunc GetSpawnFunc(const std::string_view& name);
 
       /**************************************************************/
       /*!
@@ -82,11 +82,11 @@ namespace Barrage
           Returns the list of all registered initializers.
       */
       /**************************************************************/
-      std::vector<std::string> GetSpawnFuncNames();
+      std::vector<std::string_view> GetSpawnFuncNames();
 
     private:
       SpawnFuncMap spawnFuncs_;                 //!< The collection of registered spawn functions
-      std::vector<std::string> spawnFuncNames_; //!< The names of all registered spawn functions
+      std::vector<std::string_view> spawnFuncNames_; //!< The names of all registered spawn functions
 	};
 }
 

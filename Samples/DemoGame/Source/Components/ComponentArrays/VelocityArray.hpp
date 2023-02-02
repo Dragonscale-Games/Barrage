@@ -32,12 +32,6 @@ namespace Demo
   typedef Barrage::ComponentArrayT<Velocity> VelocityArray;
 }
 
-namespace Barrage
-{
-  template <>
-  inline std::string Demo::VelocityArray::GetClassName() { return "VelocityArray"; }
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 #endif // VelocityArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

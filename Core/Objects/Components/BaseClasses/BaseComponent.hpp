@@ -52,24 +52,12 @@ namespace Barrage
       /**************************************************************/
       virtual Type GetType() = 0;
 
-      /**************************************************************/
-      /*!
-        \brief
-          Allows user to determine the name of the component's child
-          class (for use with reflection).
-
-        \return
-          Returns the name of the component's child class.
-      */
-      /**************************************************************/
-      virtual std::string GetClassName() = 0;
-
       // Notify rttr of the component hierarchy.
       RTTR_ENABLE()
   };
 
   //! Associates components with their names
-  typedef std::unordered_map<std::string, Component*> ComponentMap;
+  typedef std::unordered_map<std::string_view, Component*> ComponentMap;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

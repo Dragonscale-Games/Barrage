@@ -18,7 +18,7 @@
 namespace Barrage
 {
   template <typename T>
-  void SystemManager::RegisterSystem(const std::string& systemName)
+  void SystemManager::RegisterSystem(const std::string_view& systemName)
   {
     if (systems_.find(systemName) != systems_.end())
     {

@@ -25,6 +25,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <string_view>
+#include <string>
 
 #include <rttr/type.h>
 #include <rttr/property.h>

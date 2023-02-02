@@ -48,7 +48,7 @@ namespace Barrage
 
   void ObjectManager::SetSystemUpdateOrder()
   {
-    std::vector<std::string> update_order;
+    std::vector<std::string_view> update_order;
 
     update_order.push_back("CreationSystem");
     update_order.push_back("DestructionSystem");

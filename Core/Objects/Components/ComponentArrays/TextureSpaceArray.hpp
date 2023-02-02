@@ -32,9 +32,6 @@ namespace Barrage
   };
 
   typedef ComponentArrayT<TextureSpace> TextureSpaceArray;
-
-  template <>
-  inline std::string TextureSpaceArray::GetClassName() { return "TextureSpaceArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -22,12 +22,12 @@ namespace Barrage
   {
   }
 
-  void PoolType::AddTag(const std::string& tag)
+  void PoolType::AddTag(const std::string_view& tag)
   {
     tags_.push_back(tag);
   }
 
-  void PoolType::AddComponentName(const std::string& name)
+  void PoolType::AddComponentName(const std::string_view& name)
   {
     componentNames_.push_back(name);
   }

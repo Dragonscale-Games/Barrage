@@ -15,7 +15,7 @@
 
 namespace Barrage
 {
-  PoolInfo::PoolInfo(const std::string& poolName, const std::string& archetypeName, unsigned capacity) :
+  PoolInfo::PoolInfo(const std::string_view& poolName, const std::string_view& archetypeName, unsigned capacity) :
     poolName_(poolName),
     archetypeName_(archetypeName),
     capacity_(capacity),

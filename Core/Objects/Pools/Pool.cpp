@@ -43,17 +43,17 @@ namespace Barrage
     }
   }
 
-  bool Pool::HasTag(const std::string& tag) const
+  bool Pool::HasTag(const std::string_view& tag) const
   {
     return tags_.count(tag);
   }
 
-  bool Pool::HasComponentArray(const std::string& componentArrayName)
+  bool Pool::HasComponentArray(const std::string_view& componentArrayName)
   {
     return componentArrays_.count(componentArrayName) > 0;
   }
 
-  bool Pool::HasSharedComponent(const std::string& sharedComponentName)
+  bool Pool::HasSharedComponent(const std::string_view& sharedComponentName)
   {
     return sharedComponents_.count(sharedComponentName) > 0;
   }

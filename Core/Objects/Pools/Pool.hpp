@@ -23,7 +23,7 @@
 
 namespace Barrage
 {
-  typedef std::unordered_set<std::string> TagSet;
+  typedef std::unordered_set<std::string_view> TagSet;
   
   class Space;
 
@@ -58,7 +58,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      bool HasTag(const std::string& tag) const;
+      bool HasTag(const std::string_view& tag) const;
 
       /**************************************************************/
       /*!
@@ -73,7 +73,7 @@ namespace Barrage
           false otherwise.
       */
       /**************************************************************/
-      bool HasComponentArray(const std::string& componentArrayName);
+      bool HasComponentArray(const std::string_view& componentArrayName);
 
       /**************************************************************/
       /*!
@@ -88,7 +88,7 @@ namespace Barrage
           false otherwise.
       */
       /**************************************************************/
-      bool HasSharedComponent(const std::string& sharedComponentName);
+      bool HasSharedComponent(const std::string_view& sharedComponentName);
 
       /**************************************************************/
       /*!
@@ -120,7 +120,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      T* GetComponentArray(const std::string& componentName);
+      T* GetComponentArray(const std::string_view& componentName);
 
       /**************************************************************/
       /*!
@@ -141,7 +141,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      T* GetSharedComponent(const std::string& componentName);
+      T* GetSharedComponent(const std::string_view& componentName);
 
     public:
       TagSet tags_;                         //!< Holds the pool's tags

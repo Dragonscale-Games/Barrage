@@ -50,7 +50,7 @@ namespace Barrage
   };
 
   //! Associates each shared component with its name
-  typedef std::unordered_map<std::string, SharedComponent*> SharedComponentMap;
+  typedef std::unordered_map<std::string_view, SharedComponent*> SharedComponentMap;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

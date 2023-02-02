@@ -28,8 +28,8 @@ namespace Barrage
   typedef ComponentArray* (ComponentAllocator::* ComponentArrayAllocFunc)(unsigned) const;
   typedef SharedComponent* (ComponentAllocator::* SharedComponentAllocFunc)(SharedComponent*) const;
 
-  typedef std::unordered_map<std::string, ComponentArrayAllocFunc> ComponentArrayAllocMap;
-  typedef std::unordered_map<std::string, SharedComponentAllocFunc> SharedComponentAllocMap;
+  typedef std::unordered_map<std::string_view, ComponentArrayAllocFunc> ComponentArrayAllocMap;
+  typedef std::unordered_map<std::string_view, SharedComponentAllocFunc> SharedComponentAllocMap;
 
   //! Responsible for allocating new components
   class ComponentAllocator
@@ -58,7 +58,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      void RegisterComponent(const std::string& componentName);
+      void RegisterComponent(const std::string_view& componentName);
 
       /**************************************************************/
       /*!
@@ -80,7 +80,7 @@ namespace Barrage
           nullptr.
       */
       /**************************************************************/
-      ComponentArray* AllocateComponentArray(const std::string& name, unsigned capacity) const;
+      ComponentArray* AllocateComponentArray(const std::string_view& name, unsigned capacity) const;
 
       /**************************************************************/
       /*!
@@ -103,7 +103,7 @@ namespace Barrage
           nullptr.
       */
       /**************************************************************/
-      SharedComponent* AllocateSharedComponent(const std::string& name, SharedComponent* initializer = nullptr) const;
+      SharedComponent* AllocateSharedComponent(const std::string_view& name, SharedComponent* initializer = nullptr) const;
 
       /**************************************************************/
       /*!
@@ -114,7 +114,7 @@ namespace Barrage
           Returns the list of all registered component arrays.
       */
       /**************************************************************/
-      std::vector<std::string> GetComponentArrayNames();
+      std::vector<std::string_view> GetComponentArrayNames();
       
       /**************************************************************/
       /*!
@@ -125,7 +125,7 @@ namespace Barrage
           Returns the list of all registered shared components.
       */
       /**************************************************************/
-      std::vector<std::string> GetSharedComponentNames();
+      std::vector<std::string_view> GetSharedComponentNames();
 
     private:
       /**************************************************************/
@@ -171,8 +171,8 @@ namespace Barrage
       ComponentArrayAllocMap componentArrayAllocMap_;   //!< Maps names of component arrays to their allocation functions
       SharedComponentAllocMap sharedComponentAllocMap_; //!< Maps names of shared components to their allocation functions
 
-      std::vector<std::string> componentArrayNames_;    //!< The names of all registered component arrays
-      std::vector<std::string> sharedComponentNames_;   //!< The names of all registered shared components
+      std::vector<std::string_view> componentArrayNames_;    //!< The names of all registered component arrays
+      std::vector<std::string_view> sharedComponentNames_;   //!< The names of all registered shared components
 	};
 }
 
