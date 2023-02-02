@@ -37,7 +37,7 @@ namespace Barrage
     window_ = window;
     SetVsync(useVsync);
     SetFpsCap(fpsCap);
-    StartFrame(); // for safety, so the frame start time is never uninitialized
+    frameStart_ = std::chrono::high_resolution_clock::now();
   }
 
   void FramerateController::StartFrame()
