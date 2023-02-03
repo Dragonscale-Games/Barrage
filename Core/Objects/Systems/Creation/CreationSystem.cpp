@@ -72,7 +72,7 @@ namespace Barrage
       ObjectDirectory& object_directory = *destinationPool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
       DirectoryIndexArray& directory_index_array = *destinationPool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
 
-      unsigned object_index = destinationPool->size_ - 1;
+      unsigned object_index = destinationPool->numActiveObjects_ - 1;
       DirectoryIndex& directory_index = directory_index_array[object_index];
       directory_index.index_ = object_directory.CreateHandle(object_index);
     }
@@ -84,7 +84,7 @@ namespace Barrage
     Pool* destination_pool = poolManager_->GetPool(spawnType.destinationPoolName_);
     unsigned num_spawns = static_cast<unsigned>(spawnType.sourceIndices_.size());
     unsigned available_slots = destination_pool->GetAvailableSlots();
-    unsigned start_index = destination_pool->size_ + destination_pool->queuedObjects_;
+    unsigned start_index = destination_pool->numActiveObjects_ + destination_pool->numQueuedObjects_;
 
     if (available_slots < num_spawns)
     {
@@ -112,17 +112,17 @@ namespace Barrage
 
       for (unsigned i = 0; i < numNewObjects; ++i)
       {
-        destination_array->CopyToThis(*source_component, 0, destinationPool->size_ + destinationPool->queuedObjects_ + i);
+        destination_array->CopyToThis(*source_component, 0, destinationPool->numActiveObjects_ + destinationPool->numQueuedObjects_ + i);
       }
     }
 
     if (queueObjects)
     {
-      destinationPool->queuedObjects_ += numNewObjects;
+      destinationPool->numQueuedObjects_ += numNewObjects;
     }
     else
     {
-      destinationPool->size_ += numNewObjects;
+      destinationPool->numActiveObjects_ += numNewObjects;
     }
   }
 
@@ -143,8 +143,8 @@ namespace Barrage
 
   void CreationSystem::SpawnObjects(Pool* pool)
   {
-    pool->size_ += pool->queuedObjects_;
-    pool->queuedObjects_ = 0;
+    pool->numActiveObjects_ += pool->numQueuedObjects_;
+    pool->numQueuedObjects_ = 0;
   }
 
   void CreationSystem::AssignHandles(Pool* pool)
@@ -152,8 +152,8 @@ namespace Barrage
     ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
     DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
 
-    unsigned start_index = pool->size_;
-    unsigned num_queued_objects = pool->queuedObjects_;
+    unsigned start_index = pool->numActiveObjects_;
+    unsigned num_queued_objects = pool->numQueuedObjects_;
 
     for (unsigned i = 0; i < num_queued_objects; ++i)
     {

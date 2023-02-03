@@ -30,56 +30,35 @@ namespace Barrage
     rttr::registration::class_<SpawnType>("SpawnType")
       .property("archetypeName", &SpawnType::archetypeName_)
       .property("destinationPoolName", &SpawnType::destinationPoolName_)
-      .property("spawnFuncs", &SpawnType::spawnFuncs_)
-      /*.constructor<>(
-        rttr::policy::ctor::as_object
-      )*/;
+      .property("spawnFuncs", &SpawnType::spawnFuncs_);
+
     // Spawner
     rttr::registration::class_<Spawner>("Spawner")
-      .property("spawnTypes", &Spawner::spawnTypes_)
-      /*.constructor<>(
-        rttr::policy::ctor::as_object
-      )*/;
+      .property("spawnTypes", &Spawner::spawnTypes_);
+
     // Sprite
     rttr::registration::class_<Sprite>("Sprite")
       .property("texture", &Sprite::texture_)
-      .property("layer", &Sprite::layer_)
-      /*.constructor<>(
-        rttr::policy::ctor::as_object
-      )*/;
-    // Random
-    /*
-    rttr::registration::class_<Random>("Random")
-      .property_readonly("startSeed", &Random::GetSeed(), rttr::access_levels::public_access);
-    */
+      .property("layer", &Sprite::layer_);
 
     // Component Arrays.
 
     // Destructible Arrays.
     rttr::registration::class_<Destructible>("Destructible")
-      .property("destroyed", &Destructible::destroyed_)
-      /*.constructor<>(
-        rttr::policy::ctor::as_object
-      )*/;
+      .property("destroyed", &Destructible::destroyed_);
+
     // Position Arrays.
     rttr::registration::class_<Position>("Position")
       .property("x", &Position::x_)
-      .property("y", &Position::y_)
-      /*.constructor<>(
-        rttr::policy::ctor::as_object
-      )*/;
+      .property("y", &Position::y_);
+
     // Scale Arrays.
     rttr::registration::class_<Scale>("Scale")
       .property("x", &Position::x_)
-      .property("y", &Position::y_)
-      /*.constructor<>(
-        rttr::policy::ctor::as_object
-      )*/;
+      .property("y", &Position::y_);
+
     // Rotation Arrays.
     rttr::registration::class_<Rotation>("Rotation")
-      .property("angle", &Rotation::angle_)
-      /*.constructor<>(
-        rttr::policy::ctor::as_object
-      )*/;
+      .property("angle", &Rotation::angle_);
   }
 }

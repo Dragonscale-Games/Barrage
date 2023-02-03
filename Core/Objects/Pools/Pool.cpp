@@ -21,8 +21,8 @@ namespace Barrage
     tags_(),
     componentArrays_(),
     sharedComponents_(),
-    size_(0),
-    queuedObjects_(0),
+    numActiveObjects_(0),
+    numQueuedObjects_(0),
     capacity_(capacity),
     space_(space)
   {
@@ -60,6 +60,6 @@ namespace Barrage
 
   unsigned Pool::GetAvailableSlots() const
   {
-    return capacity_ - size_ - queuedObjects_;
+    return capacity_ - numActiveObjects_ - numQueuedObjects_;
   }
 }

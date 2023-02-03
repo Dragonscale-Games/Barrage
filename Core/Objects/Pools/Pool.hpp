@@ -147,8 +147,8 @@ namespace Barrage
       TagSet tags_;                         //!< Holds the pool's tags
       ComponentArrayMap componentArrays_;   //!< Holds component arrays and their names
       SharedComponentMap sharedComponents_; //!< Holds shared components and their names
-      unsigned size_;                       //!< Number of currently active objects
-      unsigned queuedObjects_;              //!< Number of objects waiting to be spawned on the next tick
+      unsigned numActiveObjects_;           //!< Number of currently active objects
+      unsigned numQueuedObjects_;           //!< Number of objects waiting to be spawned on the next tick
       const unsigned capacity_;             //!< Total number of objects the pool can hold
       Space& space_;                        //!< The space the pool lives in
 

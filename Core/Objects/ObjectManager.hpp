@@ -87,6 +87,8 @@ namespace Barrage
 
       void AddPoolArchetype(const std::string_view& name, PoolArchetype* archetype);
 
+      PoolArchetype* GetPoolArchetype(const std::string_view& name);
+
       void CreatePool(const std::string_view& poolName, const std::string_view& archetypeName, unsigned capacity = 1);
 
       void CreatePoolAndObjects(const PoolInfo& poolInfo);
@@ -106,6 +108,8 @@ namespace Barrage
       // ===================================================================
 
       void AddObjectArchetype(const std::string_view& name, ObjectArchetype* archetype);
+
+      ObjectArchetype* GetObjectArchetype(const std::string_view& name);
 
       void CreateObject(const std::string_view& poolName, const std::string_view& archetypeName);
 

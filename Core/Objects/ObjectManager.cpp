@@ -102,9 +102,19 @@ namespace Barrage
     archetypeManager_.AddPoolArchetype(name, archetype);
   }
 
+  PoolArchetype* ObjectManager::GetPoolArchetype(const std::string_view& name)
+  {
+    return archetypeManager_.GetPoolArchetype(name);
+  }
+
   void ObjectManager::AddObjectArchetype(const std::string_view& name, ObjectArchetype* archetype)
   {
     archetypeManager_.AddObjectArchetype(name, archetype);
+  }
+
+  ObjectArchetype* ObjectManager::GetObjectArchetype(const std::string_view& name)
+  {
+    return archetypeManager_.GetObjectArchetype(name);
   }
 
   std::vector<std::string_view> ObjectManager::GetPoolArchetypeNames()

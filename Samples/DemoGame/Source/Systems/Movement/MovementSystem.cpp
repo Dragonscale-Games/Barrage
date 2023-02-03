@@ -95,7 +95,7 @@ namespace Demo
 
     PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
 
-    unsigned num_objects = pool->size_;
+    unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
@@ -109,7 +109,7 @@ namespace Demo
     PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
     BoundaryBox& bounds = *pool->GetSharedComponent<BoundaryBox>("BoundaryBox");
 
-    unsigned num_objects = pool->size_;
+    unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
@@ -132,7 +132,7 @@ namespace Demo
     PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
     VelocityArray& velocity_array = *pool->GetComponentArray<VelocityArray>("VelocityArray");
 
-    unsigned num_objects = pool->size_;
+    unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
@@ -146,7 +146,7 @@ namespace Demo
     RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("RotationArray");
     AngularSpeedArray& angular_speed_array = *pool->GetComponentArray<AngularSpeedArray>("AngularSpeedArray");
 
-    unsigned num_objects = pool->size_;
+    unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {

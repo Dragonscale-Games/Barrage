@@ -47,7 +47,7 @@ namespace Barrage
     DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
     ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
 
-    unsigned num_objects = pool->size_;
+    unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
@@ -65,7 +65,7 @@ namespace Barrage
     DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
     ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
 
-    unsigned num_objects = pool->size_;
+    unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
@@ -92,7 +92,7 @@ namespace Barrage
 
     // starting at the beginning of the original object array, find the index of the first destroyed object (if one exists) or one
     // past the end of the original object array
-    while (initial_alive_end_index < pool->size_)
+    while (initial_alive_end_index < pool->numActiveObjects_)
     {
       if (destructible_array[initial_alive_end_index].destroyed_ == true)
         break;
@@ -101,7 +101,7 @@ namespace Barrage
     }
 
     // if no objects were destroyed, early out
-    if (initial_alive_end_index >= pool->size_)
+    if (initial_alive_end_index >= pool->numActiveObjects_)
       return;
 
     // in each component array, shift the components from alive objects to the beginning of the array
@@ -116,7 +116,7 @@ namespace Barrage
 
       ComponentArray* component_array = it->second;
 
-      while (next_alive_index < pool->size_)
+      while (next_alive_index < pool->numActiveObjects_)
       {
         if (destructible_array[next_alive_index].destroyed_ == false)
         {
@@ -133,7 +133,7 @@ namespace Barrage
     unsigned alive_end_index = initial_alive_end_index;
     unsigned next_alive_index = alive_end_index + 1;
 
-    while (next_alive_index < pool->size_)
+    while (next_alive_index < pool->numActiveObjects_)
     {
       if (destructible_array[next_alive_index].destroyed_ == false)
       {
@@ -146,6 +146,6 @@ namespace Barrage
     }
 
     // update the size of the newly packed object array
-    pool->size_ = alive_end_index;
+    pool->numActiveObjects_ = alive_end_index;
   }
 }
