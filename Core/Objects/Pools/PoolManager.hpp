@@ -59,17 +59,14 @@ namespace Barrage
 
         \param archetype
           The archetype carrying information about all the components
-          the new object pool will contain.
-
-        \param capacity
-          The maximum number of objects the pool will be able to hold.
+          the new object pool will contain and its capacity.
 
         \return
           Returns a pointer to the newly created object pool. Returns
           nullptr if creation fails.
       */
       /**************************************************************/
-      Pool* CreatePool(const std::string_view& name, const PoolArchetype& archetype, unsigned capacity);
+      Pool* CreatePool(const std::string_view& name, const PoolArchetype& archetype);
 
       /**************************************************************/
       /*!
@@ -129,7 +126,7 @@ namespace Barrage
           nullptr if creation fails.
       */
       /**************************************************************/
-      Pool* CreatePoolInternal(const PoolArchetype& archetype, unsigned capacity);
+      Pool* CreatePoolInternal(const PoolArchetype& archetype);
 
     private:
       PoolMap pools_;                          //!< The collection of all object pools

@@ -24,9 +24,10 @@ namespace Barrage
   {
     EditorData();
     
-    std::string_view selectedPool_;          //!< The currently selected pool
-    std::string_view selectedPoolArchetype_; //!< The currently selected pool archetype
-    std::string_view selectedObject_;        //!< The currently selected object
+    bool isRunning_; //!< Keeps track of whether the editor is running
+
+    std::string_view selectedPool_;   //!< The currently selected pool
+    std::string_view selectedObject_; //!< The currently selected object
   };
 }
 

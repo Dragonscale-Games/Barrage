@@ -127,23 +127,23 @@ namespace Barrage
     return archetypeManager_.GetObjectArchetypeNames();
   }
 
-  void ObjectManager::CreatePool(const std::string_view& poolName, const std::string_view& archetypeName, unsigned capacity)
+  void ObjectManager::CreatePool(const std::string_view& poolName)
   {
-    if (capacity == 0)
-      return;
-
-    PoolArchetype* pool_archetype = archetypeManager_.GetPoolArchetype(archetypeName);
+    PoolArchetype* pool_archetype = archetypeManager_.GetPoolArchetype(poolName);
     
     if (pool_archetype)
     {
-      Pool* new_pool = poolManager_.CreatePool(poolName, *pool_archetype, capacity);
+      if (pool_archetype->capacity_ == 0)
+        return;
+      
+      Pool* new_pool = poolManager_.CreatePool(poolName, *pool_archetype);
       systemManager_.Subscribe(new_pool);
     }
   }
 
   void ObjectManager::CreatePoolAndObjects(const PoolInfo& poolInfo)
   {
-    CreatePool(poolInfo.poolName_, poolInfo.archetypeName_, poolInfo.capacity_);
+    CreatePool(poolInfo.poolName_);
 
     for (auto it = poolInfo.objects_.begin(); it != poolInfo.objects_.end(); ++it)
     {

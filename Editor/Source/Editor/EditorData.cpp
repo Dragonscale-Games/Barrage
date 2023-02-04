@@ -15,8 +15,8 @@
 namespace Barrage
 {
   EditorData::EditorData() :
+    isRunning_(false),
     selectedPool_(),
-    selectedPoolArchetype_(),
     selectedObject_()
   {
   }

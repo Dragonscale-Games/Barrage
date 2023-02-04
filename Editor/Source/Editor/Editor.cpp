@@ -26,29 +26,29 @@ namespace Barrage
     engine_(),
     gui_(),
     data_(),
-    isRunning_(false),
 
     hierarchy_(data_, engine_),
-    inspector_(data_, engine_)
+    inspector_(data_, engine_),
+    mainMenu_(data_, engine_)
   {
   }
 
   void Editor::Run()
   {
-    if (!isRunning_)
+    if (!data_.isRunning_)
     {
-      isRunning_ = true;
+      data_.isRunning_ = true;
       
       Initialize();
 
-      while (isRunning_)
+      while (data_.isRunning_)
       {
         Update();
       }
 
       Shutdown();
 
-      isRunning_ = false;
+      data_.isRunning_ = false;
     }
   }
 
@@ -112,7 +112,7 @@ namespace Barrage
 
     if(!windowing.IsOpen())
     {
-      isRunning_ = false;
+      data_.isRunning_ = false;
     }
 
     engine_.Frames().EndFrame();
@@ -129,10 +129,10 @@ namespace Barrage
 
   void Editor::UseEditorWidget()
   {
+    mainMenu_.UseWidget();
     hierarchy_.UseWidget();
     inspector_.UseWidget();
 
-    ImGui::Begin("Placeholder");
-    ImGui::End();
+    ImGui::ShowDemoWindow();
   }
 }

@@ -23,6 +23,8 @@ namespace Barrage
   {
     ImGui::Begin("Hierarchy");
 
+    bool itemClicked = false;
+
     std::vector<PoolInfo>& pools = engine_.Scenes().GetScene("Demo Scene")->startingPools_;
 
     for (PoolInfo& pool : pools)
@@ -38,8 +40,8 @@ namespace Barrage
 
       if (ImGui::IsItemClicked())
       {
+        itemClicked = true;
         editorData_.selectedPool_ = pool.poolName_;
-        editorData_.selectedPoolArchetype_ = pool.archetypeName_;
         editorData_.selectedObject_ = std::string_view();
       }
 
@@ -58,14 +60,20 @@ namespace Barrage
 
           if (ImGui::IsItemClicked())
           {
+            itemClicked = true;
             editorData_.selectedPool_ = pool.poolName_;
-            editorData_.selectedPoolArchetype_ = pool.archetypeName_;
             editorData_.selectedObject_ = objectName;
           }
         }
 
         ImGui::TreePop();
       }
+    }
+
+    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !itemClicked && ImGui::IsWindowHovered())
+    {
+      editorData_.selectedPool_ = std::string_view();
+      editorData_.selectedObject_ = std::string_view();
     }
 
     ImGui::End();

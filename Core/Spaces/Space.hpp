@@ -55,7 +55,6 @@ namespace Barrage
       ActionManager actionManager_;
       ObjectManager objectManager_;
       Random rng_;
-      Scene* nextScene_;
       bool paused_;
       bool visible_;
 	};

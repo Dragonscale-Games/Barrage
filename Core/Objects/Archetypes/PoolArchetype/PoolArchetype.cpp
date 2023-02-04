@@ -21,7 +21,8 @@ namespace Barrage
   PoolArchetype::PoolArchetype() :
     sharedComponents_(),
     componentArrayNames_(),
-    tags_()
+    tags_(),
+    capacity_(1)
   {
   }
 

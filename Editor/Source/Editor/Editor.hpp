@@ -21,6 +21,7 @@
 
 #include "Widgets/Hierarchy/HierarchyWidget.hpp"
 #include "Widgets/Inspector/InspectorWidget.hpp"
+#include "Widgets/MainMenu/MainMenuWidget.hpp"
 
 #include <string_view>
 
@@ -83,10 +84,10 @@ namespace Barrage
       Engine engine_;   //!< Barrage game engine
       GUI gui_;         //!< Contains all widgets/user controls
       EditorData data_; //!< Runtime settings and data for the editor
-      bool isRunning_;  //!< Keeps track of whether the editor is running
 
       HierarchyWidget hierarchy_; //!< Shows the hierarchy widget
       InspectorWidget inspector_; //!< Shows the inspector widget
+      MainMenuWidget mainMenu_;   //!< Shows the main menu bar
 	};
 }
 

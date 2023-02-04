@@ -43,9 +43,10 @@ namespace Barrage
       ~PoolArchetype();
 
     public:
-      SharedComponentMap sharedComponents_;          //!< Map of initialized shared components to copy
+      SharedComponentMap sharedComponents_;               //!< Map of initialized shared components to copy
       std::vector<std::string_view> componentArrayNames_; //!< List of names of component arrays to add to pool
       std::vector<std::string_view> tags_;                //!< Tags that the new pool will have
+      unsigned capacity_;
 	};
 }
 

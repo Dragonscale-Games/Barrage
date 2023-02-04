@@ -25,12 +25,10 @@ namespace Barrage
   struct PoolInfo
   {
     public:
-      PoolInfo(const std::string_view& poolName, const std::string_view& archetypeName, unsigned capacity = 1);
+      PoolInfo(const std::string_view& poolName);
 
     public:
-      const std::string_view poolName_;       //!< Name that will be assigned to the pool
-      const std::string_view archetypeName_;  //!< Name of the archetype used to construct the pool
-      const unsigned capacity_;               //!< Number of objects the pool can hold
+      const std::string_view poolName_;       //!< Name of the archetype used to construct the pool
       std::vector<std::string_view> objects_; //!< Names of object archetypes used to construct starting objects
   };
 }
