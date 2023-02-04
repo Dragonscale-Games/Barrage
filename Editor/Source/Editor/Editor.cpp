@@ -77,6 +77,9 @@ namespace Barrage
 
     Space* demo_space = Demo::CreateDemoSpace();
     engine_.Spaces().AddSpace("Demo Space", demo_space);
+
+    engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_120);
+    engine_.Frames().SetVsync(false);
   }
 
   void Editor::Update()
@@ -108,8 +111,6 @@ namespace Barrage
     {
       isRunning_ = false;
     }
-      
-    engine_.Spaces().SetSpacePaused("Demo Space", statePaused_);
 
     engine_.Frames().EndFrame();
     frameTime_ = engine_.Frames().DT();
@@ -132,56 +133,49 @@ namespace Barrage
 
     ImGui::Begin("Editor");
 
-    ImGui::Checkbox("Pause game", &statePaused_);
-    ImGui::Text("");
-    
-    std::string frametime("Frame time: ");
-    frametime = frametime + std::to_string(frameTime_) + " microseconds";
-    ImGui::Text(frametime.c_str());
-    ImGui::Text("");
+    ObjectManager& object_manager = engine_.Spaces().GetSpace("Demo Space")->GetObjectManager();
+    std::vector<std::string_view> pool_archetype_names = object_manager.GetPoolArchetypeNames();
 
-    double fps;
-
-    if (frameTime_ > 0)
-      fps = 1000000.0 / static_cast<double>(frameTime_);
-    else
-      fps = 0.0;
-
-    std::string fpstime("FPS: ");
-    fpstime = fpstime + std::to_string(fps);
-    ImGui::Text(fpstime.c_str());
-    ImGui::Text("");
-
-    std::string ticksdisplay("Number of ticks per frame: ");
-    ticksdisplay = ticksdisplay + std::to_string(numTicks_);
-    ImGui::Text(ticksdisplay.c_str());
-    ImGui::Text("");
-
-    if (ImGui::Button("60 fps"))
+    for (auto it = pool_archetype_names.begin(); it != pool_archetype_names.end(); ++it)
     {
-      engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_60);
-    }
+      PoolArchetype* pool_archetype = object_manager.GetPoolArchetype(*it);
 
-    if (ImGui::Button("120 fps"))
-    {
-      engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_120);
-    }
+      ImGui::Text(it->data());
+      ImGui::Text("");
+      ImGui::Text("Shared components:");
+      ImGui::Text("-------------------");
+      for (auto jt = pool_archetype->sharedComponents_.begin(); jt != pool_archetype->sharedComponents_.end(); ++jt)
+      {
+        if (ImGui::CollapsingHeader(jt->first.data()))
+        {
+          rttr::type component_type = rttr::type::get_by_name(jt->first.data());
 
-    if (ImGui::Button("No cap"))
-    {
-      engine_.Frames().SetFpsCap(FramerateController::FpsCap::NO_CAP);
-    }
+          if (component_type.is_valid())
+          {
+            for (auto& prop : component_type.get_properties())
+            {
+              ImGui::Text(prop.get_name().data());
+            }
+          }
+        }
+      }
 
-    ImGui::Text("");
+      ImGui::Text("");
+      ImGui::Text("Component arrays:");
+      ImGui::Text("------------------");
+      for (auto jt = pool_archetype->componentArrayNames_.begin(); jt != pool_archetype->componentArrayNames_.end(); ++jt)
+      {
+        ImGui::Text(jt->data());
+      }
 
-    if (ImGui::Button("Enable vsync"))
-    {
-      engine_.Frames().SetVsync(true);
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Disable vsync"))
-    {
-      engine_.Frames().SetVsync(false);
+      ImGui::Text("");
+      ImGui::Text("Tags:");
+      ImGui::Text("------");
+      for (auto jt = pool_archetype->tags_.begin(); jt != pool_archetype->tags_.end(); ++jt)
+      {
+        ImGui::Text(jt->data());
+      }
+      ImGui::Text("");
     }
     
     ImGui::End();

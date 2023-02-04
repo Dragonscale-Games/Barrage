@@ -28,8 +28,6 @@ namespace Demo
 
       inline RNG() : rng_() {}
 
-      inline std::string GetClassName() override { return "RNG"; }
-
       RTTR_ENABLE()
   };
 }

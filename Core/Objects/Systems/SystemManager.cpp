@@ -30,7 +30,7 @@ namespace Barrage
     }
   }
 
-  void SystemManager::SetUpdateOrder(const std::vector<std::string>& updateOrderList)
+  void SystemManager::SetUpdateOrder(const std::vector<std::string_view>& updateOrderList)
   {
     updateOrderList_ = updateOrderList;
   }
@@ -69,7 +69,7 @@ namespace Barrage
     }
   }
 
-  System* SystemManager::GetSystem(const std::string& name)
+  System* SystemManager::GetSystem(const std::string_view& name)
   {
     if (systems_.find(name) != systems_.end())
       return systems_.at(name);
@@ -77,12 +77,12 @@ namespace Barrage
       return nullptr;
   }
 
-  std::vector<std::string> SystemManager::GetRegisteredSystemNames()
+  std::vector<std::string_view> SystemManager::GetRegisteredSystemNames()
   {
     return systemNames_;
   }
 
-  std::vector<std::string> SystemManager::GetSystemUpdateOrder()
+  std::vector<std::string_view> SystemManager::GetSystemUpdateOrder()
   {
     return updateOrderList_;
   }

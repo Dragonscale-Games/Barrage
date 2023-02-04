@@ -71,11 +71,14 @@ namespace Barrage
 
   void System::UpdatePoolGroup(unsigned group, PoolUpdateFunc function)
   {
-    std::vector<Pool*>& pool_group = pools_[group];
-
-    for (auto it = pool_group.begin(); it != pool_group.end(); ++it)
+    if (pools_.find(group) != pools_.end())
     {
-      function(*it);
+      std::vector<Pool*>& pool_group = pools_[group];
+
+      for (auto it = pool_group.begin(); it != pool_group.end(); ++it)
+      {
+        function(*it);
+      }
     }
   }
 

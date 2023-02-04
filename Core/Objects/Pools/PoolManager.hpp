@@ -22,8 +22,8 @@
 
 namespace Barrage
 {
-  //! Maps system names to systems
-  typedef std::unordered_map<std::string, Pool*> PoolMap;
+  //! Maps pool names to pools
+  typedef std::unordered_map<std::string_view, Pool*> PoolMap;
 
   class Space;
 
@@ -69,7 +69,7 @@ namespace Barrage
           nullptr if creation fails.
       */
       /**************************************************************/
-      Pool* CreatePool(const std::string& name, const PoolArchetype& archetype, unsigned capacity);
+      Pool* CreatePool(const std::string_view& name, const PoolArchetype& archetype, unsigned capacity);
 
       /**************************************************************/
       /*!
@@ -85,7 +85,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      Pool* GetPool(const std::string& name) const;
+      Pool* GetPool(const std::string_view& name) const;
 
       /**************************************************************/
       /*!
@@ -97,7 +97,7 @@ namespace Barrage
           The name of the object pool. 
       */
       /**************************************************************/
-      void DeletePool(const std::string& name);
+      void DeletePool(const std::string_view& name);
 
       /**************************************************************/
       /*!
@@ -109,7 +109,7 @@ namespace Barrage
           Returns the names of all currently active pools.
       */
       /**************************************************************/
-      std::vector<std::string> GetPoolNames();
+      std::vector<std::string_view> GetPoolNames();
 
     private:
       /**************************************************************/

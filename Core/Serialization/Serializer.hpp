@@ -19,6 +19,7 @@
 //  ===========================================================================
 // Includes
 //  ===========================================================================
+#include <string>
 #include <rapidjson/document.h>
 #include <rapidjson/allocators.h>
 #include <rttr/registration.h>

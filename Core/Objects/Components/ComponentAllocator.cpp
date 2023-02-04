@@ -23,7 +23,7 @@ namespace Barrage
   {
   }
 
-  ComponentArray* ComponentAllocator::AllocateComponentArray(const std::string& name, unsigned capacity) const
+  ComponentArray* ComponentAllocator::AllocateComponentArray(const std::string_view& name, unsigned capacity) const
   {
     if (componentArrayAllocMap_.find(name) == componentArrayAllocMap_.end())
     {
@@ -35,7 +35,7 @@ namespace Barrage
     }
   }
 
-  SharedComponent* ComponentAllocator::AllocateSharedComponent(const std::string& name, SharedComponent* initializer) const
+  SharedComponent* ComponentAllocator::AllocateSharedComponent(const std::string_view& name, SharedComponent* initializer) const
   {
     if (sharedComponentAllocMap_.find(name) == sharedComponentAllocMap_.end())
     {
@@ -47,12 +47,12 @@ namespace Barrage
     }
   }
 
-  std::vector<std::string> ComponentAllocator::GetComponentArrayNames()
+  std::vector<std::string_view> ComponentAllocator::GetComponentArrayNames()
   {
     return componentArrayNames_;
   }
 
-  std::vector<std::string> ComponentAllocator::GetSharedComponentNames()
+  std::vector<std::string_view> ComponentAllocator::GetSharedComponentNames()
   {
     return sharedComponentNames_;
   }

@@ -29,8 +29,6 @@ namespace Barrage
 
       inline Sprite() : texture_(), layer_(0) {}
 
-      inline std::string GetClassName() override { return "Sprite"; }
-
       // Notify rttr of the component hierarchy.
       RTTR_ENABLE()
   };

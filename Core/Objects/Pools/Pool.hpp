@@ -23,7 +23,7 @@
 
 namespace Barrage
 {
-  typedef std::unordered_set<std::string> TagSet;
+  typedef std::unordered_set<std::string_view> TagSet;
   
   class Space;
 
@@ -58,7 +58,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      bool HasTag(const std::string& tag) const;
+      bool HasTag(const std::string_view& tag) const;
 
       /**************************************************************/
       /*!
@@ -73,7 +73,7 @@ namespace Barrage
           false otherwise.
       */
       /**************************************************************/
-      bool HasComponentArray(const std::string& componentArrayName);
+      bool HasComponentArray(const std::string_view& componentArrayName);
 
       /**************************************************************/
       /*!
@@ -88,7 +88,7 @@ namespace Barrage
           false otherwise.
       */
       /**************************************************************/
-      bool HasSharedComponent(const std::string& sharedComponentName);
+      bool HasSharedComponent(const std::string_view& sharedComponentName);
 
       /**************************************************************/
       /*!
@@ -120,7 +120,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      T* GetComponentArray(const std::string& componentName);
+      T* GetComponentArray(const std::string_view& componentName);
 
       /**************************************************************/
       /*!
@@ -141,14 +141,14 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      T* GetSharedComponent(const std::string& componentName);
+      T* GetSharedComponent(const std::string_view& componentName);
 
     public:
       TagSet tags_;                         //!< Holds the pool's tags
       ComponentArrayMap componentArrays_;   //!< Holds component arrays and their names
       SharedComponentMap sharedComponents_; //!< Holds shared components and their names
-      unsigned size_;                       //!< Number of currently active objects
-      unsigned queuedObjects_;              //!< Number of objects waiting to be spawned on the next tick
+      unsigned numActiveObjects_;           //!< Number of currently active objects
+      unsigned numQueuedObjects_;           //!< Number of objects waiting to be spawned on the next tick
       const unsigned capacity_;             //!< Total number of objects the pool can hold
       Space& space_;                        //!< The space the pool lives in
 

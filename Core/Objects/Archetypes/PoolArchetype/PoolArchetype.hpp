@@ -44,8 +44,8 @@ namespace Barrage
 
     public:
       SharedComponentMap sharedComponents_;          //!< Map of initialized shared components to copy
-      std::vector<std::string> componentArrayNames_; //!< List of names of component arrays to add to pool
-      std::vector<std::string> tags_;                //!< Tags that the new pool will have
+      std::vector<std::string_view> componentArrayNames_; //!< List of names of component arrays to add to pool
+      std::vector<std::string_view> tags_;                //!< Tags that the new pool will have
 	};
 }
 

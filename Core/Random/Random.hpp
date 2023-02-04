@@ -58,6 +58,14 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Resets the current seed to the starting seed.
+      */
+      /**************************************************************/
+      void ResetSeed();
+
+      /**************************************************************/
+      /*!
+        \brief
           Generates a random float between min and max (inclusive).
 
         \param min

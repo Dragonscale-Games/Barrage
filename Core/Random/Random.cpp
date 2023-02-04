@@ -48,6 +48,11 @@ namespace Barrage
     }
   }
 
+  void Random::ResetSeed()
+  {
+    currentSeed_ = startSeed_;
+  }
+
   float Random::RangeFloat(float min, float max)
   {
     return min + Float() * (max - min);

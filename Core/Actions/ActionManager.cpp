@@ -29,7 +29,7 @@ namespace Barrage
     replayData_.reserve(10000);
   }
 
-  void ActionManager::MapActionKey(const ACTION& action, KEY key)
+  void ActionManager::MapActionKey(ACTION action, KEY key)
   {
     actionKeyMap_[action] = key;
 

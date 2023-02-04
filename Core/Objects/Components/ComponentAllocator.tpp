@@ -18,7 +18,7 @@
 namespace Barrage
 {
   template <typename T>
-  void ComponentAllocator::RegisterComponent(const std::string& componentName)
+  void ComponentAllocator::RegisterComponent(const std::string_view& componentName)
   {
     // create a test component of the input type and make sure it's a component
     T type_test;

@@ -59,7 +59,7 @@ namespace Barrage
     }
   }
 
-  void ObjectManager::CreateObject(const std::string& poolName, const std::string& archetypeName)
+  void ObjectManager::CreateObject(const std::string_view& poolName, const std::string_view& archetypeName)
   {
     Pool* pool = poolManager_.GetPool(poolName);
     ObjectArchetype* archetype = archetypeManager_.GetObjectArchetype(archetypeName);
@@ -72,52 +72,62 @@ namespace Barrage
     }
   }
 
-  std::vector<std::string> ObjectManager::GetComponentArrayNames()
+  std::vector<std::string_view> ObjectManager::GetComponentArrayNames()
   {
     return componentAllocator_.GetComponentArrayNames();
   }
 
-  std::vector<std::string> ObjectManager::GetSharedComponentNames()
+  std::vector<std::string_view> ObjectManager::GetSharedComponentNames()
   {
     return componentAllocator_.GetSharedComponentNames();
   }
 
-  std::vector<std::string> ObjectManager::GetSpawnFuncNames()
+  std::vector<std::string_view> ObjectManager::GetSpawnFuncNames()
   {
     return spawnFuncManager_.GetSpawnFuncNames();
   }
 
-  std::vector<std::string> ObjectManager::GetRegisteredSystemNames()
+  std::vector<std::string_view> ObjectManager::GetRegisteredSystemNames()
   {
     return systemManager_.GetRegisteredSystemNames();
   }
 
-  std::vector<std::string> ObjectManager::GetSystemUpdateOrder()
+  std::vector<std::string_view> ObjectManager::GetSystemUpdateOrder()
   {
     return systemManager_.GetSystemUpdateOrder();
   }
 
-  void ObjectManager::AddPoolArchetype(const std::string& name, PoolArchetype* archetype)
+  void ObjectManager::AddPoolArchetype(const std::string_view& name, PoolArchetype* archetype)
   {
     archetypeManager_.AddPoolArchetype(name, archetype);
   }
 
-  void ObjectManager::AddObjectArchetype(const std::string& name, ObjectArchetype* archetype)
+  PoolArchetype* ObjectManager::GetPoolArchetype(const std::string_view& name)
+  {
+    return archetypeManager_.GetPoolArchetype(name);
+  }
+
+  void ObjectManager::AddObjectArchetype(const std::string_view& name, ObjectArchetype* archetype)
   {
     archetypeManager_.AddObjectArchetype(name, archetype);
   }
 
-  std::vector<std::string> ObjectManager::GetPoolArchetypeNames()
+  ObjectArchetype* ObjectManager::GetObjectArchetype(const std::string_view& name)
+  {
+    return archetypeManager_.GetObjectArchetype(name);
+  }
+
+  std::vector<std::string_view> ObjectManager::GetPoolArchetypeNames()
   {
     return archetypeManager_.GetPoolArchetypeNames();
   }
 
-  std::vector<std::string> ObjectManager::GetObjectArchetypeNames()
+  std::vector<std::string_view> ObjectManager::GetObjectArchetypeNames()
   {
     return archetypeManager_.GetObjectArchetypeNames();
   }
 
-  void ObjectManager::CreatePool(const std::string& poolName, const std::string& archetypeName, unsigned capacity)
+  void ObjectManager::CreatePool(const std::string_view& poolName, const std::string_view& archetypeName, unsigned capacity)
   {
     if (capacity == 0)
       return;
@@ -141,12 +151,12 @@ namespace Barrage
     }
   }
 
-  Pool* ObjectManager::GetPool(const std::string& name) const
+  Pool* ObjectManager::GetPool(const std::string_view& name) const
   {
     return poolManager_.GetPool(name);
   }
 
-  void ObjectManager::DeletePool(const std::string& poolName)
+  void ObjectManager::DeletePool(const std::string_view& poolName)
   {
     Pool* pool = poolManager_.GetPool(poolName);
 
@@ -159,7 +169,7 @@ namespace Barrage
 
   void ObjectManager::DeleteAllPools()
   {
-    std::vector<std::string> pool_names = GetPoolNames();
+    std::vector<std::string_view> pool_names = GetPoolNames();
 
     for (auto it = pool_names.begin(); it != pool_names.end(); ++it)
     {
@@ -167,17 +177,17 @@ namespace Barrage
     }
   }
 
-  std::vector<std::string> ObjectManager::GetPoolNames()
+  std::vector<std::string_view> ObjectManager::GetPoolNames()
   {
     return poolManager_.GetPoolNames();
   }
 
-  void ObjectManager::SetSystemUpdateOrder(const std::vector<std::string>& updateOrderList)
+  void ObjectManager::SetSystemUpdateOrder(const std::vector<std::string_view>& updateOrderList)
   {
     systemManager_.SetUpdateOrder(updateOrderList);
   }
 
-  void ObjectManager::RegisterSpawnFunc(const std::string name, SpawnFunc initializer)
+  void ObjectManager::RegisterSpawnFunc(const std::string_view& name, SpawnFunc initializer)
   {
     spawnFuncManager_.RegisterSpawnFunc(name, initializer);
   }
@@ -211,7 +221,7 @@ namespace Barrage
 
   void ObjectManager::SetDefaultSystemUpdateOrder()
   {
-    std::vector<std::string> update_order;
+    std::vector<std::string_view> update_order;
 
     update_order.push_back("CreationSystem");
     update_order.push_back("DestructionSystem");

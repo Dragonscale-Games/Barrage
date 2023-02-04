@@ -30,8 +30,6 @@ namespace Demo
       float speedFast_;
       
       inline Player() : speedSlow_(3.5f), speedFast_(7.0f) {}
-
-      inline std::string GetClassName() override { return "Player"; }
   };
 }
 

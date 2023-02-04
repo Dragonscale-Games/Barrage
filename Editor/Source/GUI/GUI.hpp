@@ -79,6 +79,24 @@ namespace Barrage
       */
       /**************************************************************/
       void Shutdown();
+
+    private:
+      /**************************************************************/
+      /*!
+        \brief
+          Creates a space that allows windows to be docked and
+          undocked from the editor.
+      */
+      /**************************************************************/
+      void BeginDockingSpace();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Ends the docking space.
+      */
+      /**************************************************************/
+      void EndDockingSpace();
 	};
 }
 

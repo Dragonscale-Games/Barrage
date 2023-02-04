@@ -63,64 +63,68 @@ namespace Barrage
       // Components
       // ===================================================================
 
-      std::vector<std::string> GetComponentArrayNames();
+      std::vector<std::string_view> GetComponentArrayNames();
 
-      std::vector<std::string> GetSharedComponentNames();
+      std::vector<std::string_view> GetSharedComponentNames();
 
       // ===================================================================
       // Initializers
       // ===================================================================
 
-      std::vector<std::string> GetSpawnFuncNames();
+      std::vector<std::string_view> GetSpawnFuncNames();
 
       // ===================================================================
       // Systems
       // ===================================================================
 
-      std::vector<std::string> GetRegisteredSystemNames();
+      std::vector<std::string_view> GetRegisteredSystemNames();
 
-      std::vector<std::string> GetSystemUpdateOrder();
+      std::vector<std::string_view> GetSystemUpdateOrder();
 
       // ===================================================================
       // Pools
       // ===================================================================
 
-      void AddPoolArchetype(const std::string& name, PoolArchetype* archetype);
+      void AddPoolArchetype(const std::string_view& name, PoolArchetype* archetype);
 
-      void CreatePool(const std::string& poolName, const std::string& archetypeName, unsigned capacity = 1);
+      PoolArchetype* GetPoolArchetype(const std::string_view& name);
+
+      void CreatePool(const std::string_view& poolName, const std::string_view& archetypeName, unsigned capacity = 1);
 
       void CreatePoolAndObjects(const PoolInfo& poolInfo);
 
-      Pool* GetPool(const std::string& name) const;
+      Pool* GetPool(const std::string_view& name) const;
 
-      void DeletePool(const std::string& poolName);
+      void DeletePool(const std::string_view& poolName);
 
       void DeleteAllPools();
 
-      std::vector<std::string> GetPoolArchetypeNames();
+      std::vector<std::string_view> GetPoolArchetypeNames();
 
-      std::vector<std::string> GetPoolNames();
+      std::vector<std::string_view> GetPoolNames();
 
       // ===================================================================
       // Objects
       // ===================================================================
 
-      void AddObjectArchetype(const std::string& name, ObjectArchetype* archetype);
+      void AddObjectArchetype(const std::string_view& name, ObjectArchetype* archetype);
 
-      void CreateObject(const std::string& poolName, const std::string& archetypeName);
+      ObjectArchetype* GetObjectArchetype(const std::string_view& name);
 
-      std::vector<std::string> GetObjectArchetypeNames();
+      void CreateObject(const std::string_view& poolName, const std::string_view& archetypeName);
+
+      std::vector<std::string_view> GetObjectArchetypeNames();
     
     private:
       template <typename T>
-      void RegisterComponent(const std::string& componentName);
+      void RegisterComponent(const std::string_view& componentName);
 
       template <typename T>
-      void RegisterSystem(const std::string& systemName);
+      void RegisterSystem(const std::string_view& systemName);
 
-      void RegisterSpawnFunc(const std::string name, SpawnFunc spawnFunction);
+      void RegisterSpawnFunc(const std::string_view& name, SpawnFunc spawnFunction);
 
-      void SetSystemUpdateOrder(const std::vector<std::string>& updateOrderList);
+      void SetSystemUpdateOrder(const std::vector<std::string_view>& updateOrderList);
 
       void RegisterEngineComponents();
 

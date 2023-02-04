@@ -47,7 +47,7 @@ namespace Barrage
     
       ActionManager();
 
-      void MapActionKey(const ACTION& action, KEY key);
+      void MapActionKey(ACTION action, KEY key);
 
       void SetMode(Mode newMode);
 

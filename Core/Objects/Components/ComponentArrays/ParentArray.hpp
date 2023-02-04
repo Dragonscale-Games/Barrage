@@ -36,9 +36,6 @@ namespace Barrage
   };
 
   typedef ComponentArrayT<Parent> ParentArray;
-
-  template <>
-  inline std::string ParentArray::GetClassName() { return "ParentArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

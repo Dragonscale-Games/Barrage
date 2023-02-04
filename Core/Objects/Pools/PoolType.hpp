@@ -44,7 +44,7 @@ namespace Barrage
           The tag to add.
       */
       /**************************************************************/
-      void AddTag(const std::string& tag);
+      void AddTag(const std::string_view& tag);
 
       /**************************************************************/
       /*!
@@ -55,7 +55,7 @@ namespace Barrage
           The component name to add.
       */
       /**************************************************************/
-      void AddComponentName(const std::string& name);
+      void AddComponentName(const std::string_view& name);
       
       /**************************************************************/
       /*!
@@ -74,8 +74,8 @@ namespace Barrage
       bool MatchesPool(Pool* pool);
 
     private:
-      std::vector<std::string> tags_;           //!< The tags of the pool type
-      std::vector<std::string> componentNames_; //!< The component names of the pool type
+      std::vector<std::string_view> tags_;           //!< The tags of the pool type
+      std::vector<std::string_view> componentNames_; //!< The component names of the pool type
 	};
 }
 

@@ -25,6 +25,10 @@
     {
       "name": "rttr",
       "version": "0.9.6#4"
+    },
+    {
+      "name": "spdlog",
+      "version": "1.10.0"
     }
   ]
 }

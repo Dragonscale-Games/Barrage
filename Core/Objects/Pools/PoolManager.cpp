@@ -32,7 +32,7 @@ namespace Barrage
     }
   }
 
-  Pool* PoolManager::CreatePool(const std::string& name, const PoolArchetype& archetype, unsigned capacity)
+  Pool* PoolManager::CreatePool(const std::string_view& name, const PoolArchetype& archetype, unsigned capacity)
   {
     if (pools_.find(name) == pools_.end())
     {
@@ -47,7 +47,7 @@ namespace Barrage
     }
   }
 
-  Pool* PoolManager::GetPool(const std::string& name) const
+  Pool* PoolManager::GetPool(const std::string_view& name) const
   {
     if (pools_.find(name) == pools_.end())
     {
@@ -59,7 +59,7 @@ namespace Barrage
     }
   }
 
-  void PoolManager::DeletePool(const std::string& name)
+  void PoolManager::DeletePool(const std::string_view& name)
   {
     if (pools_.find(name) != pools_.end())
     {
@@ -68,9 +68,9 @@ namespace Barrage
     }
   }
 
-  std::vector<std::string> PoolManager::GetPoolNames()
+  std::vector<std::string_view> PoolManager::GetPoolNames()
   {
-    std::vector<std::string> pool_list;
+    std::vector<std::string_view> pool_list;
 
     for (auto it = pools_.begin(); it != pools_.end(); ++it)
     {
@@ -85,13 +85,13 @@ namespace Barrage
     Pool* new_pool = new Pool(capacity, space_);
 
     // add tags
-    for (const std::string& tag : archetype.tags_)
+    for (const std::string_view& tag : archetype.tags_)
     {
       new_pool->tags_.insert(tag);
     }
 
     // allocate component arrays
-    for (const std::string& component_array_name : archetype.componentArrayNames_)
+    for (const std::string_view& component_array_name : archetype.componentArrayNames_)
     {
       ComponentArray* component_array = componentAllocator_.AllocateComponentArray(component_array_name, capacity);
 
