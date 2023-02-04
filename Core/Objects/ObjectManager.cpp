@@ -190,6 +190,7 @@ namespace Barrage
     RegisterComponent<PositionArray>("PositionArray");
     RegisterComponent<RotationArray>("RotationArray");
     RegisterComponent<ScaleArray>("ScaleArray");
+    RegisterComponent<TextureSpaceArray>("TextureSpaceArray");
 
     RegisterComponent<ObjectDirectory>("ObjectDirectory");
     RegisterComponent<Spawner>("Spawner");

@@ -207,7 +207,7 @@ namespace Barrage
     const std::vector<GfxManager2D::BufferList>& buffers = manager_->GetOpenGLBuffers();
     const GfxManager2D::BufferList instancedMeshBuffers = buffers[instancedMesh_];
 
-    // Create the vertex layout for the instanced mesh.
+    // Start operating on the mesh.
     CHECK_GL( glBindVertexArray(renderState_));
     BindMeshBuffers(instancedMeshBuffers);
     
@@ -227,10 +227,10 @@ namespace Barrage
     CHECK_GL( glVertexAttribPointer(rotationIndex, 1, GL_FLOAT, GL_FALSE, sizeof(float), reinterpret_cast<void*>(0)) );
     CHECK_GL( glVertexAttribDivisor(rotationIndex, 1) );
 
-    const GLint uvMapIndex = 5;
-    CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[UV_BUFFER]) ); 
-    CHECK_GL( glVertexAttribPointer(uvMapIndex, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat2x2), reinterpret_cast<void*>(0)) );
-    CHECK_GL( glVertexAttribDivisor(uvMapIndex, 1) );
+    const GLint texCoordIndex = 5;
+    CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[TEXCOORD_BUFFER]) );
+    CHECK_GL( glVertexAttribPointer(texCoordIndex, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), reinterpret_cast<void*>(0)) );
+    CHECK_GL( glVertexAttribDivisor(texCoordIndex, 1) );
 
     // Enable the vertex attributes being used.
     CHECK_GL( glEnableVertexAttribArray(translationIndex) );
@@ -286,9 +286,10 @@ namespace Barrage
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[ROTATION_BUFFER]) );
     CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(decltype(*request.transform_.rotations_)) * request.transform_.count_,
       request.transform_.rotations_, GL_STREAM_DRAW) );
-    CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[UV_BUFFER]) );
-    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(decltype(*request.transform_.uvMaps_)) * request.transform_.count_,
-      request.transform_.uvMaps_, GL_STREAM_DRAW) );
+    CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[TEXCOORD_BUFFER]) );
+    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4)* request.transform_.count_,
+      request.transform_.texCoords_, GL_STREAM_DRAW) );
+
 
     // Make sure to bind the correct buffer.
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedVertexBuffers[GfxManager2D::VERTICES]) );

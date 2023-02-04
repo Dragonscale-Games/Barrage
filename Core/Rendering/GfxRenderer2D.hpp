@@ -46,6 +46,7 @@ namespace Barrage
       const glm::vec2* scales_;         //!< The scales to all the objects in the render the request.
       const glm::mat2x2* uvMaps_;       //!< The uv maps to all objects in the request.
       const RADIAN* rotations_;         //!< The rotations to all the objects in the request.
+      const glm::vec4* texCoords_;      //!< The texture coordinates of all objects in the request.
     };
 
     struct ResourceState //!< Keeps track of the currently bound resources.
@@ -234,7 +235,7 @@ namespace Barrage
       TRANSLATION_BUFFER,
       SCALE_BUFFER,
       ROTATION_BUFFER,
-      UV_BUFFER,
+      TEXCOORD_BUFFER,
       BUFFER_COUNT
     };
 

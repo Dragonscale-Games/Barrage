@@ -4,7 +4,7 @@ layout (location = 1) in vec2 uv;
 layout (location = 2) in vec2 position;
 layout (location = 3) in vec2 scale;
 layout (location = 4) in float rotation;
-layout (location = 5) in vec4 uvMap;
+layout (location = 5) in vec4 texCoords;
 
 uniform mat4 projection;
 
@@ -21,7 +21,5 @@ void main(void)
   v += position;
   gl_Position = projection * vec4(v, 0.0, 1.0);
   // Send over data over to the fragment shader.
-  vec2 g_uv = uv * vec2(uvMap[2], uvMap[3]);
-  g_uv += vec2(uvMap[0], uvMap[1]);
-  vs_out.uv = g_uv;
+  vs_out.uv = texCoords.zw * uv + texCoords.xy;
 }

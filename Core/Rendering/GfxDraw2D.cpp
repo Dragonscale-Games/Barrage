@@ -97,7 +97,8 @@ namespace Barrage
   void GfxDraw2D::DrawInstancedQuad(
     int count,
     const glm::vec2* positions, const glm::vec2* scales,
-    const RADIAN* rotations, const GfxManager2D::TextureID& texture)
+    const RADIAN* rotations, const glm::vec4* texCoords,
+    const GfxManager2D::TextureID& texture)
   {
     assert(renderer_);
     // Fill out a render request form.
@@ -112,12 +113,7 @@ namespace Barrage
     request.transform_.positions_ = positions;
     request.transform_.scales_ = scales;
     request.transform_.rotations_ = rotations;
-    // A temporary buffer to store UV transformations
-    // TODO: REMOVE THIS AND OFFICIALLY SUPPORT UVS.
-    //const glm::mat2 defaultUVMap = glm::inverse(glm::mat2x2(glm::vec2(0.25, 0.25), glm::vec2(0.75, 0.75)));
-    const glm::mat2 defaultUVMap = glm::mat2x2(glm::vec2(0, 0), glm::vec2(1, 1));
-    static std::vector<glm::mat2x2> uvs(100000, defaultUVMap);
-    request.transform_.uvMaps_ = uvs.data();
+    request.transform_.texCoords_ = texCoords;
     // And send the request to the renderer.
     renderer_->AddRequest(request);
   }
@@ -125,12 +121,13 @@ namespace Barrage
   void GfxDraw2D::DrawInstancedQuad(
     int count,
     const glm::vec2* positions, const glm::vec2* scales,
-    const RADIAN* rotations, const char* textureKey)
+    const RADIAN* rotations, const glm::vec4* texCoords,
+    const char* textureKey)
   {
     assert(renderer_);
     assert(registry_);
     const GfxManager2D::TextureID texture(registry_->FindTexture(textureKey));
-    DrawInstancedQuad(count, positions, scales, rotations, texture);
+    DrawInstancedQuad(count, positions, scales, rotations, texCoords, texture);
   }
 
   void GfxDraw2D::ApplyShader(const GfxManager2D::ShaderID& shader)
