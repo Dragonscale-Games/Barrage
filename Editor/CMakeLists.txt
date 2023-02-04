@@ -42,6 +42,10 @@ add_executable(Editor "Source/main.cpp"
 "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization/DemoInitialization.cpp" "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization/DemoInitialization.hpp"
 "../Samples/DemoGame/Source/SpawnFuncs/Direction/DirectionFuncs.cpp"
 "../Samples/DemoGame/Source/SpawnFuncs/Position/PositionFuncs.cpp"
+"Source/Widgets/Hierarchy/HierarchyWidget.cpp"
+"Source/Widgets/Inspector/InspectorWidget.cpp"
+"Source/Widgets/Widget.cpp"
+"Source/Editor/EditorData.cpp"
 )
 
 target_link_libraries(Editor PUBLIC BarrageCore imgui)

@@ -25,10 +25,11 @@ namespace Barrage
   Editor::Editor() :
     engine_(),
     gui_(),
-    frameTime_(),
-    numTicks_(0),
-    statePaused_(false),
-    isRunning_(false)
+    data_(),
+    isRunning_(false),
+
+    hierarchy_(data_, engine_),
+    inspector_(data_, engine_)
   {
   }
 
@@ -59,6 +60,8 @@ namespace Barrage
     Barrage::GfxRegistry2D& registry = engine_.GfxRegistry();
     Barrage::GfxDraw2D& drawing = engine_.Drawing();
 
+    windowing.ChangeTitle("Barrage Editor");
+
     // Register the assets necessary.
     const char* instancedShaderPaths[] = {
       "Assets/Shaders/Default/Instanced.vs",
@@ -69,7 +72,7 @@ namespace Barrage
     registry.RegisterTexture("Assets/Textures/TestShip.png", "TestShip");
     // Set any default resources on the draw system.
     drawing.ApplyShader("Instanced");
-    // Set the viewport of our game.
+    // Set the viewport of our game
     const Barrage::WindowManager::WindowData& settings = windowing.GetSettings();
     drawing.SetViewportSpace(glm::ivec2(settings.width_, settings.height_));
 
@@ -88,14 +91,14 @@ namespace Barrage
     
     engine_.Input().Update();
 
-    numTicks_ = engine_.Frames().ConsumeTicks();
-    for (unsigned i = 0; i < numTicks_; ++i)
+    unsigned numTicks = engine_.Frames().ConsumeTicks();
+    for (unsigned i = 0; i < numTicks; ++i)
     {
       engine_.Spaces().Update();
     }
 
     gui_.StartWidgets();
-    MakeTestWidget();
+    UseEditorWidget();
     gui_.EndWidgets();
 
     Barrage::WindowManager& windowing = engine_.Windowing();
@@ -113,7 +116,6 @@ namespace Barrage
     }
 
     engine_.Frames().EndFrame();
-    frameTime_ = engine_.Frames().DT();
   }
 
   void Editor::Shutdown()
@@ -121,63 +123,16 @@ namespace Barrage
     gui_.Shutdown();
     
     engine_.Shutdown();
-
+    
     Barrage::Engine::Instance = nullptr;
   }
 
-  void Editor::MakeTestWidget()
+  void Editor::UseEditorWidget()
   {
-    const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 20, main_viewport->WorkPos.y + 20), ImGuiCond_Once);
-    ImGui::SetNextWindowSize(ImVec2(240, 680), ImGuiCond_Once);
+    hierarchy_.UseWidget();
+    inspector_.UseWidget();
 
-    ImGui::Begin("Editor");
-
-    ObjectManager& object_manager = engine_.Spaces().GetSpace("Demo Space")->GetObjectManager();
-    std::vector<std::string_view> pool_archetype_names = object_manager.GetPoolArchetypeNames();
-
-    for (auto it = pool_archetype_names.begin(); it != pool_archetype_names.end(); ++it)
-    {
-      PoolArchetype* pool_archetype = object_manager.GetPoolArchetype(*it);
-
-      ImGui::Text(it->data());
-      ImGui::Text("");
-      ImGui::Text("Shared components:");
-      ImGui::Text("-------------------");
-      for (auto jt = pool_archetype->sharedComponents_.begin(); jt != pool_archetype->sharedComponents_.end(); ++jt)
-      {
-        if (ImGui::CollapsingHeader(jt->first.data()))
-        {
-          rttr::type component_type = rttr::type::get_by_name(jt->first.data());
-
-          if (component_type.is_valid())
-          {
-            for (auto& prop : component_type.get_properties())
-            {
-              ImGui::Text(prop.get_name().data());
-            }
-          }
-        }
-      }
-
-      ImGui::Text("");
-      ImGui::Text("Component arrays:");
-      ImGui::Text("------------------");
-      for (auto jt = pool_archetype->componentArrayNames_.begin(); jt != pool_archetype->componentArrayNames_.end(); ++jt)
-      {
-        ImGui::Text(jt->data());
-      }
-
-      ImGui::Text("");
-      ImGui::Text("Tags:");
-      ImGui::Text("------");
-      for (auto jt = pool_archetype->tags_.begin(); jt != pool_archetype->tags_.end(); ++jt)
-      {
-        ImGui::Text(jt->data());
-      }
-      ImGui::Text("");
-    }
-    
+    ImGui::Begin("Placeholder");
     ImGui::End();
   }
 }

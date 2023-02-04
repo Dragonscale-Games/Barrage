@@ -16,7 +16,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Engine/Engine.hpp>
+#include "EditorData.hpp"
 #include "GUI/GUI.hpp"
+
+#include "Widgets/Hierarchy/HierarchyWidget.hpp"
+#include "Widgets/Inspector/InspectorWidget.hpp"
+
+#include <string_view>
 
 namespace Barrage
 {
@@ -68,18 +74,19 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          TEMPORARY: Just testing out ImGui
+          Adds the main editor widget to the window.
       */
       /**************************************************************/
-      void MakeTestWidget();
+      void UseEditorWidget();
 
     private:
-      Engine engine_;       //!< Barrage game engine
-      GUI gui_;             //!< Contains all widgets/user controls
-      long long frameTime_; //!< TEMPORARY: holds the current frame time in milliseconds
-      unsigned numTicks_;   //!< TEMPORARY: holds number of ticks that should be performed this frame
-      bool statePaused_;    //!< TEMPORARY: stores whether game state is paused
-      bool isRunning_;      //!< Keeps track of whether the editor is running
+      Engine engine_;   //!< Barrage game engine
+      GUI gui_;         //!< Contains all widgets/user controls
+      EditorData data_; //!< Runtime settings and data for the editor
+      bool isRunning_;  //!< Keeps track of whether the editor is running
+
+      HierarchyWidget hierarchy_; //!< Shows the hierarchy widget
+      InspectorWidget inspector_; //!< Shows the inspector widget
 	};
 }
 
