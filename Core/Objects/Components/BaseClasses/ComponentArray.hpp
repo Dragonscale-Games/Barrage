@@ -20,6 +20,7 @@
 
 #include "BaseComponent.hpp"
 #include <vector>
+#include <rttr/rttr_enable.h>
 
 namespace Barrage
 { 
@@ -76,6 +77,42 @@ namespace Barrage
       */
       /**************************************************************/
       virtual Component::Type GetType() override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the value at index i of the array as an rttr::variant.
+
+          For non-RTTR value getting, use operator[].
+
+        \param i
+          The index of the value to get.
+
+        \return
+          Returns the value at the given index as an rttr::variant.
+      */
+      /**************************************************************/
+      virtual rttr::variant GetRTTRValue(int i) = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the value at index i using an rttr::variant. If the
+          rttr::variant doesn't match type T, this function has no
+          effect.
+
+          For non-RTTR value setting, use operator[].
+
+        \param i
+          The index of the value to set.
+
+        \return
+          Returns the value at the given index as an rttr::variant.
+      */
+      /**************************************************************/
+      virtual void SetRTTRValue(int i, rttr::variant& value) = 0;
+
+      RTTR_ENABLE(Component)
   };
 
   //! All component arrays are a specialization of this template
@@ -144,8 +181,44 @@ namespace Barrage
       /**************************************************************/
       T& operator[](int i);
 
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the value at index i of the array as an rttr::variant.
+
+          For non-RTTR value getting, use operator[].
+
+        \param i
+          The index of the value to get.
+
+        \return
+          Returns the value at the given index as an rttr::variant.
+      */
+      /**************************************************************/
+      rttr::variant GetRTTRValue(int i) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the value at index i using an rttr::variant. If the
+          rttr::variant doesn't match type T, this function has no
+          effect.
+
+          For non-RTTR value setting, use operator[].
+
+        \param i
+          The index of the value to set.
+
+        \return
+          Returns the value at the given index as an rttr::variant.
+      */
+      /**************************************************************/
+      void SetRTTRValue(int i, rttr::variant& value) override;
+
     public:
       T* data_;
+
+    RTTR_ENABLE(ComponentArray)
   };
 
   //! Associates each component array with its name

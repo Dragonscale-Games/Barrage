@@ -48,6 +48,7 @@ namespace Demo
     spawner_pool.objects_.push_back("Spawner Object");
 
     PoolInfo bullet_pool("Bullet Pool");
+    bullet_pool.objects_.push_back("Bullet Object");
 
     Scene* demo_scene = new Scene;
 
@@ -96,7 +97,7 @@ namespace Demo
     PositionArray* position_array = new PositionArray;
     position_array->Allocate(1);
     position_array->data_->x_ = 960.0f;
-    position_array->data_->y_ = 200.0f;
+    position_array->data_->y_ = 540.0f;
     object_archetype->components_["PositionArray"] = position_array;
 
     RotationArray* rotation_array = new RotationArray;

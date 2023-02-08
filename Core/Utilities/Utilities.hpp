@@ -101,6 +101,30 @@ namespace Barrage
   /**************************************************************/
   template <typename T>
   T Lerp(T min, T max, float factor);
+
+  /**************************************************************/
+  /*!
+    \brief
+      Used to create a deference converter function for RTTR.
+      Note: does not safety check, and assumes pointer is not
+      null.
+
+    \tparam T
+      The type used in the pointer and returned reference.
+
+    \param pointer
+      The pointer to dereference.
+
+    \param ok
+      "True" will be written to this variable. This function assumes
+      the pointer is valid and non-null.
+
+    \return
+      Returns a reference to the object being pointed at.
+  */
+  /**************************************************************/
+  template <typename T>
+  T& Dereference(T* pointer, bool& ok);
 }
 
 #include "Utilities.tpp"

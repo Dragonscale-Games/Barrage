@@ -46,7 +46,7 @@ namespace Barrage
       virtual Component::Type GetType() override;
 
       // Notify rttr of the component hierarchy.
-      RTTR_ENABLE()
+      RTTR_ENABLE(Component)
   };
 
   //! Associates each shared component with its name

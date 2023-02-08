@@ -55,6 +55,21 @@ namespace Barrage
   {
     return data_[i];
   }
+
+  template <typename T>
+  rttr::variant ComponentArrayT<T>::GetRTTRValue(int i)
+  {
+    return rttr::variant(data_[i]);
+  }
+
+  template <typename T>
+  void ComponentArrayT<T>::SetRTTRValue(int i, rttr::variant& value)
+  {
+    if (value.is_type<T>())
+    {
+      data_[i] = value.get_value<T>();
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

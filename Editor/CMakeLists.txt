@@ -46,7 +46,7 @@ add_executable(Editor "Source/main.cpp"
 "Source/Widgets/Inspector/InspectorWidget.cpp"
 "Source/Widgets/Widget.cpp"
 "Source/Editor/EditorData.cpp"
- "Source/Widgets/MainMenu/MainMenuWidget.cpp")
+ "Source/Widgets/MainMenu/MainMenuWidget.cpp" "Source/Widgets/Component/ComponentWidget.cpp"  "Source/Widgets/Data/DataWidget.cpp")
 
 target_link_libraries(Editor PUBLIC BarrageCore imgui)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

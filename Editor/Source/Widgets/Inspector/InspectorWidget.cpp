@@ -11,6 +11,8 @@
  /* ======================================================================== */
 
 #include "InspectorWidget.hpp"
+#include "Widgets/Component/ComponentWidget.hpp"
+#include <string>
 
 namespace Barrage
 {
@@ -21,7 +23,7 @@ namespace Barrage
 
   void InspectorWidget::UseWidget()
   {
-    ImGui::Begin("Inspector");
+    ImGui::Begin("Components");
 
     ObjectManager& objectManager = engine_.Spaces().GetSpace("Demo Space")->GetObjectManager();
 
@@ -31,9 +33,14 @@ namespace Barrage
 
       if (poolArchetype)
       {
+        ImGui::Separator();
+        ImGui::Spacing();
         ImGui::Text("Pool:");
         ImGui::SameLine();
         ImGui::Text(editorData_.selectedPool_.data());
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
 
         if (ImGui::CollapsingHeader("Tags"))
         {
@@ -45,17 +52,7 @@ namespace Barrage
 
         for (auto& component : poolArchetype->sharedComponents_)
         {
-          if (ImGui::CollapsingHeader(component.first.data()))
-          {
-            rttr::type componentType = rttr::type::get_by_name(component.first.data());
-            if (componentType.is_valid())
-            {
-              for (auto& prop : componentType.get_properties())
-              {
-                ImGui::Text(prop.get_name().data());
-              }
-            }
-          }
+           editorData_.sceneIsDirty_ |= ComponentWidget::UseWidget(component.first, component.second);
         }
 
         ImGui::Text(" ");
@@ -64,27 +61,22 @@ namespace Barrage
 
     if (!editorData_.selectedObject_.empty())
     {
+      ImGui::Separator();
+      ImGui::Spacing();
       ImGui::Text("Object:");
       ImGui::SameLine();
       ImGui::Text(editorData_.selectedObject_.data());
+      ImGui::Spacing();
+      ImGui::Separator();
+      ImGui::Spacing();
 
       ObjectArchetype* objectArchetype = objectManager.GetObjectArchetype(editorData_.selectedObject_);
 
       if (objectArchetype)
       {
-        for (auto& componentName : objectArchetype->components_)
+        for (auto& component : objectArchetype->components_)
         {
-          if (ImGui::CollapsingHeader(componentName.first.data()))
-          {
-            rttr::type componentType = rttr::type::get_by_name(componentName.first.data());
-            if (componentType.is_valid())
-            {
-              for (auto& prop : componentType.get_properties())
-              {
-                ImGui::Text(prop.get_name().data());
-              }
-            }
-          }
+          editorData_.sceneIsDirty_ |= ComponentWidget::UseWidget(component.first, component.second);
         }
       }
     }

@@ -41,8 +41,6 @@ namespace Barrage
 
       void SetScene(const std::string& name);
 
-      void QueueScene(const std::string& name);
-
       void SetPaused(bool isPaused);
 
       void SetVisible(bool isVisible);

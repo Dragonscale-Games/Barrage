@@ -45,7 +45,7 @@ namespace Barrage
           Adds the widget to the window.
       */
       /**************************************************************/
-      void UseWidget() override;
+      void UseWidget();
   };
 }
 

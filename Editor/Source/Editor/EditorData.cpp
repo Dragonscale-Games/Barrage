@@ -16,8 +16,11 @@ namespace Barrage
 {
   EditorData::EditorData() :
     isRunning_(false),
+    sceneIsDirty_(false),
     selectedPool_(),
-    selectedObject_()
+    selectedObject_(),
+    selectedScene_(),
+    selectedSpace_()
   {
   }
 }

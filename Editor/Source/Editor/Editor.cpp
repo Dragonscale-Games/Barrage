@@ -80,9 +80,9 @@ namespace Barrage
 
     Space* demo_space = Demo::CreateDemoSpace();
     engine_.Spaces().AddSpace("Demo Space", demo_space);
-
-    engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_120);
-    engine_.Frames().SetVsync(false);
+    data_.selectedScene_ = "Demo Scene";
+    data_.selectedSpace_ = "Demo Space";
+    engine_.Frames().SetVsync(true);
   }
 
   void Editor::Update()
@@ -94,7 +94,13 @@ namespace Barrage
     unsigned numTicks = engine_.Frames().ConsumeTicks();
     for (unsigned i = 0; i < numTicks; ++i)
     {
-      engine_.Spaces().Update();
+      //engine_.Spaces().Update();
+    }
+
+    if (data_.sceneIsDirty_)
+    {
+      engine_.Spaces().GetSpace("Demo Space")->SetScene("Demo Scene");
+      data_.sceneIsDirty_ = false;
     }
 
     gui_.StartWidgets();

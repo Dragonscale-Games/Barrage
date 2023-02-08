@@ -43,14 +43,6 @@ namespace Barrage
       /**************************************************************/
       Widget(EditorData& editorData, Engine& engine);
 
-      /**************************************************************/
-      /*!
-        \brief
-          Adds the widget to the window.
-      */
-      /**************************************************************/
-      virtual void UseWidget() = 0;
-
     protected:
       EditorData& editorData_; //!< Settings and other runtime data used by the editor
       Engine& engine_;         //!< The currently running engine
