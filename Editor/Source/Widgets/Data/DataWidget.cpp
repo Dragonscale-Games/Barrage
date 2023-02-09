@@ -57,7 +57,7 @@ namespace Barrage
     {
       bool objectChanged = false;
       
-      if (!treeNode || ImGui::TreeNode(objectType.get_name().data()))
+      if (!treeNode || ImGui::TreeNode(name.data()))
       {
         for (auto& prop : objectType.get_properties())
         {
