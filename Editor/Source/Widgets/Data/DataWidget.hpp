@@ -18,10 +18,11 @@
 
 #include "Widgets/Widget.hpp"
 #include <unordered_map>
+#include "Serialization/DataWrapper.hpp"
 
 namespace Barrage
 {
-  typedef bool (*DataWidgetFunction)(rttr::variant& object, rttr::string_view name);
+  typedef bool (*DataWidgetFunction)(DataWrapper, const char*);
   typedef std::unordered_map<std::string, DataWidgetFunction> DataWidgetFunctionMap;
 
   //! Allows user to edit the values of an RTTR-registered object
@@ -79,29 +80,31 @@ namespace Barrage
       /**************************************************************/
       static void Initialize();
 
-      static bool FloatWidget(rttr::variant& object, rttr::string_view name);
+      static bool FloatWidget(DataWrapper object, const char* name);
 
-      static bool DoubleWidget(rttr::variant& object, rttr::string_view name);
+      static bool DoubleWidget(DataWrapper object, const char* name);
 
-      static bool IntWidget(rttr::variant& object, rttr::string_view name);
+      static bool IntWidget(DataWrapper object, const char* name);
 
-      static bool UnsignedIntWidget(rttr::variant& object, rttr::string_view name);
+      static bool UnsignedIntWidget(DataWrapper object, const char* name);
 
-      static bool CharWidget(rttr::variant& object, rttr::string_view name);
+      static bool CharWidget(DataWrapper object, const char* name);
 
-      static bool UnsignedCharWidget(rttr::variant& object, rttr::string_view name);
+      static bool UnsignedCharWidget(DataWrapper object, const char* name);
 
-      static bool ShortWidget(rttr::variant& object, rttr::string_view name);
+      static bool ShortWidget(DataWrapper object, const char* name);
 
-      static bool UnsignedShortWidget(rttr::variant& object, rttr::string_view name);
+      static bool UnsignedShortWidget(DataWrapper object, const char* name);
 
-      static bool LongLongWidget(rttr::variant& object, rttr::string_view name);
+      static bool LongLongWidget(DataWrapper object, const char* name);
 
-      static bool UnsignedLongLongWidget(rttr::variant& object, rttr::string_view name);
+      static bool UnsignedLongLongWidget(DataWrapper object, const char* name);
 
-      static bool StringWidget(rttr::variant& object, rttr::string_view name);
+      static bool StringWidget(DataWrapper object, const char* name);
 
-      static bool RotationWidget(rttr::variant& object, rttr::string_view name);
+      static bool RotationWidget(DataWrapper object, const char* name);
+
+      static bool SpriteWidget(DataWrapper object, const char* name);
 
     private:
       static DataWidgetFunctionMap widgetFunctions_;

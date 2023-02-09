@@ -74,7 +74,7 @@ namespace Barrage
       inline Spawner() : spawnTypes_() {}
 
       // Notify rttr of the component hierarchy.
-      RTTR_ENABLE()
+      RTTR_ENABLE(SharedComponent)
   };
 }
 

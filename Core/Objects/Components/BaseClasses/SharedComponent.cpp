@@ -14,6 +14,8 @@
 
 #include "stdafx.h"
 #include "SharedComponent.hpp"
+#include <iostream>
+#include <string>
 
 namespace Barrage
 { 

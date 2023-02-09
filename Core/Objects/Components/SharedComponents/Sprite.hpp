@@ -30,7 +30,7 @@ namespace Barrage
       inline Sprite() : texture_(), layer_(0) {}
 
       // Notify rttr of the component hierarchy.
-      RTTR_ENABLE()
+      RTTR_ENABLE(SharedComponent)
   };
 }
 

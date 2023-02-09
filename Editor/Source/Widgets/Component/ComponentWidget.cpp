@@ -13,6 +13,7 @@
 #include "ComponentWidget.hpp"
 #include "Objects/Components/BaseClasses/BaseComponent.hpp"
 #include "Widgets/Data/DataWidget.hpp"
+#include <iostream>
 
 namespace Barrage
 {
@@ -59,18 +60,13 @@ namespace Barrage
       }
 
       const rttr::type dataType = rttr::type::get_by_name(propName);
-      rttr::variant data = componentArray->GetRTTRValue(0);
+      rttr::variant dataPointer = prop.get_value(arrayPointer);
 
       if (dataType.is_valid() && ImGui::CollapsingHeader(propName.data()))
       {
         ImGui::Spacing();
-        bool dataChanged = DataWidget::UseWidget(data);
+        bool dataChanged = DataWidget::UseWidget(dataPointer);
         ImGui::Spacing();
-
-        if (dataChanged)
-        {
-          componentArray->SetRTTRValue(0, data);
-        }
 
         return dataChanged;
       }
@@ -95,9 +91,9 @@ namespace Barrage
 
     ImGui::Spacing();
 
-    bool dataChanged = false;
+    bool dataChanged = DataWidget::UseWidget(componentPointer);
 
-    for (auto& prop : componentType.get_properties())
+    /*for (auto& prop : componentType.get_properties())
     {
       rttr::variant propData = prop.get_value(componentPointer);
       
@@ -106,7 +102,7 @@ namespace Barrage
         dataChanged = true;
         prop.set_value(componentPointer, propData);
       }
-    }
+    }*/
 
     ImGui::Spacing();
 

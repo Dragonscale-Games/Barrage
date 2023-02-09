@@ -13,6 +13,7 @@
 
 #include "DataWidget.hpp"
 #include "imgui/imgui_internal.h"
+#include "imgui/imgui_stdlib.h"
 
 namespace Barrage
 {
@@ -35,17 +36,22 @@ namespace Barrage
       return false;
     }
 
-    if (name.empty())
+    std::string typeName = objectType.get_name().data();
+
+    if (typeName.back() == '*')
     {
-      name = object.get_type().get_name();
+      typeName.pop_back();
     }
 
-    std::string typeName = objectType.get_name().data();
+    if (name.empty())
+    {
+      name = typeName;
+    }
 
     if (widgetFunctions_.find(typeName) != widgetFunctions_.end())
     {
       DataWidgetFunction function = widgetFunctions_.at(typeName);
-      return function(object, name);
+      return function(object, name.data());
     }
     else
     {
@@ -101,113 +107,120 @@ namespace Barrage
     AddDataWidget(rttr::type::get<unsigned long long>(), UnsignedLongLongWidget);
     AddDataWidget(rttr::type::get<std::string>(), StringWidget);
     AddDataWidget(rttr::type::get<Rotation>(), RotationWidget);
+    AddDataWidget(rttr::type::get<Sprite>(), SpriteWidget);
   }
 
-  bool DataWidget::FloatWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::FloatWidget(DataWrapper object, const char* name)
   {
-    float value = object.get_value<float>();
+    float value = object.GetValue<float>();
 
-    bool fieldChanged = ImGui::DragFloat(name.data(), &value);
+    bool fieldChanged = ImGui::DragFloat(name, &value);
 
     if (fieldChanged)
     {
-      object = value;
+      object.SetValue(value);
     }
 
     return fieldChanged;
   }
 
-  bool DataWidget::DoubleWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::DoubleWidget(DataWrapper object, const char* name)
   {
-    std::string text = name.data();
+    std::string text = name;
     text += " (double)";
     ImGui::Text(text.data());
     return false;
   }
 
-  bool DataWidget::IntWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::IntWidget(DataWrapper object, const char* name)
   {
-    std::string text = name.data();
+    std::string text = name;
     text += " (int)";
     ImGui::Text(text.data());
     return false;
   }
 
-  bool DataWidget::UnsignedIntWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::UnsignedIntWidget(DataWrapper object, const char* name)
   {
-    unsigned value = object.get_value<unsigned>();
+    unsigned value = object.GetValue<unsigned>();
 
     const ImU32 one_step = 1;
 
-    bool fieldChanged = ImGui::InputScalar(name.data(), ImGuiDataType_U32, &value, &one_step);
+    bool fieldChanged = ImGui::InputScalar(name, ImGuiDataType_U32, &value, &one_step);
 
     if (fieldChanged)
     {
-      object = value;
+      object.SetValue(value);
     }
 
     return fieldChanged;
   }
 
-  bool DataWidget::CharWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::CharWidget(DataWrapper object, const char* name)
   {
-    std::string text = name.data();
+    std::string text = name;
     text += " (char)";
     ImGui::Text(text.data());
     return false;
   }
 
-  bool DataWidget::UnsignedCharWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::UnsignedCharWidget(DataWrapper object, const char* name)
   {
-    std::string text = name.data();
+    std::string text = name;
     text += " (uchar)";
     ImGui::Text(text.data());
     return false;
   }
 
-  bool DataWidget::ShortWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::ShortWidget(DataWrapper object, const char* name)
   {
-    std::string text = name.data();
+    std::string text = name;
     text += " (short)";
     ImGui::Text(text.data());
     return false;
   }
 
-  bool DataWidget::UnsignedShortWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::UnsignedShortWidget(DataWrapper object, const char* name)
   {
-    std::string text = name.data();
+    std::string text = name;
     text += " (ushort)";
     ImGui::Text(text.data());
     return false;
   }
 
-  bool DataWidget::LongLongWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::LongLongWidget(DataWrapper object, const char* name)
   {
-    std::string text = name.data();
+    std::string text = name;
     text += " (long long)";
     ImGui::Text(text.data());
     return false;
   }
 
-  bool DataWidget::UnsignedLongLongWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::UnsignedLongLongWidget(DataWrapper object, const char* name)
   {
-    std::string text = name.data();
+    std::string text = name;
     text += " (unsigned long long)";
     ImGui::Text(text.data());
     return false;
   }
 
-  bool DataWidget::StringWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::StringWidget(DataWrapper object, const char* name)
   {
-    std::string text = name.data();
-    text += " (string)";
-    ImGui::Text(text.data());
-    return false;
+    std::string value = object.GetValue<std::string>();
+
+    bool fieldChanged = ImGui::InputText(name, &value);
+
+    if (fieldChanged)
+    {
+      object.SetValue(value);
+    }
+
+    return fieldChanged;
   }
 
-  bool DataWidget::RotationWidget(rttr::variant& object, rttr::string_view name)
+  bool DataWidget::RotationWidget(DataWrapper object, const char* name)
   {
-    Rotation rotation = object.get_value<Rotation>();
+    Rotation rotation = object.GetValue<Rotation>();
 
     float angleDeg = -rotation.angle_ * 360.0f / (2 * IM_PI);
 
@@ -222,7 +235,55 @@ namespace Barrage
     if (fieldChanged)
     {
       rotation.angle_ = -angleDeg * (2 * IM_PI) / 360.0f;
-      object = rotation;
+      object.SetValue(rotation);
+    }
+
+    return fieldChanged;
+  }
+
+  bool DataWidget::SpriteWidget(DataWrapper object, const char* name)
+  {
+    rttr::type type = rttr::type::get_by_name(name);
+    rttr::variant sprite = object.GetValue<Sprite>();
+
+    bool fieldChanged = false;
+
+    for (auto& prop : type.get_properties())
+    {
+      rttr::string_view propName = prop.get_name();
+      rttr::variant propValue = prop.get_value(sprite);
+
+      if (std::string(propName.data()) == "texture" && propValue.is_type<std::string>())
+      {
+        std::vector<std::string> textureNames = Engine::Instance->GfxRegistry().GetTextureNames();
+        std::string currentTexture = propValue.get_value<std::string>();
+
+        if (ImGui::BeginCombo("texture", currentTexture.data()))
+        {
+          for (auto& textureName : textureNames)
+          {
+            if (ImGui::Selectable(textureName.data(), textureName == currentTexture))
+            {
+              fieldChanged = true;
+              prop.set_value(sprite, textureName);
+            }
+          }
+          ImGui::EndCombo();
+        }
+      }
+      else
+      {
+        if (DataWidget::UseWidget(propValue, propName))
+        {
+          fieldChanged = true;
+          prop.set_value(sprite, propValue);
+        }
+      }
+    }
+
+    if (fieldChanged)
+    {
+      object.SetValue(sprite.get_value<Sprite>());
     }
 
     return fieldChanged;

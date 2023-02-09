@@ -83,6 +83,8 @@ namespace Barrage
       std::vector<unsigned> freeList_;
       unsigned long long currentId_;
 
+      // Notify rttr of the component hierarchy.
+      RTTR_ENABLE(SharedComponent)
   };
 }
 
