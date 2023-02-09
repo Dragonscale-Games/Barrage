@@ -90,20 +90,7 @@ namespace Barrage
     }
 
     ImGui::Spacing();
-
     bool dataChanged = DataWidget::UseWidget(componentPointer);
-
-    /*for (auto& prop : componentType.get_properties())
-    {
-      rttr::variant propData = prop.get_value(componentPointer);
-      
-      if (DataWidget::UseWidget(propData, prop.get_name()))
-      {
-        dataChanged = true;
-        prop.set_value(componentPointer, propData);
-      }
-    }*/
-
     ImGui::Spacing();
 
     return dataChanged;
