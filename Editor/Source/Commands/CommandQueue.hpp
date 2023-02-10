@@ -93,6 +93,31 @@ namespace Barrage
       void Redo(bool log = true);
 
     private:
+      /**************************************************************/
+      /*!
+        \brief
+          Undoes the most recent command.
+
+        \param log
+          If "true", outputs the undo action to the log.
+      */
+      /**************************************************************/
+      void UndoInternal(bool log);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Re-executes the most recently undone command.
+
+        \param log
+          If "true", outputs the redo action to the log.
+
+        \return
+          Returns true if another command should be redone (used for 
+          redo chains).
+      */
+      /**************************************************************/
+      bool RedoInternal(bool log);
 
       /**************************************************************/
       /*!

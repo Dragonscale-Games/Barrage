@@ -32,7 +32,9 @@ namespace Barrage
     hierarchy_(data_, engine_),
     inspector_(data_, engine_),
     log_(data_, engine_),
-    mainMenu_(data_, engine_)
+    mainMenu_(data_, engine_),
+
+    repeatTimer_(0)
   {
   }
 
@@ -115,7 +117,7 @@ namespace Barrage
     {
       //engine_.Spaces().Update();
     }
-
+    
     commandQueue_.Process();
 
     if (data_.sceneIsDirty_)
@@ -127,6 +129,8 @@ namespace Barrage
     gui_.StartWidgets();
     UseEditorWidget();
     gui_.EndWidgets();
+
+    HandleKeyboard();
 
     Barrage::WindowManager& windowing = engine_.Windowing();
     Barrage::GfxDraw2D& drawing = engine_.Drawing();
@@ -160,5 +164,46 @@ namespace Barrage
     inspector_.UseWidget();
     ImGui::ShowDemoWindow();
     log_.UseWidget();
+  }
+
+  void Editor::HandleKeyboard()
+  {
+    long long bigDelayMilliseconds = 500000;
+    long long smallDelayMilliseconds = 100000;
+    
+    if (engine_.Input().KeyIsDown(KEY_CTRL_LEFT) && engine_.Input().KeyIsDown(KEY_Z))
+    {
+      if (engine_.Input().KeyTriggered(KEY_Z))
+      {
+        commandQueue_.Undo();
+        repeatTimer_ = bigDelayMilliseconds;
+      }
+      else if (repeatTimer_ <= 0)
+      {
+        commandQueue_.Undo();
+        repeatTimer_ = smallDelayMilliseconds;
+      }
+      else
+      {
+        repeatTimer_ -= engine_.Frames().DT();
+      }
+    }
+    else if (engine_.Input().KeyIsDown(KEY_CTRL_LEFT) && engine_.Input().KeyIsDown(KEY_Y))
+    {
+      if (engine_.Input().KeyTriggered(KEY_Y))
+      {
+        commandQueue_.Redo();
+        repeatTimer_ = bigDelayMilliseconds;
+      }
+      else if (repeatTimer_ <= 0)
+      {
+        commandQueue_.Redo();
+        repeatTimer_ = smallDelayMilliseconds;
+      }
+      else
+      {
+        repeatTimer_ -= engine_.Frames().DT();
+      }
+    }
   }
 }

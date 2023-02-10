@@ -73,7 +73,22 @@ namespace Barrage
 
   void CommandQueue::Undo(bool log)
   {
-    if (undoStack_.empty() || currentCommand_)
+    if (currentCommand_)
+    {
+      return;
+    }
+
+    UndoInternal(log);
+
+    while (!undoStack_.empty() && undoStack_.top()->chains_)
+    {
+      UndoInternal(false);
+    }
+  }
+
+  void CommandQueue::UndoInternal(bool log)
+  {
+    if (undoStack_.empty())
     {
       return;
     }
@@ -83,33 +98,31 @@ namespace Barrage
 
     undoStack_.pop();
     redoStack_.push(undoCommand);
-    
+
     if (log)
     {
       std::string logMessage = "Undo \"" + undoCommand->GetName() + "\"";
       Editor::Instance->Log().AddLog(logMessage.c_str());
     }
-
-    if (undoStack_.empty())
-    {
-      return;
-    }
-
-    Command* nextCommand = undoStack_.top();
-
-    if (nextCommand->chains_)
-    {
-      Undo(false);
-    }
   }
 
   void CommandQueue::Redo(bool log)
   {
-    if (redoStack_.empty() || currentCommand_)
+    if (currentCommand_)
     {
       return;
     }
 
+    while (RedoInternal(log)) {};
+  }
+
+  bool CommandQueue::RedoInternal(bool log)
+  {
+    if (redoStack_.empty())
+    {
+      return false;
+    }
+    
     Command* redoCommand = redoStack_.top();
     bool success = redoCommand->Execute();
 
@@ -121,21 +134,25 @@ namespace Barrage
     if (!success)
     {
       ClearRedoStack();
-      return;
+      return false;
     }
 
     redoStack_.pop();
     undoStack_.push(redoCommand);
 
-    if (log)
-    {
-      std::string logMessage = "Redo \"" + redoCommand->GetName() + "\"";
-      Editor::Instance->Log().AddLog(logMessage.c_str());
-    }
-    
     if (redoCommand->chains_)
     {
-      Redo(false);
+      return true;
+    }
+    else
+    {
+      if (log)
+      {
+        std::string logMessage = "Redo \"" + redoCommand->GetName() + "\"";
+        Editor::Instance->Log().AddLog(logMessage.c_str());
+      }
+
+      return false;
     }
   }
 

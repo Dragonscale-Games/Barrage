@@ -25,7 +25,7 @@ namespace Barrage
 
   void LogWidget::UseWidget()
   {
-    ImGui::Begin("Log");
+    ImGui::Begin("Output Log");
     if (ImGui::Button("Clear")) Clear();
     ImGui::SameLine();
     bool copy = ImGui::Button("Copy");
@@ -36,23 +36,18 @@ namespace Barrage
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 1));
     if (copy) ImGui::LogToClipboard();
     
-    if (filter_.IsActive())
+    const char* buf_begin = buffer_.begin();
+    const char* line = buf_begin;
+    for (int line_no = 0; line != NULL; line_no++)
     {
-      const char* buf_begin = buffer_.begin();
-      const char* line = buf_begin;
-      for (int line_no = 0; line != NULL; line_no++)
-      {
-        const char* line_end = (line_no < lineOffsets_.Size) ? buf_begin + lineOffsets_[line_no] : NULL;
-        if (filter_.PassFilter(line, line_end))
-          ImGui::TextUnformatted(line, line_end);
-        line = line_end && line_end[1] ? line_end + 1 : NULL;
-      }
-    }
-    else
-    {
-      ImGui::TextUnformatted(buffer_.begin());
+      const char* line_end = (line_no < lineOffsets_.Size) ? buf_begin + lineOffsets_[line_no] : NULL;
+      if (!filter_.IsActive() || filter_.PassFilter(line, line_end))
+        ImGui::TextUnformatted(line, line_end);
+      line = line_end && line_end[1] ? line_end + 1 : NULL;
     }
     
+    ImGui::Spacing();
+
     if (scrollToBottom_)
       ImGui::SetScrollHereY(1.0f);
     scrollToBottom_ = false;

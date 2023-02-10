@@ -130,7 +130,12 @@ namespace Barrage
 
     bool fieldChanged = ImGui::DragScalar(object.GetValueName().c_str(), ImGuiDataType_Double, &value);
 
-    if (fieldChanged)
+    if (ImGui::IsItemActive())
+    {
+      object.SetChainUndo(true);
+    }
+
+    if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
     {
       object.SetValue(value);
     }
@@ -142,7 +147,12 @@ namespace Barrage
 
     bool fieldChanged = ImGui::DragInt(object.GetValueName().c_str(), &value);
 
-    if (fieldChanged)
+    if (ImGui::IsItemActive())
+    {
+      object.SetChainUndo(true);
+    }
+
+    if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
     {
       object.SetValue(value);
     }
@@ -156,7 +166,12 @@ namespace Barrage
 
     bool fieldChanged = ImGui::InputScalar(object.GetValueName().c_str(), ImGuiDataType_U32, &value, &one_step);
 
-    if (fieldChanged)
+    if (ImGui::IsItemActive())
+    {
+      object.SetChainUndo(true);
+    }
+
+    if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
     {
       object.SetValue(value);
     }
@@ -210,7 +225,12 @@ namespace Barrage
 
     bool fieldChanged = ImGui::InputText(object.GetValueName().c_str(), &value);
 
-    if (fieldChanged)
+    if (ImGui::IsItemActive())
+    {
+      object.SetChainUndo(true);
+    }
+
+    if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
     {
       object.SetValue(value);
     }
@@ -230,7 +250,12 @@ namespace Barrage
 
     bool fieldChanged = ImGui::DragFloat("angle", &angleDeg);
     
-    if (fieldChanged)
+    if (ImGui::IsItemActive())
+    {
+      object.SetChainUndo(true);
+    }
+
+    if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
     {
       rotation.angle_ = -angleDeg * (2 * IM_PI) / 360.0f;
       object.SetValue(rotation);

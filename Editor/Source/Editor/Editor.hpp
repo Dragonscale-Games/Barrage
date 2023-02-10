@@ -117,6 +117,14 @@ namespace Barrage
       /**************************************************************/
       void UseEditorWidget();
 
+      /**************************************************************/
+      /*!
+        \brief
+          Handles keyboard shortcuts and other keyboard input.
+      */
+      /**************************************************************/
+      void HandleKeyboard();
+
     private:
       Engine engine_;             //!< Barrage game engine
       GUI gui_;                   //!< Contains all widgets/user controls
@@ -128,6 +136,7 @@ namespace Barrage
       LogWidget log_;             //!< Shows the log widget
       MainMenuWidget mainMenu_;   //!< Shows the main menu bar
 
+      long long repeatTimer_;
 	};
 }
 
