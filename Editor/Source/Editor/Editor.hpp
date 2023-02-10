@@ -18,9 +18,11 @@
 #include <Engine/Engine.hpp>
 #include "EditorData.hpp"
 #include "GUI/GUI.hpp"
+#include "Commands/CommandQueue.hpp"
 
 #include "Widgets/Hierarchy/HierarchyWidget.hpp"
 #include "Widgets/Inspector/InspectorWidget.hpp"
+#include "Widgets/Log/LogWidget.hpp"
 #include "Widgets/MainMenu/MainMenuWidget.hpp"
 
 #include <string_view>
@@ -31,6 +33,8 @@ namespace Barrage
   class Editor
 	{
     public:   
+      static Editor* Instance;
+      
       /**************************************************************/
       /*!
         \brief
@@ -46,6 +50,39 @@ namespace Barrage
       */
       /**************************************************************/
       void Run();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the public editor data that widgets can modify.
+
+        \return
+          Returns a reference to the editor's public data.
+      */
+      /**************************************************************/
+      EditorData& Data();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the editor's command queue.
+
+        \return
+          Returns a reference to the editor's command queue.
+      */
+      /**************************************************************/
+      CommandQueue& Command();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the editor's log widget.
+
+        \return
+          Returns a reference to the editor's log widget.
+      */
+      /**************************************************************/
+      LogWidget& Log();
 
     private:
       /**************************************************************/
@@ -81,13 +118,16 @@ namespace Barrage
       void UseEditorWidget();
 
     private:
-      Engine engine_;   //!< Barrage game engine
-      GUI gui_;         //!< Contains all widgets/user controls
-      EditorData data_; //!< Runtime settings and data for the editor
+      Engine engine_;             //!< Barrage game engine
+      GUI gui_;                   //!< Contains all widgets/user controls
+      EditorData data_;           //!< Public settings and data for the editor
+      CommandQueue commandQueue_; //!< Allows commands to be sent and processed
 
       HierarchyWidget hierarchy_; //!< Shows the hierarchy widget
       InspectorWidget inspector_; //!< Shows the inspector widget
+      LogWidget log_;             //!< Shows the log widget
       MainMenuWidget mainMenu_;   //!< Shows the main menu bar
+
 	};
 }
 

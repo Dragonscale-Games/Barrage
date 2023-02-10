@@ -11,6 +11,7 @@
  /* ======================================================================== */
 
 #include "MainMenuWidget.hpp"
+#include <Editor/Editor.hpp>
 
 namespace Barrage
 {
@@ -29,6 +30,22 @@ namespace Barrage
       {
         editorData_.isRunning_ = false;
       }
+
+      ImGui::EndMenu();
+    }
+
+    if (ImGui::BeginMenu("Edit"))
+    {
+      if (ImGui::MenuItem("Undo"))
+      {
+        Editor::Instance->Command().Undo();
+      }
+
+      if (ImGui::MenuItem("Redo"))
+      {
+        Editor::Instance->Command().Redo();
+      }
+
       ImGui::EndMenu();
     }
 

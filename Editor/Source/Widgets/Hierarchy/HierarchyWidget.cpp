@@ -11,6 +11,7 @@
  /* ======================================================================== */
 
 #include "HierarchyWidget.hpp"
+#include "Editor/Editor.hpp"
 
 namespace Barrage
 {

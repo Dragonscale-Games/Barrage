@@ -24,7 +24,7 @@
 namespace Barrage
 {
   void ReflectBarrageCore()
-  {
+  { 
     // Shared Components.
     
     // Spawn Type
@@ -40,8 +40,9 @@ namespace Barrage
 
     // Sprite
     rttr::registration::class_<Sprite>("Sprite")
-      .property("texture", &Sprite::texture_)
-      .property("layer", &Sprite::layer_);
+      .property("texture", &Sprite::texture_)(rttr::policy::prop::bind_as_ptr)
+      .property("layer", &Sprite::layer_)(rttr::policy::prop::bind_as_ptr)
+    ;
     rttr::type::get<Sprite*>();
 
     // Component Arrays.
@@ -54,25 +55,31 @@ namespace Barrage
 
     // Position Arrays.
     rttr::registration::class_<PositionArray>("PositionArray")
-      .property("Position", &PositionArray::data_);
+      .property("Position", &PositionArray::data_)
+    ;
     rttr::type::get<PositionArray*>();
     rttr::registration::class_<Position>("Position")
-      .property("x", &Position::x_)
-      .property("y", &Position::y_);
+      .property("x", &Position::x_)(rttr::policy::prop::bind_as_ptr)
+      .property("y", &Position::y_)(rttr::policy::prop::bind_as_ptr)
+    ;
 
     // Scale Arrays.
     rttr::registration::class_<ScaleArray>("ScaleArray")
-      .property("Scale", &ScaleArray::data_);
+      .property("Scale", &ScaleArray::data_)
+    ;
     rttr::type::get<ScaleArray*>();
     rttr::registration::class_<Scale>("Scale")
-      .property("w", &Scale::w_)
-      .property("h", &Scale::h_);
+      .property("w", &Scale::w_)(rttr::policy::prop::bind_as_ptr)
+      .property("h", &Scale::h_)(rttr::policy::prop::bind_as_ptr)
+    ;
 
     // Rotation Arrays.
     rttr::registration::class_<RotationArray>("RotationArray")
-      .property("Rotation", &RotationArray::data_);
+      .property("Rotation", &RotationArray::data_)
+    ;
     rttr::type::get<RotationArray*>();
     rttr::registration::class_<Rotation>("Rotation")
-      .property("angle", &Rotation::angle_);
+      .property("angle", &Rotation::angle_)(rttr::policy::prop::bind_as_ptr)
+    ;
   }
 }

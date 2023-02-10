@@ -40,7 +40,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      static bool UseWidget(const std::string_view& componentName, Component* component);
+      static void UseWidget(const std::string_view& componentName, Component* component);
 
     private:
       /**************************************************************/
@@ -60,7 +60,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      static bool EditComponentArray(const std::string_view& componentName, ComponentArray* componentArray);
+      static void EditComponentArray(const std::string_view& componentName, ComponentArray* componentArray);
 
       /**************************************************************/
       /*!
@@ -78,7 +78,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      static bool EditSharedComponent(const std::string_view& componentName, SharedComponent* component);
+      static void EditSharedComponent(const std::string_view& componentName, SharedComponent* component);
   };
 }
 

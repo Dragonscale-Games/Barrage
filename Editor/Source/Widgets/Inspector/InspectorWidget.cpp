@@ -12,6 +12,7 @@
 
 #include "InspectorWidget.hpp"
 #include "Widgets/Component/ComponentWidget.hpp"
+#include "Editor/Editor.hpp"
 #include <string>
 
 namespace Barrage
@@ -23,9 +24,9 @@ namespace Barrage
 
   void InspectorWidget::UseWidget()
   {
-    ImGui::Begin("Components");
+    ImGui::Begin("Inspector");
 
-    ObjectManager& objectManager = engine_.Spaces().GetSpace("Demo Space")->GetObjectManager();
+    ObjectManager& objectManager = engine_.Spaces().GetSpace(editorData_.selectedSpace_.data())->GetObjectManager();
 
     if (!editorData_.selectedPool_.empty())
     {
@@ -52,7 +53,7 @@ namespace Barrage
 
         for (auto& component : poolArchetype->sharedComponents_)
         {
-           editorData_.sceneIsDirty_ |= ComponentWidget::UseWidget(component.first, component.second);
+           ComponentWidget::UseWidget(component.first, component.second);
         }
 
         ImGui::Text(" ");
@@ -76,7 +77,7 @@ namespace Barrage
       {
         for (auto& component : objectArchetype->components_)
         {
-          editorData_.sceneIsDirty_ |= ComponentWidget::UseWidget(component.first, component.second);
+          ComponentWidget::UseWidget(component.first, component.second);
         }
       }
     }

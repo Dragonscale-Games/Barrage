@@ -17,12 +17,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Widgets/Widget.hpp"
+#include "Commands/ChangeValue/ChangeValue.hpp"
+
 #include <unordered_map>
-#include "Serialization/DataWrapper.hpp"
 
 namespace Barrage
 {
-  typedef bool (*DataWidgetFunction)(DataWrapper, const char*);
+  typedef ChangeValue DataObject;
+  typedef void (*DataWidgetFunction)(DataObject& object);
   typedef std::unordered_map<std::string, DataWidgetFunction> DataWidgetFunctionMap;
 
   //! Allows user to edit the values of an RTTR-registered object
@@ -52,7 +54,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      static bool UseWidget(rttr::variant& object, rttr::string_view name = rttr::string_view(), bool treeNode = false);
+      static void UseWidget(rttr::variant& object, rttr::string_view name = rttr::string_view(), bool treeNode = false);
 
       /**************************************************************/
       /*!
@@ -80,31 +82,29 @@ namespace Barrage
       /**************************************************************/
       static void Initialize();
 
-      static bool FloatWidget(DataWrapper object, const char* name);
+      static void FloatWidget(DataObject& object);
 
-      static bool DoubleWidget(DataWrapper object, const char* name);
+      static void DoubleWidget(DataObject& object);
 
-      static bool IntWidget(DataWrapper object, const char* name);
+      static void IntWidget(DataObject& object);
 
-      static bool UnsignedIntWidget(DataWrapper object, const char* name);
+      static void UnsignedIntWidget(DataObject& object);
 
-      static bool CharWidget(DataWrapper object, const char* name);
+      static void CharWidget(DataObject& object);
 
-      static bool UnsignedCharWidget(DataWrapper object, const char* name);
+      static void UnsignedCharWidget(DataObject& object);
 
-      static bool ShortWidget(DataWrapper object, const char* name);
+      static void ShortWidget(DataObject& object);
 
-      static bool UnsignedShortWidget(DataWrapper object, const char* name);
+      static void UnsignedShortWidget(DataObject& object);
 
-      static bool LongLongWidget(DataWrapper object, const char* name);
+      static void LongLongWidget(DataObject& object);
 
-      static bool UnsignedLongLongWidget(DataWrapper object, const char* name);
+      static void UnsignedLongLongWidget(DataObject& object);
 
-      static bool StringWidget(DataWrapper object, const char* name);
+      static void StringWidget(DataObject& object);
 
-      static bool RotationWidget(DataWrapper object, const char* name);
-
-      static bool SpriteWidget(DataWrapper object, const char* name);
+      static void RotationWidget(DataObject& object);
 
     private:
       static DataWidgetFunctionMap widgetFunctions_;

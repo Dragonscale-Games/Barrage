@@ -1,38 +1,33 @@
 /* ======================================================================== */
 /*!
- * \file            Widget.hpp
+ * \file            LogWidget.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Base class for all editor widgets.
+   Widget for displaying a log window. Code taken from imgui_demo.cpp.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef Widget_BARRAGE_H
-#define Widget_BARRAGE_H
+#ifndef LogWidget_BARRAGE_H
+#define LogWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Editor/EditorData.hpp>
-#include <Engine/Engine.hpp>
-
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_glfw.h>
-#include <imgui/imgui_impl_opengl3.h>
+#include "Widgets/Widget.hpp"
 
 namespace Barrage
 {
-  //! Widget base class
-  class Widget
+  //! Displays a log window
+  class LogWidget : public Widget
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Constructs a widget with references to the data it's allowed
-          to see/change in the editor and engine.
+          Constructs the log widget with references to the
+          data it's allowed to see/change in the editor and engine.
 
         \param editorData
           Runtime settings and data for the editor.
@@ -41,22 +36,37 @@ namespace Barrage
           The currently running engine.
       */
       /**************************************************************/
-      Widget(EditorData& editorData, Engine& engine);
+      LogWidget(EditorData& editorData, Engine& engine);
 
       /**************************************************************/
       /*!
         \brief
-          Virtual destructor for base class.
+          Adds the widget to the window.
       */
       /**************************************************************/
-      virtual ~Widget() = default;
+      void UseWidget();
 
-    protected:
-      EditorData& editorData_; //!< Settings and other runtime data used by the editor
-      Engine& engine_;         //!< The currently running engine
+      void Clear();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds an entry to the log.
+
+        \param fmt
+          A printf()-style formatted C string.
+      */
+      /**************************************************************/
+      void AddLog(const char* fmt, ...) IM_FMTARGS(2);
+
+    private:
+      ImGuiTextBuffer buffer_;
+      ImGuiTextFilter filter_;
+      ImVector<int> lineOffsets_;
+      bool scrollToBottom_;
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // Widget_BARRAGE_H
+#endif // LogWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

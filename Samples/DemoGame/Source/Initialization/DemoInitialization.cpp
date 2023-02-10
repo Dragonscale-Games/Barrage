@@ -164,8 +164,8 @@ namespace Demo
 
     PositionArray* position_array = new PositionArray;
     position_array->Allocate(1);
-    position_array->data_->x_ = 640.0f;
-    position_array->data_->y_ = 120.0f;
+    position_array->data_->x_ = 960.0f;
+    position_array->data_->y_ = 880.0f;
     object_archetype->components_["PositionArray"] = position_array;
 
     RotationArray* rotation_array = new RotationArray;

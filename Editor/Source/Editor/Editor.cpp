@@ -22,6 +22,8 @@
 
 namespace Barrage
 {
+  Editor* Editor::Instance = nullptr;
+  
   Editor::Editor() :
     engine_(),
     gui_(),
@@ -29,6 +31,7 @@ namespace Barrage
 
     hierarchy_(data_, engine_),
     inspector_(data_, engine_),
+    log_(data_, engine_),
     mainMenu_(data_, engine_)
   {
   }
@@ -52,8 +55,24 @@ namespace Barrage
     }
   }
 
+  EditorData& Editor::Data()
+  {
+    return data_;
+  }
+
+  CommandQueue& Editor::Command()
+  {
+    return commandQueue_;
+  }
+
+  LogWidget& Editor::Log()
+  {
+    return log_;
+  }
+
   void Editor::Initialize()
   {
+    Instance = this;
     engine_.Initialize();
 
     Barrage::WindowManager& windowing = engine_.Windowing();
@@ -97,9 +116,11 @@ namespace Barrage
       //engine_.Spaces().Update();
     }
 
+    commandQueue_.Process();
+
     if (data_.sceneIsDirty_)
     {
-      engine_.Spaces().GetSpace("Demo Space")->SetScene("Demo Scene");
+      engine_.Spaces().GetSpace(data_.selectedSpace_.data())->SetScene(data_.selectedScene_.data());
       data_.sceneIsDirty_ = false;
     }
 
@@ -116,7 +137,7 @@ namespace Barrage
     gui_.DrawWidgets();
     drawing.EndFrame();
 
-    if(!windowing.IsOpen())
+    if (!windowing.IsOpen())
     {
       data_.isRunning_ = false;
     }
@@ -129,8 +150,7 @@ namespace Barrage
     gui_.Shutdown();
     
     engine_.Shutdown();
-    
-    Barrage::Engine::Instance = nullptr;
+    Instance = nullptr;
   }
 
   void Editor::UseEditorWidget()
@@ -138,7 +158,7 @@ namespace Barrage
     mainMenu_.UseWidget();
     hierarchy_.UseWidget();
     inspector_.UseWidget();
-
     ImGui::ShowDemoWindow();
+    log_.UseWidget();
   }
 }

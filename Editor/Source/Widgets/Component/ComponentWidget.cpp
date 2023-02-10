@@ -17,37 +17,35 @@
 
 namespace Barrage
 {
-  bool ComponentWidget::UseWidget(const std::string_view& componentName, Component* component)
+  void ComponentWidget::UseWidget(const std::string_view& componentName, Component* component)
   {
     if (component == nullptr)
     {
-      return false;
+      return;
     }
 
     if (component->GetType() == Component::Type::ARRAY)
     {
-      return EditComponentArray(componentName, dynamic_cast<ComponentArray*>(component));
+      EditComponentArray(componentName, dynamic_cast<ComponentArray*>(component));
     }
     else if (component->GetType() == Component::Type::SHARED)
     {
-      return EditSharedComponent(componentName, dynamic_cast<SharedComponent*>(component));
+      EditSharedComponent(componentName, dynamic_cast<SharedComponent*>(component));
     }
-
-    return false;
   }
 
-  bool ComponentWidget::EditComponentArray(const std::string_view& componentName, ComponentArray* componentArray)
+  void ComponentWidget::EditComponentArray(const std::string_view& componentName, ComponentArray* componentArray)
   {
     std::string derivedArrayName = componentName.data();
     derivedArrayName += "*";
     rttr::variant arrayPointer = componentArray;
-    const rttr::type arrayType = rttr::type::get_by_name(derivedArrayName.data());
+    const rttr::type arrayType = rttr::type::get_by_name(derivedArrayName.c_str());
 
     bool success = arrayPointer.convert(arrayType);
 
     if (!success)
     {
-      return false;
+      return;
     }
 
     for (auto& prop : arrayType.get_properties())
@@ -65,34 +63,28 @@ namespace Barrage
       if (dataType.is_valid() && ImGui::CollapsingHeader(propName.data()))
       {
         ImGui::Spacing();
-        bool dataChanged = DataWidget::UseWidget(dataPointer);
+        DataWidget::UseWidget(dataPointer);
         ImGui::Spacing();
-
-        return dataChanged;
       }
     }
-
-    return false;
   }
 
-  bool ComponentWidget::EditSharedComponent(const std::string_view& componentName, SharedComponent* component)
+  void ComponentWidget::EditSharedComponent(const std::string_view& componentName, SharedComponent* component)
   {
     std::string derivedComponentName = componentName.data();
     derivedComponentName += "*";
     rttr::variant componentPointer = component;
-    const rttr::type componentType = rttr::type::get_by_name(derivedComponentName.data());
+    const rttr::type componentType = rttr::type::get_by_name(derivedComponentName.c_str());
 
     bool success = componentPointer.convert(componentType);
 
     if (!success || !ImGui::CollapsingHeader(componentName.data()))
     {
-      return false;
+      return;
     }
 
     ImGui::Spacing();
-    bool dataChanged = DataWidget::UseWidget(componentPointer);
+    DataWidget::UseWidget(componentPointer);
     ImGui::Spacing();
-
-    return dataChanged;
   }
 }
