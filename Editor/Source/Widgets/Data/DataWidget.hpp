@@ -63,14 +63,15 @@ namespace Barrage
           primitive type registered with RTTR. This will overwrite any 
           widget previously assigned to that type.
 
-        \param type
-          The rttr::type to assign a new widget to.
+        \tparam T
+          The type to assign a new widget to.
 
         \param function
           The custom widget function to add. 
       */
       /**************************************************************/
-      static void AddDataWidget(const rttr::type& type, DataWidgetFunction widgetFunction);
+      template <typename T>
+      static void AddDataWidget(DataWidgetFunction widgetFunction);
 
     private:
       /**************************************************************/
@@ -106,11 +107,15 @@ namespace Barrage
 
       static void RotationWidget(DataObject& object);
 
+      static void SpriteWidget(DataObject& object);
+
     private:
       static DataWidgetFunctionMap widgetFunctions_;
       static bool initialized_;
   };
 }
+
+#include "DataWidget.tpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif // DataWidget_BARRAGE_H

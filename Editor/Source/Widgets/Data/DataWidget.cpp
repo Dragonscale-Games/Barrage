@@ -80,31 +80,21 @@ namespace Barrage
     }
   }
 
-  void DataWidget::AddDataWidget(const rttr::type& type, DataWidgetFunction widgetFunction)
-  {
-    if (!type.is_valid())
-    {
-      return;
-    }
-    
-    std::string typeName = type.get_name().data();
-    widgetFunctions_[typeName] = widgetFunction;
-  }
-
   void DataWidget::Initialize()
   {
-    AddDataWidget(rttr::type::get<float>(), FloatWidget);
-    AddDataWidget(rttr::type::get<double>(), DoubleWidget);
-    AddDataWidget(rttr::type::get<int>(), IntWidget);
-    AddDataWidget(rttr::type::get<unsigned>(), UnsignedIntWidget);
-    AddDataWidget(rttr::type::get<char>(), CharWidget);
-    AddDataWidget(rttr::type::get<unsigned char>(), UnsignedCharWidget);
-    AddDataWidget(rttr::type::get<short>(), ShortWidget);
-    AddDataWidget(rttr::type::get<unsigned short>(), UnsignedShortWidget);
-    AddDataWidget(rttr::type::get<long long>(), LongLongWidget);
-    AddDataWidget(rttr::type::get<unsigned long long>(), UnsignedLongLongWidget);
-    AddDataWidget(rttr::type::get<std::string>(), StringWidget);
-    AddDataWidget(rttr::type::get<Rotation>(), RotationWidget);
+    AddDataWidget<float>(FloatWidget);
+    AddDataWidget<double>(DoubleWidget);
+    AddDataWidget<int>(IntWidget);
+    AddDataWidget<unsigned>(UnsignedIntWidget);
+    AddDataWidget<char>(CharWidget);
+    AddDataWidget<unsigned char>(UnsignedCharWidget);
+    AddDataWidget<short>(ShortWidget);
+    AddDataWidget<unsigned short>(UnsignedShortWidget);
+    AddDataWidget<long long>(LongLongWidget);
+    AddDataWidget<unsigned long long>(UnsignedLongLongWidget);
+    AddDataWidget<std::string>(StringWidget);
+    AddDataWidget<Rotation>(RotationWidget);
+    AddDataWidget<Sprite>(SpriteWidget);
   }
 
   void DataWidget::FloatWidget(DataObject& object)
@@ -259,6 +249,42 @@ namespace Barrage
     {
       rotation.angle_ = -angleDeg * (2 * IM_PI) / 360.0f;
       object.SetValue(rotation);
+    }
+  }
+
+  void DataWidget::SpriteWidget(DataObject& object)
+  {
+    Sprite sprite = object.GetValue<Sprite>();
+
+    bool fieldChanged = false;
+
+    std::vector<std::string> textureNames = Engine::Instance->GfxRegistry().GetTextureNames();
+
+    if (ImGui::BeginCombo("texture", sprite.texture_.c_str()))
+    { 
+      for (auto& textureName : textureNames)
+      {
+        if (ImGui::Selectable(textureName.data(), textureName == sprite.texture_))
+        {
+          fieldChanged = true;
+          sprite.texture_ = textureName;
+        }
+      }
+      ImGui::EndCombo();
+    }
+
+    const ImU32 one_step = 1;
+
+    fieldChanged |= ImGui::InputScalar("layer", ImGuiDataType_U32, &sprite.layer_, &one_step);
+
+    if (ImGui::IsItemActive())
+    {
+      object.SetChainUndo(true);
+    }
+
+    if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
+    {
+      object.SetValue(sprite);
     }
   }
 }
