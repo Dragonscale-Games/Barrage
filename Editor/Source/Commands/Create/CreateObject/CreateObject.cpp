@@ -87,6 +87,8 @@ namespace Barrage
 
     scenePool.objects_.insert(objectName_);
 
+    Editor::Instance->Data().sceneIsDirty_ = true;
+
     return true;
   }
 
@@ -100,6 +102,8 @@ namespace Barrage
     ObjectArchetype* removedArchetype = objectManager.ExtractObjectArchetype(objectName_);
     redoArchetypes_.push(removedArchetype);
     scenePool.objects_.erase(objectName_);
+
+    Editor::Instance->Data().sceneIsDirty_ = true;
   }
 
   void CreateObject::Redo()
@@ -112,6 +116,8 @@ namespace Barrage
     objectManager.AddObjectArchetype(objectName_, redoArchetypes_.top());
     redoArchetypes_.pop();
     scenePool.objects_.insert(objectName_);
+
+    Editor::Instance->Data().sceneIsDirty_ = true;
   }
 
   void CreateObject::ClearRedos()

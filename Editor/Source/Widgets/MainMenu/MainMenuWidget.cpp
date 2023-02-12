@@ -53,7 +53,7 @@ namespace Barrage
 
     if (ImGui::BeginMenu("Create"))
     {
-      if (ImGui::MenuItem("New pool"))
+      if (ImGui::MenuItem("Pool"))
       {
         std::string& space = Editor::Instance->Data().selectedSpace_;
         std::string& scene = Editor::Instance->Data().selectedScene_;
@@ -65,7 +65,7 @@ namespace Barrage
         ImGui::BeginDisabled();
       }
 
-      if (ImGui::MenuItem("Object in pool"))
+      if (ImGui::MenuItem("Object"))
       {
         std::string& space = Editor::Instance->Data().selectedSpace_;
         std::string& scene = Editor::Instance->Data().selectedScene_;
