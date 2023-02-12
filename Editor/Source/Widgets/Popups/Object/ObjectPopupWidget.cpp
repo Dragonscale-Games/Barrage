@@ -12,6 +12,9 @@
 
 #include "ObjectPopupWidget.hpp"
 
+#include <Commands/Delete/Object/DeleteObject.hpp>
+#include <Editor/Editor.hpp>
+
 namespace Barrage
 {
   void ObjectPopupWidget::Use(const char* strId)
@@ -21,9 +24,11 @@ namespace Barrage
       return;
     }
 
-    ImGui::BeginDisabled();
-    ImGui::Text("(Placeholder)");
-    ImGui::EndDisabled();
+    if (ImGui::Selectable("Delete Object"))
+    {
+      EditorData& editorData = Editor::Instance->Data();
+      Editor::Instance->Command().Send(new DeleteObject(editorData.selectedSpace_, editorData.selectedScene_, editorData.selectedPool_, editorData.selectedObject_));
+    }
 
     ImGui::EndPopup();
   }

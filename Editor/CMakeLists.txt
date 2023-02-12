@@ -53,10 +53,13 @@ add_executable(Editor "Source/main.cpp"
  "Source/Commands/Command.cpp" 
  "Source/Commands/CommandQueue.cpp" 
  "Source/Commands/ChangeValue/ChangeValue.cpp" 
- "Source/Commands/Create/CreatePool/CreatePool.cpp" 
- "Source/Commands/Create/CreateObject/CreateObject.cpp" 
+ "Source/Commands/Create/Pool/CreatePool.cpp" 
+ "Source/Commands/Create/Object/CreateObject.cpp" 
  "Source/Widgets/Popups/Object/ObjectPopupWidget.cpp" 
- "Source/Widgets/Popups/Pool/PoolPopupWidget.cpp" "Source/Widgets/Popups/Scene/ScenePopupWidget.cpp")
+ "Source/Widgets/Popups/Pool/PoolPopupWidget.cpp" 
+ "Source/Widgets/Popups/Scene/ScenePopupWidget.cpp" 
+ "Source/Commands/Delete/Object/DeleteObject.cpp" 
+ "Source/Commands/Delete/Pool/DeletePool.cpp")
 
 target_link_libraries(Editor PUBLIC BarrageCore imgui)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

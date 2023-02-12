@@ -12,7 +12,7 @@
 
 #include "ScenePopupWidget.hpp"
 
-#include <Commands/Create/CreatePool/CreatePool.hpp>
+#include <Commands/Create/Pool/CreatePool.hpp>
 #include <Editor/Editor.hpp>
 
 namespace Barrage

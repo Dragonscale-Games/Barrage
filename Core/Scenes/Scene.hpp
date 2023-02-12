@@ -28,15 +28,17 @@ namespace Barrage
 
       bool HasPool(const std::string& poolName);
 
-      void AddStartingPool(const PoolInfo& startingPool);
+      void AddStartingPool(const PoolInfo& startingPool, unsigned* index = nullptr);
 
-      void RemovePool(const std::string& poolName);
+      PoolInfo* GetPoolInfo(const std::string& poolName);
+
+      void RemovePool(const std::string& poolName, unsigned* index = nullptr);
 
       bool HasObject(const std::string& poolName, const std::string& objectName);
 
-      void AddObject(const std::string& poolName, const std::string& objectName);
+      void AddObject(const std::string& poolName, const std::string& objectName, unsigned* index = nullptr);
 
-      void RemoveObject(const std::string& poolName, const std::string& objectName);
+      void RemoveObject(const std::string& poolName, const std::string& objectName, unsigned* index = nullptr);
 
       std::vector<PoolInfo> startingPools_; //!< Collection of pools and objects the scene starts with
 	};

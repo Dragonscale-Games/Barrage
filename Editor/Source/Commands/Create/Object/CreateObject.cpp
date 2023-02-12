@@ -30,39 +30,18 @@ namespace Barrage
   bool CreateObject::Execute()
   {
     Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
-
-    if (space == nullptr)
-    {
-      return false;
-    }
-
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
-    if (scene == nullptr || !scene->HasPool(poolName_))
+    if (space == nullptr || scene == nullptr || !scene->HasPool(poolName_))
     {
       return false;
     }
 
     ObjectManager& objectManager = space->GetObjectManager();
-
     PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
+    PoolInfo* scenePool = scene->GetPoolInfo(poolName_);
 
-    if (poolArchetype == nullptr)
-    {
-      return false;
-    }
-
-    PoolInfo* scenePool = nullptr;
-
-    for (auto it = scene->startingPools_.begin(); it != scene->startingPools_.end(); ++it)
-    {
-      if (it->poolName_ == poolName_)
-      {
-        scenePool = &(*it);
-      }
-    }
-
-    if (scenePool == nullptr)
+    if (poolArchetype == nullptr || scenePool == nullptr)
     {
       return false;
     }
@@ -117,6 +96,11 @@ namespace Barrage
     ObjectArchetype* removedArchetype = objectManager.ExtractObjectArchetype(objectName_);
     redoArchetypes_.push(removedArchetype);
     scene->RemoveObject(poolName_, objectName_);
+
+    if (Editor::Instance->Data().selectedObject_ == objectName_)
+    {
+      Editor::Instance->Data().selectedObject_ = std::string();
+    }
   }
 
   void CreateObject::Redo()

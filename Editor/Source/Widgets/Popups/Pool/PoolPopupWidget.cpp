@@ -12,7 +12,8 @@
 
 #include "PoolPopupWidget.hpp"
 
-#include <Commands/Create/CreateObject/CreateObject.hpp>
+#include <Commands/Create/Object/CreateObject.hpp>
+#include <Commands/Delete/Pool/DeletePool.hpp>
 #include <Editor/Editor.hpp>
 
 namespace Barrage
@@ -28,6 +29,14 @@ namespace Barrage
     {
       EditorData& editorData = Editor::Instance->Data();
       Editor::Instance->Command().Send(new CreateObject(editorData.selectedSpace_, editorData.selectedScene_, editorData.selectedPool_));
+    }
+
+    ImGui::Separator();
+
+    if (ImGui::Selectable("Delete Pool"))
+    {
+      EditorData& editorData = Editor::Instance->Data();
+      Editor::Instance->Command().Send(new DeletePool(editorData.selectedSpace_, editorData.selectedScene_, editorData.selectedPool_));
     }
 
     ImGui::EndPopup();

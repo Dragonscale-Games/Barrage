@@ -12,8 +12,8 @@
 
 #include "MainMenuWidget.hpp"
 #include <Editor/Editor.hpp>
-#include "Commands/Create/CreatePool/CreatePool.hpp"
-#include "Commands/Create/CreateObject/CreateObject.hpp"
+#include "Commands/Create/Pool/CreatePool.hpp"
+#include "Commands/Create/Object/CreateObject.hpp"
 
 namespace Barrage
 {

@@ -28,15 +28,9 @@ namespace Barrage
   bool CreatePool::Execute()
   {
     Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
-    
-    if (space == nullptr)
-    {
-      return false;
-    }
-
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
-    if (scene == nullptr)
+    if (space == nullptr || scene == nullptr)
     {
       return false;
     }
@@ -84,6 +78,11 @@ namespace Barrage
     PoolArchetype* removedArchetype = objectManager.ExtractPoolArchetype(poolName_);
     redoArchetypes_.push(removedArchetype);
     scene->RemovePool(poolName_);
+
+    if (Editor::Instance->Data().selectedPool_ == poolName_)
+    {
+      Editor::Instance->Data().selectedPool_ = std::string();
+    }
   }
 
   void CreatePool::Redo()
