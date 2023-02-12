@@ -101,7 +101,7 @@ namespace Barrage
 
     if (log)
     {
-      std::string logMessage = "Undo \"" + undoCommand->GetName() + "\"";
+      std::string logMessage = "Undo: " + undoCommand->GetName();
       Editor::Instance->Log().AddLog(logMessage.c_str());
     }
   }
@@ -148,7 +148,7 @@ namespace Barrage
     {
       if (log)
       {
-        std::string logMessage = "Redo \"" + redoCommand->GetName() + "\"";
+        std::string logMessage = "Redo: " + redoCommand->GetName();
         Editor::Instance->Log().AddLog(logMessage.c_str());
       }
 

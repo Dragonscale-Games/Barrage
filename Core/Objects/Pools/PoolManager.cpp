@@ -32,7 +32,7 @@ namespace Barrage
     }
   }
 
-  Pool* PoolManager::CreatePool(const std::string_view& name, const PoolArchetype& archetype)
+  Pool* PoolManager::CreatePool(const std::string& name, const PoolArchetype& archetype)
   {
     if (pools_.find(name) == pools_.end())
     {
@@ -47,7 +47,7 @@ namespace Barrage
     }
   }
 
-  Pool* PoolManager::GetPool(const std::string_view& name) const
+  Pool* PoolManager::GetPool(const std::string& name) const
   {
     if (pools_.find(name) == pools_.end())
     {
@@ -59,7 +59,7 @@ namespace Barrage
     }
   }
 
-  void PoolManager::DeletePool(const std::string_view& name)
+  void PoolManager::DeletePool(const std::string& name)
   {
     if (pools_.find(name) != pools_.end())
     {
@@ -68,9 +68,9 @@ namespace Barrage
     }
   }
 
-  std::vector<std::string_view> PoolManager::GetPoolNames()
+  std::vector<std::string> PoolManager::GetPoolNames()
   {
-    std::vector<std::string_view> pool_list;
+    std::vector<std::string> pool_list;
 
     for (auto it = pools_.begin(); it != pools_.end(); ++it)
     {

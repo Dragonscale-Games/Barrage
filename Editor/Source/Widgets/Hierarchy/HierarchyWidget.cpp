@@ -26,70 +26,91 @@ namespace Barrage
 
     if (!editorData_.selectedScene_.empty())
     {
-      bool itemClicked = false;
-      
-      ImGuiTreeNodeFlags scene_tree_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding;
-      
       ImGui::Separator();
-      if (ImGui::TreeNodeEx(editorData_.selectedScene_.data(), scene_tree_flags))
+      ImGui::Spacing();
+      ImGui::Text(editorData_.selectedScene_.c_str());
+      ImGui::Spacing();
+      ImGui::Separator();
+      ImGui::Spacing();
+
+      bool itemClicked = false;
+
+      std::vector<PoolInfo>& pools = engine_.Scenes().GetScene(editorData_.selectedScene_)->startingPools_;
+
+      for (PoolInfo& pool : pools)
       {
-        ImGui::Separator();
-        ImGui::Spacing();
+        ImGuiTreeNodeFlags pool_tree_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
 
-        std::vector<PoolInfo>& pools = engine_.Scenes().GetScene(editorData_.selectedScene_.data())->startingPools_;
-
-        for (PoolInfo& pool : pools)
+        if (pool.poolName_ == editorData_.selectedPool_)
         {
-          ImGuiTreeNodeFlags pool_tree_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+          pool_tree_flags |= ImGuiTreeNodeFlags_Selected;
+        }
 
-          if (pool.poolName_ == editorData_.selectedPool_)
-          {
-            pool_tree_flags |= ImGuiTreeNodeFlags_Selected;
-          }
+        std::string poolLabel = pool.poolName_.data();
 
-          bool node_open = ImGui::TreeNodeEx(pool.poolName_.data(), pool_tree_flags);
+        PoolArchetype* poolArchetype = engine_.Spaces().GetSpace(editorData_.selectedSpace_.data())->GetObjectManager().GetPoolArchetype(pool.poolName_);
+
+        if (poolArchetype)
+        {
+          std::string poolCapacityLabel = "(" + std::to_string(pool.objects_.size()) + "/" + std::to_string(poolArchetype->capacity_) + ")";
+
+          float freeSpace = ImGui::GetWindowWidth() - ImGui::CalcTextSize(poolLabel.c_str()).x - ImGui::CalcTextSize(poolCapacityLabel.c_str()).x;
           
-          if (ImGui::IsItemClicked())
+          int numSpaces = freeSpace / ImGui::CalcTextSize(" ").x;
+          numSpaces -= 5;
+          if (numSpaces < 1)
           {
-            itemClicked = true;
-            editorData_.selectedPool_ = pool.poolName_;
-            editorData_.selectedObject_ = std::string_view();
+            numSpaces = 1;
           }
 
-          if (node_open)
+          for (int i = 0; i < numSpaces; ++i)
           {
-            for (std::string_view& objectName : pool.objects_)
+            poolLabel += " ";
+          }
+
+          poolLabel += poolCapacityLabel;
+        }
+        
+        bool node_open = ImGui::TreeNodeEx(poolLabel.c_str(), pool_tree_flags);
+        
+        if (ImGui::IsItemClicked())
+        {
+          itemClicked = true;
+          editorData_.selectedPool_ = pool.poolName_;
+          editorData_.selectedObject_ = std::string();
+        }
+
+        if (node_open)
+        {
+          for (std::string& objectName : pool.objects_)
+          {
+            ImGuiTreeNodeFlags object_tree_flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+            if (objectName == editorData_.selectedObject_)
             {
-              ImGuiTreeNodeFlags object_tree_flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-
-              if (objectName == editorData_.selectedObject_)
-              {
-                object_tree_flags |= ImGuiTreeNodeFlags_Selected;
-              }
-
-              ImGui::TreeNodeEx(objectName.data(), object_tree_flags);
-
-              if (ImGui::IsItemClicked())
-              {
-                itemClicked = true;
-                editorData_.selectedPool_ = pool.poolName_;
-                editorData_.selectedObject_ = objectName;
-              }
+              object_tree_flags |= ImGuiTreeNodeFlags_Selected;
             }
 
-            ImGui::TreePop();
+            ImGui::TreeNodeEx(objectName.c_str(), object_tree_flags);
+
+            if (ImGui::IsItemClicked())
+            {
+              itemClicked = true;
+              editorData_.selectedPool_ = pool.poolName_;
+              editorData_.selectedObject_ = objectName;
+            }
           }
 
-          ImGui::Spacing();
+          ImGui::TreePop();
         }
 
-        if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !itemClicked && ImGui::IsWindowHovered())
-        {
-          editorData_.selectedPool_ = std::string_view();
-          editorData_.selectedObject_ = std::string_view();
-        }
+        ImGui::Spacing();
+      }
 
-        ImGui::TreePop();
+      if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !itemClicked && ImGui::IsWindowHovered())
+      {
+        editorData_.selectedPool_ = std::string();
+        editorData_.selectedObject_ = std::string();
       }
     }
 

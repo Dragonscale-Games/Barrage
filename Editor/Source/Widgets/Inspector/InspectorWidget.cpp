@@ -26,7 +26,7 @@ namespace Barrage
   {
     ImGui::Begin("Inspector");
 
-    ObjectManager& objectManager = engine_.Spaces().GetSpace(editorData_.selectedSpace_.data())->GetObjectManager();
+    ObjectManager& objectManager = engine_.Spaces().GetSpace(editorData_.selectedSpace_)->GetObjectManager();
 
     if (!editorData_.selectedPool_.empty())
     {
@@ -38,10 +38,12 @@ namespace Barrage
         ImGui::Spacing();
         ImGui::Text("Pool:");
         ImGui::SameLine();
-        ImGui::Text(editorData_.selectedPool_.data());
+        ImGui::Text(editorData_.selectedPool_.c_str());
         ImGui::Spacing();
         ImGui::Separator();
         ImGui::Spacing();
+
+        ImGui::PushID(editorData_.selectedPool_.c_str());
 
         if (ImGui::CollapsingHeader("Tags"))
         {
@@ -57,29 +59,37 @@ namespace Barrage
         }
 
         ImGui::Text(" ");
+
+        ImGui::PopID();
       }
     }
 
     if (!editorData_.selectedObject_.empty())
     {
-      ImGui::Separator();
-      ImGui::Spacing();
-      ImGui::Text("Object:");
-      ImGui::SameLine();
-      ImGui::Text(editorData_.selectedObject_.data());
-      ImGui::Spacing();
-      ImGui::Separator();
-      ImGui::Spacing();
-
       ObjectArchetype* objectArchetype = objectManager.GetObjectArchetype(editorData_.selectedObject_);
 
       if (objectArchetype)
       {
+        ImGui::Separator();
+        ImGui::Spacing();
+        ImGui::Text("Object:");
+        ImGui::SameLine();
+        ImGui::Text(editorData_.selectedObject_.c_str());
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
+        
+        ImGui::PushID(editorData_.selectedObject_.c_str());
+        
         for (auto& component : objectArchetype->components_)
         {
           ComponentWidget::UseWidget(component.first, component.second);
         }
+
+        ImGui::PopID();
       }
+
+      
     }
 
     ImGui::End();

@@ -113,16 +113,20 @@ namespace Barrage
     engine_.Input().Update();
 
     unsigned numTicks = engine_.Frames().ConsumeTicks();
-    for (unsigned i = 0; i < numTicks; ++i)
+
+    if (data_.gamePlaying_)
     {
-      //engine_.Spaces().Update();
+      for (unsigned i = 0; i < numTicks; ++i)
+      {
+        //engine_.Spaces().Update();
+      }
     }
     
     commandQueue_.Process();
 
     if (data_.sceneIsDirty_)
     {
-      engine_.Spaces().GetSpace(data_.selectedSpace_.data())->SetScene(data_.selectedScene_.data());
+      engine_.Spaces().GetSpace(data_.selectedSpace_)->SetScene(data_.selectedScene_);
       data_.sceneIsDirty_ = false;
     }
 

@@ -24,12 +24,13 @@ namespace Barrage
   {
     EditorData();
     
-    bool isRunning_;                  //!< Keeps track of whether the editor is running
-    bool sceneIsDirty_;               //!< Flag for when user changes something in current scene
-    std::string_view selectedPool_;   //!< The currently selected pool
-    std::string_view selectedObject_; //!< The currently selected object
-    std::string_view selectedScene_;  //!< The currently selected scene
-    std::string_view selectedSpace_;  //!< The currently selected space
+    bool isRunning_;             //!< Keeps track of whether the editor is running
+    bool gamePlaying_;           //!< Keeps track of whether the current game is playing
+    bool sceneIsDirty_;          //!< Flag for when user changes something in current scene
+    std::string selectedPool_;   //!< The currently selected pool
+    std::string selectedObject_; //!< The currently selected object
+    std::string selectedScene_;  //!< The currently selected scene
+    std::string selectedSpace_;  //!< The currently selected space
   };
 }
 

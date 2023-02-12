@@ -35,7 +35,7 @@ namespace Barrage
 
         \param chainUndo
           Allows multiple commands to be undone at once. Also applies to
-          redo. Rarely used, but useful for some situations.
+          redo. 
           
           Here's how it works. Imagine the five most recent commands were:
 
@@ -94,8 +94,8 @@ namespace Barrage
           Executes the command.
 
         \return
-          Returns true if the command successfully executed and false
-          otherwise.
+          Returns true if the command successfully executed. False
+          should be returned only if the command had no effect.
       */
       /**************************************************************/
       virtual bool Execute() = 0;

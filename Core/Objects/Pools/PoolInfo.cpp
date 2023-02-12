@@ -15,7 +15,7 @@
 
 namespace Barrage
 {
-  PoolInfo::PoolInfo(const std::string_view& poolName) :
+  PoolInfo::PoolInfo(const std::string& poolName) :
     poolName_(poolName),
     objects_()
   {

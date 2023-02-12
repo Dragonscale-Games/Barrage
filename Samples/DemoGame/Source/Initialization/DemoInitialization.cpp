@@ -48,7 +48,6 @@ namespace Demo
     spawner_pool.objects_.push_back("Spawner Object");
 
     PoolInfo bullet_pool("Bullet Pool");
-    bullet_pool.objects_.push_back("Bullet Object");
 
     Scene* demo_scene = new Scene;
 

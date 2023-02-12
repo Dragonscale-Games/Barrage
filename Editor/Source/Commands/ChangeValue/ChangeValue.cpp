@@ -21,7 +21,7 @@ namespace Barrage
   }
 
   ChangeValue::ChangeValue(const std::string& valueName, rttr::variant valuePointer) :
-    Command("Value Changed - " + valueName),
+    Command("Value changed. (" + valueName + ")"),
     valuePointer_(valuePointer),
     value_(valuePointer_),
     valueName_(valueName),

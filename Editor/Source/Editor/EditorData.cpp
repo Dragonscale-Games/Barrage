@@ -16,6 +16,7 @@ namespace Barrage
 {
   EditorData::EditorData() :
     isRunning_(false),
+    gamePlaying_(false),
     sceneIsDirty_(false),
     selectedPool_(),
     selectedObject_(),

@@ -25,8 +25,8 @@ namespace Barrage
     spawnFuncManager_(nullptr),
     poolManager_(nullptr)
   {
-    PoolType all_pool_type;
     // this pool type has no required tags or components because all pools will be subscribed to the creation system
+    PoolType all_pool_type;
     poolTypes_[ALL_POOLS] = all_pool_type;
 
     PoolType handle_pool_type;
