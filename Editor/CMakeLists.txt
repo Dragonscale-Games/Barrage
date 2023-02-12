@@ -42,18 +42,21 @@ add_executable(Editor "Source/main.cpp"
 "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization/DemoInitialization.cpp" 
 "../Samples/DemoGame/Source/SpawnFuncs/Direction/DirectionFuncs.cpp"
 "../Samples/DemoGame/Source/SpawnFuncs/Position/PositionFuncs.cpp"
-"Source/Widgets/Hierarchy/HierarchyWidget.cpp"
-"Source/Widgets/Inspector/InspectorWidget.cpp"
-"Source/Widgets/Widget.cpp"
+"Source/Widgets/Windows/Hierarchy/HierarchyWidget.cpp"
+"Source/Widgets/Windows/Inspector/InspectorWidget.cpp"
+
 "Source/Editor/EditorData.cpp"
  "Source/Widgets/MainMenu/MainMenuWidget.cpp" 
  "Source/Widgets/Component/ComponentWidget.cpp"  
  "Source/Widgets/Data/DataWidget.cpp" 
- "Source/Widgets/Log/LogWidget.cpp"  
+ "Source/Widgets/Windows/Log/LogWidget.cpp"  
  "Source/Commands/Command.cpp" 
  "Source/Commands/CommandQueue.cpp" 
  "Source/Commands/ChangeValue/ChangeValue.cpp" 
- "Source/Commands/Create/CreatePool/CreatePool.cpp" "Source/Commands/Create/CreateObject/CreateObject.cpp")
+ "Source/Commands/Create/CreatePool/CreatePool.cpp" 
+ "Source/Commands/Create/CreateObject/CreateObject.cpp" 
+ "Source/Widgets/Popups/Object/ObjectPopupWidget.cpp" 
+ "Source/Widgets/Popups/Pool/PoolPopupWidget.cpp" "Source/Widgets/Popups/Scene/ScenePopupWidget.cpp")
 
 target_link_libraries(Editor PUBLIC BarrageCore imgui)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

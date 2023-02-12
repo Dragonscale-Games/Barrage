@@ -17,7 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <string>
-#include <unordered_set>
+#include <vector>
 
 namespace Barrage
 {
@@ -28,8 +28,8 @@ namespace Barrage
       PoolInfo(const std::string& poolName);
 
     public:
-      std::string poolName_;                    //!< Name of the archetype used to construct the pool
-      std::unordered_set<std::string> objects_; //!< Names of object archetypes used to construct starting objects
+      std::string poolName_;             //!< Name of the archetype used to construct the pool
+      std::vector<std::string> objects_; //!< Names of object archetypes used to construct starting objects
   };
 }
 

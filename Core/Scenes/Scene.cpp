@@ -21,7 +21,15 @@ namespace Barrage
 
   bool Scene::HasPool(const std::string& poolName)
   {
-    return startingPools_.count(poolName);
+    for (auto it = startingPools_.begin(); it != startingPools_.end(); ++it)
+    {
+      if (it->poolName_ == poolName)
+      {
+        return true;
+      }
+    }
+    
+    return false;
   }
 
   void Scene::AddStartingPool(const PoolInfo& startingPool)
@@ -31,28 +39,75 @@ namespace Barrage
       return;
     }
 
-    startingPools_.insert(std::make_pair(startingPool.poolName_, startingPool));
+    startingPools_.push_back(startingPool);
+  }
+
+  void Scene::RemovePool(const std::string& poolName)
+  {
+    for (auto it = startingPools_.begin(); it != startingPools_.end(); ++it)
+    {
+      if (it->poolName_ == poolName)
+      {
+        startingPools_.erase(it);
+        return;
+      }
+    }
   }
 
   bool Scene::HasObject(const std::string& poolName, const std::string& objectName)
   {
-    if (!HasPool(poolName))
+    for (auto it = startingPools_.begin(); it != startingPools_.end(); ++it)
     {
-      return false;
+      PoolInfo& pool = *it;
+      
+      if (pool.poolName_ == poolName)
+      {
+        for (auto jt = pool.objects_.begin(); jt != pool.objects_.end(); ++jt)
+        {
+          if (*jt == objectName)
+          {
+            return true;
+          }
+        }
+      }
     }
 
-    PoolInfo& pool = startingPools_.at(poolName);
-
-    return pool.objects_.count(objectName);
+    return false;
   }
 
   void Scene::AddObject(const std::string& poolName, const std::string& objectName)
-  {
-    if (!HasPool(poolName))
+  {    
+    if (HasObject(poolName, objectName))
     {
       return;
     }
+    
+    for (auto it = startingPools_.begin(); it != startingPools_.end(); ++it)
+    {
+      if (it->poolName_ == poolName)
+      {
+        it->objects_.push_back(objectName);
+      }
+    }
+  }
 
-    startingPools_.at(poolName).objects_.insert(objectName);
+  void Scene::RemoveObject(const std::string& poolName, const std::string& objectName)
+  {
+    for (auto it = startingPools_.begin(); it != startingPools_.end(); ++it)
+    {
+      PoolInfo& pool = *it;
+
+      if (pool.poolName_ == poolName)
+      {
+        for (auto jt = pool.objects_.begin(); jt != pool.objects_.end(); ++jt)
+        {
+          if (*jt == objectName)
+          {
+            pool.objects_.erase(jt);
+            return;
+          }
+        }
+      }
+    }
   }
 }

@@ -16,7 +16,6 @@
 #define DataWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Widgets/Widget.hpp"
 #include "Commands/ChangeValue/ChangeValue.hpp"
 
 #include <unordered_map>
@@ -54,7 +53,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      static void UseWidget(rttr::variant& object, rttr::string_view name = rttr::string_view(), bool treeNode = false);
+      static void Use(rttr::variant& object, rttr::string_view name = rttr::string_view(), bool treeNode = false);
 
       /**************************************************************/
       /*!

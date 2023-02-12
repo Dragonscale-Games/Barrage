@@ -60,7 +60,7 @@ namespace Barrage
       if (!currentCommand_->chains_)
       {
         std::string logMessage = currentCommand_->GetName();
-        Editor::Instance->Log().AddEntry(logMessage.c_str());
+        LogWidget::AddEntry(logMessage.c_str());
       }
     }
     else
@@ -69,6 +69,8 @@ namespace Barrage
     }
 
     currentCommand_ = nullptr;
+
+    Editor::Instance->Data().sceneIsDirty_ = true;
   }
 
   void CommandQueue::Undo(bool log)
@@ -84,6 +86,8 @@ namespace Barrage
     {
       UndoInternal(false);
     }
+
+    Editor::Instance->Data().sceneIsDirty_ = true;
   }
 
   void CommandQueue::UndoInternal(bool log)
@@ -102,7 +106,7 @@ namespace Barrage
     if (log)
     {
       std::string logMessage = "Undo: " + undoCommand->GetName();
-      Editor::Instance->Log().AddEntry(logMessage.c_str());
+      LogWidget::AddEntry(logMessage.c_str());
     }
   }
 
@@ -114,6 +118,8 @@ namespace Barrage
     }
 
     while (RedoInternal(log)) {};
+
+    Editor::Instance->Data().sceneIsDirty_ = true;
   }
 
   bool CommandQueue::RedoInternal(bool log)
@@ -138,7 +144,7 @@ namespace Barrage
       if (log)
       {
         std::string logMessage = "Redo: " + redoCommand->GetName();
-        Editor::Instance->Log().AddEntry(logMessage.c_str());
+        LogWidget::AddEntry(logMessage.c_str());
       }
 
       return false;

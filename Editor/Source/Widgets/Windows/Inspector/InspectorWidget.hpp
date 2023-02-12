@@ -1,54 +1,39 @@
 /* ======================================================================== */
 /*!
- * \file            HierarchyWidget.hpp
+ * \file            InspectorWidget.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Displays all pools in current game scene.
+   Allows user to edit components for pools and game objects.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef HierarchyWidget_BARRAGE_H
-#define HierarchyWidget_BARRAGE_H
+#ifndef InspectorWidget_BARRAGE_H
+#define InspectorWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Widgets/Widget.hpp"
+#include <imgui/imgui.h>
 #include <string_view>
 
 namespace Barrage
 {
-  //! Displays all pools in current game scene
-  class HierarchyWidget : public Widget
+  //! Allows user to modify components
+  class InspectorWidget
   {
     public:
-      /**************************************************************/
-      /*!
-        \brief
-          Constructs the hierarchy widget with references to the
-          data it's allowed to see/change in the editor and engine.
-
-        \param editorData
-          Runtime settings and data for the editor.
-
-        \param engine
-          The currently running engine.
-      */
-      /**************************************************************/
-      HierarchyWidget(EditorData& editorData, Engine& engine);
-
       /**************************************************************/
       /*!
         \brief
           Adds the widget to the window.
       */
       /**************************************************************/
-      void UseWidget();
+      static void Use();
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // HierarchyWidget_BARRAGE_H
+#endif // InspectorWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

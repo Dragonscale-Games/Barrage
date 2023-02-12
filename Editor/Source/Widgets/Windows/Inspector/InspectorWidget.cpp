@@ -17,20 +17,15 @@
 
 namespace Barrage
 {
-  InspectorWidget::InspectorWidget(EditorData& editorData, Engine& engine) :
-    Widget(editorData, engine)
-  {
-  }
-
-  void InspectorWidget::UseWidget()
+  void InspectorWidget::Use()
   {
     ImGui::Begin("Inspector");
 
-    ObjectManager& objectManager = engine_.Spaces().GetSpace(editorData_.selectedSpace_)->GetObjectManager();
+    ObjectManager& objectManager = Engine::Instance->Spaces().GetSpace(Editor::Instance->Data().selectedSpace_)->GetObjectManager();
 
-    if (!editorData_.selectedPool_.empty())
+    if (!Editor::Instance->Data().selectedPool_.empty())
     {
-      PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(editorData_.selectedPool_);
+      PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(Editor::Instance->Data().selectedPool_);
 
       if (poolArchetype)
       {
@@ -38,12 +33,12 @@ namespace Barrage
         ImGui::Spacing();
         ImGui::Text("Pool:");
         ImGui::SameLine();
-        ImGui::Text(editorData_.selectedPool_.c_str());
+        ImGui::Text(Editor::Instance->Data().selectedPool_.c_str());
         ImGui::Spacing();
         ImGui::Separator();
         ImGui::Spacing();
 
-        ImGui::PushID(editorData_.selectedPool_.c_str());
+        ImGui::PushID(Editor::Instance->Data().selectedPool_.c_str());
 
         if (ImGui::CollapsingHeader("Tags"))
         {
@@ -55,7 +50,7 @@ namespace Barrage
 
         for (auto& component : poolArchetype->sharedComponents_)
         {
-           ComponentWidget::UseWidget(component.first, component.second);
+           ComponentWidget::Use(component.first, component.second);
         }
 
         ImGui::Text(" ");
@@ -64,9 +59,9 @@ namespace Barrage
       }
     }
 
-    if (!editorData_.selectedObject_.empty())
+    if (!Editor::Instance->Data().selectedObject_.empty())
     {
-      ObjectArchetype* objectArchetype = objectManager.GetObjectArchetype(editorData_.selectedObject_);
+      ObjectArchetype* objectArchetype = objectManager.GetObjectArchetype(Editor::Instance->Data().selectedObject_);
 
       if (objectArchetype)
       {
@@ -74,16 +69,16 @@ namespace Barrage
         ImGui::Spacing();
         ImGui::Text("Object:");
         ImGui::SameLine();
-        ImGui::Text(editorData_.selectedObject_.c_str());
+        ImGui::Text(Editor::Instance->Data().selectedObject_.c_str());
         ImGui::Spacing();
         ImGui::Separator();
         ImGui::Spacing();
         
-        ImGui::PushID(editorData_.selectedObject_.c_str());
+        ImGui::PushID(Editor::Instance->Data().selectedObject_.c_str());
         
         for (auto& component : objectArchetype->components_)
         {
-          ComponentWidget::UseWidget(component.first, component.second);
+          ComponentWidget::Use(component.first, component.second);
         }
 
         ImGui::PopID();

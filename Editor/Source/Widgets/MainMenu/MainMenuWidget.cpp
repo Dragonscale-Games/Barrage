@@ -17,12 +17,7 @@
 
 namespace Barrage
 {
-  MainMenuWidget::MainMenuWidget(EditorData& editorData, Engine& engine) :
-    Widget(editorData, engine)
-  {
-  }
-
-  void MainMenuWidget::UseWidget()
+  void MainMenuWidget::Use()
   {
     ImGui::BeginMainMenuBar();
 
@@ -30,7 +25,7 @@ namespace Barrage
     {
       if (ImGui::MenuItem("Exit"))
       {
-        editorData_.isRunning_ = false;
+        Editor::Instance->Data().isRunning_ = false;
       }
 
       ImGui::EndMenu();
@@ -60,7 +55,7 @@ namespace Barrage
         Editor::Instance->Command().Send(new CreatePool(space, scene));
       }
 
-      if (editorData_.selectedPool_.empty())
+      if (Editor::Instance->Data().selectedPool_.empty())
       {
         ImGui::BeginDisabled();
       }
@@ -73,7 +68,7 @@ namespace Barrage
         Editor::Instance->Command().Send(new CreateObject(space, scene, pool));
       }
 
-      if (editorData_.selectedPool_.empty())
+      if (Editor::Instance->Data().selectedPool_.empty())
       {
         ImGui::EndDisabled();
       }

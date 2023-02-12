@@ -20,10 +20,7 @@
 #include "GUI/GUI.hpp"
 #include "Commands/CommandQueue.hpp"
 
-#include "Widgets/Hierarchy/HierarchyWidget.hpp"
-#include "Widgets/Inspector/InspectorWidget.hpp"
-#include "Widgets/Log/LogWidget.hpp"
-#include "Widgets/MainMenu/MainMenuWidget.hpp"
+#include "Widgets/Windows/Log/LogWidget.hpp"
 
 #include <string_view>
 
@@ -73,17 +70,6 @@ namespace Barrage
       /**************************************************************/
       CommandQueue& Command();
 
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the editor's log widget.
-
-        \return
-          Returns a reference to the editor's log widget.
-      */
-      /**************************************************************/
-      LogWidget& Log();
-
     private:
       /**************************************************************/
       /*!
@@ -112,10 +98,10 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Adds the main editor widget to the window.
+          Displays all editor widgets.
       */
       /**************************************************************/
-      void UseEditorWidget();
+      void UseWidgets();
 
       /**************************************************************/
       /*!
@@ -130,11 +116,6 @@ namespace Barrage
       GUI gui_;                   //!< Contains all widgets/user controls
       EditorData data_;           //!< Public settings and data for the editor
       CommandQueue commandQueue_; //!< Allows commands to be sent and processed
-
-      HierarchyWidget hierarchy_; //!< Shows the hierarchy widget
-      InspectorWidget inspector_; //!< Shows the inspector widget
-      LogWidget log_;             //!< Shows the log widget
-      MainMenuWidget mainMenu_;   //!< Shows the main menu bar
 
       long long repeatTimer_;
 	};

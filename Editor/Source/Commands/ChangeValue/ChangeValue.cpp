@@ -54,7 +54,6 @@ namespace Barrage
     if (writer_)
     {
       writer_->WriteNewValue();
-      Editor::Instance->Data().sceneIsDirty_ = true;
       return true;
     }
 
@@ -66,7 +65,6 @@ namespace Barrage
     if (writer_)
     {
       writer_->WriteOldValue();
-      Editor::Instance->Data().sceneIsDirty_ = true;
     }
   }
 

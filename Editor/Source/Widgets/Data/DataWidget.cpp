@@ -21,7 +21,7 @@ namespace Barrage
   DataWidgetFunctionMap DataWidget::widgetFunctions_ = DataWidgetFunctionMap();
   bool DataWidget::initialized_ = false;
   
-  void DataWidget::UseWidget(rttr::variant& object, rttr::string_view name, bool treeNode)
+  void DataWidget::Use(rttr::variant& object, rttr::string_view name, bool treeNode)
   {
     if (!initialized_)
     {
@@ -70,7 +70,7 @@ namespace Barrage
       {
         rttr::variant property = prop.get_value(object);
 
-        UseWidget(property, prop.get_name(), true);;
+        Use(property, prop.get_name(), true);;
       }
 
       if (treeNode)

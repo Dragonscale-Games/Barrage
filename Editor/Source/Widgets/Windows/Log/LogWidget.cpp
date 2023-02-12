@@ -11,19 +11,16 @@
  /* ======================================================================== */
 
 #include "LogWidget.hpp"
+#include <string>
 
 namespace Barrage
 {
-  LogWidget::LogWidget(EditorData& editorData, Engine& engine) :
-    Widget(editorData, engine),
-    buffer_(),
-    filter_(),
-    lineOffsets_(),
-    scrollToBottom_()
-  {
-  }
+  ImGuiTextBuffer LogWidget::buffer_ = ImGuiTextBuffer();
+  ImGuiTextFilter LogWidget::filter_ = ImGuiTextFilter();
+  ImVector<int> LogWidget::lineOffsets_ = ImVector<int>();
+  bool LogWidget::scrollToBottom_ = bool();
 
-  void LogWidget::UseWidget()
+  void LogWidget::Use()
   {
     ImGui::Begin("Output Log");
     if (ImGui::Button("Clear")) Clear();

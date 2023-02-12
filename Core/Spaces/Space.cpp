@@ -67,11 +67,11 @@ namespace Barrage
     
     objectManager_.DeleteAllPools();
 
-    const PoolInfoMap& starting_pools = new_scene->startingPools_;
+    const std::vector<PoolInfo>& starting_pools = new_scene->startingPools_;
 
     for (auto it = starting_pools.begin(); it != starting_pools.end(); ++it)
     {
-      objectManager_.CreatePoolAndObjects(it->second);
+      objectManager_.CreatePoolAndObjects(*it);
     }
 
     rng_.SetSeed();

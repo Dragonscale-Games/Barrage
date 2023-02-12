@@ -72,8 +72,6 @@ namespace Barrage
 
     scene->AddStartingPool(poolName_);
 
-    Editor::Instance->Data().sceneIsDirty_ = true;
-
     return true;
   }
 
@@ -85,9 +83,7 @@ namespace Barrage
 
     PoolArchetype* removedArchetype = objectManager.ExtractPoolArchetype(poolName_);
     redoArchetypes_.push(removedArchetype);
-    scene->startingPools_.erase(poolName_);
-
-    Editor::Instance->Data().sceneIsDirty_ = true;
+    scene->RemovePool(poolName_);
   }
 
   void CreatePool::Redo()
@@ -99,8 +95,6 @@ namespace Barrage
     objectManager.AddPoolArchetype(poolName_, redoArchetypes_.top());
     redoArchetypes_.pop();
     scene->AddStartingPool(poolName_);
-
-    Editor::Instance->Data().sceneIsDirty_ = true;
   }
 
   void CreatePool::ClearRedos()

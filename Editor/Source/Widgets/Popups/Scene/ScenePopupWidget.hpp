@@ -1,38 +1,43 @@
 /* ======================================================================== */
 /*!
- * \file            MainMenuWidget.hpp
+ * \file            ScenePopupWidget.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The main menu bar that shows at the top of the screen.
+   The menu that pops up when you right click a scene.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef MainMenuWidget_BARRAGE_H
-#define MainMenuWidget_BARRAGE_H
+#ifndef ScenePopupWidget_BARRAGE_H
+#define ScenePopupWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
+#include "Widgets/Popups/PopupWidget.hpp"
 
 namespace Barrage
 {
-  //! Main menu bar at top of screen
-  class MainMenuWidget
+  //! Scene right click menu
+  class ScenePopupWidget
   {
     public:
       /**************************************************************/
       /*!
         \brief
           Adds the widget to the window.
+
+        \param strId
+          The ID passed to ImGui::OpenPopup() that tells this popup
+          when to open.
       */
       /**************************************************************/
-      static void Use();
+      static void Use(const char* strId);
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // MainMenuWidget_BARRAGE_H
+#endif // ScenePopupWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

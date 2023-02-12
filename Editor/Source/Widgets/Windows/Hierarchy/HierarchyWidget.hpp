@@ -1,62 +1,48 @@
 /* ======================================================================== */
 /*!
- * \file            Widget.hpp
+ * \file            HierarchyWidget.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Base class for all editor widgets.
+   Displays all pools in current game scene.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef Widget_BARRAGE_H
-#define Widget_BARRAGE_H
+#ifndef HierarchyWidget_BARRAGE_H
+#define HierarchyWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Editor/EditorData.hpp>
-#include <Engine/Engine.hpp>
-
 #include <imgui/imgui.h>
-#include <imgui/imgui_impl_glfw.h>
-#include <imgui/imgui_impl_opengl3.h>
+#include <string_view>
 
 namespace Barrage
 {
-  //! Widget base class
-  class Widget
+  //! Displays all pools in current game scene
+  class HierarchyWidget 
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Constructs a widget with references to the data it's allowed
-          to see/change in the editor and engine.
-
-        \param editorData
-          Runtime settings and data for the editor.
-
-        \param engine
-          The currently running engine.
+          Adds the widget to the window.
       */
       /**************************************************************/
-      Widget(EditorData& editorData, Engine& engine);
+      static void Use();
 
+    private:
       /**************************************************************/
       /*!
         \brief
-          Virtual destructor for base class.
+          Deselects all items selected in the hierarchy.
       */
       /**************************************************************/
-      virtual ~Widget() = default;
-
-    protected:
-      EditorData& editorData_; //!< Settings and other runtime data used by the editor
-      Engine& engine_;         //!< The currently running engine
+      static void DeselectAll();
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // Widget_BARRAGE_H
+#endif // HierarchyWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

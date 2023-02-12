@@ -42,10 +42,10 @@ namespace Demo
   Scene* CreateDemoScene()
   {
     PoolInfo player_pool("Player Pool");
-    player_pool.objects_.insert("Player Object");
+    player_pool.objects_.push_back("Player Object");
 
     PoolInfo spawner_pool("Spawner Pool");
-    spawner_pool.objects_.insert("Spawner Object");
+    spawner_pool.objects_.push_back("Spawner Object");
 
     PoolInfo bullet_pool("Bullet Pool");
 

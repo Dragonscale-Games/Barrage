@@ -15,12 +15,14 @@
 #define ComponentWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Widgets/Widget.hpp"
+#include <imgui/imgui.h>
+#include <Objects/Components/BaseClasses/ComponentArray.hpp>
+#include <Objects/Components/BaseClasses/SharedComponent.hpp>
 
 namespace Barrage
 {
   //! Allows user to edit the values of a component
-  class ComponentWidget : public Widget
+  class ComponentWidget
   {
     public:
       /**************************************************************/
@@ -40,7 +42,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      static void UseWidget(const std::string_view& componentName, Component* component);
+      static void Use(const std::string_view& componentName, Component* component);
 
     private:
       /**************************************************************/

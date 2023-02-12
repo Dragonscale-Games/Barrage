@@ -17,6 +17,10 @@
 #include <DemoInitialization.hpp>
 #include <Engine/Engine.hpp>
 
+#include "Widgets/Windows/Hierarchy/HierarchyWidget.hpp"
+#include "Widgets/Windows/Inspector/InspectorWidget.hpp"
+#include "Widgets/MainMenu/MainMenuWidget.hpp"
+
 #include <unordered_set>
 #include <chrono>
 
@@ -28,11 +32,6 @@ namespace Barrage
     engine_(),
     gui_(),
     data_(),
-
-    hierarchy_(data_, engine_),
-    inspector_(data_, engine_),
-    log_(data_, engine_),
-    mainMenu_(data_, engine_),
 
     repeatTimer_(0)
   {
@@ -65,11 +64,6 @@ namespace Barrage
   CommandQueue& Editor::Command()
   {
     return commandQueue_;
-  }
-
-  LogWidget& Editor::Log()
-  {
-    return log_;
   }
 
   void Editor::Initialize()
@@ -131,7 +125,7 @@ namespace Barrage
     }
 
     gui_.StartWidgets();
-    UseEditorWidget();
+    UseWidgets();
     gui_.EndWidgets();
 
     HandleKeyboard();
@@ -161,13 +155,13 @@ namespace Barrage
     Instance = nullptr;
   }
 
-  void Editor::UseEditorWidget()
+  void Editor::UseWidgets()
   {
-    mainMenu_.UseWidget();
-    hierarchy_.UseWidget();
-    inspector_.UseWidget();
+    MainMenuWidget::Use();
+    HierarchyWidget::Use();
+    InspectorWidget::Use();
     ImGui::ShowDemoWindow();
-    log_.UseWidget();
+    LogWidget::Use();
   }
 
   void Editor::HandleKeyboard()

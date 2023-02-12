@@ -15,36 +15,21 @@
 #define LogWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Widgets/Widget.hpp"
+#include <imgui/imgui.h>
 
 namespace Barrage
 {
   //! Displays a log window
-  class LogWidget : public Widget
+  class LogWidget
   {
     public:
-      /**************************************************************/
-      /*!
-        \brief
-          Constructs the log widget with references to the
-          data it's allowed to see/change in the editor and engine.
-
-        \param editorData
-          Runtime settings and data for the editor.
-
-        \param engine
-          The currently running engine.
-      */
-      /**************************************************************/
-      LogWidget(EditorData& editorData, Engine& engine);
-
       /**************************************************************/
       /*!
         \brief
           Adds the widget to the window.
       */
       /**************************************************************/
-      void UseWidget();
+      static void Use();
 
       /**************************************************************/
       /*!
@@ -52,7 +37,7 @@ namespace Barrage
           Clears the log window.
       */
       /**************************************************************/
-      void Clear();
+      static void Clear();
 
       /**************************************************************/
       /*!
@@ -63,13 +48,13 @@ namespace Barrage
           A printf()-style formatted C string.
       */
       /**************************************************************/
-      void AddEntry(const char* fmt, ...) IM_FMTARGS(2);
+      static void AddEntry(const char* fmt, ...) IM_FMTARGS(2);
 
     private:
-      ImGuiTextBuffer buffer_;
-      ImGuiTextFilter filter_;
-      ImVector<int> lineOffsets_;
-      bool scrollToBottom_;
+      static ImGuiTextBuffer buffer_;
+      static ImGuiTextFilter filter_;
+      static ImVector<int> lineOffsets_;
+      static bool scrollToBottom_;
   };
 }
 

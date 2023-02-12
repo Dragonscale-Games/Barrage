@@ -17,7 +17,7 @@
 
 namespace Barrage
 {
-  void ComponentWidget::UseWidget(const std::string_view& componentName, Component* component)
+  void ComponentWidget::Use(const std::string_view& componentName, Component* component)
   {
     if (component == nullptr)
     {
@@ -63,7 +63,7 @@ namespace Barrage
       if (dataType.is_valid() && ImGui::CollapsingHeader(propName.data()))
       {
         ImGui::Spacing();
-        DataWidget::UseWidget(dataPointer);
+        DataWidget::Use(dataPointer);
         ImGui::Spacing();
       }
     }
@@ -84,7 +84,7 @@ namespace Barrage
     }
 
     ImGui::Spacing();
-    DataWidget::UseWidget(componentPointer);
+    DataWidget::Use(componentPointer);
     ImGui::Spacing();
   }
 }

@@ -52,11 +52,24 @@ namespace Barrage
       return false;
     }
 
-    PoolInfo& scenePool = scene->startingPools_.at(poolName_);
+    PoolInfo* scenePool = nullptr;
 
-    if (scenePool.objects_.size() >= poolArchetype->capacity_)
+    for (auto it = scene->startingPools_.begin(); it != scene->startingPools_.end(); ++it)
     {
-      Editor::Instance->Log().AddEntry("Error: Could not create object (pool is full).");
+      if (it->poolName_ == poolName_)
+      {
+        scenePool = &(*it);
+      }
+    }
+
+    if (scenePool == nullptr)
+    {
+      return false;
+    }
+
+    if (scenePool->objects_.size() >= poolArchetype->capacity_)
+    {
+      LogWidget::AddEntry("Error: Could not create object (pool is full).");
       return false;
     }
 
@@ -72,12 +85,17 @@ namespace Barrage
           objectName_ += " ";
           objectName_ += std::to_string(counter);
         }
-
+        
         counter++;
 
       } while (objectManager.GetObjectArchetype(objectName_));
     }
-    
+
+    if (scene->HasObject(poolName_, objectName_))
+    {
+      return false;
+    }
+
     objectManager.CreateObjectArchetype(objectName_, poolArchetype->componentArrayNames_);
 
     if (objectManager.GetObjectArchetype(objectName_) == nullptr)
@@ -85,9 +103,7 @@ namespace Barrage
       return false;
     }
 
-    scenePool.objects_.insert(objectName_);
-
-    Editor::Instance->Data().sceneIsDirty_ = true;
+    scenePool->objects_.push_back(objectName_);
 
     return true;
   }
@@ -97,13 +113,10 @@ namespace Barrage
     Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
-    PoolInfo& scenePool = scene->startingPools_.at(poolName_);
 
     ObjectArchetype* removedArchetype = objectManager.ExtractObjectArchetype(objectName_);
     redoArchetypes_.push(removedArchetype);
-    scenePool.objects_.erase(objectName_);
-
-    Editor::Instance->Data().sceneIsDirty_ = true;
+    scene->RemoveObject(poolName_, objectName_);
   }
 
   void CreateObject::Redo()
@@ -111,13 +124,10 @@ namespace Barrage
     Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
-    PoolInfo& scenePool = scene->startingPools_.at(poolName_);
 
     objectManager.AddObjectArchetype(objectName_, redoArchetypes_.top());
     redoArchetypes_.pop();
-    scenePool.objects_.insert(objectName_);
-
-    Editor::Instance->Data().sceneIsDirty_ = true;
+    scene->AddObject(poolName_, objectName_);
   }
 
   void CreateObject::ClearRedos()
