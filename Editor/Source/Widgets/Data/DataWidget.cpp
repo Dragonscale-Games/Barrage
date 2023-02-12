@@ -57,7 +57,7 @@ namespace Barrage
 
       if (dataObject->ValueWasSet())
       {
-        Editor::Instance->Command().Add(dataObject);
+        Editor::Instance->Command().Send(dataObject);
       }
       else
       {

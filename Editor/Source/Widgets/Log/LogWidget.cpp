@@ -62,7 +62,7 @@ namespace Barrage
     lineOffsets_.clear();
   }
   
-  void LogWidget::AddLog(const char* fmt, ...)
+  void LogWidget::AddEntry(const char* fmt, ...)
   {
     std::string addNewline = fmt;
     addNewline += "\n";

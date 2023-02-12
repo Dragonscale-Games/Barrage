@@ -15,6 +15,8 @@
 
 namespace Barrage
 {
+  std::stack<PoolArchetype*> CreatePool::redoArchetypes_ = std::stack<PoolArchetype*>();
+  
   CreatePool::CreatePool(const std::string& spaceName, const std::string& sceneName) :
     Command("New pool created."),
     spaceName_(spaceName),
@@ -41,22 +43,24 @@ namespace Barrage
 
     ObjectManager& objectManager = space->GetObjectManager();
 
-    if (poolName_.empty())
+    unsigned counter = 0;
+
+    do {
+      poolName_ = "New Pool";
+
+      if (counter)
+      {
+        poolName_ += " ";
+        poolName_ += std::to_string(counter);
+      }
+
+      counter++;
+
+    } while (objectManager.GetPoolArchetype(poolName_));
+
+    if (scene->HasPool(poolName_))
     {
-      unsigned counter = 0;
-
-      do {
-        poolName_ = "New Pool";
-
-        if (counter)
-        {
-          poolName_ += " ";
-          poolName_ += std::to_string(counter);
-        }
-
-        counter++;
-
-      } while (objectManager.GetPoolArchetype(poolName_));
+      return false;
     }
 
     objectManager.CreatePoolArchetype(poolName_);
@@ -65,7 +69,7 @@ namespace Barrage
     {
       return false;
     }
-    
+
     scene->AddStartingPool(poolName_);
 
     return true;
@@ -74,30 +78,31 @@ namespace Barrage
   void CreatePool::Undo()
   {
     Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
-
-    // this should never happen
-    if (space == nullptr)
-    {
-      return;
-    }
-
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    ObjectManager& objectManager = space->GetObjectManager();
 
-    // this should never happen
-    if (scene == nullptr)
-    {
-      return;
-    }
-    
-    space->GetObjectManager().DeletePoolArchetype(poolName_);
+    PoolArchetype* removedArchetype = objectManager.ExtractPoolArchetype(poolName_);
+    redoArchetypes_.push(removedArchetype);
+    scene->startingPools_.erase(poolName_);
+  }
 
-    for (auto it = scene->startingPools_.begin(); it != scene->startingPools_.end(); ++it)
+  void CreatePool::Redo()
+  {
+    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    ObjectManager& objectManager = space->GetObjectManager();
+
+    objectManager.AddPoolArchetype(poolName_, redoArchetypes_.top());
+    redoArchetypes_.pop();
+    scene->AddStartingPool(poolName_);
+  }
+
+  void CreatePool::ClearRedos()
+  {
+    while (!redoArchetypes_.empty())
     {
-      if (it->poolName_ == poolName_)
-      {
-        scene->startingPools_.erase(it);
-        return;
-      }
+      delete redoArchetypes_.top();
+      redoArchetypes_.pop();
     }
   }
 }

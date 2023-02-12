@@ -20,15 +20,23 @@
 
 namespace Barrage
 {  
+  typedef std::unordered_map<std::string, PoolInfo> PoolInfoMap;
+  
   //! contains all the information needed for a space to run a simulation
   class Scene
 	{
     public:   
       Scene();
 
+      bool HasPool(const std::string& poolName);
+
       void AddStartingPool(const PoolInfo& startingPool);
 
-      std::vector<PoolInfo> startingPools_; //!< List of pools and objects the scene starts with
+      bool HasObject(const std::string& poolName, const std::string& objectName);
+
+      void AddObject(const std::string& poolName, const std::string& objectName);
+
+      PoolInfoMap startingPools_; //!< Collection of pools and objects the scene starts with
 	};
 }
 

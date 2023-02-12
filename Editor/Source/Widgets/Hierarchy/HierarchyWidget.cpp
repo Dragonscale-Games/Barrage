@@ -35,10 +35,12 @@ namespace Barrage
 
       bool itemClicked = false;
 
-      std::vector<PoolInfo>& pools = engine_.Scenes().GetScene(editorData_.selectedScene_)->startingPools_;
+      const PoolInfoMap& pools = engine_.Scenes().GetScene(editorData_.selectedScene_)->startingPools_;
 
-      for (PoolInfo& pool : pools)
+      for (auto it = pools.begin(); it != pools.end(); ++it)
       {
+        const PoolInfo& pool = it->second;
+        
         ImGuiTreeNodeFlags pool_tree_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
 
         if (pool.poolName_ == editorData_.selectedPool_)
@@ -56,7 +58,7 @@ namespace Barrage
 
           float freeSpace = ImGui::GetWindowWidth() - ImGui::CalcTextSize(poolLabel.c_str()).x - ImGui::CalcTextSize(poolCapacityLabel.c_str()).x;
           
-          int numSpaces = freeSpace / ImGui::CalcTextSize(" ").x;
+          int numSpaces = static_cast<int>(freeSpace / ImGui::CalcTextSize(" ").x);
           numSpaces -= 5;
           if (numSpaces < 1)
           {
@@ -82,8 +84,10 @@ namespace Barrage
 
         if (node_open)
         {
-          for (std::string& objectName : pool.objects_)
+          for (auto jt = pool.objects_.begin(); jt != pool.objects_.end(); ++jt)
           {
+            const std::string& objectName = *jt;
+            
             ImGuiTreeNodeFlags object_tree_flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 
             if (objectName == editorData_.selectedObject_)

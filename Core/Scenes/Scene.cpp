@@ -19,8 +19,40 @@ namespace Barrage
   {
   }
 
+  bool Scene::HasPool(const std::string& poolName)
+  {
+    return startingPools_.count(poolName);
+  }
+
   void Scene::AddStartingPool(const PoolInfo& startingPool)
   {
-    startingPools_.push_back(startingPool);
+    if (HasPool(startingPool.poolName_))
+    {
+      return;
+    }
+
+    startingPools_.insert(std::make_pair(startingPool.poolName_, startingPool));
+  }
+
+  bool Scene::HasObject(const std::string& poolName, const std::string& objectName)
+  {
+    if (!HasPool(poolName))
+    {
+      return false;
+    }
+
+    PoolInfo& pool = startingPools_.at(poolName);
+
+    return pool.objects_.count(objectName);
+  }
+
+  void Scene::AddObject(const std::string& poolName, const std::string& objectName)
+  {
+    if (!HasPool(poolName))
+    {
+      return;
+    }
+
+    startingPools_.at(poolName).objects_.insert(objectName);
   }
 }

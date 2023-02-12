@@ -6,7 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Creates a new (empty) pool archetype and adds that archetype to the scene.
+   Creates a new (empty) pool archetype and adds that pool to the scene.
  */
  /* ======================================================================== */
 
@@ -16,6 +16,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
+#include <stack>
+#include <Objects/Archetypes/PoolArchetype/PoolArchetype.hpp>
 
 namespace Barrage
 {
@@ -44,8 +46,8 @@ namespace Barrage
           Creates the pool archetype and adds it to the scene.
 
         \return
-          Returns true if the value change was successful, returns
-          false otherwise.
+          Returns true if the command was successful, returns false
+          if the command had no effect.
       */
       /**************************************************************/
       bool Execute() override;
@@ -53,15 +55,35 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Removes the pool archetype from the scene and deletes it.
+          Removes the pool archetype from the scene and the archetype
+          manager.
       */
       /**************************************************************/
       void Undo() override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds the previously removed pool archetype back to the 
+          archetype manager and the scene.
+      */
+      /**************************************************************/
+      void Redo() override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deallocates the pool archetypes stored for redos.
+      */
+      /**************************************************************/
+      void ClearRedos() override;
 
     private:
       std::string spaceName_;
       std::string sceneName_;
       std::string poolName_;
+
+      static std::stack<PoolArchetype*> redoArchetypes_;
   };
 }
 

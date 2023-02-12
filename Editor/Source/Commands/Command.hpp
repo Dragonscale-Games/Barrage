@@ -111,6 +111,32 @@ namespace Barrage
       /**************************************************************/
       virtual void Undo() = 0;
 
+      /**************************************************************/
+      /*!
+        \brief
+          This function should completely reverse the effect of the
+          Undo() function. You can assume it will only be called
+          directly after Undo() is called. 
+
+          This function will often look similar to Execute(), and
+          may be the same in many cases.
+      */
+      /**************************************************************/
+      virtual void Redo() = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          This function is called when the command queue clears its
+          list of redos. 
+          
+          Some types of commands will need to track extra state to 
+          take care of redos, but this state is no longer needed once
+          the redo list is cleared.
+      */
+      /**************************************************************/
+      virtual void ClearRedos();
+
     protected:
       std::string name_;
       bool chains_;

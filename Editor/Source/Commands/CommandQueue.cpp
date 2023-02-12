@@ -31,7 +31,7 @@ namespace Barrage
     ClearRedoStack();
   }
 
-  void CommandQueue::Add(Command* command)
+  void CommandQueue::Send(Command* command)
   {
     if (currentCommand_ == nullptr)
     {
@@ -60,7 +60,7 @@ namespace Barrage
       if (!currentCommand_->chains_)
       {
         std::string logMessage = currentCommand_->GetName();
-        Editor::Instance->Log().AddLog(logMessage.c_str());
+        Editor::Instance->Log().AddEntry(logMessage.c_str());
       }
     }
     else
@@ -102,7 +102,7 @@ namespace Barrage
     if (log)
     {
       std::string logMessage = "Undo: " + undoCommand->GetName();
-      Editor::Instance->Log().AddLog(logMessage.c_str());
+      Editor::Instance->Log().AddEntry(logMessage.c_str());
     }
   }
 
@@ -124,18 +124,7 @@ namespace Barrage
     }
     
     Command* redoCommand = redoStack_.top();
-    bool success = redoCommand->Execute();
-
-    /*
-      In theory, this failure should never happen. If it does, it's likely due to one of these:
-        - A command didn't implement Undo correctly
-        - Important project state was changed without using a command
-    */
-    if (!success)
-    {
-      ClearRedoStack();
-      return false;
-    }
+    redoCommand->Redo();
 
     redoStack_.pop();
     undoStack_.push(redoCommand);
@@ -149,7 +138,7 @@ namespace Barrage
       if (log)
       {
         std::string logMessage = "Redo: " + redoCommand->GetName();
-        Editor::Instance->Log().AddLog(logMessage.c_str());
+        Editor::Instance->Log().AddEntry(logMessage.c_str());
       }
 
       return false;
@@ -169,6 +158,7 @@ namespace Barrage
   {
     while (!redoStack_.empty())
     {
+      redoStack_.top()->ClearRedos();
       delete redoStack_.top();
       redoStack_.pop();
     }

@@ -12,7 +12,8 @@
 
 #include "MainMenuWidget.hpp"
 #include <Editor/Editor.hpp>
-#include "Commands/CreatePool/CreatePool.hpp"
+#include "Commands/Create/CreatePool/CreatePool.hpp"
+#include "Commands/Create/CreateObject/CreateObject.hpp"
 
 namespace Barrage
 {
@@ -52,11 +53,29 @@ namespace Barrage
 
     if (ImGui::BeginMenu("Create"))
     {
-      if (ImGui::MenuItem("Pool"))
+      if (ImGui::MenuItem("New pool"))
       {
         std::string& space = Editor::Instance->Data().selectedSpace_;
         std::string& scene = Editor::Instance->Data().selectedScene_;
-        Editor::Instance->Command().Add(new CreatePool(space, scene));
+        Editor::Instance->Command().Send(new CreatePool(space, scene));
+      }
+
+      if (editorData_.selectedPool_.empty())
+      {
+        ImGui::BeginDisabled();
+      }
+
+      if (ImGui::MenuItem("Object in pool"))
+      {
+        std::string& space = Editor::Instance->Data().selectedSpace_;
+        std::string& scene = Editor::Instance->Data().selectedScene_;
+        std::string& pool = Editor::Instance->Data().selectedPool_;
+        Editor::Instance->Command().Send(new CreateObject(space, scene, pool));
+      }
+
+      if (editorData_.selectedPool_.empty())
+      {
+        ImGui::EndDisabled();
       }
 
       ImGui::EndMenu();

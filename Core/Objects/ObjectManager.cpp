@@ -112,14 +112,19 @@ namespace Barrage
     return archetypeManager_.GetPoolArchetype(name);
   }
 
+  PoolArchetype* ObjectManager::ExtractPoolArchetype(const std::string& name)
+  {
+    return archetypeManager_.ExtractPoolArchetype(name);
+  }
+
   void ObjectManager::DeletePoolArchetype(const std::string& name)
   {
     archetypeManager_.DeletePoolArchetype(name);
   }
 
-  void ObjectManager::CreateObjectArchetype(const std::string& name)
+  void ObjectManager::CreateObjectArchetype(const std::string& name, const std::vector<std::string_view>& componentArrayNames)
   {
-    archetypeManager_.CreateObjectArchetype(name);
+    archetypeManager_.CreateObjectArchetype(name, componentArrayNames);
   }
 
   void ObjectManager::AddObjectArchetype(const std::string& name, ObjectArchetype* archetype)
@@ -130,6 +135,11 @@ namespace Barrage
   ObjectArchetype* ObjectManager::GetObjectArchetype(const std::string& name)
   {
     return archetypeManager_.GetObjectArchetype(name);
+  }
+
+  ObjectArchetype* ObjectManager::ExtractObjectArchetype(const std::string& name)
+  {
+    return archetypeManager_.ExtractObjectArchetype(name);
   }
 
   void ObjectManager::DeleteObjectArchetype(const std::string& name)

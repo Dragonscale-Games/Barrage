@@ -26,4 +26,9 @@ namespace Barrage
   {
     return name_;
   }
+
+  void Command::ClearRedos()
+  {
+    // intentionally empty - specialized in derived classes
+  }
 }

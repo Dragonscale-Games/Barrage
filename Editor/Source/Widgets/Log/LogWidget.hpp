@@ -46,6 +46,12 @@ namespace Barrage
       /**************************************************************/
       void UseWidget();
 
+      /**************************************************************/
+      /*!
+        \brief
+          Clears the log window.
+      */
+      /**************************************************************/
       void Clear();
 
       /**************************************************************/
@@ -57,7 +63,7 @@ namespace Barrage
           A printf()-style formatted C string.
       */
       /**************************************************************/
-      void AddLog(const char* fmt, ...) IM_FMTARGS(2);
+      void AddEntry(const char* fmt, ...) IM_FMTARGS(2);
 
     private:
       ImGuiTextBuffer buffer_;

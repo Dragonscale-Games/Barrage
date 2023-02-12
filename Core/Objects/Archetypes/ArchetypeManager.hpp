@@ -37,7 +37,7 @@ namespace Barrage
 
       void CreatePoolArchetype(const std::string& name);
 
-      void CreateObjectArchetype(const std::string& name);
+      void CreateObjectArchetype(const std::string& name, const std::vector<std::string_view>& componentArrayNames);
 
       void AddPoolArchetype(const std::string& name, PoolArchetype* archetype);
 
@@ -46,6 +46,10 @@ namespace Barrage
       PoolArchetype* GetPoolArchetype(const std::string& name);
 
       ObjectArchetype* GetObjectArchetype(const std::string& name);
+
+      PoolArchetype* ExtractPoolArchetype(const std::string& name);
+
+      ObjectArchetype* ExtractObjectArchetype(const std::string& name);
 
       void DeletePoolArchetype(const std::string& name);
 
@@ -58,7 +62,7 @@ namespace Barrage
     private:
       PoolArchetypeMap poolArchetypes_;
       ObjectArchetypeMap objectArchetypes_;
-      //ComponentAllocator& componentAllocator_;
+      ComponentAllocator& componentAllocator_;
 	};
 }
 

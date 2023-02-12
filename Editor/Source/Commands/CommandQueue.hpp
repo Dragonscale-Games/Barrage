@@ -21,6 +21,8 @@
 
 namespace Barrage
 {
+  typedef void (*ClearRedoCallback)();
+  
   //! Command processor class
   class CommandQueue
   {
@@ -44,7 +46,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Adds a command to the queue. Adding multiple commands in a
+          Sends a command to the queue. Sending multiple commands in a
           single frame should be avoided. Only the first command sent
           each frame will be kept; the rest will be discarded.
 
@@ -53,7 +55,7 @@ namespace Barrage
           new. The CommandQueue will take care of deallocating it.
       */
       /**************************************************************/
-      void Add(Command* command);
+      void Send(Command* command);
 
       /**************************************************************/
       /*!

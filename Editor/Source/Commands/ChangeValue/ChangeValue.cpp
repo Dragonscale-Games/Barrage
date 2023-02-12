@@ -69,4 +69,9 @@ namespace Barrage
       Editor::Instance->Data().sceneIsDirty_ = true;
     }
   }
+
+  void ChangeValue::Redo()
+  {
+    Execute();
+  }
 }

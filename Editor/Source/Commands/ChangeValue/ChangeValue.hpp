@@ -205,8 +205,8 @@ namespace Barrage
           Performs the value change.
 
         \return
-          Returns true if the value change was successful, returns
-          false otherwise.
+          Returns true if the command was successful, returns false
+          if the command had no effect.
       */
       /**************************************************************/
       bool Execute() override;
@@ -218,6 +218,14 @@ namespace Barrage
       */
       /**************************************************************/
       void Undo() override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Reverses the value change performed by Undo().
+      */
+      /**************************************************************/
+      void Redo() override;
 
     private:
       rttr::variant valuePointer_; //!< Pointer to the value being edited

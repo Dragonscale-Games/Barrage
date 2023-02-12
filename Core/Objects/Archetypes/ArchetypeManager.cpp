@@ -15,10 +15,10 @@
 
 namespace Barrage
 {
-  ArchetypeManager::ArchetypeManager(ComponentAllocator& /*componentAllocator*/) :
+  ArchetypeManager::ArchetypeManager(ComponentAllocator& componentAllocator) :
     poolArchetypes_(),
-    objectArchetypes_()//,
-    //componentAllocator_(componentAllocator)
+    objectArchetypes_(),
+    componentAllocator_(componentAllocator)
   {
   }
 
@@ -42,9 +42,14 @@ namespace Barrage
     AddPoolArchetype(name, newArchetype);
   }
 
-  void ArchetypeManager::CreateObjectArchetype(const std::string& name)
+  void ArchetypeManager::CreateObjectArchetype(const std::string& name, const std::vector<std::string_view>& componentArrayNames)
   {
     ObjectArchetype* newArchetype = new ObjectArchetype();
+
+    for (auto it = componentArrayNames.begin(); it != componentArrayNames.end(); ++it)
+    {
+      newArchetype->components_[*it] = componentAllocator_.AllocateComponentArray(*it, 1);
+    }
 
     AddObjectArchetype(name, newArchetype);
   }
@@ -94,6 +99,34 @@ namespace Barrage
     else
     {
       return objectArchetypes_.at(name);
+    }
+  }
+
+  PoolArchetype* ArchetypeManager::ExtractPoolArchetype(const std::string& name)
+  {
+    if (poolArchetypes_.find(name) == poolArchetypes_.end())
+    {
+      return nullptr;
+    }
+    else
+    {
+      PoolArchetype* poolArchetype = poolArchetypes_.at(name);
+      poolArchetypes_.erase(name);
+      return poolArchetype;
+    }
+  }
+
+  ObjectArchetype* ArchetypeManager::ExtractObjectArchetype(const std::string& name)
+  {
+    if (objectArchetypes_.find(name) == objectArchetypes_.end())
+    {
+      return nullptr;
+    }
+    else
+    {
+      ObjectArchetype* objectArchetype = objectArchetypes_.at(name);
+      objectArchetypes_.erase(name);
+      return objectArchetype;
     }
   }
 
