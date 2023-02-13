@@ -1,26 +1,27 @@
 /* ======================================================================== */
 /*!
- * \file            ScenePopupWidget.hpp
+ * \file            ComponentArrayModal.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The menu that pops up when you right click a scene.
+   A selection window that pops up when the user tries to add a component
+   array to a pool.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef ScenePopupWidget_BARRAGE_H
-#define ScenePopupWidget_BARRAGE_H
+#ifndef ComponentArrayModal_BARRAGE_H
+#define ComponentArrayModal_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
 
 namespace Barrage
 {
-  //! Scene right click menu
-  class ScenePopupWidget
+  //! Component array selection modal
+  class ComponentArrayModal
   {
     public:
       /**************************************************************/
@@ -29,7 +30,7 @@ namespace Barrage
           Adds the widget to the window.
 
         \param strId
-          The ID passed to ImGui::OpenPopup() that tells this popup
+          The ID passed to ImGui::OpenPopup() that tells this modal
           when to open.
       */
       /**************************************************************/
@@ -38,5 +39,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ScenePopupWidget_BARRAGE_H
+#endif // ComponentArrayModal_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -18,10 +18,14 @@ namespace Barrage
     isRunning_(false),
     gamePlaying_(false),
     sceneIsDirty_(false),
+    openSharedComponentModal_(false),
+    openComponentArrayModal_(false),
+    selectedSpace_(),
+    selectedScene_(),
     selectedPool_(),
     selectedObject_(),
-    selectedScene_(),
-    selectedSpace_()
+    selectedSharedComponent_(),
+    selectedComponentArray_()
   {
   }
 }

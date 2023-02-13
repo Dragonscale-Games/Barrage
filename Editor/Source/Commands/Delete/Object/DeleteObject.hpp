@@ -48,6 +48,14 @@ namespace Barrage
         const std::string& poolName, 
         const std::string& objectName);
 
+      /**************************************************************/
+      /*!
+        \brief
+          Deallocates resources.
+      */
+      /**************************************************************/
+      ~DeleteObject();
+
     private:
       /**************************************************************/
       /*!
@@ -85,8 +93,9 @@ namespace Barrage
       std::string sceneName_;
       std::string poolName_;
       std::string objectName_;
-      unsigned objectIndex_;
-      ObjectArchetype* removedArchetype_;
+
+      unsigned undoObjectIndex_;
+      ObjectArchetype* undoArchetype_;
   };
 }
 

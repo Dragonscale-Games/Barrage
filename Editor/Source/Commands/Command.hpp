@@ -29,9 +29,9 @@ namespace Barrage
         \brief
           Command base class constructor.
 
-        \param name
-          The name of the command (will be displayed in the log window
-          when the command is executed).
+        \param message
+          The message that will be displayed to the log window when
+          this command is executed.
 
         \param chainUndo
           Allows multiple commands to be undone at once. Also applies to
@@ -66,7 +66,7 @@ namespace Barrage
           a command where "chainUndo" is set to false. 
       */
       /**************************************************************/
-      Command(const std::string& name, bool chainUndo = false);
+      Command(const std::string& message, bool chainUndo = false);
 
       /**************************************************************/
       /*!
@@ -86,7 +86,7 @@ namespace Barrage
           Returns the name of the command.
       */
       /**************************************************************/
-      std::string GetName();
+      std::string GetMessage();
 
       /**************************************************************/
       /*!
@@ -119,26 +119,13 @@ namespace Barrage
           directly after Undo() is called. 
 
           This function will often look similar to Execute(), and
-          may be the same in many cases.
+          may be the same in some cases.
       */
       /**************************************************************/
       virtual void Redo() = 0;
 
-      /**************************************************************/
-      /*!
-        \brief
-          This function is called when the command queue clears its
-          list of redos. 
-          
-          Some types of commands will need to track extra state to 
-          take care of redos, but this state is no longer needed once
-          the redo list is cleared.
-      */
-      /**************************************************************/
-      virtual void ClearRedos();
-
     protected:
-      std::string name_;
+      std::string message_;
       bool chains_;
 
     friend class CommandQueue;

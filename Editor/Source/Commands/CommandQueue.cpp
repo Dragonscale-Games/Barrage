@@ -59,7 +59,7 @@ namespace Barrage
 
       if (!currentCommand_->chains_)
       {
-        std::string logMessage = currentCommand_->GetName();
+        std::string logMessage = currentCommand_->GetMessage();
         LogWidget::AddEntry(logMessage.c_str());
       }
     }
@@ -105,7 +105,7 @@ namespace Barrage
 
     if (log)
     {
-      std::string logMessage = "Undo: " + undoCommand->GetName();
+      std::string logMessage = "Undo: " + undoCommand->GetMessage();
       LogWidget::AddEntry(logMessage.c_str());
     }
   }
@@ -143,7 +143,7 @@ namespace Barrage
     {
       if (log)
       {
-        std::string logMessage = "Redo: " + redoCommand->GetName();
+        std::string logMessage = "Redo: " + redoCommand->GetMessage();
         LogWidget::AddEntry(logMessage.c_str());
       }
 
@@ -164,7 +164,6 @@ namespace Barrage
   {
     while (!redoStack_.empty())
     {
-      redoStack_.top()->ClearRedos();
       delete redoStack_.top();
       redoStack_.pop();
     }

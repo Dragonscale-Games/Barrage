@@ -26,9 +26,14 @@ namespace Barrage
     sceneName_(sceneName),
     poolName_(poolName),
     objectName_(objectName),
-    objectIndex_(),
-    removedArchetype_()
+    undoObjectIndex_(),
+    undoArchetype_(nullptr)
   {
+  }
+
+  DeleteObject::~DeleteObject()
+  {
+    delete undoArchetype_;
   }
 
   bool DeleteObject::Execute()
@@ -49,14 +54,14 @@ namespace Barrage
     }
 
     ObjectManager& objectManager = space->GetObjectManager();
-    removedArchetype_ = objectManager.ExtractObjectArchetype(objectName_);
+    undoArchetype_ = objectManager.ExtractObjectArchetype(objectName_);
 
-    if (removedArchetype_ == nullptr)
+    if (undoArchetype_ == nullptr)
     {
       return false;
     }
 
-    scene->RemoveObject(poolName_, objectName_, &objectIndex_);
+    scene->RemoveObject(poolName_, objectName_, &undoObjectIndex_);
 
     if (Editor::Instance->Data().selectedObject_ == objectName_)
     {
@@ -72,8 +77,9 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
-    objectManager.AddObjectArchetype(objectName_, removedArchetype_);
-    scene->AddObject(poolName_, objectName_, &objectIndex_);
+    objectManager.AddObjectArchetype(objectName_, undoArchetype_);
+    scene->AddObject(poolName_, objectName_, &undoObjectIndex_);
+    undoArchetype_ = nullptr;
   }
 
   void DeleteObject::Redo()
@@ -82,8 +88,8 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
-    removedArchetype_ = objectManager.ExtractObjectArchetype(objectName_);
-    scene->RemoveObject(poolName_, objectName_, &objectIndex_);
+    undoArchetype_ = objectManager.ExtractObjectArchetype(objectName_);
+    scene->RemoveObject(poolName_, objectName_, &undoObjectIndex_);
 
     if (Editor::Instance->Data().selectedObject_ == objectName_)
     {

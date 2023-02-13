@@ -1,47 +1,55 @@
 /* ======================================================================== */
 /*!
- * \file            CreateObject.hpp
+ * \file            DeleteComponentArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Creates a new (empty) object archetype and adds that object to a pool
-   in the scene.
+    Removes a component array from a pool and removes the corresponding
+    component from all objects in that pool.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef CreateObject_BARRAGE_H
-#define CreateObject_BARRAGE_H
+#ifndef DeleteComponentArray_BARRAGE_H
+#define DeleteComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
-#include <stack>
-#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>>
+#include <vector>
+#include <string_view>
+#include <Objects/Components/BaseClasses/ComponentArray.hpp>
 
 namespace Barrage
 {
-  //! Creates an object and adds it to a pool in the scene
-  class CreateObject : public Command
+  //! Removes a component array from a pool and its objects
+  class DeleteComponentArray : public Command
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Constructs the CreateObject command.
+          Constructs the command.
 
         \param spaceName
-          The name of the space to place the object in.
+          The space containing the pool.
 
         \param sceneName
-          The name of the scene to place the object in.
+          The scene containing the pool.
 
         \param poolName
-          The name of the pool to create the object in.
+          The pool to place the component array in.
+
+        \param componentName
+          The component array to add.
       */
       /**************************************************************/
-      CreateObject(const std::string& spaceName, const std::string& sceneName, const std::string& poolName);
+      DeleteComponentArray(
+        const std::string& spaceName,
+        const std::string& sceneName,
+        const std::string& poolName,
+        const std::string_view& componentArrayName);
 
       /**************************************************************/
       /*!
@@ -49,14 +57,13 @@ namespace Barrage
           Deallocates resources.
       */
       /**************************************************************/
-      ~CreateObject();
+      ~DeleteComponentArray();
 
     private:
       /**************************************************************/
       /*!
         \brief
-          Creates the object archetype and adds it to a pool in the 
-          scene.
+
 
         \return
           Returns true if the command was successful, returns false
@@ -68,8 +75,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Removes the object archetype from the pool in the scene 
-          and removes it from the archetype manager.
+          Undoes the command.
       */
       /**************************************************************/
       void Undo() override;
@@ -77,8 +83,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Adds the previously removed object archetype back to the
-          archetype manager and the pool in the scene.
+          Redoes the command.
       */
       /**************************************************************/
       void Redo() override;
@@ -87,13 +92,13 @@ namespace Barrage
       std::string spaceName_;
       std::string sceneName_;
       std::string poolName_;
-      std::string objectName_;
+      std::string_view componentArrayName_;
 
-      ObjectArchetype* redoArchetype_;
+      unsigned undoIndex_;
+      std::vector<ComponentArray*> undoComponentArrays_;
   };
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
-#endif // CreateObject_BARRAGE_H
+#endif // DeleteComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

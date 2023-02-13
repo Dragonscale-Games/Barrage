@@ -1,26 +1,27 @@
 /* ======================================================================== */
 /*!
- * \file            ScenePopupWidget.hpp
+ * \file            ComponentArrayPopupWidget.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The menu that pops up when you right click a scene.
+   The menu that pops up when you right click a component array.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef ScenePopupWidget_BARRAGE_H
-#define ScenePopupWidget_BARRAGE_H
+#ifndef ComponentArrayPopupWidget_BARRAGE_H
+#define ComponentArrayPopupWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
+#include <string_view>
 
 namespace Barrage
 {
-  //! Scene right click menu
-  class ScenePopupWidget
+  //! Component array right click menu
+  class ComponentArrayPopupWidget
   {
     public:
       /**************************************************************/
@@ -31,12 +32,15 @@ namespace Barrage
         \param strId
           The ID passed to ImGui::OpenPopup() that tells this popup
           when to open.
+
+        \param componentArrayName
+          The name of the component being modified.
       */
       /**************************************************************/
-      static void Use(const char* strId);
+      static void Use(const char* strId, const std::string_view& componentArrayName);
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ScenePopupWidget_BARRAGE_H
+#endif // ComponentArrayPopupWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

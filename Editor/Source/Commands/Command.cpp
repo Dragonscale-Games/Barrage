@@ -16,19 +16,14 @@
 
 namespace Barrage
 {
-  Command::Command(const std::string& name, bool chainUndo) :
-    name_(name),
+  Command::Command(const std::string& message, bool chainUndo) :
+    message_(message),
     chains_(chainUndo)
   {
   }
 
-  std::string Command::GetName()
+  std::string Command::GetMessage()
   {
-    return name_;
-  }
-
-  void Command::ClearRedos()
-  {
-    // intentionally empty - specialized in derived classes
+    return message_;
   }
 }

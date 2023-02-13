@@ -1,47 +1,49 @@
 /* ======================================================================== */
 /*!
- * \file            CreateObject.hpp
+ * \file            CreateSharedComponent.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Creates a new (empty) object archetype and adds that object to a pool
-   in the scene.
+   Adds a shared component to a pool archetype.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef CreateObject_BARRAGE_H
-#define CreateObject_BARRAGE_H
+#ifndef CreateSharedComponent_BARRAGE_H
+#define CreateSharedComponent_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
-#include <stack>
-#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>>
+#include <Objects/Components/BaseClasses/SharedComponent.hpp>
+#include <string_view>
 
 namespace Barrage
 {
-  //! Creates an object and adds it to a pool in the scene
-  class CreateObject : public Command
+  //! Adds a shared component to a pool archetype
+  class CreateSharedComponent : public Command
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Constructs the CreateObject command.
-
+          Constructs the command.
+          
         \param spaceName
-          The name of the space to place the object in.
-
-        \param sceneName
-          The name of the scene to place the object in.
+          The space containing the pool.
 
         \param poolName
-          The name of the pool to create the object in.
+          The pool to place the component in. 
+
+        \param componentName
+          The component to add.
       */
       /**************************************************************/
-      CreateObject(const std::string& spaceName, const std::string& sceneName, const std::string& poolName);
+      CreateSharedComponent(
+        const std::string& spaceName, 
+        const std::string& poolName, 
+        const std::string_view& componentName);
 
       /**************************************************************/
       /*!
@@ -49,14 +51,13 @@ namespace Barrage
           Deallocates resources.
       */
       /**************************************************************/
-      ~CreateObject();
+      ~CreateSharedComponent();
 
     private:
       /**************************************************************/
       /*!
         \brief
-          Creates the object archetype and adds it to a pool in the 
-          scene.
+          Adds a shared component to a pool archetype.
 
         \return
           Returns true if the command was successful, returns false
@@ -68,8 +69,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Removes the object archetype from the pool in the scene 
-          and removes it from the archetype manager.
+          Undoes the command.
       */
       /**************************************************************/
       void Undo() override;
@@ -77,23 +77,20 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Adds the previously removed object archetype back to the
-          archetype manager and the pool in the scene.
+          Redoes the command.
       */
       /**************************************************************/
       void Redo() override;
 
     private:
-      std::string spaceName_;
-      std::string sceneName_;
-      std::string poolName_;
-      std::string objectName_;
+      std::string spaceName_;     
+      std::string poolName_;      
+      std::string_view componentName_;
 
-      ObjectArchetype* redoArchetype_;
+      SharedComponent* redoComponent_;
   };
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
-#endif // CreateObject_BARRAGE_H
+#endif // CreateSharedComponent_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -16,15 +16,19 @@
 
 namespace Barrage
 {
-  std::stack<ObjectArchetype*> CreateObject::redoArchetypes_ = std::stack<ObjectArchetype*>();
-  
   CreateObject::CreateObject(const std::string& spaceName, const std::string& sceneName, const std::string& poolName) :
     Command("New object created in " + poolName + "."),
     spaceName_(spaceName),
     sceneName_(sceneName),
     poolName_(poolName),
-    objectName_()
+    objectName_(),
+    redoArchetype_(nullptr)
   {
+  }
+
+  CreateObject::~CreateObject()
+  {
+    delete redoArchetype_;
   }
 
   bool CreateObject::Execute()
@@ -57,7 +61,7 @@ namespace Barrage
       unsigned counter = 0;
 
       do {
-        objectName_ = "New Object";
+        objectName_ = "Object";
 
         if (counter)
         {
@@ -93,8 +97,7 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
-    ObjectArchetype* removedArchetype = objectManager.ExtractObjectArchetype(objectName_);
-    redoArchetypes_.push(removedArchetype);
+    redoArchetype_ = objectManager.ExtractObjectArchetype(objectName_);
     scene->RemoveObject(poolName_, objectName_);
 
     if (Editor::Instance->Data().selectedObject_ == objectName_)
@@ -109,17 +112,8 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
-    objectManager.AddObjectArchetype(objectName_, redoArchetypes_.top());
-    redoArchetypes_.pop();
+    objectManager.AddObjectArchetype(objectName_, redoArchetype_);
+    redoArchetype_ = nullptr;
     scene->AddObject(poolName_, objectName_);
-  }
-
-  void CreateObject::ClearRedos()
-  {
-    while (!redoArchetypes_.empty())
-    {
-      delete redoArchetypes_.top();
-      redoArchetypes_.pop();
-    }
   }
 }

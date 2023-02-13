@@ -30,23 +30,25 @@ namespace Barrage
 
       if (component_type == Component::Type::ARRAY)
       {
-        if (componentArrayAllocMap_.find(componentName) != componentArrayAllocMap_.end())
+        if (componentArrayAllocMap_.count(componentName))
         {
           return;
         }
 
         componentArrayAllocMap_[componentName] = &ComponentAllocator::AllocateComponentArray<T>;
         componentArrayNames_.push_back(componentName);
+        componentArrayNamesSorted_ = false;
       }
       else if (component_type == Component::Type::SHARED)
       {
-        if (sharedComponentAllocMap_.find(componentName) != sharedComponentAllocMap_.end())
+        if (sharedComponentAllocMap_.count(componentName))
         {
           return;
         }
 
         sharedComponentAllocMap_[componentName] = &ComponentAllocator::AllocateSharedComponent<T>;
         sharedComponentNames_.push_back(componentName);
+        sharedComponentNamesSorted_ = false;
       }
     }
   }

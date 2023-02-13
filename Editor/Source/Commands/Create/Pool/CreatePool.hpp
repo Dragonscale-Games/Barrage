@@ -39,6 +39,14 @@ namespace Barrage
       /**************************************************************/
       CreatePool(const std::string& spaceName, const std::string& sceneName);
 
+      /**************************************************************/
+      /*!
+        \brief
+          Deallocates resources.
+      */
+      /**************************************************************/
+      ~CreatePool();
+
     private:
       /**************************************************************/
       /*!
@@ -70,23 +78,14 @@ namespace Barrage
       /**************************************************************/
       void Redo() override;
 
-      /**************************************************************/
-      /*!
-        \brief
-          Deallocates the pool archetypes stored for redos.
-      */
-      /**************************************************************/
-      void ClearRedos() override;
-
     private:
       std::string spaceName_;
       std::string sceneName_;
       std::string poolName_;
 
-      static std::stack<PoolArchetype*> redoArchetypes_;
+      PoolArchetype* redoArchetype_;
   };
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif // CreatePool_BARRAGE_H

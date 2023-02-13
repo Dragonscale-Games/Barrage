@@ -1,26 +1,27 @@
 /* ======================================================================== */
 /*!
- * \file            ScenePopupWidget.hpp
+ * \file            SharedComponentModal.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The menu that pops up when you right click a scene.
+   A selection window that pops up when the user tries to add a shared
+   component to a pool.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef ScenePopupWidget_BARRAGE_H
-#define ScenePopupWidget_BARRAGE_H
+#ifndef SharedComponentModal_BARRAGE_H
+#define SharedComponentModal_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
 
 namespace Barrage
 {
-  //! Scene right click menu
-  class ScenePopupWidget
+  //! Shared component selection modal
+  class SharedComponentModal
   {
     public:
       /**************************************************************/
@@ -29,7 +30,7 @@ namespace Barrage
           Adds the widget to the window.
 
         \param strId
-          The ID passed to ImGui::OpenPopup() that tells this popup
+          The ID passed to ImGui::OpenPopup() that tells this modal
           when to open.
       */
       /**************************************************************/
@@ -38,5 +39,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ScenePopupWidget_BARRAGE_H
+#endif // SharedComponentModal_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

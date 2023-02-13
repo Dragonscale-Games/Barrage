@@ -1,47 +1,55 @@
 /* ======================================================================== */
 /*!
- * \file            CreateObject.hpp
+ * \file            CreateComponentArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Creates a new (empty) object archetype and adds that object to a pool
-   in the scene.
+   Adds a component array to a pool archetype and adds the corresponding
+   component to each of the pool's object archetypes.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef CreateObject_BARRAGE_H
-#define CreateObject_BARRAGE_H
+#ifndef CreateComponentArray_BARRAGE_H
+#define CreateComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
-#include <stack>
-#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>>
+#include <Objects/Components/BaseClasses/ComponentArray.hpp>
+#include <vector>
+#include <string_view>
 
 namespace Barrage
 {
-  //! Creates an object and adds it to a pool in the scene
-  class CreateObject : public Command
+  //! Adds a component array to a pool and its objects
+  class CreateComponentArray : public Command
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Constructs the CreateObject command.
+          Constructs the command.
 
         \param spaceName
-          The name of the space to place the object in.
+          The space containing the pool.
 
         \param sceneName
-          The name of the scene to place the object in.
+          The scene containing the pool.
 
         \param poolName
-          The name of the pool to create the object in.
+          The pool to place the component array in.
+
+        \param componentName
+          The component array to add.
       */
       /**************************************************************/
-      CreateObject(const std::string& spaceName, const std::string& sceneName, const std::string& poolName);
+      CreateComponentArray(
+        const std::string& spaceName,
+        const std::string& sceneName,
+        const std::string& poolName,
+        const std::string_view& componentArrayName);
 
       /**************************************************************/
       /*!
@@ -49,14 +57,15 @@ namespace Barrage
           Deallocates resources.
       */
       /**************************************************************/
-      ~CreateObject();
+      ~CreateComponentArray();
 
     private:
       /**************************************************************/
       /*!
         \brief
-          Creates the object archetype and adds it to a pool in the 
-          scene.
+          Adds a component array to a pool archetype and adds the
+          corresponding component to each of the pool's object
+          archetypes.
 
         \return
           Returns true if the command was successful, returns false
@@ -68,8 +77,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Removes the object archetype from the pool in the scene 
-          and removes it from the archetype manager.
+          Undoes the command.
       */
       /**************************************************************/
       void Undo() override;
@@ -77,8 +85,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Adds the previously removed object archetype back to the
-          archetype manager and the pool in the scene.
+          Redoes the command.
       */
       /**************************************************************/
       void Redo() override;
@@ -87,13 +94,12 @@ namespace Barrage
       std::string spaceName_;
       std::string sceneName_;
       std::string poolName_;
-      std::string objectName_;
+      std::string_view componentArrayName_;
 
-      ObjectArchetype* redoArchetype_;
+      std::vector<ComponentArray*> redoComponentArrays_;
   };
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
-#endif // CreateObject_BARRAGE_H
+#endif // CreateComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

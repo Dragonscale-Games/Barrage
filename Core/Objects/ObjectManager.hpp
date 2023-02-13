@@ -67,6 +67,8 @@ namespace Barrage
 
       std::vector<std::string_view> GetSharedComponentNames();
 
+      ComponentAllocator& GetComponentAllocator();
+
       // ===================================================================
       // Initializers
       // ===================================================================

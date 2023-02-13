@@ -24,13 +24,17 @@ namespace Barrage
   {
     EditorData();
     
-    bool isRunning_;             //!< Keeps track of whether the editor is running
-    bool gamePlaying_;           //!< Keeps track of whether the current game is playing
-    bool sceneIsDirty_;          //!< Flag for when user changes something in current scene
-    std::string selectedPool_;   //!< The currently selected pool
-    std::string selectedObject_; //!< The currently selected object
-    std::string selectedScene_;  //!< The currently selected scene
-    std::string selectedSpace_;  //!< The currently selected space
+    bool isRunning_;                           //!< Keeps track of whether the editor is running
+    bool gamePlaying_;                         //!< Keeps track of whether the current game is playing
+    bool sceneIsDirty_;                        //!< Flag for when user changes something in current scene
+    bool openSharedComponentModal_;            //!< Flag for when user opens the "add shared component" modal
+    bool openComponentArrayModal_;             //!< Flag for when user opens the "add component array" modal
+    std::string selectedSpace_;                //!< The currently selected space
+    std::string selectedScene_;                //!< The currently selected scene
+    std::string selectedPool_;                 //!< The currently selected pool
+    std::string selectedObject_;               //!< The currently selected object
+    std::string_view selectedSharedComponent_; //!< The currently selected shared component
+    std::string_view selectedComponentArray_;  //!< The currently selected component array
   };
 }
 

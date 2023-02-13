@@ -47,6 +47,8 @@ namespace Barrage
         const std::string& sceneName,
         const std::string& poolName);
 
+      ~DeletePool();
+
     private:
       /**************************************************************/
       /*!
@@ -83,10 +85,11 @@ namespace Barrage
       std::string spaceName_;
       std::string sceneName_;
       std::string poolName_;
-      unsigned sceneIndex_;
-      PoolInfo removedScenePool_;
-      PoolArchetype* removedPoolArchetype_;
-      ObjectArchetypeMap removedObjectArchetypes_;
+
+      unsigned undoSceneIndex_;
+      PoolInfo undoScenePool_;
+      PoolArchetype* undoPoolArchetype_;
+      ObjectArchetypeMap undoObjectArchetypes_;
   };
 }
 

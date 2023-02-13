@@ -24,11 +24,21 @@ namespace Barrage
     spaceName_(spaceName),
     sceneName_(sceneName),
     poolName_(poolName),
-    sceneIndex_(),
-    removedScenePool_(poolName_),
-    removedPoolArchetype_(),
-    removedObjectArchetypes_()
+    undoSceneIndex_(),
+    undoScenePool_(poolName_),
+    undoPoolArchetype_(),
+    undoObjectArchetypes_()
   {
+  }
+
+  DeletePool::~DeletePool()
+  {
+    delete undoPoolArchetype_;
+    
+    for (auto it = undoObjectArchetypes_.begin(); it != undoObjectArchetypes_.end(); ++it)
+    {
+      delete it->second;
+    }
   }
 
   bool DeletePool::Execute()
@@ -49,10 +59,10 @@ namespace Barrage
       return false;
     }
 
-    removedScenePool_ = *scenePool;
-    removedPoolArchetype_ = objectManager.ExtractPoolArchetype(poolName_);
+    undoScenePool_ = *scenePool;
+    undoPoolArchetype_ = objectManager.ExtractPoolArchetype(poolName_);
 
-    if (removedPoolArchetype_ == nullptr)
+    if (undoPoolArchetype_ == nullptr)
     {
       return false;
     }
@@ -69,7 +79,7 @@ namespace Barrage
         return false;
       }
 
-      removedObjectArchetypes_[objectName] = objectArchetype;
+      undoObjectArchetypes_[objectName] = objectArchetype;
 
       if (Editor::Instance->Data().selectedObject_ == objectName)
       {
@@ -77,7 +87,7 @@ namespace Barrage
       }
     }
 
-    scene->RemovePool(poolName_, &sceneIndex_);
+    scene->RemovePool(poolName_, &undoSceneIndex_);
 
     if (Editor::Instance->Data().selectedPool_ == poolName_)
     {
@@ -93,13 +103,15 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
-    scene->AddStartingPool(removedScenePool_, &sceneIndex_);
-    objectManager.AddPoolArchetype(poolName_, removedPoolArchetype_);
+    scene->AddStartingPool(undoScenePool_, &undoSceneIndex_);
+    objectManager.AddPoolArchetype(poolName_, undoPoolArchetype_);
+    undoPoolArchetype_ = nullptr;
 
-    for (auto it = removedObjectArchetypes_.begin(); it != removedObjectArchetypes_.end(); ++it)
+    for (auto it = undoObjectArchetypes_.begin(); it != undoObjectArchetypes_.end(); ++it)
     {
       objectManager.AddObjectArchetype(it->first, it->second);
     }
+    undoObjectArchetypes_.clear();
   }
 
   void DeletePool::Redo()
@@ -108,14 +120,14 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
-    scene->RemovePool(poolName_, &sceneIndex_);
-    removedPoolArchetype_ = objectManager.ExtractPoolArchetype(poolName_);
+    scene->RemovePool(poolName_, &undoSceneIndex_);
+    undoPoolArchetype_ = objectManager.ExtractPoolArchetype(poolName_);
 
-    for (auto it = removedScenePool_.objects_.begin(); it != removedScenePool_.objects_.end(); ++it)
+    for (auto it = undoScenePool_.objects_.begin(); it != undoScenePool_.objects_.end(); ++it)
     {
       std::string& objectName = *it;
       ObjectArchetype* objectArchetype = objectManager.ExtractObjectArchetype(objectName);
-      removedObjectArchetypes_[objectName] = objectArchetype;
+      undoObjectArchetypes_[objectName] = objectArchetype;
 
       if (Editor::Instance->Data().selectedObject_ == objectName)
       {

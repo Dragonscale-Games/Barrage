@@ -13,7 +13,10 @@
 #include "PoolPopupWidget.hpp"
 
 #include <Commands/Create/Object/CreateObject.hpp>
+#include <Commands/Create/ComponentArray/CreateComponentArray.hpp>
+#include <Commands/Create/SharedComponent/CreateSharedComponent.hpp>
 #include <Commands/Delete/Pool/DeletePool.hpp>
+
 #include <Editor/Editor.hpp>
 
 namespace Barrage
@@ -25,17 +28,37 @@ namespace Barrage
       return;
     }
 
-    if (ImGui::Selectable("Create Object"))
+    EditorData& editorData = Editor::Instance->Data();
+
+    if (ImGui::Selectable("Create object"))
     {
-      EditorData& editorData = Editor::Instance->Data();
       Editor::Instance->Command().Send(new CreateObject(editorData.selectedSpace_, editorData.selectedScene_, editorData.selectedPool_));
     }
 
+    ImGui::Spacing();
     ImGui::Separator();
+    ImGui::Spacing();
 
-    if (ImGui::Selectable("Delete Pool"))
+    if (ImGui::Selectable("Add shared component"))
     {
-      EditorData& editorData = Editor::Instance->Data();
+      editorData.selectedSharedComponent_ = std::string_view();
+      editorData.openSharedComponentModal_ = true;
+    }
+
+    ImGui::Spacing();
+
+    if (ImGui::Selectable("Add component array"))
+    {
+      editorData.selectedComponentArray_ = std::string_view();
+      editorData.openComponentArrayModal_ = true;
+    }
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+
+    if (ImGui::Selectable("Delete pool"))
+    {
       Editor::Instance->Command().Send(new DeletePool(editorData.selectedSpace_, editorData.selectedScene_, editorData.selectedPool_));
     }
 

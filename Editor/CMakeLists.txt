@@ -59,7 +59,11 @@ add_executable(Editor "Source/main.cpp"
  "Source/Widgets/Popups/Pool/PoolPopupWidget.cpp" 
  "Source/Widgets/Popups/Scene/ScenePopupWidget.cpp" 
  "Source/Commands/Delete/Object/DeleteObject.cpp" 
- "Source/Commands/Delete/Pool/DeletePool.cpp")
+ "Source/Commands/Delete/Pool/DeletePool.cpp" 
+ "Source/Commands/Create/ComponentArray/CreateComponentArray.cpp" 
+ "Source/Commands/Create/SharedComponent/CreateSharedComponent.cpp" 
+ "Source/Commands/Delete/ComponentArray/DeleteComponentArray.cpp" 
+ "Source/Commands/Delete/SharedComponent/DeleteSharedComponent.cpp" "Source/Widgets/Popups/SharedComponent/SharedComponentPopupWidget.cpp" "Source/Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.cpp"  "Source/Widgets/Modals/ComponentArray/ComponentArrayModal.cpp" "Source/Widgets/Modals/SharedComponent/SharedComponentModal.cpp")
 
 target_link_libraries(Editor PUBLIC BarrageCore imgui)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

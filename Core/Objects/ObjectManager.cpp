@@ -82,6 +82,11 @@ namespace Barrage
     return componentAllocator_.GetSharedComponentNames();
   }
 
+  ComponentAllocator& ObjectManager::GetComponentAllocator()
+  {
+    return componentAllocator_;
+  }
+
   std::vector<std::string_view> ObjectManager::GetSpawnFuncNames()
   {
     return spawnFuncManager_.GetSpawnFuncNames();

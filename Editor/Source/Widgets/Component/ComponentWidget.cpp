@@ -14,7 +14,8 @@
 #include "Objects/Components/BaseClasses/BaseComponent.hpp"
 #include "Widgets/Data/DataWidget.hpp"
 #include <iostream>
-
+#include "Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.hpp"
+#include "Widgets/Popups/SharedComponent/SharedComponentPopupWidget.hpp"
 namespace Barrage
 {
   void ComponentWidget::Use(const std::string_view& componentName, Component* component)
@@ -24,6 +25,8 @@ namespace Barrage
       return;
     }
 
+    ImGui::PushID(componentName.data());
+
     if (component->GetType() == Component::Type::ARRAY)
     {
       EditComponentArray(componentName, dynamic_cast<ComponentArray*>(component));
@@ -32,10 +35,16 @@ namespace Barrage
     {
       EditSharedComponent(componentName, dynamic_cast<SharedComponent*>(component));
     }
+
+    ComponentArrayPopupWidget::Use("Component Array Popup", componentName);
+    SharedComponentPopupWidget::Use("Shared Component Popup", componentName);
+
+    ImGui::PopID();
   }
 
   void ComponentWidget::EditComponentArray(const std::string_view& componentName, ComponentArray* componentArray)
   {
+    
     std::string derivedArrayName = componentName.data();
     derivedArrayName += "*";
     rttr::variant arrayPointer = componentArray;
@@ -60,7 +69,14 @@ namespace Barrage
       const rttr::type dataType = rttr::type::get_by_name(propName);
       rttr::variant dataPointer = prop.get_value(arrayPointer);
 
-      if (dataType.is_valid() && ImGui::CollapsingHeader(propName.data()))
+      bool headerOpen = ImGui::CollapsingHeader(propName.data());
+
+      if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+      {
+        ImGui::OpenPopup("Component Array Popup");
+      }
+
+      if (dataType.is_valid() && headerOpen)
       {
         ImGui::Spacing();
         DataWidget::Use(dataPointer);
@@ -78,13 +94,23 @@ namespace Barrage
 
     bool success = componentPointer.convert(componentType);
 
-    if (!success || !ImGui::CollapsingHeader(componentName.data()))
+    if (!success)
     {
       return;
     }
 
-    ImGui::Spacing();
-    DataWidget::Use(componentPointer);
-    ImGui::Spacing();
+    bool headerOpen = ImGui::CollapsingHeader(componentName.data());
+
+    if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+    {
+      ImGui::OpenPopup("Shared Component Popup");
+    }
+
+    if (headerOpen)
+    {
+      ImGui::Spacing();
+      DataWidget::Use(componentPointer);
+      ImGui::Spacing();
+    }
   }
 }

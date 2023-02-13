@@ -21,6 +21,9 @@
 #include "Widgets/Windows/Inspector/InspectorWidget.hpp"
 #include "Widgets/MainMenu/MainMenuWidget.hpp"
 
+#include <Widgets/Modals/SharedComponent/SharedComponentModal.hpp>
+#include <Widgets/Modals/ComponentArray/ComponentArrayModal.hpp>
+
 #include <unordered_set>
 #include <chrono>
 
@@ -162,6 +165,21 @@ namespace Barrage
     InspectorWidget::Use();
     ImGui::ShowDemoWindow();
     LogWidget::Use();
+
+    if (data_.openSharedComponentModal_)
+    {
+      ImGui::OpenPopup("Add shared component");
+      data_.openSharedComponentModal_ = false;
+    }
+
+    if (data_.openComponentArrayModal_)
+    {
+      ImGui::OpenPopup("Add component array");
+      data_.openComponentArrayModal_ = false;
+    }
+
+    SharedComponentModal::Use("Add shared component");
+    ComponentArrayModal::Use("Add component array");
   }
 
   void Editor::HandleKeyboard()

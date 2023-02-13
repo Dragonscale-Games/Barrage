@@ -15,16 +15,20 @@
 
 namespace Barrage
 {
-  std::stack<PoolArchetype*> CreatePool::redoArchetypes_ = std::stack<PoolArchetype*>();
-  
   CreatePool::CreatePool(const std::string& spaceName, const std::string& sceneName) :
     Command("New pool created."),
     spaceName_(spaceName),
     sceneName_(sceneName),
-    poolName_()
+    poolName_(),
+    redoArchetype_(nullptr)
   {
   }
  
+  CreatePool::~CreatePool()
+  {
+    delete redoArchetype_;
+  }
+
   bool CreatePool::Execute()
   {
     Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
@@ -40,7 +44,7 @@ namespace Barrage
     unsigned counter = 0;
 
     do {
-      poolName_ = "New Pool";
+      poolName_ = "Pool";
 
       if (counter)
       {
@@ -75,8 +79,7 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
-    PoolArchetype* removedArchetype = objectManager.ExtractPoolArchetype(poolName_);
-    redoArchetypes_.push(removedArchetype);
+    redoArchetype_ = objectManager.ExtractPoolArchetype(poolName_);
     scene->RemovePool(poolName_);
 
     if (Editor::Instance->Data().selectedPool_ == poolName_)
@@ -91,17 +94,8 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
-    objectManager.AddPoolArchetype(poolName_, redoArchetypes_.top());
-    redoArchetypes_.pop();
+    objectManager.AddPoolArchetype(poolName_, redoArchetype_);
+    redoArchetype_ = nullptr;
     scene->AddStartingPool(poolName_);
-  }
-
-  void CreatePool::ClearRedos()
-  {
-    while (!redoArchetypes_.empty())
-    {
-      delete redoArchetypes_.top();
-      redoArchetypes_.pop();
-    }
   }
 }
