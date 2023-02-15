@@ -25,7 +25,7 @@ namespace Barrage
     EditorData();
     
     bool isRunning_;                           //!< Keeps track of whether the editor is running
-    bool gamePlaying_;                         //!< Keeps track of whether the current game is playing
+    bool gamePlaying_;                         //!< Keeps track of whether the game is playing
     bool sceneIsDirty_;                        //!< Flag for when user changes something in current scene
     bool openSharedComponentModal_;            //!< Flag for when user opens the "add shared component" modal
     bool openComponentArrayModal_;             //!< Flag for when user opens the "add component array" modal

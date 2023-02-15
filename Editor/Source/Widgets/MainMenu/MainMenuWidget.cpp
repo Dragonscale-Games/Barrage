@@ -33,14 +33,38 @@ namespace Barrage
 
     if (ImGui::BeginMenu("Edit"))
     {
+      bool undoAvailable = Editor::Instance->Command().UndoAvailable();
+      
+      if (!undoAvailable)
+      {
+        ImGui::BeginDisabled();
+      }
+
       if (ImGui::MenuItem("Undo"))
       {
         Editor::Instance->Command().Undo();
       }
 
+      if (!undoAvailable)
+      {
+        ImGui::EndDisabled();
+      }
+
+      bool redoAvailable = Editor::Instance->Command().RedoAvailable();
+
+      if (!redoAvailable)
+      {
+        ImGui::BeginDisabled();
+      }
+
       if (ImGui::MenuItem("Redo"))
       {
         Editor::Instance->Command().Redo();
+      }
+
+      if (!redoAvailable)
+      {
+        ImGui::EndDisabled();
       }
 
       ImGui::EndMenu();

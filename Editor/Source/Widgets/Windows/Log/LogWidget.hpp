@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
+#include <string>
 
 namespace Barrage
 {
@@ -44,11 +45,22 @@ namespace Barrage
         \brief
           Adds an entry to the log.
 
-        \param fmt
+        \param text
           A printf()-style formatted C string.
       */
       /**************************************************************/
-      static void AddEntry(const char* fmt, ...) IM_FMTARGS(2);
+      static void AddEntry(const char* text, ...) IM_FMTARGS(2);
+      
+      /**************************************************************/
+      /*!
+        \brief
+          Adds an entry to the log.
+
+        \param text
+          The text to add as a std::string.
+      */
+      /**************************************************************/
+      static void AddEntry(const std::string& text);
 
     private:
       static ImGuiTextBuffer buffer_;

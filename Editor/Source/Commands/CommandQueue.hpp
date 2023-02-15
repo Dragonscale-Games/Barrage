@@ -94,6 +94,30 @@ namespace Barrage
       /**************************************************************/
       void Redo(bool log = true);
 
+      /**************************************************************/
+      /*!
+        \brief
+          Indicates whether there are undo actions the user can take.
+
+        \return
+          Returns true if a command that can be undone exists, returns
+          false otherwise.
+      */
+      /**************************************************************/
+      bool UndoAvailable();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Indicates whether there are redo actions the user can take.
+
+        \return
+          Returns true if a command that can be redone exists, returns
+          false otherwise.
+      */
+      /**************************************************************/
+      bool RedoAvailable();
+
     private:
       /**************************************************************/
       /*!

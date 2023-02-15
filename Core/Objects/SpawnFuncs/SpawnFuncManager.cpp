@@ -24,7 +24,7 @@ namespace Barrage
 
   void SpawnFuncManager::RegisterSpawnFunc(const std::string_view& name, SpawnFunc spawnFunction)
   {
-    if (spawnFuncs_.find(name) != spawnFuncs_.end())
+    if (spawnFuncs_.count(name))
     {
       return;
     }

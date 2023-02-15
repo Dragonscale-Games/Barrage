@@ -191,7 +191,7 @@ namespace Barrage
       \brief
         Saves a particular resource through this manager.
       \remark
-        For the meantime, this is equivalent to calling "Save" on the actua
+        For the meantime, this is equivalent to calling "Save" on the actual
         resource but that may change in the future.
     */
     /*************************************************************************/

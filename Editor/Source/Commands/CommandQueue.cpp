@@ -151,6 +151,16 @@ namespace Barrage
     }
   }
 
+  bool CommandQueue::UndoAvailable()
+  {
+    return !undoStack_.empty();
+  }
+
+  bool CommandQueue::RedoAvailable()
+  {
+    return !redoStack_.empty();
+  }
+
   void CommandQueue::ClearUndoStack()
   {
     while (!undoStack_.empty())

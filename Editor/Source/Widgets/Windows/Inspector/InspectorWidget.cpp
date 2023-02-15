@@ -14,6 +14,7 @@
 #include "Widgets/Component/ComponentWidget.hpp"
 #include "Editor/Editor.hpp"
 #include <string>
+#include "Widgets/Data/DataWidget.hpp"
 
 namespace Barrage
 {
@@ -39,6 +40,10 @@ namespace Barrage
         ImGui::Spacing();
 
         ImGui::PushID(Editor::Instance->Data().selectedPool_.c_str());
+
+        DataWidget::Use(poolArchetype->capacity_, "capacity");
+
+        ImGui::Spacing();
 
         if (ImGui::CollapsingHeader("Tags"))
         {

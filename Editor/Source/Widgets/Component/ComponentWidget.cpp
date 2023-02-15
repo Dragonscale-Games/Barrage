@@ -44,6 +44,7 @@ namespace Barrage
 
   void ComponentWidget::EditComponentArray(const std::string_view& componentName, ComponentArray* componentArray)
   {
+    bool headerOpen = ImGui::CollapsingHeader(componentName.data());
     
     std::string derivedArrayName = componentName.data();
     derivedArrayName += "*";
@@ -69,8 +70,6 @@ namespace Barrage
       const rttr::type dataType = rttr::type::get_by_name(propName);
       rttr::variant dataPointer = prop.get_value(arrayPointer);
 
-      bool headerOpen = ImGui::CollapsingHeader(propName.data());
-
       if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
       {
         ImGui::OpenPopup("Component Array Popup");
@@ -87,6 +86,8 @@ namespace Barrage
 
   void ComponentWidget::EditSharedComponent(const std::string_view& componentName, SharedComponent* component)
   {
+    bool headerOpen = ImGui::CollapsingHeader(componentName.data());
+    
     std::string derivedComponentName = componentName.data();
     derivedComponentName += "*";
     rttr::variant componentPointer = component;
@@ -98,8 +99,6 @@ namespace Barrage
     {
       return;
     }
-
-    bool headerOpen = ImGui::CollapsingHeader(componentName.data());
 
     if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
     {

@@ -40,7 +40,9 @@ namespace Barrage
           The name of the object or primitive being edited.
 
         \param object
-          The object or primitive being edited.
+          An rttr::variant containing the object/primitive to be
+          edited. If the variant contains a pointer, the object or
+          primitive it points at is edited instead.
 
         \param treeNode
           If "true", wraps the class's widgets in a ImGui::TreeNode.
@@ -58,6 +60,32 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Adds a widget to the window that allows the user to edit
+          an object or primitive registered with RTTR.
+
+        \param name
+          The name of the object or primitive being edited.
+
+        \param object
+          The object or primitive to be edited.
+
+        \param treeNode
+          If "true", wraps the class's widgets in a ImGui::TreeNode.
+          If "false", displays widgets normally.
+          This is generally used internally when this function is
+          called recursively on sub-objects of the user object.
+
+        \return
+          Returns true if the object's value changed, returns false
+          otherwise.
+      */
+      /**************************************************************/
+      template <typename T>
+      static void Use(T& object, rttr::string_view name = rttr::string_view(), bool treeNode = false);
+
+      /**************************************************************/
+      /*!
+        \brief
           Allows the user to provide a widget for an object or
           primitive type registered with RTTR. This will overwrite any 
           widget previously assigned to that type.
@@ -71,16 +99,6 @@ namespace Barrage
       /**************************************************************/
       template <typename T>
       static void AddDataWidget(DataWidgetFunction widgetFunction);
-
-    private:
-      /**************************************************************/
-      /*!
-        \brief
-          Sets up the function map with the default widget functions
-          for primitives and other common/important types.
-      */
-      /**************************************************************/
-      static void Initialize();
 
       static void FloatWidget(DataObject& object);
 
@@ -107,6 +125,16 @@ namespace Barrage
       static void RotationWidget(DataObject& object);
 
       static void SpriteWidget(DataObject& object);
+
+    private:
+      /**************************************************************/
+      /*!
+        \brief
+          Sets up the function map with the default widget functions
+          for primitives and other common/important types.
+      */
+      /**************************************************************/
+      static void Initialize();
 
     private:
       static DataWidgetFunctionMap widgetFunctions_;

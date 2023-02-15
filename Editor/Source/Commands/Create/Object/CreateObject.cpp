@@ -52,7 +52,7 @@ namespace Barrage
 
     if (scenePool->objects_.size() >= poolArchetype->capacity_)
     {
-      LogWidget::AddEntry("Error: Could not create object (pool is full).");
+      LogWidget::AddEntry("Error: Could not create object (" + poolName_ + " is full).");
       return false;
     }
 

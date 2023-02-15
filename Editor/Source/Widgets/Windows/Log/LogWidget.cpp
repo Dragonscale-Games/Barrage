@@ -76,4 +76,9 @@ namespace Barrage
         lineOffsets_.push_back(old_size);
     scrollToBottom_ = true;
   }
+
+  void LogWidget::AddEntry(const std::string& text)
+  {
+    AddEntry(text.c_str());
+  }
 }

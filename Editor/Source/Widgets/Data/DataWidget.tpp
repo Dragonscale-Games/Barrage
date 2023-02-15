@@ -19,6 +19,13 @@
 namespace Barrage
 {
   template <typename T>
+  void DataWidget::Use(T& object, rttr::string_view name, bool treeNode)
+  {
+    rttr::variant objectPointer = &object;
+    DataWidget::Use(objectPointer, name, treeNode);
+  }
+  
+  template <typename T>
   void DataWidget::AddDataWidget(DataWidgetFunction widgetFunction)
   {
     rttr::type type = rttr::type::get<T>();
