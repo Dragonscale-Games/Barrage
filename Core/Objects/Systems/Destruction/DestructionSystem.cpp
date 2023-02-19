@@ -108,7 +108,7 @@ namespace Barrage
     for (auto it = pool->componentArrays_.begin(); it != pool->componentArrays_.end(); ++it)
     {
       // we'll operate on the destructible array last; after the loop finishes
-      if (it->first == "DestructibleArray")
+      if (it->first == "Destructible")
         continue;
 
       unsigned alive_end_index = initial_alive_end_index;
