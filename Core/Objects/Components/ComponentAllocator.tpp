@@ -46,9 +46,7 @@ namespace Barrage
   template <typename T>
   ComponentArray* ComponentAllocator::AllocateComponentArray(unsigned capacity)
   {
-    ComponentArrayT<T>* new_component_array = new ComponentArrayT<T>;
-
-    new_component_array->Allocate(capacity);
+    ComponentArrayT<T>* new_component_array = new ComponentArrayT<T>(capacity);
 
     return new_component_array;
   }

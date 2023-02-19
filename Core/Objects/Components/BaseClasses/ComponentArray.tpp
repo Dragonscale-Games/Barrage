@@ -20,26 +20,17 @@
 namespace Barrage
 {
   template <typename T>
-  ComponentArrayT<T>::ComponentArrayT() :
-    data_(nullptr)
+  ComponentArrayT<T>::ComponentArrayT(unsigned capacity) :
+    data_(nullptr),
+    capacity_(capacity)
   {
+    data_ = new T[capacity];
   }
   
   template <typename T>
   ComponentArrayT<T>::~ComponentArrayT()
   {
     delete[] data_;
-  }
-
-  template <typename T>
-  void ComponentArrayT<T>::Allocate(unsigned capacity)
-  {
-    if (data_)
-    {
-      delete[] data_;
-    }
-      
-    data_ = new T[capacity];
   }
 
   template <typename T>

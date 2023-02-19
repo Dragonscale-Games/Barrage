@@ -94,27 +94,22 @@ namespace Demo
     ObjectArchetype* object_archetype = new ObjectArchetype;
 
     PositionArray* position_array = new PositionArray;
-    position_array->Allocate(1);
     position_array->data_->x_ = 960.0f;
     position_array->data_->y_ = 540.0f;
     object_archetype->components_["Position"] = position_array;
 
     RotationArray* rotation_array = new RotationArray;
-    rotation_array->Allocate(1);
     object_archetype->components_["Rotation"] = rotation_array;
 
     ScaleArray* scale_array = new ScaleArray;
-    scale_array->Allocate(1);
     scale_array->data_->w_ = 64.0f;
     scale_array->data_->h_ = 64.0f;
     object_archetype->components_["Scale"] = scale_array;
 
     VelocityArray* velocity_array = new VelocityArray;
-    velocity_array->Allocate(1);
     object_archetype->components_["Velocity"] = velocity_array;
 
     TextureSpaceArray* tex_space_array = new TextureSpaceArray;
-    tex_space_array->Allocate(1);
     tex_space_array->data_->uSize_ = 1.0f;
     tex_space_array->data_->vSize_ = 1.0f;
     tex_space_array->data_->u_ = 0.0f;
@@ -162,27 +157,22 @@ namespace Demo
     ObjectArchetype* object_archetype = new ObjectArchetype;
 
     PositionArray* position_array = new PositionArray;
-    position_array->Allocate(1);
     position_array->data_->x_ = 960.0f;
     position_array->data_->y_ = 880.0f;
     object_archetype->components_["Position"] = position_array;
 
     RotationArray* rotation_array = new RotationArray;
-    rotation_array->Allocate(1);
     object_archetype->components_["Rotation"] = rotation_array;
 
     ScaleArray* scale_array = new ScaleArray;
-    scale_array->Allocate(1);
     scale_array->data_->w_ = 32.0f;
     scale_array->data_->h_ = 32.0f;
     object_archetype->components_["Scale"] = scale_array;
 
     VelocityArray* velocity_array = new VelocityArray;
-    velocity_array->Allocate(1);
     object_archetype->components_["Velocity"] = velocity_array;
 
     TextureSpaceArray* tex_space_array = new TextureSpaceArray;
-    tex_space_array->Allocate(1);
     tex_space_array->data_->uSize_ = 1.0f;
     tex_space_array->data_->vSize_ = 1.0f;
     tex_space_array->data_->u_ = 0.0f;
@@ -190,7 +180,6 @@ namespace Demo
     object_archetype->components_["TextureSpace"] = tex_space_array;
 
     DestructibleArray* destructible_array = new DestructibleArray;
-    destructible_array->Allocate(1);
     object_archetype->components_["Destructible"] = destructible_array;
 
     objectManager.AddObjectArchetype("Bullet Object", object_archetype);
@@ -222,7 +211,6 @@ namespace Demo
     ObjectArchetype* object_archetype = new ObjectArchetype;
 
     PositionArray* position_array = new PositionArray;
-    position_array->Allocate(1);
     position_array->data_->x_ = 960.0f;
     position_array->data_->y_ = 880.0f;
     object_archetype->components_["Position"] = position_array;

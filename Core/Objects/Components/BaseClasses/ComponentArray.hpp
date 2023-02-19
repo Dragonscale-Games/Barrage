@@ -38,17 +38,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Allocates the component array for a given component type.
-
-        \param capacity
-          The number of elements in the component array.
-      */
-      /**************************************************************/
-      virtual void Allocate(unsigned capacity) = 0;
-
-      /**************************************************************/
-      /*!
-        \brief
           Copies a component from some source component array to a 
           recipient component in this component array.
 
@@ -80,7 +69,7 @@ namespace Barrage
           Initializes with a null component array.
       */
       /**************************************************************/
-      ComponentArrayT();
+      ComponentArrayT(unsigned capacity = 1);
 
       /**************************************************************/
       /*!
@@ -89,17 +78,6 @@ namespace Barrage
       */
       /**************************************************************/
       virtual ~ComponentArrayT();
-
-      /**************************************************************/
-      /*!
-        \brief
-          Allocates component array with the given number of elements.
-
-        \param capacity
-          The number of elements in the component array.
-      */
-      /**************************************************************/
-      void Allocate(unsigned capacity) override;
 
       /**************************************************************/
       /*!
@@ -137,6 +115,7 @@ namespace Barrage
 
     public:
       T* data_;
+      const unsigned capacity_;
 
     RTTR_ENABLE(ComponentArray)
   };
