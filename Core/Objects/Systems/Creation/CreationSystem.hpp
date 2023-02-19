@@ -19,7 +19,7 @@
 #include "Objects/Systems/BaseSystem.hpp"
 #include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
 #include "Objects/Archetypes/ArchetypeManager.hpp"
-#include "Objects/SpawnFuncs/SpawnFuncManager.hpp"
+#include "Objects/SpawnFunctions/SpawnFunctionManager.hpp"
 #include "Objects/Pools/PoolManager.hpp"
 #include "Objects/Components/SharedComponents/Spawner.hpp"
 
@@ -60,15 +60,15 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Sets the initializer manager the creation system will use
-          to look up initializers.
+          Sets the spawn function manager the creation system will use
+          to look up spawn functions.
 
-        \param initializerManager
-          The initializer manager that holds all registered 
-          initializers.
+        \param spawnFunctionManager
+          The spawn function manager that holds all registered 
+          spawn functions.
       */
       /**************************************************************/
-      void SetSpawnFuncManager(SpawnFuncManager& spawnFuncManager);
+      void SetSpawnFunctionManager(SpawnFunctionManager& spawnFunctionManager);
 
       /**************************************************************/
       /*!
@@ -186,9 +186,9 @@ namespace Barrage
       static void AssignHandles(Pool* pool);
 
     private:
-      ArchetypeManager* archetypeManager_;  //!< Used to get object archetypes
-      SpawnFuncManager* spawnFuncManager_;  //!< Used to look up spawn functions
-      PoolManager* poolManager_;            //!< Used to get pools where objects will spawn
+      ArchetypeManager* archetypeManager_;          //!< Used to get object archetypes
+      SpawnFunctionManager* spawnFunctionManager_;  //!< Used to look up spawn functions
+      PoolManager* poolManager_;                    //!< Used to get pools where objects will spawn
 	};
 }
 

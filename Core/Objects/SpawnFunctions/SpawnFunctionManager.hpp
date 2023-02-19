@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            SpawnFuncManager.hpp
+ * \file            SpawnFunctionManager.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -14,8 +14,8 @@
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef SpawnFuncManager_BARRAGE_H
-#define SpawnFuncManager_BARRAGE_H
+#ifndef SpawnFunctionManager_BARRAGE_H
+#define SpawnFunctionManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <vector>
@@ -27,13 +27,13 @@ namespace Barrage
   class Pool;
   
   // Arguments: spawner pool, pool to spawn into, index of first new object, number of new objects, indices of spawner objects
-  typedef void (*SpawnFunc)(Pool&, Pool&, unsigned, unsigned, const std::vector<unsigned>&);
+  typedef void (*SpawnFunction)(Pool&, Pool&, unsigned, unsigned, const std::vector<unsigned>&);
   
   //! Associates spawn functions with their names
-  typedef std::unordered_map<std::string_view, SpawnFunc> SpawnFuncMap;
+  typedef std::unordered_map<std::string_view, SpawnFunction> SpawnFunctionMap;
 
   //! Keeps track of spawn functions and their names
-  class SpawnFuncManager
+  class SpawnFunctionManager
 	{
     public:   
       /**************************************************************/
@@ -42,7 +42,7 @@ namespace Barrage
           Default constructor.
       */
       /**************************************************************/
-      SpawnFuncManager();
+      SpawnFunctionManager();
 
       /**************************************************************/
       /*!
@@ -56,7 +56,7 @@ namespace Barrage
           The spawn function to add.
       */
       /**************************************************************/
-      void RegisterSpawnFunc(const std::string_view& name, SpawnFunc spawnFunction);
+      void RegisterSpawnFunction(const std::string_view& name, SpawnFunction spawnFunction);
 
       /**************************************************************/
       /*!
@@ -71,7 +71,7 @@ namespace Barrage
           if it doesn't exist.
       */
       /**************************************************************/
-      SpawnFunc GetSpawnFunc(const std::string_view& name);
+      SpawnFunction GetSpawnFunction(const std::string_view& name);
 
       /**************************************************************/
       /*!
@@ -82,14 +82,14 @@ namespace Barrage
           Returns the list of all registered initializers.
       */
       /**************************************************************/
-      std::vector<std::string_view> GetSpawnFuncNames();
+      std::vector<std::string_view> GetSpawnFunctionNames();
 
     private:
-      SpawnFuncMap spawnFuncs_;                      //!< The collection of registered spawn functions
-      std::vector<std::string_view> spawnFuncNames_; //!< The names of all registered spawn functions
+      SpawnFunctionMap spawnFunctions_;                  //!< The collection of registered spawn functions
+      std::vector<std::string_view> spawnFunctionNames_; //!< The names of all registered spawn functions
 	};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // SpawnFuncManager_BARRAGE_H
+#endif // SpawnFunctionManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

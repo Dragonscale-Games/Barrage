@@ -15,7 +15,7 @@
 #define DirectionFuncs_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Objects/SpawnFuncs/SpawnFuncManager.hpp>
+#include <Objects/SpawnFunctions/SpawnFunctionManager.hpp>
 
 namespace Demo
 {

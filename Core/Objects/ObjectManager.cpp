@@ -25,22 +25,22 @@ namespace Barrage
     archetypeManager_(componentAllocator_),
     poolManager_(componentAllocator_, space),
     systemManager_(),
-    spawnFuncManager_()
+    spawnFunctionManager_()
   {
     RegisterEngineComponents();
     RegisterEngineSystems();
-    RegisterEngineSpawnFuncs();
+    RegisterEngineSpawnFunctions();
     SetDefaultSystemUpdateOrder();
 
     CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_.at("CreationSystem"));
 
     creation_system->SetArchetypeManager(archetypeManager_);
-    creation_system->SetSpawnFuncManager(spawnFuncManager_);
+    creation_system->SetSpawnFunctionManager(spawnFunctionManager_);
     creation_system->SetPoolManager(poolManager_);
 
     RegisterCustomComponents();
     RegisterCustomSystems();
-    RegisterCustomSpawnFuncs();
+    RegisterCustomSpawnFunctions();
     SetSystemUpdateOrder();
   }
 
@@ -87,9 +87,9 @@ namespace Barrage
     return componentAllocator_;
   }
 
-  std::vector<std::string_view> ObjectManager::GetSpawnFuncNames()
+  std::vector<std::string_view> ObjectManager::GetSpawnFunctionNames()
   {
-    return spawnFuncManager_.GetSpawnFuncNames();
+    return spawnFunctionManager_.GetSpawnFunctionNames();
   }
 
   std::vector<std::string_view> ObjectManager::GetRegisteredSystemNames()
@@ -222,9 +222,9 @@ namespace Barrage
     systemManager_.SetUpdateOrder(updateOrderList);
   }
 
-  void ObjectManager::RegisterSpawnFunc(const std::string_view& name, SpawnFunc initializer)
+  void ObjectManager::RegisterSpawnFunction(const std::string_view& name, SpawnFunction initializer)
   {
-    spawnFuncManager_.RegisterSpawnFunc(name, initializer);
+    spawnFunctionManager_.RegisterSpawnFunction(name, initializer);
   }
 
   void ObjectManager::RegisterEngineComponents()
@@ -249,7 +249,7 @@ namespace Barrage
     RegisterSystem<DrawSystem>("DrawSystem");
   }
 
-  void ObjectManager::RegisterEngineSpawnFuncs()
+  void ObjectManager::RegisterEngineSpawnFunctions()
   {
 
   }

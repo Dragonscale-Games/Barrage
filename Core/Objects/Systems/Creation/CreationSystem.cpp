@@ -19,7 +19,7 @@ namespace Barrage
   CreationSystem::CreationSystem() :
     System(),
     archetypeManager_(nullptr),
-    spawnFuncManager_(nullptr),
+    spawnFunctionManager_(nullptr),
     poolManager_(nullptr)
   {
     // this pool type has no required tags or components because all pools will be subscribed to the creation system
@@ -43,9 +43,9 @@ namespace Barrage
     archetypeManager_ = &archetypeManager;
   }
 
-  void CreationSystem::SetSpawnFuncManager(SpawnFuncManager& spawnFuncManager)
+  void CreationSystem::SetSpawnFunctionManager(SpawnFunctionManager& spawnFunctionManager)
   {
-    spawnFuncManager_ = &spawnFuncManager;
+    spawnFunctionManager_ = &spawnFunctionManager;
   }
 
   void CreationSystem::SetPoolManager(PoolManager& poolManager)
@@ -123,17 +123,17 @@ namespace Barrage
     }
   }
 
-  void CreationSystem::ApplySpawnFuncs(const std::vector<std::string>& spawnFuncs, Pool* sourcePool, Pool* destinationPool, unsigned startIndex, unsigned numObjects, const std::vector<unsigned>& sourceIndices)
+  void CreationSystem::ApplySpawnFuncs(const std::vector<std::string>& spawnFunctions, Pool* sourcePool, Pool* destinationPool, unsigned startIndex, unsigned numObjects, const std::vector<unsigned>& sourceIndices)
   {
-    size_t num_spawn_funcs = spawnFuncs.size();
+    size_t num_spawn_funcs = spawnFunctions.size();
 
     for (size_t i = 0; i < num_spawn_funcs; ++i)
     {
-      SpawnFunc spawn_func = spawnFuncManager_->GetSpawnFunc(spawnFuncs[i]);
+      SpawnFunction spawn_function = spawnFunctionManager_->GetSpawnFunction(spawnFunctions[i]);
 
-      if (spawn_func)
+      if (spawn_function)
       {
-        spawn_func(*sourcePool, *destinationPool, startIndex, numObjects, sourceIndices);
+        spawn_function(*sourcePool, *destinationPool, startIndex, numObjects, sourceIndices);
       }
     }
   }

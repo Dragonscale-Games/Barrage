@@ -40,10 +40,10 @@ namespace Barrage
     RegisterSystem<Demo::SpawnSystem>("SpawnSystem");
   }
 
-  void ObjectManager::RegisterCustomSpawnFuncs()
+  void ObjectManager::RegisterCustomSpawnFunctions()
   {
-    RegisterSpawnFunc("MatchPosition", Demo::Spawn::MatchPosition);
-    RegisterSpawnFunc("RandomDirection", Demo::Spawn::RandomDirection);
+    RegisterSpawnFunction("MatchPosition", Demo::Spawn::MatchPosition);
+    RegisterSpawnFunction("RandomDirection", Demo::Spawn::RandomDirection);
   }
 
   void ObjectManager::SetSystemUpdateOrder()
