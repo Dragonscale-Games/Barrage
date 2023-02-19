@@ -27,7 +27,7 @@ namespace Demo
   {
     PoolType bullet_type;
     bullet_type.AddTag("Spawner");
-    bullet_type.AddComponentName("Spawner");
+    bullet_type.AddSharedComponent("Spawner");
     poolTypes_[BULLET_SPAWNER_POOLS] = bullet_type;
   }
 
@@ -38,7 +38,7 @@ namespace Demo
 
   void SpawnSystem::SpawnBullets(Pool* pool)
   {
-    Spawner& spawner = *pool->GetSharedComponent<Spawner>("Spawner");
+    Spawner& spawner = pool->GetSharedComponent<Spawner>("Spawner")->Data();
     spawner.spawnTypes_[BULLET_SPAWN_TYPE].sourceIndices_.resize(100, 0);
     CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_->GetSystem("CreationSystem"));
     creation_system->QueueSpawns(pool, spawner.spawnTypes_[BULLET_SPAWN_TYPE]);

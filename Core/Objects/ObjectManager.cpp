@@ -229,17 +229,17 @@ namespace Barrage
 
   void ObjectManager::RegisterEngineComponents()
   {
-    RegisterComponent<DestructibleArray>("DestructibleArray");
-    RegisterComponent<DirectoryIndexArray>("DirectoryIndexArray");
-    RegisterComponent<ParentArray>("ParentArray");
-    RegisterComponent<PositionArray>("PositionArray");
-    RegisterComponent<RotationArray>("RotationArray");
-    RegisterComponent<ScaleArray>("ScaleArray");
-    RegisterComponent<TextureSpaceArray>("TextureSpaceArray");
+    RegisterComponentArray<Destructible>("Destructible");
+    RegisterComponentArray<DirectoryIndex>("DirectoryIndex");
+    RegisterComponentArray<Parent>("Parent");
+    RegisterComponentArray<Position>("Position");
+    RegisterComponentArray<Rotation>("Rotation");
+    RegisterComponentArray<Scale>("Scale");
+    RegisterComponentArray<TextureSpace>("TextureSpace");
 
-    RegisterComponent<ObjectDirectory>("ObjectDirectory");
-    RegisterComponent<Spawner>("Spawner");
-    RegisterComponent<Sprite>("Sprite");
+    RegisterSharedComponent<ObjectDirectory>("ObjectDirectory");
+    RegisterSharedComponent<Spawner>("Spawner");
+    RegisterSharedComponent<Sprite>("Sprite");
   }
 
   void ObjectManager::RegisterEngineSystems()

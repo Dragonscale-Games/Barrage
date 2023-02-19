@@ -30,8 +30,8 @@ namespace Barrage
     poolTypes_[ALL_POOLS] = all_pool_type;
 
     PoolType handle_pool_type;
-    handle_pool_type.AddComponentName("ObjectDirectory");
-    handle_pool_type.AddComponentName("DirectoryIndexArray");
+    handle_pool_type.AddSharedComponent("ObjectDirectory");
+    handle_pool_type.AddComponentArray("DirectoryIndex");
     poolTypes_[HANDLE_POOLS] = handle_pool_type;
   }
 
@@ -69,8 +69,8 @@ namespace Barrage
 
     if (destinationPool->HasComponentArray("DirectoryIndexArray") && destinationPool->HasSharedComponent("ObjectDirectory"))
     {
-      ObjectDirectory& object_directory = *destinationPool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
-      DirectoryIndexArray& directory_index_array = *destinationPool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
+      ObjectDirectory& object_directory = destinationPool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
+      DirectoryIndexArray& directory_index_array = *destinationPool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
 
       unsigned object_index = destinationPool->numActiveObjects_ - 1;
       DirectoryIndex& directory_index = directory_index_array.Data(object_index);
@@ -149,8 +149,8 @@ namespace Barrage
 
   void CreationSystem::AssignHandles(Pool* pool)
   {
-    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
-    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
+    ObjectDirectory& object_directory = pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
 
     unsigned start_index = pool->numActiveObjects_;
     unsigned num_queued_objects = pool->numQueuedObjects_;

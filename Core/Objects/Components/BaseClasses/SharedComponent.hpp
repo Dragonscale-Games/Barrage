@@ -17,13 +17,12 @@
 #define SharedComponent_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "BaseComponent.hpp"
 #include <rttr/rttr_enable.h>
 
 namespace Barrage
 {
 	//! Base shared component class that all shared components should inherit from
-  class SharedComponent : public Component
+  class SharedComponent
   {
     public:
       /**************************************************************/
@@ -37,21 +36,66 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Used to identify this object as a shared component.
+          Copies another component to this component. They must be
+          the same type.
 
-        \return
-          Returns the "SHARED" component type.
+        \param other
+          The component to copy.
       */
       /**************************************************************/
-      virtual Component::Type GetType() override;
+      virtual void CopyToThis(const SharedComponent& other) = 0;
 
       // Notify rttr of the component hierarchy.
-      RTTR_ENABLE(Component)
+      RTTR_ENABLE()
+  };
+
+  //! All shared components are a specialization of this template
+  template <typename T>
+  class SharedComponentT : public SharedComponent
+  {
+    public:
+      /**************************************************************/
+      /*!
+        \brief
+          Constructs component.
+      */
+      /**************************************************************/
+      SharedComponentT();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copies another component to this component. They must be
+          the same type.
+
+        \param other
+          The component to copy.
+      */
+      /**************************************************************/
+      void CopyToThis(const SharedComponent& other) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Accesses the underlying component data.
+
+        \return
+          Returns a reference to the component data.
+      */
+      /**************************************************************/
+      T& Data();
+
+    public:
+      T data_;
+
+      RTTR_ENABLE(SharedComponent)
   };
 
   //! Associates each shared component with its name
   typedef std::unordered_map<std::string_view, SharedComponent*> SharedComponentMap;
 }
+
+#include "SharedComponent.tpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif // SharedComponent_BARRAGE_H

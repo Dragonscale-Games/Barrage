@@ -21,15 +21,15 @@
 namespace Demo
 {
   //! Random number generator component
-  class RNG : public Barrage::SharedComponent
+  class RNG
   {
     public:
       Barrage::Random rng_;
 
       inline RNG() : rng_() {}
-
-      RTTR_ENABLE()
   };
+
+  typedef Barrage::SharedComponentT<RNG> SharedRNG;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

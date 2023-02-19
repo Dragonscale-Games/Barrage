@@ -18,14 +18,13 @@
 #define ComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "BaseComponent.hpp"
 #include <vector>
 #include <rttr/rttr_enable.h>
 
 namespace Barrage
 { 
   //! Base component array class that all component arrays inherit from
-  class ComponentArray : public Component
+  class ComponentArray
   {
     public:
       /**************************************************************/
@@ -67,18 +66,7 @@ namespace Barrage
       /**************************************************************/
       virtual void CopyToThis(const ComponentArray& source, unsigned sourceIndex, unsigned recipientIndex) = 0;
 
-      /**************************************************************/
-      /*!
-        \brief
-          Used to identify this object as a component array.
-
-        \return
-          Returns the "ARRAY" component type.
-      */
-      /**************************************************************/
-      virtual Component::Type GetType() override;
-
-      RTTR_ENABLE(Component)
+      RTTR_ENABLE()
   };
 
   //! All component arrays are a specialization of this template

@@ -1,41 +1,45 @@
 /* ======================================================================== */
 /*!
- * \file            ObjectManager.tpp
+ * \file            SharedComponent.tpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The main point of contact for game object manipulation in the engine.
+   Base shared component class that all shared components should inherit from.
+   A shared component is a component that all objects in a pool use.
+   For instance, all objects in a pool may use the same sprite component.
  */
  /* ======================================================================== */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef ObjectManager_BARRAGE_T
-#define ObjectManager_BARRAGE_T
+#ifndef SharedComponent_BARRAGE_T
+#define SharedComponent_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace Barrage
 {
   template <typename T>
-  void ObjectManager::RegisterComponentArray(const std::string_view& componentName)
+  SharedComponentT<T>::SharedComponentT() :
+    data_()
   {
-    componentAllocator_.RegisterComponentArray<T>(componentName);
   }
 
   template <typename T>
-  void ObjectManager::RegisterSharedComponent(const std::string_view& componentName)
+  void SharedComponentT<T>::CopyToThis(const SharedComponent& source)
   {
-    componentAllocator_.RegisterSharedComponent<T>(componentName);
+    const SharedComponentT<T>& source_derived = static_cast<const SharedComponentT<T>&>(source);
+
+    data_ = source_derived.data_;
   }
 
   template <typename T>
-  void ObjectManager::RegisterSystem(const std::string_view& systemName)
+  T& SharedComponentT<T>::Data()
   {
-    systemManager_.RegisterSystem<T>(systemName);
+    return data_;
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ObjectManager_BARRAGE_T
+#endif // SharedComponent_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////

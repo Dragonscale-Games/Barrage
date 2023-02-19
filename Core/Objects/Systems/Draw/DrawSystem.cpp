@@ -23,11 +23,11 @@ namespace Barrage
     System()
   {
     PoolType basic_sprite_type;
-    basic_sprite_type.AddComponentName("PositionArray");
-    basic_sprite_type.AddComponentName("ScaleArray");
-    basic_sprite_type.AddComponentName("RotationArray");
-    basic_sprite_type.AddComponentName("Sprite");
-    basic_sprite_type.AddComponentName("TextureSpaceArray");
+    basic_sprite_type.AddComponentArray("Position");
+    basic_sprite_type.AddComponentArray("Scale");
+    basic_sprite_type.AddComponentArray("Rotation");
+    basic_sprite_type.AddSharedComponent("Sprite");
+    basic_sprite_type.AddComponentArray("TextureSpace");
     poolTypes_[BASIC_2D_SPRITE_POOLS] = basic_sprite_type;
   }
   
@@ -35,9 +35,9 @@ namespace Barrage
   {
     if (poolTypes_[BASIC_2D_SPRITE_POOLS].MatchesPool(pool))
     {
-      Sprite* pool_sprite = dynamic_cast<Sprite*>(pool->sharedComponents_.at("Sprite"));
+      Sprite& pool_sprite = pool->GetSharedComponent<Sprite>("Sprite")->Data();
       
-      pools_[pool_sprite->layer_].push_back(pool);
+      pools_[pool_sprite.layer_].push_back(pool);
     }
   }
 
@@ -53,17 +53,17 @@ namespace Barrage
       {
         Pool* pool = *jt;
 
-        PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
-        ScaleArray& scale_array = *pool->GetComponentArray<ScaleArray>("ScaleArray");
-        RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("RotationArray");
-        TextureSpaceArray& tex_space_array = *pool->GetComponentArray<TextureSpaceArray>("TextureSpaceArray");
+        PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
+        ScaleArray& scale_array = *pool->GetComponentArray<Scale>("Scale");
+        RotationArray& rotation_array = *pool->GetComponentArray<Rotation>("Rotation");
+        TextureSpaceArray& tex_space_array = *pool->GetComponentArray<TextureSpace>("TextureSpace");
 
         glm::vec2* positions = reinterpret_cast<glm::vec2*>(position_array.data_);
         glm::vec2* scales = reinterpret_cast<glm::vec2*>(scale_array.data_);
         glm::vec4* tex_coords = reinterpret_cast<glm::vec4*>(tex_space_array.data_);
         float* rotations = reinterpret_cast<float*>(rotation_array.data_);
 
-        Sprite& pool_sprite = *pool->GetSharedComponent<Sprite>("Sprite");
+        Sprite& pool_sprite = pool->GetSharedComponent<Sprite>("Sprite")->Data();
 
         drawing.DrawInstancedQuad(
           pool->numActiveObjects_, 

@@ -26,23 +26,23 @@ namespace Demo
     System()
   {
     PoolType circle_bullet_type;
-    circle_bullet_type.AddComponentName("CircleCollider");
-    circle_bullet_type.AddComponentName("PositionArray");
-    circle_bullet_type.AddComponentName("DestructibleArray");
+    circle_bullet_type.AddSharedComponent("CircleCollider");
+    circle_bullet_type.AddComponentArray("Position");
+    circle_bullet_type.AddComponentArray("Destructible");
     circle_bullet_type.AddTag("Bullet");
     poolTypes_[CIRCLE_BULLET_POOLS] = circle_bullet_type;
 
     PoolType bounded_bullet_type;
-    bounded_bullet_type.AddComponentName("PositionArray");
-    bounded_bullet_type.AddComponentName("BoundaryBox");
-    bounded_bullet_type.AddComponentName("DestructibleArray");
+    bounded_bullet_type.AddComponentArray("Position");
+    bounded_bullet_type.AddSharedComponent("BoundaryBox");
+    bounded_bullet_type.AddComponentArray("Destructible");
     bounded_bullet_type.AddTag("Bullet");
     poolTypes_[BOUNDED_BULLET_POOLS] = bounded_bullet_type;
 
     PoolType circle_player_type;
-    circle_player_type.AddComponentName("CircleCollider");
-    circle_player_type.AddComponentName("PositionArray");
-    circle_player_type.AddComponentName("Player");
+    circle_player_type.AddSharedComponent("CircleCollider");
+    circle_player_type.AddComponentArray("Position");
+    circle_player_type.AddSharedComponent("Player");
     poolTypes_[CIRCLE_PLAYER_POOLS] = circle_player_type;
   }
 
@@ -55,10 +55,10 @@ namespace Demo
 
   void CollisionSystem::UpdateBoundedBullets(Pool* pool)
   {
-    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
-    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("DestructibleArray");
+    PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
+    DestructibleArray& destructible_array = *pool->GetComponentArray<Destructible>("Destructible");
 
-    BoundaryBox& boundary_box = *pool->GetSharedComponent<BoundaryBox>("BoundaryBox");
+    BoundaryBox& boundary_box = pool->GetSharedComponent<BoundaryBox>("BoundaryBox")->Data();
 
     unsigned num_bullets = pool->numActiveObjects_;
 
@@ -75,13 +75,13 @@ namespace Demo
 
   void CollisionSystem::UpdatePlayerBulletCollisions(Pool* player_pool, Pool* bullet_pool)
   {
-    CircleCollider& player_collider = *player_pool->GetSharedComponent<CircleCollider>("CircleCollider");
-    CircleCollider& bullet_collider = *bullet_pool->GetSharedComponent<CircleCollider>("CircleCollider");
+    CircleCollider& player_collider = player_pool->GetSharedComponent<CircleCollider>("CircleCollider")->Data();
+    CircleCollider& bullet_collider = bullet_pool->GetSharedComponent<CircleCollider>("CircleCollider")->Data();
 
-    PositionArray& player_positions = *player_pool->GetComponentArray<PositionArray>("PositionArray");
-    PositionArray& bullet_positions = *bullet_pool->GetComponentArray<PositionArray>("PositionArray");
+    PositionArray& player_positions = *player_pool->GetComponentArray<Position>("Position");
+    PositionArray& bullet_positions = *bullet_pool->GetComponentArray<Position>("Position");
 
-    DestructibleArray& bullet_destructibles = *bullet_pool->GetComponentArray<DestructibleArray>("DestructibleArray");
+    DestructibleArray& bullet_destructibles = *bullet_pool->GetComponentArray<Destructible>("Destructible");
 
     float collision_radius = player_collider.radius_ + bullet_collider.radius_;
 

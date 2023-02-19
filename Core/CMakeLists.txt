@@ -59,10 +59,7 @@ add_library(BarrageCore STATIC
   
   "Input/InputManager.cpp" "Input/InputManager.hpp" 
   "Input/KeyMap.hpp" 
-
-  "Objects/Components/BaseClasses/ComponentArray.cpp" "Objects/Components/BaseClasses/ComponentArray.hpp" 
-  "Objects/Components/BaseClasses/SharedComponent.cpp"   "Objects/Components/BaseClasses/SharedComponent.hpp"   
-  "Objects/Components/BaseClasses/BaseComponent.hpp" 
+ 
   "Objects/Components/ComponentArrays/PositionArray.hpp" 
   "Objects/ObjectManager.cpp" "Objects/ObjectManager.hpp" 
   "Objects/Pools/Pool.cpp"    "Objects/Pools/Pool.hpp"  

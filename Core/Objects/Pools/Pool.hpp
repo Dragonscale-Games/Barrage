@@ -120,7 +120,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      T* GetComponentArray(const std::string_view& componentName);
+      ComponentArrayT<T>* GetComponentArray(const std::string_view& componentName);
 
       /**************************************************************/
       /*!
@@ -141,7 +141,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      T* GetSharedComponent(const std::string_view& componentName);
+      SharedComponentT<T>* GetSharedComponent(const std::string_view& componentName);
 
     public:
       TagSet tags_;                         //!< Holds the pool's tags

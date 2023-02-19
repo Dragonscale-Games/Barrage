@@ -46,19 +46,34 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Tells the component allocator how to allocate a component
-          of a given type. Component must inherit from one of the
-          component base classes.
+          Tells the allocator how to allocate a component array for 
+          a given type. 
 
         \tparam T
-          The type of the component to register.
+          The type of component the array will contain.
 
         \param componentName
-          The name the user would like assigned to the component.
+          The name of the component's C++ class.
       */
       /**************************************************************/
       template <typename T>
-      static void RegisterComponent(const std::string_view& componentName);
+      static void RegisterComponentArray(const std::string_view& componentName);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Tells the allocator how to allocate a shared component for 
+          a given type. 
+
+        \tparam T
+          The type of component data the shared component will wrap.
+
+        \param componentName
+          The name of the component's C++ class.
+      */
+      /**************************************************************/
+      template <typename T>
+      static void RegisterSharedComponent(const std::string_view& componentName);
 
       /**************************************************************/
       /*!

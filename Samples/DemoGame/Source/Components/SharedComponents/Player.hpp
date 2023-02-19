@@ -23,7 +23,7 @@
 namespace Demo
 {
   //! Basic player component
-  class Player : public Barrage::SharedComponent
+  class Player
   {
     public:
       float speedSlow_;
@@ -31,6 +31,8 @@ namespace Demo
       
       inline Player() : speedSlow_(3.5f), speedFast_(7.0f) {}
   };
+
+  typedef Barrage::SharedComponentT<Player> SharedPlayer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

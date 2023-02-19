@@ -50,12 +50,12 @@ namespace Barrage
 
   bool Pool::HasComponentArray(const std::string_view& componentArrayName)
   {
-    return componentArrays_.count(componentArrayName) > 0;
+    return componentArrays_.count(componentArrayName);
   }
 
   bool Pool::HasSharedComponent(const std::string_view& sharedComponentName)
   {
-    return sharedComponents_.count(sharedComponentName) > 0;
+    return sharedComponents_.count(sharedComponentName);
   }
 
   unsigned Pool::GetAvailableSlots() const

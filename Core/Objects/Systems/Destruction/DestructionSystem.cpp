@@ -24,13 +24,13 @@ namespace Barrage
     System()
   {
     PoolType destructible_type;
-    destructible_type.AddComponentName("DestructibleArray");
+    destructible_type.AddComponentArray("Destructible");
     poolTypes_[BASIC_DESTRUCTIBLE_POOLS] = destructible_type;
 
     PoolType directory_type;
-    directory_type.AddComponentName("DestructibleArray");
-    directory_type.AddComponentName("ObjectDirectory");
-    directory_type.AddComponentName("DirectoryIndexArray");
+    directory_type.AddComponentArray("Destructible");
+    directory_type.AddSharedComponent("ObjectDirectory");
+    directory_type.AddComponentArray("DirectoryIndex");
     poolTypes_[DIRECTORY_POOLS] = directory_type;
   }
   
@@ -43,9 +43,9 @@ namespace Barrage
 
   void DestructionSystem::UpdateDeadHandles(Pool* pool)
   {
-    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("DestructibleArray");
-    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
-    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
+    DestructibleArray& destructible_array = *pool->GetComponentArray<Destructible>("Destructible");
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
+    ObjectDirectory& object_directory = pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
 
     unsigned num_objects = pool->numActiveObjects_;
 
@@ -62,8 +62,8 @@ namespace Barrage
 
   void DestructionSystem::UpdateAliveHandles(Pool* pool)
   {
-    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
-    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
+    ObjectDirectory& object_directory = pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
 
     unsigned num_objects = pool->numActiveObjects_;
 
@@ -78,7 +78,7 @@ namespace Barrage
 
   void DestructionSystem::DestroyObjects(Pool* pool)
   {
-    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("DestructibleArray");
+    DestructibleArray& destructible_array = *pool->GetComponentArray<Destructible>("Destructible");
 
     /*
      *  Objectives:

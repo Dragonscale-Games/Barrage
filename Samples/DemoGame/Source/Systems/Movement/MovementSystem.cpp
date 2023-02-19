@@ -28,24 +28,24 @@ namespace Demo
     System()
   {
     PoolType basic_movement_type;
-    basic_movement_type.AddComponentName("PositionArray");
-    basic_movement_type.AddComponentName("VelocityArray");
+    basic_movement_type.AddComponentArray("Position");
+    basic_movement_type.AddComponentArray("Velocity");
     poolTypes_[BASIC_MOVEMENT_POOLS] = basic_movement_type;
 
     PoolType basic_rotation_type;
-    basic_rotation_type.AddComponentName("RotationArray");
-    basic_rotation_type.AddComponentName("AngularSpeedArray");
+    basic_rotation_type.AddComponentArray("Rotation");
+    basic_rotation_type.AddComponentArray("AngularSpeed");
     poolTypes_[BASIC_ROTATION_POOLS] = basic_rotation_type;
 
     PoolType player_type;
-    player_type.AddComponentName("PositionArray");
-    player_type.AddComponentName("Player");
+    player_type.AddComponentArray("Position");
+    player_type.AddSharedComponent("Player");
     poolTypes_[PLAYER_POOLS] = player_type;
 
     PoolType bounded_player_type;
-    bounded_player_type.AddComponentName("PositionArray");
-    bounded_player_type.AddComponentName("BoundaryBox");
-    bounded_player_type.AddComponentName("Player");
+    bounded_player_type.AddComponentArray("Position");
+    bounded_player_type.AddSharedComponent("BoundaryBox");
+    bounded_player_type.AddSharedComponent("Player");
     poolTypes_[BOUNDED_PLAYER_POOLS] = bounded_player_type;
   }
 
@@ -59,7 +59,7 @@ namespace Demo
 
   void MovementSystem::UpdatePlayerMovement(Pool* pool)
   {
-    Player& player = *pool->GetSharedComponent<Player>("Player");
+    Player& player = pool->GetSharedComponent<Player>("Player")->Data();
 
     float speed = 0.0f;
     Velocity player_velocity;
@@ -93,7 +93,7 @@ namespace Demo
       player_velocity.vy_ = player_velocity.vy_ / 1.4142f;
     }
 
-    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
+    PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
 
     unsigned num_objects = pool->numActiveObjects_;
 
@@ -106,8 +106,8 @@ namespace Demo
 
   void MovementSystem::UpdatePlayerBounds(Pool* pool)
   {
-    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
-    BoundaryBox& bounds = *pool->GetSharedComponent<BoundaryBox>("BoundaryBox");
+    PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
+    BoundaryBox& bounds = pool->GetSharedComponent<BoundaryBox>("BoundaryBox")->Data();
 
     unsigned num_objects = pool->numActiveObjects_;
 
@@ -129,8 +129,8 @@ namespace Demo
 
   void MovementSystem::UpdateBasicMovement(Pool* pool)
   {
-    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
-    VelocityArray& velocity_array = *pool->GetComponentArray<VelocityArray>("VelocityArray");
+    PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
+    VelocityArray& velocity_array = *pool->GetComponentArray<Velocity>("Velocity");
 
     unsigned num_objects = pool->numActiveObjects_;
 
@@ -143,8 +143,8 @@ namespace Demo
 
   void MovementSystem::UpdateBasicRotation(Pool* pool)
   {
-    RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("RotationArray");
-    AngularSpeedArray& angular_speed_array = *pool->GetComponentArray<AngularSpeedArray>("AngularSpeedArray");
+    RotationArray& rotation_array = *pool->GetComponentArray<Rotation>("Rotation");
+    AngularSpeedArray& angular_speed_array = *pool->GetComponentArray<AngularSpeed>("AngularSpeed");
 
     unsigned num_objects = pool->numActiveObjects_;
 
