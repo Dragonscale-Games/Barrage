@@ -24,14 +24,15 @@
 #include "Objects/Components/EngineComponents.hpp"
 #include <map>
 #include <unordered_map>
+#include <string_view>
 
 namespace Barrage
 {
   class SystemManager;
   class System;
   
-  typedef std::unordered_map<unsigned, PoolType> PoolTypeMap;
-  typedef std::map<unsigned, std::vector<Pool*>> OrderedPoolMap;
+  typedef std::unordered_map<std::string_view, PoolType> PoolTypeMap;
+  typedef std::map<std::string_view, std::vector<Pool*>> OrderedPoolMap;
 
   typedef void (*PoolUpdateFunc)(Pool*);
   typedef void (*InteractionFunc)(Pool*, Pool*);
@@ -79,7 +80,7 @@ namespace Barrage
           and, if so, unsubscribes it from the system.
       */
       /**************************************************************/
-      void Unsubscribe(Pool* pool);
+      virtual void Unsubscribe(Pool* pool);
 
       /**************************************************************/
       /*!
@@ -116,7 +117,7 @@ namespace Barrage
           The function to apply to these pools.
       */
       /**************************************************************/
-      void UpdatePoolGroup(unsigned group, PoolUpdateFunc function);
+      void UpdatePoolGroup(std::string_view group, PoolUpdateFunc function);
 
       /**************************************************************/
       /*!
@@ -131,7 +132,7 @@ namespace Barrage
           The function to apply to these pools.
       */
       /**************************************************************/
-      void UpdatePoolGroup(unsigned group, PoolUpdateMemberFunc function);
+      void UpdatePoolGroup(std::string_view group, PoolUpdateMemberFunc function);
 
       /**************************************************************/
       /*!
@@ -149,7 +150,7 @@ namespace Barrage
           The function to apply to these pools.
       */
       /**************************************************************/
-      void UpdateInteraction(unsigned group1, unsigned group2, InteractionFunc function);
+      void UpdateInteraction(std::string_view group1, std::string_view group2, InteractionFunc function);
 
       /**************************************************************/
       /*!
@@ -167,7 +168,7 @@ namespace Barrage
           The function to apply to these pools.
       */
       /**************************************************************/
-      void UpdateInteraction(unsigned group1, unsigned group2, InteractionMemberFunc function);
+      void UpdateInteraction(std::string_view group1, std::string_view group2, InteractionMemberFunc function);
 
     protected:
       PoolTypeMap poolTypes_;        //!< Holds all pool types the system cares about

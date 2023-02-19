@@ -20,7 +20,8 @@ namespace Barrage
   static const unsigned BASIC_2D_SPRITE_POOLS = 0;
   
   DrawSystem::DrawSystem() :
-    System()
+    System(),
+    drawPools_()
   {
     PoolType basic_sprite_type;
     basic_sprite_type.AddComponentArray("Position");
@@ -28,16 +29,36 @@ namespace Barrage
     basic_sprite_type.AddComponentArray("Rotation");
     basic_sprite_type.AddSharedComponent("Sprite");
     basic_sprite_type.AddComponentArray("TextureSpace");
-    poolTypes_[BASIC_2D_SPRITE_POOLS] = basic_sprite_type;
+    poolTypes_["Basic 2D Sprite Pools"] = basic_sprite_type;
   }
   
   void DrawSystem::Subscribe(Pool* pool)
   {
-    if (poolTypes_[BASIC_2D_SPRITE_POOLS].MatchesPool(pool))
+    if (poolTypes_["Basic 2D Sprite Pools"].MatchesPool(pool))
     {
       Sprite& pool_sprite = pool->GetSharedComponent<Sprite>("Sprite")->Data();
       
-      pools_[pool_sprite.layer_].push_back(pool);
+      drawPools_[pool_sprite.layer_].push_back(pool);
+    }
+  }
+
+  void DrawSystem::Unsubscribe(Pool* pool)
+  {
+    for (auto it = drawPools_.begin(); it != drawPools_.end(); ++it)
+    {
+      std::vector<Pool*>& pool_group = it->second;
+
+      for (auto jt = pool_group.begin(); jt != pool_group.end(); /* iterator incremented in body */)
+      {
+        if (*jt == pool)
+        {
+          jt = pool_group.erase(jt);
+        }
+        else
+        {
+          ++jt;
+        }
+      }
     }
   }
 
@@ -45,9 +66,9 @@ namespace Barrage
   {
     GfxDraw2D& drawing = Engine::Instance->Drawing();
 
-    for (auto it = pools_.begin(); it != pools_.end(); ++it)
+    for (auto it = drawPools_.begin(); it != drawPools_.end(); ++it)
     {
-      std::vector<Pool*>& pool_group = pools_[it->first];
+      std::vector<Pool*>& pool_group = drawPools_[it->first];
       
       for (auto jt = pool_group.begin(); jt != pool_group.end(); ++jt)
       {

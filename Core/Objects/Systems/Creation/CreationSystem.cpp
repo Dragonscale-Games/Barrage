@@ -16,9 +16,6 @@
 
 namespace Barrage
 {
-  static const unsigned ALL_POOLS = 0;
-  static const unsigned HANDLE_POOLS = 1;
-
   CreationSystem::CreationSystem() :
     System(),
     archetypeManager_(nullptr),
@@ -27,18 +24,18 @@ namespace Barrage
   {
     // this pool type has no required tags or components because all pools will be subscribed to the creation system
     PoolType all_pool_type;
-    poolTypes_[ALL_POOLS] = all_pool_type;
+    poolTypes_["All Pools"] = all_pool_type;
 
     PoolType handle_pool_type;
     handle_pool_type.AddSharedComponent("ObjectDirectory");
     handle_pool_type.AddComponentArray("DirectoryIndex");
-    poolTypes_[HANDLE_POOLS] = handle_pool_type;
+    poolTypes_["Handle Pools"] = handle_pool_type;
   }
 
   void CreationSystem::Update()
   {
-    UpdatePoolGroup(HANDLE_POOLS, AssignHandles);
-    UpdatePoolGroup(ALL_POOLS, SpawnObjects);
+    UpdatePoolGroup("Handle Pools", AssignHandles);
+    UpdatePoolGroup("All Pools", SpawnObjects);
   }
 
   void CreationSystem::SetArchetypeManager(ArchetypeManager& archetypeManager)

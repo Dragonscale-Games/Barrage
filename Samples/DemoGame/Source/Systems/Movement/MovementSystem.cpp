@@ -30,31 +30,31 @@ namespace Demo
     PoolType basic_movement_type;
     basic_movement_type.AddComponentArray("Position");
     basic_movement_type.AddComponentArray("Velocity");
-    poolTypes_[BASIC_MOVEMENT_POOLS] = basic_movement_type;
+    poolTypes_["Basic Movement Pools"] = basic_movement_type;
 
     PoolType basic_rotation_type;
     basic_rotation_type.AddComponentArray("Rotation");
     basic_rotation_type.AddComponentArray("AngularSpeed");
-    poolTypes_[BASIC_ROTATION_POOLS] = basic_rotation_type;
+    poolTypes_["Basic Rotation Pools"] = basic_rotation_type;
 
     PoolType player_type;
     player_type.AddComponentArray("Position");
     player_type.AddSharedComponent("Player");
-    poolTypes_[PLAYER_POOLS] = player_type;
+    poolTypes_["Player Pools"] = player_type;
 
     PoolType bounded_player_type;
     bounded_player_type.AddComponentArray("Position");
     bounded_player_type.AddSharedComponent("BoundaryBox");
     bounded_player_type.AddSharedComponent("Player");
-    poolTypes_[BOUNDED_PLAYER_POOLS] = bounded_player_type;
+    poolTypes_["Bounded Player Pools"] = bounded_player_type;
   }
 
   void MovementSystem::Update()
   {
-    UpdatePoolGroup(PLAYER_POOLS, UpdatePlayerMovement);
-    UpdatePoolGroup(BOUNDED_PLAYER_POOLS, UpdatePlayerBounds);
-    UpdatePoolGroup(BASIC_MOVEMENT_POOLS, UpdateBasicMovement);
-    UpdatePoolGroup(BASIC_ROTATION_POOLS, UpdateBasicRotation);
+    UpdatePoolGroup("Player Pools", UpdatePlayerMovement);
+    UpdatePoolGroup("Bounded Player Pools", UpdatePlayerBounds);
+    UpdatePoolGroup("Basic Movement Pools", UpdateBasicMovement);
+    UpdatePoolGroup("Basic Rotation Pools", UpdateBasicRotation);
   }
 
   void MovementSystem::UpdatePlayerMovement(Pool* pool)

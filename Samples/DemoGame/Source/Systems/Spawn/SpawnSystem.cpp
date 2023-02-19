@@ -20,20 +20,18 @@ namespace Demo
 {
   using namespace Barrage;
   
-  static const unsigned BULLET_SPAWNER_POOLS = 0;
-  
   SpawnSystem::SpawnSystem() :
     System()
   {
     PoolType bullet_type;
     bullet_type.AddTag("Spawner");
     bullet_type.AddSharedComponent("Spawner");
-    poolTypes_[BULLET_SPAWNER_POOLS] = bullet_type;
+    poolTypes_["Bullet Spawner Pools"] = bullet_type;
   }
 
   void SpawnSystem::Update()
   {
-    UpdatePoolGroup(BULLET_SPAWNER_POOLS, static_cast<PoolUpdateMemberFunc>(&SpawnSystem::SpawnBullets));
+    UpdatePoolGroup("Bullet Spawner Pools", static_cast<PoolUpdateMemberFunc>(&SpawnSystem::SpawnBullets));
   }
 
   void SpawnSystem::SpawnBullets(Pool* pool)

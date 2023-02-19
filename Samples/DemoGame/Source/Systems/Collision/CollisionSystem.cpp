@@ -18,10 +18,6 @@ namespace Demo
 {
   using namespace Barrage;
   
-  static const unsigned CIRCLE_BULLET_POOLS = 0;
-  static const unsigned CIRCLE_PLAYER_POOLS = 1;
-  static const unsigned BOUNDED_BULLET_POOLS = 2;
-  
   CollisionSystem::CollisionSystem() :
     System()
   {
@@ -30,27 +26,27 @@ namespace Demo
     circle_bullet_type.AddComponentArray("Position");
     circle_bullet_type.AddComponentArray("Destructible");
     circle_bullet_type.AddTag("Bullet");
-    poolTypes_[CIRCLE_BULLET_POOLS] = circle_bullet_type;
+    poolTypes_["Circle Bullet Pools"] = circle_bullet_type;
 
     PoolType bounded_bullet_type;
     bounded_bullet_type.AddComponentArray("Position");
     bounded_bullet_type.AddSharedComponent("BoundaryBox");
     bounded_bullet_type.AddComponentArray("Destructible");
     bounded_bullet_type.AddTag("Bullet");
-    poolTypes_[BOUNDED_BULLET_POOLS] = bounded_bullet_type;
+    poolTypes_["Bounded Bullet Pools"] = bounded_bullet_type;
 
     PoolType circle_player_type;
     circle_player_type.AddSharedComponent("CircleCollider");
     circle_player_type.AddComponentArray("Position");
     circle_player_type.AddSharedComponent("Player");
-    poolTypes_[CIRCLE_PLAYER_POOLS] = circle_player_type;
+    poolTypes_["Circle Player Pools"] = circle_player_type;
   }
 
   void CollisionSystem::Update()
   {
-    UpdatePoolGroup(BOUNDED_BULLET_POOLS, UpdateBoundedBullets);
+    UpdatePoolGroup("Bounded Bullet Pools", UpdateBoundedBullets);
     
-    UpdateInteraction(CIRCLE_PLAYER_POOLS, CIRCLE_BULLET_POOLS, UpdatePlayerBulletCollisions);
+    UpdateInteraction("Circle Player Pools", "Circle Bullet Pools", UpdatePlayerBulletCollisions);
   }
 
   void CollisionSystem::UpdateBoundedBullets(Pool* pool)

@@ -25,20 +25,20 @@ namespace Barrage
   {
     PoolType destructible_type;
     destructible_type.AddComponentArray("Destructible");
-    poolTypes_[BASIC_DESTRUCTIBLE_POOLS] = destructible_type;
+    poolTypes_["Basic Destructible Pools"] = destructible_type;
 
     PoolType directory_type;
     directory_type.AddComponentArray("Destructible");
     directory_type.AddSharedComponent("ObjectDirectory");
     directory_type.AddComponentArray("DirectoryIndex");
-    poolTypes_[DIRECTORY_POOLS] = directory_type;
+    poolTypes_["Directory Pools"] = directory_type;
   }
   
   void DestructionSystem::Update()
   {
-    UpdatePoolGroup(DIRECTORY_POOLS, UpdateDeadHandles);
-    UpdatePoolGroup(BASIC_DESTRUCTIBLE_POOLS, DestroyObjects);
-    UpdatePoolGroup(DIRECTORY_POOLS, UpdateAliveHandles);
+    UpdatePoolGroup("Directory Pools", UpdateDeadHandles);
+    UpdatePoolGroup("Basic Destructible Pools", DestroyObjects);
+    UpdatePoolGroup("Directory Pools", UpdateAliveHandles);
   }
 
   void DestructionSystem::UpdateDeadHandles(Pool* pool)

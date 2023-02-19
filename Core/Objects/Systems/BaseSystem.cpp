@@ -69,7 +69,7 @@ namespace Barrage
     systemManager_ = manager;
   }
 
-  void System::UpdatePoolGroup(unsigned group, PoolUpdateFunc function)
+  void System::UpdatePoolGroup(std::string_view group, PoolUpdateFunc function)
   {
     if (pools_.find(group) != pools_.end())
     {
@@ -82,7 +82,7 @@ namespace Barrage
     }
   }
 
-  void System::UpdatePoolGroup(unsigned group, PoolUpdateMemberFunc function)
+  void System::UpdatePoolGroup(std::string_view group, PoolUpdateMemberFunc function)
   {
     std::vector<Pool*>& pool_group = pools_[group];
 
@@ -92,7 +92,7 @@ namespace Barrage
     }
   }
 
-  void System::UpdateInteraction(unsigned group1, unsigned group2, InteractionFunc function)
+  void System::UpdateInteraction(std::string_view group1, std::string_view group2, InteractionFunc function)
   {
     std::vector<Pool*>& pool_group_1 = pools_[group1];
     std::vector<Pool*>& pool_group_2 = pools_[group2];
@@ -106,7 +106,7 @@ namespace Barrage
     }
   }
 
-  void System::UpdateInteraction(unsigned group1, unsigned group2, InteractionMemberFunc function)
+  void System::UpdateInteraction(std::string_view group1, std::string_view group2, InteractionMemberFunc function)
   {
     std::vector<Pool*>& pool_group_1 = pools_[group1];
     std::vector<Pool*>& pool_group_2 = pools_[group2];
