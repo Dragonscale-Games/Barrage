@@ -54,7 +54,7 @@ namespace Barrage
   }
 
   template <typename T>
-  ComponentArray* ComponentAllocator::AllocateComponentArray(unsigned capacity) const
+  ComponentArray* ComponentAllocator::AllocateComponentArray(unsigned capacity)
   {
     ComponentArray* new_component_array = dynamic_cast<ComponentArray*>(new T);
 
@@ -64,7 +64,7 @@ namespace Barrage
   }
 
   template <typename T>
-  SharedComponent* ComponentAllocator::AllocateSharedComponent(SharedComponent* initializer) const
+  SharedComponent* ComponentAllocator::AllocateSharedComponent(SharedComponent* initializer)
   {
     T* new_component = new T;
     T* initializer_full = dynamic_cast<T*>(initializer);
