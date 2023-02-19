@@ -99,8 +99,8 @@ namespace Demo
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      position_array[i].x_ += player_velocity.vx_;
-      position_array[i].y_ += player_velocity.vy_;
+      position_array.Data(i).x_ += player_velocity.vx_;
+      position_array.Data(i).y_ += player_velocity.vy_;
     }
   }
 
@@ -113,7 +113,7 @@ namespace Demo
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      Position& pos = position_array[i];
+      Position& pos = position_array.Data(i);
 
       if (pos.x_ < bounds.xMin_)
         pos.x_ = bounds.xMin_;
@@ -136,8 +136,8 @@ namespace Demo
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      position_array[i].x_ += velocity_array[i].vx_;
-      position_array[i].y_ += velocity_array[i].vy_;
+      position_array.Data(i).x_ += velocity_array.Data(i).vx_;
+      position_array.Data(i).y_ += velocity_array.Data(i).vy_;
     }
   }
 
@@ -150,8 +150,8 @@ namespace Demo
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      rotation_array[i].angle_ += angular_speed_array[i].w_;
-      rotation_array[i].angle_ = ClampWrapped(rotation_array[i].angle_, 0.0f, 2.0f * 3.141592f);
+      rotation_array.Data(i).angle_ += angular_speed_array.Data(i).w_;
+      rotation_array.Data(i).angle_ = ClampWrapped(rotation_array.Data(i).angle_, 0.0f, 2.0f * 3.141592f);
     }
   }
 }

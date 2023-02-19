@@ -29,8 +29,8 @@ namespace Demo
         unsigned dest_index = i + firstObjIndex;
         unsigned source_index = sourceIndices[i];
 
-        dest_positions[dest_index].x_ = source_positions[source_index].x_;
-        dest_positions[dest_index].y_ = source_positions[source_index].y_;
+        dest_positions.Data(dest_index).x_ = source_positions.Data(source_index).x_;
+        dest_positions.Data(dest_index).y_ = source_positions.Data(source_index).y_;
       }
     }
   }

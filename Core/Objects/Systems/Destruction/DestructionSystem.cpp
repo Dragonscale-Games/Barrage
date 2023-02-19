@@ -51,9 +51,9 @@ namespace Barrage
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      if (destructible_array[i].destroyed_)
+      if (destructible_array.Data(i).destroyed_)
       {
-        unsigned directory_index = directory_index_array[i].index_;
+        unsigned directory_index = directory_index_array.Data(i).index_;
 
         object_directory.FreeHandle(directory_index);
       }
@@ -69,7 +69,7 @@ namespace Barrage
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      unsigned directory_index = directory_index_array[i].index_;
+      unsigned directory_index = directory_index_array.Data(i).index_;
       ObjectHandle& handle = object_directory.GetHandle(directory_index);
 
       handle.poolIndex_ = i;
@@ -94,7 +94,7 @@ namespace Barrage
     // past the end of the original object array
     while (initial_alive_end_index < pool->numActiveObjects_)
     {
-      if (destructible_array[initial_alive_end_index].destroyed_ == true)
+      if (destructible_array.Data(initial_alive_end_index).destroyed_ == true)
         break;
 
       ++initial_alive_end_index;
@@ -118,7 +118,7 @@ namespace Barrage
 
       while (next_alive_index < pool->numActiveObjects_)
       {
-        if (destructible_array[next_alive_index].destroyed_ == false)
+        if (destructible_array.Data(next_alive_index).destroyed_ == false)
         {
           component_array->CopyToThis(*component_array, next_alive_index, alive_end_index);
 
@@ -135,7 +135,7 @@ namespace Barrage
 
     while (next_alive_index < pool->numActiveObjects_)
     {
-      if (destructible_array[next_alive_index].destroyed_ == false)
+      if (destructible_array.Data(next_alive_index).destroyed_ == false)
       {
         destructible_array.CopyToThis(destructible_array, next_alive_index, alive_end_index);
 

@@ -73,7 +73,7 @@ namespace Barrage
       DirectoryIndexArray& directory_index_array = *destinationPool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
 
       unsigned object_index = destinationPool->numActiveObjects_ - 1;
-      DirectoryIndex& directory_index = directory_index_array[object_index];
+      DirectoryIndex& directory_index = directory_index_array.Data(object_index);
       directory_index.index_ = object_directory.CreateHandle(object_index);
     }
   }
@@ -159,7 +159,7 @@ namespace Barrage
     {
       unsigned object_index = start_index + i;
       
-      DirectoryIndex& directory_index = directory_index_array[object_index];
+      DirectoryIndex& directory_index = directory_index_array.Data(object_index);
 
       directory_index.index_ = object_directory.CreateHandle(object_index);
     }

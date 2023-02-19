@@ -64,11 +64,11 @@ namespace Demo
 
     for (unsigned i = 0; i < num_bullets; ++i)
     {
-      Position& pos = position_array[i];
+      Position& pos = position_array.Data(i);
 
       if (pos.x_ < boundary_box.xMin_ || pos.x_ > boundary_box.xMax_ || pos.y_ < boundary_box.yMin_ || pos.y_ > boundary_box.yMax_)
       {
-        destructible_array[i].destroyed_ = true;
+        destructible_array.Data(i).destroyed_ = true;
       }
     }
   }
@@ -92,12 +92,12 @@ namespace Demo
     {
       for (unsigned j = 0; j < num_bullets; ++j)
       {
-        float delta_x = player_positions[i].x_ - bullet_positions[j].x_;
-        float delta_y = player_positions[i].y_ - bullet_positions[j].y_;
+        float delta_x = player_positions.Data(i).x_ - bullet_positions.Data(j).x_;
+        float delta_y = player_positions.Data(i).y_ - bullet_positions.Data(j).y_;
 
         if (delta_x * delta_x + delta_y * delta_y <= collision_radius * collision_radius)
         {
-          bullet_destructibles[j].destroyed_ = true;
+          bullet_destructibles.Data(j).destroyed_ = true;
         }
       }
     }

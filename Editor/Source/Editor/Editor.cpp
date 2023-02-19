@@ -111,14 +111,21 @@ namespace Barrage
 
     unsigned numTicks = engine_.Frames().ConsumeTicks();
 
-    if (data_.gamePlaying_)
+    TimePoint beginT;
+    TimePoint endT;
+
+    //if (data_.gamePlaying_)
     {
       for (unsigned i = 0; i < numTicks; ++i)
       {
-        //engine_.Spaces().Update();
+        beginT = std::chrono::high_resolution_clock::now();
+        engine_.Spaces().Update();
+        endT = std::chrono::high_resolution_clock::now();
       }
     }
     
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
+
     commandQueue_.Process();
 
     if (data_.sceneIsDirty_)
@@ -128,7 +135,12 @@ namespace Barrage
     }
 
     gui_.StartWidgets();
-    UseWidgets();
+    ImGui::Begin("Time Test");
+    ImGui::Text("Frame time (microseconds): ");
+    ImGui::SameLine();
+    ImGui::Text(numTicks ? std::to_string(duration.count()).c_str() : "0");
+    ImGui::End();
+    //UseWidgets();
     gui_.EndWidgets();
 
     HandleKeyboard();

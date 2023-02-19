@@ -51,9 +51,9 @@ namespace Barrage
   }
   
   template <typename T>
-  T& ComponentArrayT<T>::operator[](int i)
+  T& ComponentArrayT<T>::Data(int index)
   {
-    return data_[i];
+    return data_[index];
   }
 }
 

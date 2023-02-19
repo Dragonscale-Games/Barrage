@@ -145,7 +145,7 @@ namespace Barrage
           Returns a reference to the accessed component.
       */
       /**************************************************************/
-      T& operator[](int i);
+      T& Data(int index);
 
     public:
       T* data_;
