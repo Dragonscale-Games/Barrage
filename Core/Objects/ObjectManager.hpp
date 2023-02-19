@@ -67,6 +67,8 @@ namespace Barrage
 
       std::vector<std::string_view> GetSharedComponentNames();
 
+      ComponentAllocator& GetComponentAllocator();
+
       // ===================================================================
       // Initializers
       // ===================================================================
@@ -85,35 +87,47 @@ namespace Barrage
       // Pools
       // ===================================================================
 
-      void AddPoolArchetype(const std::string_view& name, PoolArchetype* archetype);
+      void CreatePoolArchetype(const std::string& name);
 
-      PoolArchetype* GetPoolArchetype(const std::string_view& name);
+      void AddPoolArchetype(const std::string& name, PoolArchetype* archetype);
 
-      void CreatePool(const std::string_view& poolName, const std::string_view& archetypeName, unsigned capacity = 1);
+      PoolArchetype* GetPoolArchetype(const std::string& name);
+
+      PoolArchetype* ExtractPoolArchetype(const std::string& name);
+
+      void DeletePoolArchetype(const std::string& name);
+
+      void CreatePool(const std::string& poolName);
 
       void CreatePoolAndObjects(const PoolInfo& poolInfo);
 
-      Pool* GetPool(const std::string_view& name) const;
+      Pool* GetPool(const std::string& name) const;
 
-      void DeletePool(const std::string_view& poolName);
+      void DeletePool(const std::string& poolName);
 
       void DeleteAllPools();
 
-      std::vector<std::string_view> GetPoolArchetypeNames();
+      std::vector<std::string> GetPoolArchetypeNames();
 
-      std::vector<std::string_view> GetPoolNames();
+      std::vector<std::string> GetPoolNames();
 
       // ===================================================================
       // Objects
       // ===================================================================
 
-      void AddObjectArchetype(const std::string_view& name, ObjectArchetype* archetype);
+      void CreateObjectArchetype(const std::string& name, const std::vector<std::string_view>& componentArrayNames);
 
-      ObjectArchetype* GetObjectArchetype(const std::string_view& name);
+      void AddObjectArchetype(const std::string& name, ObjectArchetype* archetype);
 
-      void CreateObject(const std::string_view& poolName, const std::string_view& archetypeName);
+      ObjectArchetype* GetObjectArchetype(const std::string& name);
 
-      std::vector<std::string_view> GetObjectArchetypeNames();
+      ObjectArchetype* ExtractObjectArchetype(const std::string& name);
+
+      void DeleteObjectArchetype(const std::string& name);
+
+      void CreateObject(const std::string& poolName, const std::string& archetypeName);
+
+      std::vector<std::string> GetObjectArchetypeNames();
     
     private:
       template <typename T>

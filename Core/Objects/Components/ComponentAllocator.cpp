@@ -15,11 +15,16 @@
 
 namespace Barrage
 {
-  ComponentAllocator::ComponentAllocator() :
-    componentArrayAllocMap_(),
-    sharedComponentAllocMap_(),
-    componentArrayNames_(),
-    sharedComponentNames_()
+  ComponentArrayAllocMap ComponentAllocator::componentArrayAllocMap_ = ComponentArrayAllocMap();
+  SharedComponentAllocMap ComponentAllocator::sharedComponentAllocMap_ = SharedComponentAllocMap();
+
+  std::vector<std::string_view> ComponentAllocator::componentArrayNames_ = std::vector<std::string_view>();
+  std::vector<std::string_view> ComponentAllocator::sharedComponentNames_ = std::vector<std::string_view>();
+
+  bool ComponentAllocator::componentArrayNamesSorted_ = false;
+  bool ComponentAllocator::sharedComponentNamesSorted_ = false;
+  
+  ComponentAllocator::ComponentAllocator()
   {
   }
 
@@ -47,13 +52,25 @@ namespace Barrage
     }
   }
 
-  std::vector<std::string_view> ComponentAllocator::GetComponentArrayNames()
+  const std::vector<std::string_view>& ComponentAllocator::GetComponentArrayNames()
   {
+    if (!componentArrayNamesSorted_)
+    {
+      std::sort(componentArrayNames_.begin(), componentArrayNames_.end());
+      componentArrayNamesSorted_ = true;
+    }
+    
     return componentArrayNames_;
   }
 
-  std::vector<std::string_view> ComponentAllocator::GetSharedComponentNames()
+  const std::vector<std::string_view>& ComponentAllocator::GetSharedComponentNames()
   {
+    if (!sharedComponentNamesSorted_)
+    {
+      std::sort(sharedComponentNames_.begin(), sharedComponentNames_.end());
+      sharedComponentNamesSorted_ = true;
+    }
+    
     return sharedComponentNames_;
   }
 }

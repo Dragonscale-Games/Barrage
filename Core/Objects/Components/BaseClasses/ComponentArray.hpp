@@ -20,6 +20,7 @@
 
 #include "BaseComponent.hpp"
 #include <vector>
+#include <rttr/rttr_enable.h>
 
 namespace Barrage
 { 
@@ -76,6 +77,8 @@ namespace Barrage
       */
       /**************************************************************/
       virtual Component::Type GetType() override;
+
+      RTTR_ENABLE(Component)
   };
 
   //! All component arrays are a specialization of this template
@@ -146,6 +149,8 @@ namespace Barrage
 
     public:
       T* data_;
+
+    RTTR_ENABLE(ComponentArray)
   };
 
   //! Associates each component array with its name

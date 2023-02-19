@@ -22,10 +22,10 @@
 namespace Barrage
 {
   //! Maps pool archetype names to pool archetypes
-  typedef std::unordered_map<std::string_view, PoolArchetype*> PoolArchetypeMap;
+  typedef std::unordered_map<std::string, PoolArchetype*> PoolArchetypeMap;
 
   //! Maps object archetype names to object archetypes
-  typedef std::unordered_map<std::string_view, ObjectArchetype*> ObjectArchetypeMap;
+  typedef std::unordered_map<std::string, ObjectArchetype*> ObjectArchetypeMap;
 
   //! <class description>
   class ArchetypeManager
@@ -35,30 +35,34 @@ namespace Barrage
 
       ~ArchetypeManager();
 
-      void AddPoolArchetype(const std::string_view& name, PoolArchetype* archetype);
+      void CreatePoolArchetype(const std::string& name);
 
-      void AddObjectArchetype(const std::string_view& name, ObjectArchetype* archetype);
+      void CreateObjectArchetype(const std::string& name, const std::vector<std::string_view>& componentArrayNames);
 
-      PoolArchetype* GetPoolArchetype(const std::string_view& name);
+      void AddPoolArchetype(const std::string& name, PoolArchetype* archetype);
 
-      ObjectArchetype* GetObjectArchetype(const std::string_view& name);
+      void AddObjectArchetype(const std::string& name, ObjectArchetype* archetype);
 
-      std::vector<std::string_view> GetPoolArchetypeNames();
+      PoolArchetype* GetPoolArchetype(const std::string& name);
 
-      std::vector<std::string_view> GetObjectArchetypeNames();
+      ObjectArchetype* GetObjectArchetype(const std::string& name);
 
-      void LoadPoolArchetype(const std::string_view& name);
+      PoolArchetype* ExtractPoolArchetype(const std::string& name);
 
-      void LoadObjectArchetype(const std::string_view& name);
+      ObjectArchetype* ExtractObjectArchetype(const std::string& name);
 
-      void SavePoolArchetype(const std::string_view& name);
+      void DeletePoolArchetype(const std::string& name);
 
-      void SaveObjectArchetype(const std::string_view& name);
+      void DeleteObjectArchetype(const std::string& name);
+
+      std::vector<std::string> GetPoolArchetypeNames();
+
+      std::vector<std::string> GetObjectArchetypeNames();
 
     private:
       PoolArchetypeMap poolArchetypes_;
       ObjectArchetypeMap objectArchetypes_;
-      //ComponentAllocator& componentAllocator_;
+      ComponentAllocator& componentAllocator_;
 	};
 }
 

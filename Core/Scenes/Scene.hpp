@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Objects/Pools/PoolInfo.hpp>
+#include <unordered_map>
 
 namespace Barrage
 {  
@@ -25,9 +26,21 @@ namespace Barrage
     public:   
       Scene();
 
-      void AddStartingPool(const PoolInfo& startingPool);
+      bool HasPool(const std::string& poolName);
 
-      std::vector<PoolInfo> startingPools_; //!< List of pools and objects the scene starts with
+      void AddStartingPool(const PoolInfo& startingPool, unsigned* index = nullptr);
+
+      PoolInfo* GetPoolInfo(const std::string& poolName);
+
+      void RemovePool(const std::string& poolName, unsigned* index = nullptr);
+
+      bool HasObject(const std::string& poolName, const std::string& objectName);
+
+      void AddObject(const std::string& poolName, const std::string& objectName, unsigned* index = nullptr);
+
+      void RemoveObject(const std::string& poolName, const std::string& objectName, unsigned* index = nullptr);
+
+      std::vector<PoolInfo> startingPools_; //!< Collection of pools and objects the scene starts with
 	};
 }
 

@@ -85,7 +85,7 @@ namespace Barrage
       std::vector<std::string_view> GetSpawnFuncNames();
 
     private:
-      SpawnFuncMap spawnFuncs_;                 //!< The collection of registered spawn functions
+      SpawnFuncMap spawnFuncs_;                      //!< The collection of registered spawn functions
       std::vector<std::string_view> spawnFuncNames_; //!< The names of all registered spawn functions
 	};
 }

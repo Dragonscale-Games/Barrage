@@ -159,8 +159,11 @@ namespace Barrage
           Initializes the capacity of an object pool. Components are
           added by a pool manager, not by this function.
 
-        \param
+        \param capacity
           The number of objects the pool will be able to hold.
+
+        \param space
+          The space the pool lives in.
       */
       /**************************************************************/
       Pool(unsigned capacity, Space& space);

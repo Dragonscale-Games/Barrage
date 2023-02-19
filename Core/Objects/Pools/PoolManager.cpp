@@ -32,11 +32,11 @@ namespace Barrage
     }
   }
 
-  Pool* PoolManager::CreatePool(const std::string_view& name, const PoolArchetype& archetype, unsigned capacity)
+  Pool* PoolManager::CreatePool(const std::string& name, const PoolArchetype& archetype)
   {
     if (pools_.find(name) == pools_.end())
     {
-      Pool* new_pool = CreatePoolInternal(archetype, capacity);
+      Pool* new_pool = CreatePoolInternal(archetype);
       pools_[name] = new_pool;
 
       return new_pool;
@@ -47,7 +47,7 @@ namespace Barrage
     }
   }
 
-  Pool* PoolManager::GetPool(const std::string_view& name) const
+  Pool* PoolManager::GetPool(const std::string& name) const
   {
     if (pools_.find(name) == pools_.end())
     {
@@ -59,7 +59,7 @@ namespace Barrage
     }
   }
 
-  void PoolManager::DeletePool(const std::string_view& name)
+  void PoolManager::DeletePool(const std::string& name)
   {
     if (pools_.find(name) != pools_.end())
     {
@@ -68,9 +68,9 @@ namespace Barrage
     }
   }
 
-  std::vector<std::string_view> PoolManager::GetPoolNames()
+  std::vector<std::string> PoolManager::GetPoolNames()
   {
-    std::vector<std::string_view> pool_list;
+    std::vector<std::string> pool_list;
 
     for (auto it = pools_.begin(); it != pools_.end(); ++it)
     {
@@ -80,9 +80,9 @@ namespace Barrage
     return pool_list;
   }
 
-  Pool* PoolManager::CreatePoolInternal(const PoolArchetype& archetype, unsigned capacity)
+  Pool* PoolManager::CreatePoolInternal(const PoolArchetype& archetype)
   {
-    Pool* new_pool = new Pool(capacity, space_);
+    Pool* new_pool = new Pool(archetype.capacity_, space_);
 
     // add tags
     for (const std::string_view& tag : archetype.tags_)
@@ -93,7 +93,7 @@ namespace Barrage
     // allocate component arrays
     for (const std::string_view& component_array_name : archetype.componentArrayNames_)
     {
-      ComponentArray* component_array = componentAllocator_.AllocateComponentArray(component_array_name, capacity);
+      ComponentArray* component_array = componentAllocator_.AllocateComponentArray(component_array_name, archetype.capacity_);
 
       if (component_array)
       {

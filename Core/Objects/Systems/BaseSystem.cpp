@@ -61,7 +61,7 @@ namespace Barrage
 
   void System::Update()
   {
-    // intentionally empty
+    // intentionally empty - specialized in derived classes
   }
 
   void System::SetSystemManager(SystemManager* manager)

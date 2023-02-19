@@ -19,6 +19,7 @@
 #include "GfxRegistry2D.hpp"
 
 #include <cassert>
+#include <algorithm>
 
 namespace Barrage
 {
@@ -82,6 +83,20 @@ namespace Barrage
   GfxManager2D::ShaderID GfxRegistry2D::FindShader(const char* keyname)
   {
     return Find(keyname, shaderBook_);
+  }
+
+  std::vector<std::string> GfxRegistry2D::GetTextureNames()
+  {
+    std::vector<std::string> textureNames;
+
+    for (auto& entry : textureBook_)
+    {
+      textureNames.push_back(entry.first);
+    }
+
+    std::sort(textureNames.begin(), textureNames.end());
+    
+    return textureNames;
   }
 
   void GfxRegistry2D::Register(

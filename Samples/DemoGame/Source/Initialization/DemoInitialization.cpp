@@ -41,15 +41,13 @@ namespace Demo
   
   Scene* CreateDemoScene()
   {
-    const unsigned MAX_BULLETS = 100000;
+    PoolInfo player_pool("Player Pool");
+    player_pool.objects_.push_back("Player Object");
 
-    PoolInfo player_pool("Player Pool", "Player Pool Archetype");
-    player_pool.objects_.push_back("Player Object Archetype");
+    PoolInfo spawner_pool("Spawner Pool");
+    spawner_pool.objects_.push_back("Spawner Object");
 
-    PoolInfo spawner_pool("Spawner Pool", "Spawner Pool Archetype");
-    spawner_pool.objects_.push_back("Spawner Object Archetype");
-
-    PoolInfo bullet_pool("Bullet Pool", "Bullet Pool Archetype", MAX_BULLETS);
+    PoolInfo bullet_pool("Bullet Pool");
 
     Scene* demo_scene = new Scene;
 
@@ -91,14 +89,14 @@ namespace Demo
     pool_archetype->componentArrayNames_.push_back("VelocityArray");
     pool_archetype->componentArrayNames_.push_back("TextureSpaceArray");
 
-    objectManager.AddPoolArchetype("Player Pool Archetype", pool_archetype);
+    objectManager.AddPoolArchetype("Player Pool", pool_archetype);
 
     ObjectArchetype* object_archetype = new ObjectArchetype;
 
     PositionArray* position_array = new PositionArray;
     position_array->Allocate(1);
     position_array->data_->x_ = 960.0f;
-    position_array->data_->y_ = 200.0f;
+    position_array->data_->y_ = 540.0f;
     object_archetype->components_["PositionArray"] = position_array;
 
     RotationArray* rotation_array = new RotationArray;
@@ -123,11 +121,13 @@ namespace Demo
     tex_space_array->data_->v_ = 0.0f;
     object_archetype->components_["TextureSpaceArray"] = tex_space_array;
 
-    objectManager.AddObjectArchetype("Player Object Archetype", object_archetype);
+    objectManager.AddObjectArchetype("Player Object", object_archetype);
   }
 
   void CreateBulletArchetypes(Barrage::ObjectManager& objectManager)
   {
+    const unsigned MAX_BULLETS = 100000;
+    
     PoolArchetype* pool_archetype = new PoolArchetype;
 
     pool_archetype->tags_.push_back("Bullet");
@@ -155,14 +155,16 @@ namespace Demo
     pool_archetype->componentArrayNames_.push_back("TextureSpaceArray");
     pool_archetype->componentArrayNames_.push_back("DestructibleArray");
 
-    objectManager.AddPoolArchetype("Bullet Pool Archetype", pool_archetype);
+    pool_archetype->capacity_ = MAX_BULLETS;
+
+    objectManager.AddPoolArchetype("Bullet Pool", pool_archetype);
 
     ObjectArchetype* object_archetype = new ObjectArchetype;
 
     PositionArray* position_array = new PositionArray;
     position_array->Allocate(1);
-    position_array->data_->x_ = 640.0f;
-    position_array->data_->y_ = 120.0f;
+    position_array->data_->x_ = 960.0f;
+    position_array->data_->y_ = 880.0f;
     object_archetype->components_["PositionArray"] = position_array;
 
     RotationArray* rotation_array = new RotationArray;
@@ -191,7 +193,7 @@ namespace Demo
     destructible_array->Allocate(1);
     object_archetype->components_["DestructibleArray"] = destructible_array;
 
-    objectManager.AddObjectArchetype("Bullet Object Archetype", object_archetype);
+    objectManager.AddObjectArchetype("Bullet Object", object_archetype);
   }
 
   void CreateSpawnerArchetypes(Barrage::ObjectManager& objectManager)
@@ -201,7 +203,7 @@ namespace Demo
     pool_archetype->tags_.push_back("Spawner");
 
     SpawnType bullet_spawn_type;
-    bullet_spawn_type.archetypeName_ = "Bullet Object Archetype";
+    bullet_spawn_type.archetypeName_ = "Bullet Object";
     bullet_spawn_type.destinationPoolName_ = "Bullet Pool";
     bullet_spawn_type.spawnFuncs_.push_back("MatchPosition");
     bullet_spawn_type.spawnFuncs_.push_back("RandomDirection");
@@ -215,7 +217,7 @@ namespace Demo
 
     pool_archetype->componentArrayNames_.push_back("PositionArray");
 
-    objectManager.AddPoolArchetype("Spawner Pool Archetype", pool_archetype);
+    objectManager.AddPoolArchetype("Spawner Pool", pool_archetype);
 
     ObjectArchetype* object_archetype = new ObjectArchetype;
 
@@ -225,6 +227,6 @@ namespace Demo
     position_array->data_->y_ = 880.0f;
     object_archetype->components_["PositionArray"] = position_array;
 
-    objectManager.AddObjectArchetype("Spawner Object Archetype", object_archetype);
+    objectManager.AddObjectArchetype("Spawner Object", object_archetype);
   }
 }

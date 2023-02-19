@@ -114,7 +114,7 @@ namespace Barrage
           Returns the list of all registered component arrays.
       */
       /**************************************************************/
-      std::vector<std::string_view> GetComponentArrayNames();
+      static const std::vector<std::string_view>& GetComponentArrayNames();
       
       /**************************************************************/
       /*!
@@ -125,7 +125,7 @@ namespace Barrage
           Returns the list of all registered shared components.
       */
       /**************************************************************/
-      std::vector<std::string_view> GetSharedComponentNames();
+      static const std::vector<std::string_view>& GetSharedComponentNames();
 
     private:
       /**************************************************************/
@@ -168,11 +168,14 @@ namespace Barrage
       SharedComponent* AllocateSharedComponent(SharedComponent* initializer) const;
 
     private:
-      ComponentArrayAllocMap componentArrayAllocMap_;   //!< Maps names of component arrays to their allocation functions
-      SharedComponentAllocMap sharedComponentAllocMap_; //!< Maps names of shared components to their allocation functions
+      static ComponentArrayAllocMap componentArrayAllocMap_;   //!< Maps names of component arrays to their allocation functions
+      static SharedComponentAllocMap sharedComponentAllocMap_; //!< Maps names of shared components to their allocation functions
 
-      std::vector<std::string_view> componentArrayNames_;    //!< The names of all registered component arrays
-      std::vector<std::string_view> sharedComponentNames_;   //!< The names of all registered shared components
+      static std::vector<std::string_view> componentArrayNames_;    //!< The names of all registered component arrays
+      static std::vector<std::string_view> sharedComponentNames_;   //!< The names of all registered shared components
+
+      static bool componentArrayNamesSorted_;
+      static bool sharedComponentNamesSorted_; 
 	};
 }
 

@@ -17,47 +17,68 @@
 #include <DemoInitialization.hpp>
 #include <Engine/Engine.hpp>
 
+#include "Widgets/Windows/Hierarchy/HierarchyWidget.hpp"
+#include "Widgets/Windows/Inspector/InspectorWidget.hpp"
+#include "Widgets/MainMenu/MainMenuWidget.hpp"
+
+#include <Widgets/Modals/SharedComponent/SharedComponentModal.hpp>
+#include <Widgets/Modals/ComponentArray/ComponentArrayModal.hpp>
+
 #include <unordered_set>
 #include <chrono>
 
 namespace Barrage
 {
+  Editor* Editor::Instance = nullptr;
+  
   Editor::Editor() :
     engine_(),
     gui_(),
-    frameTime_(),
-    numTicks_(0),
-    statePaused_(false),
-    isRunning_(false)
+    data_(),
+
+    repeatTimer_(0)
   {
   }
 
   void Editor::Run()
   {
-    if (!isRunning_)
+    if (!data_.isRunning_)
     {
-      isRunning_ = true;
+      data_.isRunning_ = true;
       
       Initialize();
 
-      while (isRunning_)
+      while (data_.isRunning_)
       {
         Update();
       }
 
       Shutdown();
 
-      isRunning_ = false;
+      data_.isRunning_ = false;
     }
+  }
+
+  EditorData& Editor::Data()
+  {
+    return data_;
+  }
+
+  CommandQueue& Editor::Command()
+  {
+    return commandQueue_;
   }
 
   void Editor::Initialize()
   {
+    Instance = this;
     engine_.Initialize();
 
     Barrage::WindowManager& windowing = engine_.Windowing();
     Barrage::GfxRegistry2D& registry = engine_.GfxRegistry();
     Barrage::GfxDraw2D& drawing = engine_.Drawing();
+
+    windowing.ChangeTitle("Barrage Editor");
 
     // Register the assets necessary.
     const char* instancedShaderPaths[] = {
@@ -69,7 +90,7 @@ namespace Barrage
     registry.RegisterTexture("Assets/Textures/TestShip.png", "TestShip");
     // Set any default resources on the draw system.
     drawing.ApplyShader("Instanced");
-    // Set the viewport of our game.
+    // Set the viewport of our game
     const Barrage::WindowManager::WindowData& settings = windowing.GetSettings();
     drawing.SetViewportSpace(glm::ivec2(settings.width_, settings.height_));
 
@@ -77,9 +98,9 @@ namespace Barrage
 
     Space* demo_space = Demo::CreateDemoSpace();
     engine_.Spaces().AddSpace("Demo Space", demo_space);
-
-    engine_.Frames().SetFpsCap(FramerateController::FpsCap::FPS_120);
-    engine_.Frames().SetVsync(false);
+    data_.selectedScene_ = "Demo Scene";
+    data_.selectedSpace_ = "Demo Space";
+    engine_.Frames().SetVsync(true);
   }
 
   void Editor::Update()
@@ -88,15 +109,29 @@ namespace Barrage
     
     engine_.Input().Update();
 
-    numTicks_ = engine_.Frames().ConsumeTicks();
-    for (unsigned i = 0; i < numTicks_; ++i)
+    unsigned numTicks = engine_.Frames().ConsumeTicks();
+
+    if (data_.gamePlaying_)
     {
-      engine_.Spaces().Update();
+      for (unsigned i = 0; i < numTicks; ++i)
+      {
+        //engine_.Spaces().Update();
+      }
+    }
+    
+    commandQueue_.Process();
+
+    if (data_.sceneIsDirty_)
+    {
+      engine_.Spaces().GetSpace(data_.selectedSpace_)->SetScene(data_.selectedScene_);
+      data_.sceneIsDirty_ = false;
     }
 
     gui_.StartWidgets();
-    MakeTestWidget();
+    UseWidgets();
     gui_.EndWidgets();
+
+    HandleKeyboard();
 
     Barrage::WindowManager& windowing = engine_.Windowing();
     Barrage::GfxDraw2D& drawing = engine_.Drawing();
@@ -107,13 +142,12 @@ namespace Barrage
     gui_.DrawWidgets();
     drawing.EndFrame();
 
-    if(!windowing.IsOpen())
+    if (!windowing.IsOpen())
     {
-      isRunning_ = false;
+      data_.isRunning_ = false;
     }
 
     engine_.Frames().EndFrame();
-    frameTime_ = engine_.Frames().DT();
   }
 
   void Editor::Shutdown()
@@ -121,63 +155,71 @@ namespace Barrage
     gui_.Shutdown();
     
     engine_.Shutdown();
-
-    Barrage::Engine::Instance = nullptr;
+    Instance = nullptr;
   }
 
-  void Editor::MakeTestWidget()
+  void Editor::UseWidgets()
   {
-    const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(ImVec2(main_viewport->WorkPos.x + 20, main_viewport->WorkPos.y + 20), ImGuiCond_Once);
-    ImGui::SetNextWindowSize(ImVec2(240, 680), ImGuiCond_Once);
+    MainMenuWidget::Use();
+    HierarchyWidget::Use();
+    InspectorWidget::Use();
+    ImGui::ShowDemoWindow();
+    LogWidget::Use();
 
-    ImGui::Begin("Editor");
-
-    ObjectManager& object_manager = engine_.Spaces().GetSpace("Demo Space")->GetObjectManager();
-    std::vector<std::string_view> pool_archetype_names = object_manager.GetPoolArchetypeNames();
-
-    for (auto it = pool_archetype_names.begin(); it != pool_archetype_names.end(); ++it)
+    if (data_.openSharedComponentModal_)
     {
-      PoolArchetype* pool_archetype = object_manager.GetPoolArchetype(*it);
-
-      ImGui::Text(it->data());
-      ImGui::Text("");
-      ImGui::Text("Shared components:");
-      ImGui::Text("-------------------");
-      for (auto jt = pool_archetype->sharedComponents_.begin(); jt != pool_archetype->sharedComponents_.end(); ++jt)
-      {
-        if (ImGui::CollapsingHeader(jt->first.data()))
-        {
-          rttr::type component_type = rttr::type::get_by_name(jt->first.data());
-
-          if (component_type.is_valid())
-          {
-            for (auto& prop : component_type.get_properties())
-            {
-              ImGui::Text(prop.get_name().data());
-            }
-          }
-        }
-      }
-
-      ImGui::Text("");
-      ImGui::Text("Component arrays:");
-      ImGui::Text("------------------");
-      for (auto jt = pool_archetype->componentArrayNames_.begin(); jt != pool_archetype->componentArrayNames_.end(); ++jt)
-      {
-        ImGui::Text(jt->data());
-      }
-
-      ImGui::Text("");
-      ImGui::Text("Tags:");
-      ImGui::Text("------");
-      for (auto jt = pool_archetype->tags_.begin(); jt != pool_archetype->tags_.end(); ++jt)
-      {
-        ImGui::Text(jt->data());
-      }
-      ImGui::Text("");
+      ImGui::OpenPopup("Add shared component");
+      data_.openSharedComponentModal_ = false;
     }
+
+    if (data_.openComponentArrayModal_)
+    {
+      ImGui::OpenPopup("Add component array");
+      data_.openComponentArrayModal_ = false;
+    }
+
+    SharedComponentModal::Use("Add shared component");
+    ComponentArrayModal::Use("Add component array");
+  }
+
+  void Editor::HandleKeyboard()
+  {
+    long long bigDelayMilliseconds = 500000;
+    long long smallDelayMilliseconds = 100000;
     
-    ImGui::End();
+    if (engine_.Input().KeyIsDown(KEY_CTRL_LEFT) && engine_.Input().KeyIsDown(KEY_Z))
+    {
+      if (engine_.Input().KeyTriggered(KEY_Z))
+      {
+        commandQueue_.Undo();
+        repeatTimer_ = bigDelayMilliseconds;
+      }
+      else if (repeatTimer_ <= 0)
+      {
+        commandQueue_.Undo();
+        repeatTimer_ = smallDelayMilliseconds;
+      }
+      else
+      {
+        repeatTimer_ -= engine_.Frames().DT();
+      }
+    }
+    else if (engine_.Input().KeyIsDown(KEY_CTRL_LEFT) && engine_.Input().KeyIsDown(KEY_Y))
+    {
+      if (engine_.Input().KeyTriggered(KEY_Y))
+      {
+        commandQueue_.Redo();
+        repeatTimer_ = bigDelayMilliseconds;
+      }
+      else if (repeatTimer_ <= 0)
+      {
+        commandQueue_.Redo();
+        repeatTimer_ = smallDelayMilliseconds;
+      }
+      else
+      {
+        repeatTimer_ -= engine_.Frames().DT();
+      }
+    }
   }
 }

@@ -23,7 +23,7 @@
 namespace Barrage
 {
   //! Maps pool names to pools
-  typedef std::unordered_map<std::string_view, Pool*> PoolMap;
+  typedef std::unordered_map<std::string, Pool*> PoolMap;
 
   class Space;
 
@@ -59,17 +59,14 @@ namespace Barrage
 
         \param archetype
           The archetype carrying information about all the components
-          the new object pool will contain.
-
-        \param capacity
-          The maximum number of objects the pool will be able to hold.
+          the new object pool will contain and its capacity.
 
         \return
           Returns a pointer to the newly created object pool. Returns
           nullptr if creation fails.
       */
       /**************************************************************/
-      Pool* CreatePool(const std::string_view& name, const PoolArchetype& archetype, unsigned capacity);
+      Pool* CreatePool(const std::string& name, const PoolArchetype& archetype);
 
       /**************************************************************/
       /*!
@@ -85,7 +82,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      Pool* GetPool(const std::string_view& name) const;
+      Pool* GetPool(const std::string& name) const;
 
       /**************************************************************/
       /*!
@@ -97,7 +94,7 @@ namespace Barrage
           The name of the object pool. 
       */
       /**************************************************************/
-      void DeletePool(const std::string_view& name);
+      void DeletePool(const std::string& name);
 
       /**************************************************************/
       /*!
@@ -109,7 +106,7 @@ namespace Barrage
           Returns the names of all currently active pools.
       */
       /**************************************************************/
-      std::vector<std::string_view> GetPoolNames();
+      std::vector<std::string> GetPoolNames();
 
     private:
       /**************************************************************/
@@ -129,7 +126,7 @@ namespace Barrage
           nullptr if creation fails.
       */
       /**************************************************************/
-      Pool* CreatePoolInternal(const PoolArchetype& archetype, unsigned capacity);
+      Pool* CreatePoolInternal(const PoolArchetype& archetype);
 
     private:
       PoolMap pools_;                          //!< The collection of all object pools

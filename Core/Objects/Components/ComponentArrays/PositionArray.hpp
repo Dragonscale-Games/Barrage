@@ -25,7 +25,7 @@ namespace Barrage
     float x_; //!< x coord in world units
     float y_; //!< y coord in world units
 
-    inline Position() : x_(0.0f), y_(0.0f) {}
+    inline Position() : x_(960.0f), y_(540.0f) {}
   };
 
   typedef ComponentArrayT<Position> PositionArray;

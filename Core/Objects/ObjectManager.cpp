@@ -59,7 +59,7 @@ namespace Barrage
     }
   }
 
-  void ObjectManager::CreateObject(const std::string_view& poolName, const std::string_view& archetypeName)
+  void ObjectManager::CreateObject(const std::string& poolName, const std::string& archetypeName)
   {
     Pool* pool = poolManager_.GetPool(poolName);
     ObjectArchetype* archetype = archetypeManager_.GetObjectArchetype(archetypeName);
@@ -82,6 +82,11 @@ namespace Barrage
     return componentAllocator_.GetSharedComponentNames();
   }
 
+  ComponentAllocator& ObjectManager::GetComponentAllocator()
+  {
+    return componentAllocator_;
+  }
+
   std::vector<std::string_view> ObjectManager::GetSpawnFuncNames()
   {
     return spawnFuncManager_.GetSpawnFuncNames();
@@ -97,53 +102,83 @@ namespace Barrage
     return systemManager_.GetSystemUpdateOrder();
   }
 
-  void ObjectManager::AddPoolArchetype(const std::string_view& name, PoolArchetype* archetype)
+  void ObjectManager::CreatePoolArchetype(const std::string& name)
+  {
+    archetypeManager_.CreatePoolArchetype(name);
+  }
+
+  void ObjectManager::AddPoolArchetype(const std::string& name, PoolArchetype* archetype)
   {
     archetypeManager_.AddPoolArchetype(name, archetype);
   }
 
-  PoolArchetype* ObjectManager::GetPoolArchetype(const std::string_view& name)
+  PoolArchetype* ObjectManager::GetPoolArchetype(const std::string& name)
   {
     return archetypeManager_.GetPoolArchetype(name);
   }
 
-  void ObjectManager::AddObjectArchetype(const std::string_view& name, ObjectArchetype* archetype)
+  PoolArchetype* ObjectManager::ExtractPoolArchetype(const std::string& name)
+  {
+    return archetypeManager_.ExtractPoolArchetype(name);
+  }
+
+  void ObjectManager::DeletePoolArchetype(const std::string& name)
+  {
+    archetypeManager_.DeletePoolArchetype(name);
+  }
+
+  void ObjectManager::CreateObjectArchetype(const std::string& name, const std::vector<std::string_view>& componentArrayNames)
+  {
+    archetypeManager_.CreateObjectArchetype(name, componentArrayNames);
+  }
+
+  void ObjectManager::AddObjectArchetype(const std::string& name, ObjectArchetype* archetype)
   {
     archetypeManager_.AddObjectArchetype(name, archetype);
   }
 
-  ObjectArchetype* ObjectManager::GetObjectArchetype(const std::string_view& name)
+  ObjectArchetype* ObjectManager::GetObjectArchetype(const std::string& name)
   {
     return archetypeManager_.GetObjectArchetype(name);
   }
 
-  std::vector<std::string_view> ObjectManager::GetPoolArchetypeNames()
+  ObjectArchetype* ObjectManager::ExtractObjectArchetype(const std::string& name)
+  {
+    return archetypeManager_.ExtractObjectArchetype(name);
+  }
+
+  void ObjectManager::DeleteObjectArchetype(const std::string& name)
+  {
+    archetypeManager_.DeleteObjectArchetype(name);
+  }
+
+  std::vector<std::string> ObjectManager::GetPoolArchetypeNames()
   {
     return archetypeManager_.GetPoolArchetypeNames();
   }
 
-  std::vector<std::string_view> ObjectManager::GetObjectArchetypeNames()
+  std::vector<std::string> ObjectManager::GetObjectArchetypeNames()
   {
     return archetypeManager_.GetObjectArchetypeNames();
   }
 
-  void ObjectManager::CreatePool(const std::string_view& poolName, const std::string_view& archetypeName, unsigned capacity)
+  void ObjectManager::CreatePool(const std::string& poolName)
   {
-    if (capacity == 0)
-      return;
-
-    PoolArchetype* pool_archetype = archetypeManager_.GetPoolArchetype(archetypeName);
+    PoolArchetype* pool_archetype = archetypeManager_.GetPoolArchetype(poolName);
     
     if (pool_archetype)
     {
-      Pool* new_pool = poolManager_.CreatePool(poolName, *pool_archetype, capacity);
+      if (pool_archetype->capacity_ == 0)
+        return;
+      
+      Pool* new_pool = poolManager_.CreatePool(poolName, *pool_archetype);
       systemManager_.Subscribe(new_pool);
     }
   }
 
   void ObjectManager::CreatePoolAndObjects(const PoolInfo& poolInfo)
   {
-    CreatePool(poolInfo.poolName_, poolInfo.archetypeName_, poolInfo.capacity_);
+    CreatePool(poolInfo.poolName_);
 
     for (auto it = poolInfo.objects_.begin(); it != poolInfo.objects_.end(); ++it)
     {
@@ -151,12 +186,12 @@ namespace Barrage
     }
   }
 
-  Pool* ObjectManager::GetPool(const std::string_view& name) const
+  Pool* ObjectManager::GetPool(const std::string& name) const
   {
     return poolManager_.GetPool(name);
   }
 
-  void ObjectManager::DeletePool(const std::string_view& poolName)
+  void ObjectManager::DeletePool(const std::string& poolName)
   {
     Pool* pool = poolManager_.GetPool(poolName);
 
@@ -169,7 +204,7 @@ namespace Barrage
 
   void ObjectManager::DeleteAllPools()
   {
-    std::vector<std::string_view> pool_names = GetPoolNames();
+    std::vector<std::string> pool_names = GetPoolNames();
 
     for (auto it = pool_names.begin(); it != pool_names.end(); ++it)
     {
@@ -177,7 +212,7 @@ namespace Barrage
     }
   }
 
-  std::vector<std::string_view> ObjectManager::GetPoolNames()
+  std::vector<std::string> ObjectManager::GetPoolNames()
   {
     return poolManager_.GetPoolNames();
   }
