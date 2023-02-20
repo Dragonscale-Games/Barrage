@@ -19,7 +19,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <vector>
+#include <string>
 #include <rttr/rttr_enable.h>
+#include <rttr/variant.h>
 
 namespace Barrage
 { 
@@ -54,6 +56,32 @@ namespace Barrage
       */
       /**************************************************************/
       virtual void CopyToThis(const ComponentArray& source, unsigned sourceIndex, unsigned recipientIndex) = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets an rttr::variant representation of the component at
+          some index. Should not generally be used except for
+          serialization/the editor.
+
+        \param index
+          The index of the component to get.
+
+        \return
+          Returns the value of the component as an rttr::variant.
+      */
+      /**************************************************************/
+      virtual rttr::variant GetRTTRValue(int index) = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the component value at some index using an rttr::variant.
+          Should not generally be used except for serialization or
+          the editor.
+      */
+      /**************************************************************/
+      virtual void SetRTTRValue(const rttr::variant& value, int index) = 0;
 
       RTTR_ENABLE()
   };
@@ -112,6 +140,32 @@ namespace Barrage
       */
       /**************************************************************/
       T& Data(int index);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets an rttr::variant representation of the component at
+          some index. Should not generally be used except for
+          serialization/the editor.
+
+        \param index
+          The index of the component to get.
+
+        \return
+          Returns the value of the component as an rttr::variant.
+      */
+      /**************************************************************/
+      rttr::variant GetRTTRValue(int index) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the component value at some index using an rttr::variant.
+          Should not generally be used except for serialization or
+          the editor.
+      */
+      /**************************************************************/
+      void SetRTTRValue(const rttr::variant& value, int index) override;
 
     public:
       T* data_;

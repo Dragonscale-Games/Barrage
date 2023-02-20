@@ -38,6 +38,25 @@ namespace Barrage
   {
     return data_;
   }
+
+  template <typename T>
+  rttr::variant SharedComponentT<T>::GetRTTRValue()
+  {
+    rttr::variant value = data_;
+
+    return value;
+  }
+
+  template <typename T>
+  void SharedComponentT<T>::SetRTTRValue(const rttr::variant& value)
+  {
+    if (value.get_type() != rttr::type::get<T>())
+    {
+      return;
+    }
+
+    data_ = value.get_value<T>();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

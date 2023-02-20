@@ -45,6 +45,28 @@ namespace Barrage
       /**************************************************************/
       virtual void CopyToThis(const SharedComponent& other) = 0;
 
+      /**************************************************************/
+      /*!
+        \brief
+          Gets an rttr::variant representation of the component.
+          Should not generally be used except for serialization or
+          the editor.
+
+        \return
+          Returns the component's value as an rttr::variant.
+      */
+      /**************************************************************/
+      virtual rttr::variant GetRTTRValue() = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the component value using an rttr::variant. Should not
+          generally be used except for serialization/the editor.
+      */
+      /**************************************************************/
+      virtual void SetRTTRValue(const rttr::variant& value) = 0;
+
       // Notify rttr of the component hierarchy.
       RTTR_ENABLE()
   };
@@ -84,6 +106,28 @@ namespace Barrage
       */
       /**************************************************************/
       T& Data();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets an rttr::variant representation of the component.
+          Should not generally be used except for serialization or
+          the editor.
+
+        \return
+          Returns the component's value as an rttr::variant.
+      */
+      /**************************************************************/
+      rttr::variant GetRTTRValue() override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the component value using an rttr::variant. Should not
+          generally be used except for serialization/the editor.
+      */
+      /**************************************************************/
+      void SetRTTRValue(const rttr::variant& value) override;
 
     public:
       T data_;
