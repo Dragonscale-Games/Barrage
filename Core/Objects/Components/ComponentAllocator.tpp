@@ -10,7 +10,7 @@
  */
  /* ======================================================================== */
 
- ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #ifndef ComponentAllocator_BARRAGE_T
 #define ComponentAllocator_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////
@@ -18,63 +18,51 @@
 namespace Barrage
 {
   template <typename T>
-  void ComponentAllocator::RegisterComponent(const std::string_view& componentName)
+  void ComponentAllocator::RegisterComponentArray(const std::string_view& componentName)
   {
-    // create a test component of the input type and make sure it's a component
-    T type_test;
-    Component* component = dynamic_cast<Component*>(&type_test);
-
-    if (component)
+    if (componentArrayAllocMap_.count(componentName))
     {
-      Component::Type component_type = component->GetType();
-
-      if (component_type == Component::Type::ARRAY)
-      {
-        if (componentArrayAllocMap_.count(componentName))
-        {
-          return;
-        }
-
-        componentArrayAllocMap_[componentName] = &ComponentAllocator::AllocateComponentArray<T>;
-        componentArrayNames_.push_back(componentName);
-        componentArrayNamesSorted_ = false;
-      }
-      else if (component_type == Component::Type::SHARED)
-      {
-        if (sharedComponentAllocMap_.count(componentName))
-        {
-          return;
-        }
-
-        sharedComponentAllocMap_[componentName] = &ComponentAllocator::AllocateSharedComponent<T>;
-        sharedComponentNames_.push_back(componentName);
-        sharedComponentNamesSorted_ = false;
-      }
+      return;
     }
+
+    componentArrayAllocMap_[componentName] = &ComponentAllocator::AllocateComponentArray<T>;
+    componentArrayNames_.push_back(componentName);
+    componentArrayNamesSorted_ = false;
   }
 
   template <typename T>
-  ComponentArray* ComponentAllocator::AllocateComponentArray(unsigned capacity) const
+  void ComponentAllocator::RegisterSharedComponent(const std::string_view& componentName)
   {
-    ComponentArray* new_component_array = dynamic_cast<ComponentArray*>(new T);
+    if (sharedComponentAllocMap_.count(componentName))
+    {
+      return;
+    }
 
-    new_component_array->Allocate(capacity);
+    sharedComponentAllocMap_[componentName] = &ComponentAllocator::AllocateSharedComponent<T>;
+    sharedComponentNames_.push_back(componentName);
+    sharedComponentNamesSorted_ = false;
+  }
+
+  template <typename T>
+  ComponentArray* ComponentAllocator::AllocateComponentArray(unsigned capacity)
+  {
+    ComponentArrayT<T>* new_component_array = new ComponentArrayT<T>(capacity);
 
     return new_component_array;
   }
 
   template <typename T>
-  SharedComponent* ComponentAllocator::AllocateSharedComponent(SharedComponent* initializer) const
+  SharedComponent* ComponentAllocator::AllocateSharedComponent(SharedComponent* initializer)
   {
-    T* new_component = new T;
-    T* initializer_full = dynamic_cast<T*>(initializer);
+    SharedComponentT<T>* new_component = new SharedComponentT<T>;
+    SharedComponentT<T>* initializer_full = dynamic_cast<SharedComponentT<T>*>(initializer);
 
     if (initializer_full)
     {
-      *new_component = *initializer_full;
+      new_component->Data() = initializer_full->Data();
     }
 
-    return dynamic_cast<SharedComponent*>(new_component);
+    return new_component;
   }
 }
 

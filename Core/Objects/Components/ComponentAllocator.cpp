@@ -28,7 +28,7 @@ namespace Barrage
   {
   }
 
-  ComponentArray* ComponentAllocator::AllocateComponentArray(const std::string_view& name, unsigned capacity) const
+  ComponentArray* ComponentAllocator::AllocateComponentArray(const std::string_view& name, unsigned capacity)
   {
     if (componentArrayAllocMap_.find(name) == componentArrayAllocMap_.end())
     {
@@ -36,11 +36,12 @@ namespace Barrage
     }
     else
     {
-      return CALL_MEMBER_FN(*this, componentArrayAllocMap_.at(name))(capacity);
+      ComponentArrayAllocFunc function = componentArrayAllocMap_.at(name);
+      return function(capacity);
     }
   }
 
-  SharedComponent* ComponentAllocator::AllocateSharedComponent(const std::string_view& name, SharedComponent* initializer) const
+  SharedComponent* ComponentAllocator::AllocateSharedComponent(const std::string_view& name, SharedComponent* initializer)
   {
     if (sharedComponentAllocMap_.find(name) == sharedComponentAllocMap_.end())
     {
@@ -48,7 +49,8 @@ namespace Barrage
     }
     else
     {
-      return CALL_MEMBER_FN(*this, sharedComponentAllocMap_.at(name))(initializer);
+      SharedComponentAllocFunc function = sharedComponentAllocMap_.at(name);
+      return function(initializer);
     }
   }
 

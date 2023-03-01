@@ -66,16 +66,15 @@ namespace Barrage
   typedef std::unordered_map<SpawnTypeId, SpawnType> SpawnTypeMap;
 
   //! Component that allows objects to spawn other objects
-  class Spawner : public SharedComponent
+  class Spawner
   {
     public:
       SpawnTypeMap spawnTypes_; //!< List of the object types that will be spawned
 
       inline Spawner() : spawnTypes_() {}
-
-      // Notify rttr of the component hierarchy.
-      RTTR_ENABLE(SharedComponent)
   };
+
+  typedef SharedComponentT<Spawner> SharedSpawner;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

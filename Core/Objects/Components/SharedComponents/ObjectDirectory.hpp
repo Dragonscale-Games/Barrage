@@ -36,7 +36,7 @@ namespace Barrage
   };
   
   //! Tells which index corresponds to a specific object at any given time
-  class ObjectDirectory : public SharedComponent
+  class ObjectDirectory
   {
     public:
       inline ObjectDirectory() : handles_(), freeList_(), currentId_(0) {}
@@ -82,10 +82,9 @@ namespace Barrage
       std::vector<ObjectHandle> handles_;
       std::vector<unsigned> freeList_;
       unsigned long long currentId_;
-
-      // Notify rttr of the component hierarchy.
-      RTTR_ENABLE(SharedComponent)
   };
+
+  typedef SharedComponentT<ObjectDirectory> SharedObjectDirectory;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

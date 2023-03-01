@@ -16,29 +16,26 @@
 
 namespace Barrage
 {
-  static const unsigned ALL_POOLS = 0;
-  static const unsigned HANDLE_POOLS = 1;
-
   CreationSystem::CreationSystem() :
     System(),
     archetypeManager_(nullptr),
-    spawnFuncManager_(nullptr),
+    spawnFunctionManager_(nullptr),
     poolManager_(nullptr)
   {
     // this pool type has no required tags or components because all pools will be subscribed to the creation system
     PoolType all_pool_type;
-    poolTypes_[ALL_POOLS] = all_pool_type;
+    poolTypes_["All Pools"] = all_pool_type;
 
     PoolType handle_pool_type;
-    handle_pool_type.AddComponentName("ObjectDirectory");
-    handle_pool_type.AddComponentName("DirectoryIndexArray");
-    poolTypes_[HANDLE_POOLS] = handle_pool_type;
+    handle_pool_type.AddSharedComponent("ObjectDirectory");
+    handle_pool_type.AddComponentArray("DirectoryIndex");
+    poolTypes_["Handle Pools"] = handle_pool_type;
   }
 
   void CreationSystem::Update()
   {
-    UpdatePoolGroup(HANDLE_POOLS, AssignHandles);
-    UpdatePoolGroup(ALL_POOLS, SpawnObjects);
+    UpdatePoolGroup("Handle Pools", AssignHandles);
+    UpdatePoolGroup("All Pools", SpawnObjects);
   }
 
   void CreationSystem::SetArchetypeManager(ArchetypeManager& archetypeManager)
@@ -46,9 +43,9 @@ namespace Barrage
     archetypeManager_ = &archetypeManager;
   }
 
-  void CreationSystem::SetSpawnFuncManager(SpawnFuncManager& spawnFuncManager)
+  void CreationSystem::SetSpawnFunctionManager(SpawnFunctionManager& spawnFunctionManager)
   {
-    spawnFuncManager_ = &spawnFuncManager;
+    spawnFunctionManager_ = &spawnFunctionManager;
   }
 
   void CreationSystem::SetPoolManager(PoolManager& poolManager)
@@ -69,11 +66,11 @@ namespace Barrage
 
     if (destinationPool->HasComponentArray("DirectoryIndexArray") && destinationPool->HasSharedComponent("ObjectDirectory"))
     {
-      ObjectDirectory& object_directory = *destinationPool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
-      DirectoryIndexArray& directory_index_array = *destinationPool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
+      ObjectDirectory& object_directory = destinationPool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
+      DirectoryIndexArray& directory_index_array = *destinationPool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
 
       unsigned object_index = destinationPool->numActiveObjects_ - 1;
-      DirectoryIndex& directory_index = directory_index_array[object_index];
+      DirectoryIndex& directory_index = directory_index_array.Data(object_index);
       directory_index.index_ = object_directory.CreateHandle(object_index);
     }
   }
@@ -126,17 +123,17 @@ namespace Barrage
     }
   }
 
-  void CreationSystem::ApplySpawnFuncs(const std::vector<std::string>& spawnFuncs, Pool* sourcePool, Pool* destinationPool, unsigned startIndex, unsigned numObjects, const std::vector<unsigned>& sourceIndices)
+  void CreationSystem::ApplySpawnFuncs(const std::vector<std::string>& spawnFunctions, Pool* sourcePool, Pool* destinationPool, unsigned startIndex, unsigned numObjects, const std::vector<unsigned>& sourceIndices)
   {
-    size_t num_spawn_funcs = spawnFuncs.size();
+    size_t num_spawn_funcs = spawnFunctions.size();
 
     for (size_t i = 0; i < num_spawn_funcs; ++i)
     {
-      SpawnFunc spawn_func = spawnFuncManager_->GetSpawnFunc(spawnFuncs[i]);
+      SpawnFunction spawn_function = spawnFunctionManager_->GetSpawnFunction(spawnFunctions[i]);
 
-      if (spawn_func)
+      if (spawn_function)
       {
-        spawn_func(*sourcePool, *destinationPool, startIndex, numObjects, sourceIndices);
+        spawn_function(*sourcePool, *destinationPool, startIndex, numObjects, sourceIndices);
       }
     }
   }
@@ -149,8 +146,8 @@ namespace Barrage
 
   void CreationSystem::AssignHandles(Pool* pool)
   {
-    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
-    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
+    ObjectDirectory& object_directory = pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
 
     unsigned start_index = pool->numActiveObjects_;
     unsigned num_queued_objects = pool->numQueuedObjects_;
@@ -159,7 +156,7 @@ namespace Barrage
     {
       unsigned object_index = start_index + i;
       
-      DirectoryIndex& directory_index = directory_index_array[object_index];
+      DirectoryIndex& directory_index = directory_index_array.Data(object_index);
 
       directory_index.index_ = object_directory.CreateHandle(object_index);
     }

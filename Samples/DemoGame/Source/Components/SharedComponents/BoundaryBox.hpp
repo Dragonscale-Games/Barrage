@@ -21,7 +21,7 @@
 namespace Demo
 {
   //! Holds all information needed to draw the objects in a pool
-  class BoundaryBox : public Barrage::SharedComponent
+  class BoundaryBox
   {
   public:
     float xMin_;
@@ -30,10 +30,9 @@ namespace Demo
     float yMax_;
 
     inline BoundaryBox() : xMin_(-50.0f), xMax_(50.0f), yMin_(-50.0f), yMax_(50.0f) {}
-
-    // Notify rttr of the component hierarchy.
-    RTTR_ENABLE()
   };
+
+  typedef Barrage::SharedComponentT<BoundaryBox> SharedBoundaryBox;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

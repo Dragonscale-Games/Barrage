@@ -18,7 +18,8 @@ namespace Barrage
 {
   PoolType::PoolType() :
     tags_(),
-    componentNames_()
+    componentArrayNames_(),
+    sharedComponentNames_()
   {
   }
 
@@ -27,22 +28,31 @@ namespace Barrage
     tags_.push_back(tag);
   }
 
-  void PoolType::AddComponentName(const std::string_view& name)
+  void PoolType::AddComponentArray(const std::string_view& name)
   {
-    componentNames_.push_back(name);
+    componentArrayNames_.push_back(name);
+  }
+
+  void PoolType::AddSharedComponent(const std::string_view& name)
+  {
+    sharedComponentNames_.push_back(name);
   }
 
   bool PoolType::MatchesPool(Pool* pool)
   {
-    for (const auto& component : componentNames_)
+    for (const auto& componentArray : componentArrayNames_)
     {
-      if (!pool->HasComponentArray(component))
+      if (!pool->HasComponentArray(componentArray))
       {
-        if (!pool->HasSharedComponent(component))
-        {
-          // if it doesn't exist in either list, the pool doesn't have the required component
-          return false;
-        }
+        return false;
+      }
+    }
+
+    for (const auto& sharedComponent : sharedComponentNames_)
+    {
+      if (!pool->HasSharedComponent(sharedComponent))
+      {
+        return false;
       }
     }
 

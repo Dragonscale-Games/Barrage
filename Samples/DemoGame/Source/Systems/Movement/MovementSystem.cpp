@@ -28,38 +28,38 @@ namespace Demo
     System()
   {
     PoolType basic_movement_type;
-    basic_movement_type.AddComponentName("PositionArray");
-    basic_movement_type.AddComponentName("VelocityArray");
-    poolTypes_[BASIC_MOVEMENT_POOLS] = basic_movement_type;
+    basic_movement_type.AddComponentArray("Position");
+    basic_movement_type.AddComponentArray("Velocity");
+    poolTypes_["Basic Movement Pools"] = basic_movement_type;
 
     PoolType basic_rotation_type;
-    basic_rotation_type.AddComponentName("RotationArray");
-    basic_rotation_type.AddComponentName("AngularSpeedArray");
-    poolTypes_[BASIC_ROTATION_POOLS] = basic_rotation_type;
+    basic_rotation_type.AddComponentArray("Rotation");
+    basic_rotation_type.AddComponentArray("AngularSpeed");
+    poolTypes_["Basic Rotation Pools"] = basic_rotation_type;
 
     PoolType player_type;
-    player_type.AddComponentName("PositionArray");
-    player_type.AddComponentName("Player");
-    poolTypes_[PLAYER_POOLS] = player_type;
+    player_type.AddComponentArray("Position");
+    player_type.AddSharedComponent("Player");
+    poolTypes_["Player Pools"] = player_type;
 
     PoolType bounded_player_type;
-    bounded_player_type.AddComponentName("PositionArray");
-    bounded_player_type.AddComponentName("BoundaryBox");
-    bounded_player_type.AddComponentName("Player");
-    poolTypes_[BOUNDED_PLAYER_POOLS] = bounded_player_type;
+    bounded_player_type.AddComponentArray("Position");
+    bounded_player_type.AddSharedComponent("BoundaryBox");
+    bounded_player_type.AddSharedComponent("Player");
+    poolTypes_["Bounded Player Pools"] = bounded_player_type;
   }
 
   void MovementSystem::Update()
   {
-    UpdatePoolGroup(PLAYER_POOLS, UpdatePlayerMovement);
-    UpdatePoolGroup(BOUNDED_PLAYER_POOLS, UpdatePlayerBounds);
-    UpdatePoolGroup(BASIC_MOVEMENT_POOLS, UpdateBasicMovement);
-    UpdatePoolGroup(BASIC_ROTATION_POOLS, UpdateBasicRotation);
+    UpdatePoolGroup("Player Pools", UpdatePlayerMovement);
+    UpdatePoolGroup("Bounded Player Pools", UpdatePlayerBounds);
+    UpdatePoolGroup("Basic Movement Pools", UpdateBasicMovement);
+    UpdatePoolGroup("Basic Rotation Pools", UpdateBasicRotation);
   }
 
   void MovementSystem::UpdatePlayerMovement(Pool* pool)
   {
-    Player& player = *pool->GetSharedComponent<Player>("Player");
+    Player& player = pool->GetSharedComponent<Player>("Player")->Data();
 
     float speed = 0.0f;
     Velocity player_velocity;
@@ -93,27 +93,27 @@ namespace Demo
       player_velocity.vy_ = player_velocity.vy_ / 1.4142f;
     }
 
-    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
+    PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
 
     unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      position_array[i].x_ += player_velocity.vx_;
-      position_array[i].y_ += player_velocity.vy_;
+      position_array.Data(i).x_ += player_velocity.vx_;
+      position_array.Data(i).y_ += player_velocity.vy_;
     }
   }
 
   void MovementSystem::UpdatePlayerBounds(Pool* pool)
   {
-    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
-    BoundaryBox& bounds = *pool->GetSharedComponent<BoundaryBox>("BoundaryBox");
+    PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
+    BoundaryBox& bounds = pool->GetSharedComponent<BoundaryBox>("BoundaryBox")->Data();
 
     unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      Position& pos = position_array[i];
+      Position& pos = position_array.Data(i);
 
       if (pos.x_ < bounds.xMin_)
         pos.x_ = bounds.xMin_;
@@ -129,29 +129,29 @@ namespace Demo
 
   void MovementSystem::UpdateBasicMovement(Pool* pool)
   {
-    PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
-    VelocityArray& velocity_array = *pool->GetComponentArray<VelocityArray>("VelocityArray");
+    PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
+    VelocityArray& velocity_array = *pool->GetComponentArray<Velocity>("Velocity");
 
     unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      position_array[i].x_ += velocity_array[i].vx_;
-      position_array[i].y_ += velocity_array[i].vy_;
+      position_array.Data(i).x_ += velocity_array.Data(i).vx_;
+      position_array.Data(i).y_ += velocity_array.Data(i).vy_;
     }
   }
 
   void MovementSystem::UpdateBasicRotation(Pool* pool)
   {
-    RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("RotationArray");
-    AngularSpeedArray& angular_speed_array = *pool->GetComponentArray<AngularSpeedArray>("AngularSpeedArray");
+    RotationArray& rotation_array = *pool->GetComponentArray<Rotation>("Rotation");
+    AngularSpeedArray& angular_speed_array = *pool->GetComponentArray<AngularSpeed>("AngularSpeed");
 
     unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      rotation_array[i].angle_ += angular_speed_array[i].w_;
-      rotation_array[i].angle_ = ClampWrapped(rotation_array[i].angle_, 0.0f, 2.0f * 3.141592f);
+      rotation_array.Data(i).angle_ += angular_speed_array.Data(i).w_;
+      rotation_array.Data(i).angle_ = ClampWrapped(rotation_array.Data(i).angle_, 0.0f, 2.0f * 3.141592f);
     }
   }
 }

@@ -20,26 +20,17 @@
 namespace Barrage
 {
   template <typename T>
-  ComponentArrayT<T>::ComponentArrayT() :
-    data_(nullptr)
+  ComponentArrayT<T>::ComponentArrayT(unsigned capacity) :
+    data_(nullptr),
+    capacity_(capacity)
   {
+    data_ = new T[capacity];
   }
   
   template <typename T>
   ComponentArrayT<T>::~ComponentArrayT()
   {
     delete[] data_;
-  }
-
-  template <typename T>
-  void ComponentArrayT<T>::Allocate(unsigned capacity)
-  {
-    if (data_)
-    {
-      delete[] data_;
-    }
-      
-    data_ = new T[capacity];
   }
 
   template <typename T>
@@ -51,9 +42,28 @@ namespace Barrage
   }
   
   template <typename T>
-  T& ComponentArrayT<T>::operator[](int i)
+  T& ComponentArrayT<T>::Data(int index)
   {
-    return data_[i];
+    return data_[index];
+  }
+
+  template <typename T>
+  rttr::variant ComponentArrayT<T>::GetRTTRValue(int index)
+  {
+    rttr::variant value = data_[index];
+
+    return value;
+  }
+
+  template <typename T>
+  void ComponentArrayT<T>::SetRTTRValue(const rttr::variant& value, int index)
+  {
+    if (value.get_type() != rttr::type::get<T>())
+    {
+      return;
+    }
+
+    data_[index] = value.get_value<T>();
   }
 }
 

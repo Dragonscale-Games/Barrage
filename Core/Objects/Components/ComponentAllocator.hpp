@@ -25,8 +25,8 @@ namespace Barrage
 {
   class ComponentAllocator;
   
-  typedef ComponentArray* (ComponentAllocator::* ComponentArrayAllocFunc)(unsigned) const;
-  typedef SharedComponent* (ComponentAllocator::* SharedComponentAllocFunc)(SharedComponent*) const;
+  typedef ComponentArray* (*ComponentArrayAllocFunc)(unsigned);
+  typedef SharedComponent* (*SharedComponentAllocFunc)(SharedComponent*);
 
   typedef std::unordered_map<std::string_view, ComponentArrayAllocFunc> ComponentArrayAllocMap;
   typedef std::unordered_map<std::string_view, SharedComponentAllocFunc> SharedComponentAllocMap;
@@ -46,19 +46,34 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Tells the component allocator how to allocate a component
-          of a given type. Component must inherit from one of the
-          component base classes.
+          Tells the allocator how to allocate a component array for 
+          a given type. 
 
         \tparam T
-          The type of the component to register.
+          The type of component the array will contain.
 
         \param componentName
-          The name the user would like assigned to the component.
+          The name of the component's C++ class.
       */
       /**************************************************************/
       template <typename T>
-      void RegisterComponent(const std::string_view& componentName);
+      static void RegisterComponentArray(const std::string_view& componentName);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Tells the allocator how to allocate a shared component for 
+          a given type. 
+
+        \tparam T
+          The type of component data the shared component will wrap.
+
+        \param componentName
+          The name of the component's C++ class.
+      */
+      /**************************************************************/
+      template <typename T>
+      static void RegisterSharedComponent(const std::string_view& componentName);
 
       /**************************************************************/
       /*!
@@ -80,7 +95,7 @@ namespace Barrage
           nullptr.
       */
       /**************************************************************/
-      ComponentArray* AllocateComponentArray(const std::string_view& name, unsigned capacity) const;
+      static ComponentArray* AllocateComponentArray(const std::string_view& name, unsigned capacity);
 
       /**************************************************************/
       /*!
@@ -103,7 +118,7 @@ namespace Barrage
           nullptr.
       */
       /**************************************************************/
-      SharedComponent* AllocateSharedComponent(const std::string_view& name, SharedComponent* initializer = nullptr) const;
+      static SharedComponent* AllocateSharedComponent(const std::string_view& name, SharedComponent* initializer = nullptr);
 
       /**************************************************************/
       /*!
@@ -145,7 +160,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      ComponentArray* AllocateComponentArray(unsigned capacity) const;
+      static ComponentArray* AllocateComponentArray(unsigned capacity);
 
       /**************************************************************/
       /*!
@@ -165,7 +180,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      SharedComponent* AllocateSharedComponent(SharedComponent* initializer) const;
+      static SharedComponent* AllocateSharedComponent(SharedComponent* initializer);
 
     private:
       static ComponentArrayAllocMap componentArrayAllocMap_;   //!< Maps names of component arrays to their allocation functions

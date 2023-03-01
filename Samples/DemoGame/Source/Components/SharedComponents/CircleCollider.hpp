@@ -22,16 +22,15 @@
 namespace Demo
 {
   //! Holds all information needed to draw the objects in a pool
-  class CircleCollider : public Barrage::SharedComponent
+  class CircleCollider
   {
     public:
       float radius_;
 
       CircleCollider() : radius_(50.0f) {}
-
-      // Notify rttr of the component hierarchy.
-      RTTR_ENABLE()
   };
+
+  typedef Barrage::SharedComponentT<CircleCollider> SharedCircleCollider;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

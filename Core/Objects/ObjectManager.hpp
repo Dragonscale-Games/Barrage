@@ -19,7 +19,7 @@
 #include "Pools/PoolManager.hpp"
 #include "Pools/PoolInfo.hpp"
 #include "Systems/SystemManager.hpp"
-#include "SpawnFuncs/SpawnFuncManager.hpp"
+#include "SpawnFunctions/SpawnFunctionManager.hpp"
 #include "Random/Random.hpp"
 
 namespace Barrage
@@ -73,7 +73,7 @@ namespace Barrage
       // Initializers
       // ===================================================================
 
-      std::vector<std::string_view> GetSpawnFuncNames();
+      std::vector<std::string_view> GetSpawnFunctionNames();
 
       // ===================================================================
       // Systems
@@ -131,12 +131,15 @@ namespace Barrage
     
     private:
       template <typename T>
-      void RegisterComponent(const std::string_view& componentName);
+      void RegisterComponentArray(const std::string_view& componentName);
+
+      template <typename T>
+      void RegisterSharedComponent(const std::string_view& componentName);
 
       template <typename T>
       void RegisterSystem(const std::string_view& systemName);
 
-      void RegisterSpawnFunc(const std::string_view& name, SpawnFunc spawnFunction);
+      void RegisterSpawnFunction(const std::string_view& name, SpawnFunction spawnFunction);
 
       void SetSystemUpdateOrder(const std::vector<std::string_view>& updateOrderList);
 
@@ -144,7 +147,7 @@ namespace Barrage
 
       void RegisterEngineSystems();
 
-      void RegisterEngineSpawnFuncs();
+      void RegisterEngineSpawnFunctions();
 
       void SetDefaultSystemUpdateOrder();
 
@@ -152,7 +155,7 @@ namespace Barrage
 
       void RegisterCustomSystems();
 
-      void RegisterCustomSpawnFuncs();
+      void RegisterCustomSpawnFunctions();
 
       void SetSystemUpdateOrder();
 
@@ -162,7 +165,7 @@ namespace Barrage
       ArchetypeManager archetypeManager_;
       PoolManager poolManager_;
       SystemManager systemManager_;
-      SpawnFuncManager spawnFuncManager_;
+      SpawnFunctionManager spawnFunctionManager_;
 	};
 }
 

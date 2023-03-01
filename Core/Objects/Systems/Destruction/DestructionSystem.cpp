@@ -24,36 +24,36 @@ namespace Barrage
     System()
   {
     PoolType destructible_type;
-    destructible_type.AddComponentName("DestructibleArray");
-    poolTypes_[BASIC_DESTRUCTIBLE_POOLS] = destructible_type;
+    destructible_type.AddComponentArray("Destructible");
+    poolTypes_["Basic Destructible Pools"] = destructible_type;
 
     PoolType directory_type;
-    directory_type.AddComponentName("DestructibleArray");
-    directory_type.AddComponentName("ObjectDirectory");
-    directory_type.AddComponentName("DirectoryIndexArray");
-    poolTypes_[DIRECTORY_POOLS] = directory_type;
+    directory_type.AddComponentArray("Destructible");
+    directory_type.AddSharedComponent("ObjectDirectory");
+    directory_type.AddComponentArray("DirectoryIndex");
+    poolTypes_["Directory Pools"] = directory_type;
   }
   
   void DestructionSystem::Update()
   {
-    UpdatePoolGroup(DIRECTORY_POOLS, UpdateDeadHandles);
-    UpdatePoolGroup(BASIC_DESTRUCTIBLE_POOLS, DestroyObjects);
-    UpdatePoolGroup(DIRECTORY_POOLS, UpdateAliveHandles);
+    UpdatePoolGroup("Directory Pools", UpdateDeadHandles);
+    UpdatePoolGroup("Basic Destructible Pools", DestroyObjects);
+    UpdatePoolGroup("Directory Pools", UpdateAliveHandles);
   }
 
   void DestructionSystem::UpdateDeadHandles(Pool* pool)
   {
-    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("DestructibleArray");
-    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
-    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
+    DestructibleArray& destructible_array = *pool->GetComponentArray<Destructible>("Destructible");
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
+    ObjectDirectory& object_directory = pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
 
     unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      if (destructible_array[i].destroyed_)
+      if (destructible_array.Data(i).destroyed_)
       {
-        unsigned directory_index = directory_index_array[i].index_;
+        unsigned directory_index = directory_index_array.Data(i).index_;
 
         object_directory.FreeHandle(directory_index);
       }
@@ -62,14 +62,14 @@ namespace Barrage
 
   void DestructionSystem::UpdateAliveHandles(Pool* pool)
   {
-    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndexArray>("DirectoryIndexArray");
-    ObjectDirectory& object_directory = *pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory");
+    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
+    ObjectDirectory& object_directory = pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
 
     unsigned num_objects = pool->numActiveObjects_;
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      unsigned directory_index = directory_index_array[i].index_;
+      unsigned directory_index = directory_index_array.Data(i).index_;
       ObjectHandle& handle = object_directory.GetHandle(directory_index);
 
       handle.poolIndex_ = i;
@@ -78,7 +78,7 @@ namespace Barrage
 
   void DestructionSystem::DestroyObjects(Pool* pool)
   {
-    DestructibleArray& destructible_array = *pool->GetComponentArray<DestructibleArray>("DestructibleArray");
+    DestructibleArray& destructible_array = *pool->GetComponentArray<Destructible>("Destructible");
 
     /*
      *  Objectives:
@@ -94,7 +94,7 @@ namespace Barrage
     // past the end of the original object array
     while (initial_alive_end_index < pool->numActiveObjects_)
     {
-      if (destructible_array[initial_alive_end_index].destroyed_ == true)
+      if (destructible_array.Data(initial_alive_end_index).destroyed_ == true)
         break;
 
       ++initial_alive_end_index;
@@ -108,7 +108,7 @@ namespace Barrage
     for (auto it = pool->componentArrays_.begin(); it != pool->componentArrays_.end(); ++it)
     {
       // we'll operate on the destructible array last; after the loop finishes
-      if (it->first == "DestructibleArray")
+      if (it->first == "Destructible")
         continue;
 
       unsigned alive_end_index = initial_alive_end_index;
@@ -118,7 +118,7 @@ namespace Barrage
 
       while (next_alive_index < pool->numActiveObjects_)
       {
-        if (destructible_array[next_alive_index].destroyed_ == false)
+        if (destructible_array.Data(next_alive_index).destroyed_ == false)
         {
           component_array->CopyToThis(*component_array, next_alive_index, alive_end_index);
 
@@ -135,7 +135,7 @@ namespace Barrage
 
     while (next_alive_index < pool->numActiveObjects_)
     {
-      if (destructible_array[next_alive_index].destroyed_ == false)
+      if (destructible_array.Data(next_alive_index).destroyed_ == false)
       {
         destructible_array.CopyToThis(destructible_array, next_alive_index, alive_end_index);
 

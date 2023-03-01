@@ -24,13 +24,13 @@ namespace Barrage
 {
   void ObjectManager::RegisterCustomComponents()
   {
-    RegisterComponent<Demo::AngularSpeedArray>("AngularSpeedArray");
-    RegisterComponent<Demo::VelocityArray>("VelocityArray");
+    RegisterComponentArray<Demo::AngularSpeed>("AngularSpeed");
+    RegisterComponentArray<Demo::Velocity>("Velocity");
 
-    RegisterComponent<Demo::BoundaryBox>("BoundaryBox");
-    RegisterComponent<Demo::CircleCollider>("CircleCollider");
-    RegisterComponent<Demo::Player>("Player");
-    RegisterComponent<Demo::RNG>("RNG");
+    RegisterSharedComponent<Demo::BoundaryBox>("BoundaryBox");
+    RegisterSharedComponent<Demo::CircleCollider>("CircleCollider");
+    RegisterSharedComponent<Demo::Player>("Player");
+    RegisterSharedComponent<Demo::RNG>("RNG");
   }
 
   void ObjectManager::RegisterCustomSystems()
@@ -40,10 +40,10 @@ namespace Barrage
     RegisterSystem<Demo::SpawnSystem>("SpawnSystem");
   }
 
-  void ObjectManager::RegisterCustomSpawnFuncs()
+  void ObjectManager::RegisterCustomSpawnFunctions()
   {
-    RegisterSpawnFunc("MatchPosition", Demo::Spawn::MatchPosition);
-    RegisterSpawnFunc("RandomDirection", Demo::Spawn::RandomDirection);
+    RegisterSpawnFunction("MatchPosition", Demo::Spawn::MatchPosition);
+    RegisterSpawnFunction("RandomDirection", Demo::Spawn::RandomDirection);
   }
 
   void ObjectManager::SetSystemUpdateOrder()

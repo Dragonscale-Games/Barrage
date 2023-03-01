@@ -19,7 +19,9 @@
 
 namespace Barrage
 {
-	//! Responsible for sending object draw calls to the renderer
+  typedef std::map<unsigned, std::vector<Pool*>> DrawPoolMap;
+  
+  //! Responsible for sending object draw calls to the renderer
   class DrawSystem : public System
 	{
     public:   
@@ -46,10 +48,21 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Unsubscribes a pool from the system.
+      */
+      /**************************************************************/
+      void Unsubscribe(Pool* pool) override;
+
+      /**************************************************************/
+      /*!
+        \brief
           Draws all pools contained in the system.
       */
       /**************************************************************/
       void Draw();
+
+    private:
+      DrawPoolMap drawPools_;
 	};
 }
 

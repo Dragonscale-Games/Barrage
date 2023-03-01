@@ -21,16 +21,16 @@ namespace Demo
   {
     void MatchPosition(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, const std::vector<unsigned>& sourceIndices)
     {
-      PositionArray& source_positions = *initPool.GetComponentArray<PositionArray>("PositionArray");
-      PositionArray& dest_positions = *destPool.GetComponentArray<PositionArray>("PositionArray");
+      PositionArray& source_positions = *initPool.GetComponentArray<Position>("Position");
+      PositionArray& dest_positions = *destPool.GetComponentArray<Position>("Position");
 
       for (unsigned i = 0; i < numNewObjects; ++i)
       {
         unsigned dest_index = i + firstObjIndex;
         unsigned source_index = sourceIndices[i];
 
-        dest_positions[dest_index].x_ = source_positions[source_index].x_;
-        dest_positions[dest_index].y_ = source_positions[source_index].y_;
+        dest_positions.Data(dest_index).x_ = source_positions.Data(source_index).x_;
+        dest_positions.Data(dest_index).y_ = source_positions.Data(source_index).y_;
       }
     }
   }
