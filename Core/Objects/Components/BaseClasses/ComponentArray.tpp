@@ -51,6 +51,8 @@ namespace Barrage
     {
       data_[i] = other.data_[i];
     }
+
+    return *this;
   }
 
   template <typename T>

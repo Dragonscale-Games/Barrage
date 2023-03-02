@@ -37,6 +37,28 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Copy constructor.
+
+        \param other
+          The archetype to copy.
+      */
+      /**************************************************************/
+      PoolArchetype(const PoolArchetype& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copy assignment operator.
+
+        \param other
+          The archetype to copy.
+      */
+      /**************************************************************/
+      PoolArchetype& operator=(const PoolArchetype& other);
+
+      /**************************************************************/
+      /*!
+        \brief
           Deallocates all components attached to pool archetype.
       */
       /**************************************************************/
@@ -103,6 +125,29 @@ namespace Barrage
       */
       /**************************************************************/
       void RemoveTag(const std::string_view& tag, unsigned* index = nullptr);
+
+    private:
+      /**************************************************************/
+      /*!
+        \brief
+          Helper function that copies a component map to this object's
+          component map. This object's old component map is deleted
+          first.
+
+        \param other
+          The component map to copy.
+      */
+      /**************************************************************/
+      void CopyComponentMap(const SharedComponentMap& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Helper function that delets the component map of this
+          object.
+      */
+      /**************************************************************/
+      void DeleteComponentMap();
 
     public:
       SharedComponentMap sharedComponents_;               //!< Map of initialized shared components to copy

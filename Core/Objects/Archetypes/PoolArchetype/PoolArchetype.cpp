@@ -15,6 +15,7 @@
 
 #include "stdafx.h"
 #include "PoolArchetype.hpp"
+#include "Objects/Components/ComponentAllocator.hpp"
 
 namespace Barrage
 {
@@ -26,12 +27,28 @@ namespace Barrage
   {
   }
 
+  PoolArchetype::PoolArchetype(const PoolArchetype& other) :
+    sharedComponents_(),
+    componentArrayNames_(other.componentArrayNames_),
+    tags_(other.tags_),
+    capacity_(other.capacity_)
+  {
+    CopyComponentMap(other.sharedComponents_);
+  }
+
+  PoolArchetype& PoolArchetype::operator=(const PoolArchetype& other)
+  {
+    componentArrayNames_ = other.componentArrayNames_;
+    tags_ = other.tags_;
+    capacity_ = other.capacity_;
+    CopyComponentMap(other.sharedComponents_);
+
+    return *this;
+  }
+
   PoolArchetype::~PoolArchetype()
   {
-    for (auto it = sharedComponents_.begin(); it != sharedComponents_.end(); ++it)
-    {
-      delete it->second;
-    }
+    DeleteComponentMap();
   }
 
   bool PoolArchetype::HasComponentArray(const std::string_view& componentArrayName)
@@ -79,5 +96,30 @@ namespace Barrage
         return;
       }
     }
+  }
+
+  void PoolArchetype::CopyComponentMap(const SharedComponentMap& other)
+  {
+    DeleteComponentMap();
+
+    for (auto it = other.begin(); it != other.end(); ++it)
+    {
+      SharedComponent* newArray = ComponentAllocator::AllocateSharedComponent(it->first, it->second);
+
+      if (newArray)
+      {
+        sharedComponents_[it->first] = newArray;
+      }
+    }
+  }
+
+  void PoolArchetype::DeleteComponentMap()
+  {
+    for (auto it = sharedComponents_.begin(); it != sharedComponents_.end(); ++it)
+    {
+      delete it->second;
+    }
+
+    sharedComponents_.clear();
   }
 }

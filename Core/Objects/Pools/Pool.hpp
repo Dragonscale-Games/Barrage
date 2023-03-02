@@ -150,6 +150,7 @@ namespace Barrage
       unsigned numActiveObjects_;           //!< Number of currently active objects
       unsigned numQueuedObjects_;           //!< Number of objects waiting to be spawned on the next tick
       const unsigned capacity_;             //!< Total number of objects the pool can hold
+
       Space& space_;                        //!< The space the pool lives in
 
     private:
