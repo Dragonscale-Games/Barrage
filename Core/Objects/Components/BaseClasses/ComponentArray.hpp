@@ -94,10 +94,35 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Initializes with a null component array.
+          Constructs a component array with the given capacity.
+
+        \param capacity
+          The number of components held in the array.
       */
       /**************************************************************/
       ComponentArrayT(unsigned capacity = 1);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copy constructor.
+
+        \param other
+          The array to copy.
+      */
+      /**************************************************************/
+      ComponentArrayT(const ComponentArrayT<T>& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copy assignment operator.
+
+        \param other
+          The array to copy.
+      */
+      /**************************************************************/
+      ComponentArrayT<T>& operator=(const ComponentArrayT<T>& other);
 
       /**************************************************************/
       /*!
@@ -111,7 +136,9 @@ namespace Barrage
       /*!
         \brief
           Copies a component from some source component array to a
-          recipient component in this component array.
+          recipient component in this component array. The arrays
+          should be the same type (this function is not safety
+          checked).
 
         \param source
           The component array holding the component to copy from. The
@@ -169,7 +196,7 @@ namespace Barrage
 
     public:
       T* data_;
-      const unsigned capacity_;
+      unsigned capacity_;
 
     RTTR_ENABLE(ComponentArray)
   };
