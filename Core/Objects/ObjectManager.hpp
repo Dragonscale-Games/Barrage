@@ -58,17 +58,7 @@ namespace Barrage
       void Draw();
 
       // ===================================================================
-      // Components
-      // ===================================================================
-
-      std::vector<std::string_view> GetComponentArrayNames();
-
-      std::vector<std::string_view> GetSharedComponentNames();
-
-      ComponentAllocator& GetComponentAllocator();
-
-      // ===================================================================
-      // Initializers
+      // Spawn Functions
       // ===================================================================
 
       std::vector<std::string_view> GetSpawnFunctionNames();
@@ -127,7 +117,6 @@ namespace Barrage
 
     private:
       Random rng_;
-      ComponentAllocator componentAllocator_;
       PoolManager poolManager_;
       SystemManager systemManager_;
       SpawnFunctionManager spawnFunctionManager_;

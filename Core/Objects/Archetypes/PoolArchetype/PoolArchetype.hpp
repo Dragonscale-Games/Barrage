@@ -156,6 +156,7 @@ namespace Barrage
       std::vector<std::string_view> componentArrayNames_; //!< Names of the pool's component arrays
       std::vector<std::string_view> tags_;                //!< Tags of the pool
       unsigned capacity_;                                 //!< The number of objects the pool will be able to hold
+
       std::vector<ObjectArchetype> startingObjects_;      //!< The objects the pool starts with
       std::vector<ObjectArchetype> spawnArchetypes_;      //!< Objects that can be spawned in the pool
   };

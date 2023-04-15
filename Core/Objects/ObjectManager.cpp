@@ -21,8 +21,7 @@ namespace Barrage
 {
   ObjectManager::ObjectManager(Space& space) :
     rng_(),
-    componentAllocator_(),
-    poolManager_(componentAllocator_, space),
+    poolManager_(space),
     systemManager_(),
     spawnFunctionManager_()
   {
@@ -69,21 +68,6 @@ namespace Barrage
       creation_system->CreateObject(*archetype, pool);
     }
   }*/
-
-  std::vector<std::string_view> ObjectManager::GetComponentArrayNames()
-  {
-    return componentAllocator_.GetComponentArrayNames();
-  }
-
-  std::vector<std::string_view> ObjectManager::GetSharedComponentNames()
-  {
-    return componentAllocator_.GetSharedComponentNames();
-  }
-
-  ComponentAllocator& ObjectManager::GetComponentAllocator()
-  {
-    return componentAllocator_;
-  }
 
   std::vector<std::string_view> ObjectManager::GetSpawnFunctionNames()
   {

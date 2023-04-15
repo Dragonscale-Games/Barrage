@@ -14,12 +14,12 @@
 #include "stdafx.h"
 #include "PoolManager.hpp"
 #include "Spaces/Space.hpp"
+#include "Objects/Components/ComponentAllocator.hpp"
 
 namespace Barrage
 {
-  PoolManager::PoolManager(ComponentAllocator& componentAllocator, Space& space) :
+  PoolManager::PoolManager(Space& space) :
     pools_(),
-    componentAllocator_(componentAllocator),
     space_(space)
   {
   }
@@ -93,7 +93,7 @@ namespace Barrage
     // allocate component arrays
     for (const std::string_view& component_array_name : archetype.componentArrayNames_)
     {
-      ComponentArray* component_array = componentAllocator_.AllocateComponentArray(component_array_name, archetype.capacity_);
+      ComponentArray* component_array = ComponentAllocator::AllocateComponentArray(component_array_name, archetype.capacity_);
 
       if (component_array)
       {
@@ -104,7 +104,7 @@ namespace Barrage
     // allocate and initialize shared components
     for (auto it = archetype.sharedComponents_.begin(); it != archetype.sharedComponents_.end(); ++it)
     {
-      SharedComponent* shared_component = componentAllocator_.AllocateSharedComponent(it->first, it->second);
+      SharedComponent* shared_component = ComponentAllocator::AllocateSharedComponent(it->first, it->second);
 
       if (shared_component)
       {
