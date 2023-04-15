@@ -130,7 +130,7 @@ namespace Barrage
           Deallocates component array.
       */
       /**************************************************************/
-      virtual ~ComponentArrayT();
+      ~ComponentArrayT() override;
 
       /**************************************************************/
       /*!
