@@ -113,6 +113,7 @@ namespace Demo
     PoolArchetype pool_archetype("Bullet Pool");
 
     pool_archetype.tags_.push_back("Bullet");
+    pool_archetype.tags_.push_back("Bullet Pool");
 
     SharedCircleCollider* circle_collider = new SharedCircleCollider;
     circle_collider->Data().radius_ = 16.0f;
@@ -181,8 +182,8 @@ namespace Demo
     SpawnInfo bullet_spawn_type;
     bullet_spawn_type.archetypeName_ = "Bullet Object";
     bullet_spawn_type.destinationPoolName_ = "Bullet Pool";
-    bullet_spawn_type.spawnFuncs_.push_back("MatchPosition");
-    bullet_spawn_type.spawnFuncs_.push_back("RandomDirection");
+    bullet_spawn_type.spawnFunctions_.push_back("MatchPosition");
+    bullet_spawn_type.spawnFunctions_.push_back("RandomDirection");
 
     SharedSpawner* spawner = new SharedSpawner;
     spawner->Data().spawnTypes_[BULLET_SPAWN_TYPE] = bullet_spawn_type;

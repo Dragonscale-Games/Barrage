@@ -40,7 +40,7 @@ namespace Demo
       void Update() override;
 
     private:
-      void SpawnBullets(Barrage::Pool* pool);
+      static void SpawnBullets(Barrage::Pool* spawnerPool, Barrage::Pool* bulletPool);
 	};
 }
 

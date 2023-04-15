@@ -28,10 +28,6 @@ namespace Barrage
     RegisterEngineSpawnFunctions();
     SetDefaultSystemUpdateOrder();
 
-    CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_.at("CreationSystem"));
-
-    creation_system->SetPoolManager(poolManager_);
-
     RegisterCustomComponents();
     RegisterCustomSystems();
     RegisterCustomSpawnFunctions();
@@ -81,15 +77,11 @@ namespace Barrage
     if (archetype.capacity_ == 0)
       return;
     
-    CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_["CreationSystem"]);
     Pool* new_pool = poolManager_.CreatePool(archetype);
 
     for (auto it = archetype.startingObjects_.begin(); it != archetype.startingObjects_.end(); ++it)
     {
-      if (creation_system)
-      {
-        creation_system->CreateObject(*it, new_pool);
-      }
+      new_pool->CreateObject(*it);
     }
 
     systemManager_.Subscribe(new_pool);

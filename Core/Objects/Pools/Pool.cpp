@@ -104,7 +104,7 @@ namespace Barrage
     numActiveObjects_++;
   }
 
-  void Pool::QueueSpawns(SpawnInfo& spawnInfo)
+  void Pool::QueueSpawns(Pool* sourcePool, SpawnInfo& spawnInfo)
   {
     unsigned numObjects = spawnInfo.sourceIndices_.size();
     unsigned availableSlots = GetAvailableSlots();
@@ -114,13 +114,17 @@ namespace Barrage
       numObjects = availableSlots;
     }
 
+    if (numObjects == 0)
+    {
+      return;
+    }
+
     unsigned startIndex = numActiveObjects_ + numQueuedObjects_;
     ObjectArchetype& archetype = spawnArchetypes_.at(spawnInfo.archetypeName_);
 
     CreateObjectsInternal(archetype, startIndex, numObjects);
+    ApplySpawnFuncs(sourcePool, spawnInfo, startIndex, numObjects);
 
-
-    spawnInfo.sourceIndices_.clear();
     numQueuedObjects_ += numObjects;
   }
 
@@ -175,7 +179,7 @@ namespace Barrage
     }
   }
 
-  void Pool::CreateObjectsInternal(const ObjectArchetype& archetype, unsigned index, unsigned numObjects)
+  void Pool::CreateObjectsInternal(const ObjectArchetype& archetype, unsigned startIndex, unsigned numObjects)
   {
     for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
     {
@@ -184,7 +188,23 @@ namespace Barrage
 
       for (unsigned i = 0; i < numObjects; ++i)
       {
-        destination_array->CopyToThis(*source_component, 0, index + i);
+        destination_array->CopyToThis(*source_component, 0, startIndex + i);
+      }
+    }
+  }
+
+  void Pool::ApplySpawnFuncs(Pool* sourcePool, const SpawnInfo& spawnInfo, unsigned startIndex, unsigned numObjects)
+  {
+    const std::vector<std::string>& spawnFunctions = spawnInfo.spawnFunctions_;
+    size_t spawnFunctionCount = spawnFunctions.size();
+
+    for (size_t i = 0; i < spawnFunctionCount; ++i)
+    {
+      SpawnFunction spawn_function = SpawnFunctionManager::GetSpawnFunction(spawnFunctions[i]);
+
+      if (spawn_function)
+      {
+        spawn_function(*sourcePool, *this, startIndex, numObjects, spawnInfo.sourceIndices_);
       }
     }
   }

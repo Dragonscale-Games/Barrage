@@ -23,22 +23,25 @@ namespace Demo
   SpawnSystem::SpawnSystem() :
     System()
   {
-    PoolType bullet_type;
-    bullet_type.AddTag("Spawner");
-    bullet_type.AddSharedComponent("Spawner");
-    poolTypes_["Bullet Spawner Pools"] = bullet_type;
+    PoolType bullet_spawner_type;
+    bullet_spawner_type.AddTag("Spawner");
+    bullet_spawner_type.AddSharedComponent("Spawner");
+    poolTypes_["Bullet Spawner Pools"] = bullet_spawner_type;
+
+    PoolType bullet_pool_type;
+    bullet_pool_type.AddTag("Bullet Pool");
+    poolTypes_["Bullet Pools"] = bullet_pool_type;
   }
 
   void SpawnSystem::Update()
   {
-    UpdatePoolGroup("Bullet Spawner Pools", static_cast<PoolUpdateMemberFunc>(&SpawnSystem::SpawnBullets));
+    UpdateInteraction("Bullet Spawner Pools", "Bullet Pools", SpawnSystem::SpawnBullets);
   }
 
-  void SpawnSystem::SpawnBullets(Pool* pool)
+  void SpawnSystem::SpawnBullets(Barrage::Pool* spawnerPool, Barrage::Pool* bulletPool)
   {
-    Spawner& spawner = pool->GetSharedComponent<Spawner>("Spawner")->Data();
+    Spawner& spawner = spawnerPool->GetSharedComponent<Spawner>("Spawner")->Data();
     spawner.spawnTypes_[BULLET_SPAWN_TYPE].sourceIndices_.resize(100, 0);
-    CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_->GetSystem("CreationSystem"));
-    creation_system->QueueSpawns(pool, spawner.spawnTypes_[BULLET_SPAWN_TYPE]);
+    bulletPool->QueueSpawns(spawnerPool, spawner.spawnTypes_[BULLET_SPAWN_TYPE]);
   }
 }

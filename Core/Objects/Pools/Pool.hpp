@@ -138,11 +138,14 @@ namespace Barrage
           Queues a number of objects for spawning on the next creation 
           system update.
 
+        \param sourcePool
+          The pool spawning the objects.
+
         \param spawnInfo
-          Contains the information needed to spawn the object.
+          Contains the information needed to spawn the objects.
       */
       /**************************************************************/
-      void QueueSpawns(SpawnInfo& spawnInfo);
+      void QueueSpawns(Pool* sourcePool, SpawnInfo& spawnInfo);
 
       /**************************************************************/
       /*!
@@ -305,14 +308,32 @@ namespace Barrage
         \param archetype
           The archetype used to construct the objects.
 
-        \param index
+        \param startIndex
           The index of the first new object.
 
         \param numObjects
           The number of objects to create.
       */
       /**************************************************************/
-      void CreateObjectsInternal(const ObjectArchetype& archetype, unsigned index, unsigned numObjects);
+      void CreateObjectsInternal(const ObjectArchetype& archetype, unsigned startIndex, unsigned numObjects);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Applies spawn functions to newly spawned objects in this
+          pool.
+
+        \param spawnInfo
+          Contains the spawn function list and source object indices.
+
+        \param startIndex
+          The index of the first object to apply spawn functions to.
+
+        \param numObjects
+          The number of objects to apply spawn functions to.
+      */
+      /**************************************************************/
+      void ApplySpawnFuncs(Pool* sourcePool, const SpawnInfo& spawnInfo, unsigned startIndex, unsigned numObjects);
 
     private:
       ComponentArrayMap componentArrays_;   //!< Holds component arrays and their names
