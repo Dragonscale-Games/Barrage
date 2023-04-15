@@ -77,7 +77,7 @@ add_library(BarrageCore STATIC
   "Objects/Archetypes/ObjectArchetype/ObjectArchetype.cpp" 
   "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
   "Objects/Pools/PoolType.cpp"  
-  "Objects/Pools/PoolInfo.cpp" 
+   
 
   "Math/Curves.hpp" "Math/Curves.tpp"
 

@@ -25,8 +25,6 @@ namespace Demo
   Space* CreateDemoSpace()
   {
     Space* demo_space = new Space;
-    ObjectManager& object_manager = demo_space->GetObjectManager();
-
     Scene* demo_scene = CreateDemoScene();
 
     Engine::Instance->Scenes().AddScene("Demo Scene", demo_scene);
@@ -37,14 +35,6 @@ namespace Demo
   
   Scene* CreateDemoScene()
   {
-    PoolInfo player_pool("Player Pool");
-    player_pool.objects_.push_back("Player Object");
-
-    PoolInfo spawner_pool("Spawner Pool");
-    spawner_pool.objects_.push_back("Spawner Object");
-
-    PoolInfo bullet_pool("Bullet Pool");
-
     Scene* demo_scene = new Scene("Demo Scene");
 
     CreatePlayerArchetypes(*demo_scene);

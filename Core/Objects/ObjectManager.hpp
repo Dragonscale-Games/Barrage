@@ -16,7 +16,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Pools/PoolManager.hpp"
-#include "Pools/PoolInfo.hpp"
 #include "Systems/SystemManager.hpp"
 #include "SpawnFunctions/SpawnFunctionManager.hpp"
 #include "Random/Random.hpp"
