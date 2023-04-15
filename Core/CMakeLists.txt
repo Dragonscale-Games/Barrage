@@ -70,7 +70,7 @@ add_library(BarrageCore STATIC
   "Objects/Systems/Draw/DrawSystem.cpp"              
   
   "Objects/SpawnFunctions/SpawnFunctionManager.cpp"  
-  "Objects/Archetypes/ArchetypeManager.cpp"       
+         
   "Objects/Pools/PoolManager.cpp"                        
   "Objects/Systems/SystemManager.cpp"                   
   "Objects/Components/ComponentAllocator.cpp"              

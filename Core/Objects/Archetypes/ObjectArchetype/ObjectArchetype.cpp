@@ -8,7 +8,7 @@
  * \brief
    Used to initialize new objects by copying the values in its component map.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 #include "stdafx.h"
 #include "ObjectArchetype.hpp"
@@ -16,53 +16,51 @@
 
 namespace Barrage
 {
-  ObjectArchetype::ObjectArchetype() :
-    components_()
+  ObjectArchetype::ObjectArchetype(const std::string& name) :
+    name_(name),
+    componentArrays_()
   {
   }
 
   ObjectArchetype::ObjectArchetype(const ObjectArchetype& other) :
-    components_()
+    name_(other.name_),
+    componentArrays_()
   {
-    CopyComponentMap(other.components_);
+    CopyComponentArrayMap(other.componentArrays_);
   }
 
   ObjectArchetype& ObjectArchetype::operator=(const ObjectArchetype& other)
   {
-    CopyComponentMap(other.components_);
+    name_ = other.name_;
+    CopyComponentArrayMap(other.componentArrays_);
 
     return *this;
   }
 
   ObjectArchetype::~ObjectArchetype()
   {
-    DeleteComponentMap();
+    DeleteComponentArrayMap();
   }
 
-  void ObjectArchetype::CopyComponentMap(const ComponentArrayMap& other)
+  void ObjectArchetype::CopyComponentArrayMap(const ComponentArrayMap& other)
   {
-    DeleteComponentMap();
+    DeleteComponentArrayMap();
 
     for (auto it = other.begin(); it != other.end(); ++it)
     {
       ComponentArray* newArray = ComponentAllocator::AllocateComponentArray(it->first, 1);
-      ComponentArray* otherArray = it->second;
-
-      if (newArray)
-      {
-        newArray->CopyToThis(*otherArray, 0, 0);
-        components_[it->first] = newArray;
-      }
+      newArray->CopyToThis(*it->second, 0, 0);
+      componentArrays_[it->first] = newArray;
     }
   }
 
-  void ObjectArchetype::DeleteComponentMap()
+  void ObjectArchetype::DeleteComponentArrayMap()
   {
-    for (auto it = components_.begin(); it != components_.end(); ++it)
+    for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
     {
       delete it->second;
     }
 
-    components_.clear();
+    componentArrays_.clear();
   }
 }

@@ -22,7 +22,6 @@ namespace Barrage
   ObjectManager::ObjectManager(Space& space) :
     rng_(),
     componentAllocator_(),
-    archetypeManager_(componentAllocator_),
     poolManager_(componentAllocator_, space),
     systemManager_(),
     spawnFunctionManager_()
@@ -34,7 +33,6 @@ namespace Barrage
 
     CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_.at("CreationSystem"));
 
-    creation_system->SetArchetypeManager(archetypeManager_);
     creation_system->SetSpawnFunctionManager(spawnFunctionManager_);
     creation_system->SetPoolManager(poolManager_);
 
@@ -59,7 +57,7 @@ namespace Barrage
     }
   }
 
-  void ObjectManager::CreateObject(const std::string& poolName, const std::string& archetypeName)
+  /*void ObjectManager::CreateObject(const std::string& poolName, const std::string& archetypeName)
   {
     Pool* pool = poolManager_.GetPool(poolName);
     ObjectArchetype* archetype = archetypeManager_.GetObjectArchetype(archetypeName);
@@ -70,7 +68,7 @@ namespace Barrage
     {
       creation_system->CreateObject(*archetype, pool);
     }
-  }
+  }*/
 
   std::vector<std::string_view> ObjectManager::GetComponentArrayNames()
   {
@@ -102,88 +100,23 @@ namespace Barrage
     return systemManager_.GetSystemUpdateOrder();
   }
 
-  void ObjectManager::CreatePoolArchetype(const std::string& name)
+  void ObjectManager::CreatePool(const PoolArchetype& archetype)
   {
-    archetypeManager_.CreatePoolArchetype(name);
-  }
-
-  void ObjectManager::AddPoolArchetype(const std::string& name, PoolArchetype* archetype)
-  {
-    archetypeManager_.AddPoolArchetype(name, archetype);
-  }
-
-  PoolArchetype* ObjectManager::GetPoolArchetype(const std::string& name)
-  {
-    return archetypeManager_.GetPoolArchetype(name);
-  }
-
-  PoolArchetype* ObjectManager::ExtractPoolArchetype(const std::string& name)
-  {
-    return archetypeManager_.ExtractPoolArchetype(name);
-  }
-
-  void ObjectManager::DeletePoolArchetype(const std::string& name)
-  {
-    archetypeManager_.DeletePoolArchetype(name);
-  }
-
-  void ObjectManager::CreateObjectArchetype(const std::string& name, const std::vector<std::string_view>& componentArrayNames)
-  {
-    archetypeManager_.CreateObjectArchetype(name, componentArrayNames);
-  }
-
-  void ObjectManager::AddObjectArchetype(const std::string& name, ObjectArchetype* archetype)
-  {
-    archetypeManager_.AddObjectArchetype(name, archetype);
-  }
-
-  ObjectArchetype* ObjectManager::GetObjectArchetype(const std::string& name)
-  {
-    return archetypeManager_.GetObjectArchetype(name);
-  }
-
-  ObjectArchetype* ObjectManager::ExtractObjectArchetype(const std::string& name)
-  {
-    return archetypeManager_.ExtractObjectArchetype(name);
-  }
-
-  void ObjectManager::DeleteObjectArchetype(const std::string& name)
-  {
-    archetypeManager_.DeleteObjectArchetype(name);
-  }
-
-  std::vector<std::string> ObjectManager::GetPoolArchetypeNames()
-  {
-    return archetypeManager_.GetPoolArchetypeNames();
-  }
-
-  std::vector<std::string> ObjectManager::GetObjectArchetypeNames()
-  {
-    return archetypeManager_.GetObjectArchetypeNames();
-  }
-
-  void ObjectManager::CreatePool(const std::string& poolName)
-  {
-    PoolArchetype* pool_archetype = archetypeManager_.GetPoolArchetype(poolName);
+    if (archetype.capacity_ == 0)
+      return;
     
-    if (pool_archetype)
-    {
-      if (pool_archetype->capacity_ == 0)
-        return;
-      
-      Pool* new_pool = poolManager_.CreatePool(poolName, *pool_archetype);
-      systemManager_.Subscribe(new_pool);
-    }
-  }
+    CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_["CreationSystem"]);
+    Pool* new_pool = poolManager_.CreatePool(archetype);
 
-  void ObjectManager::CreatePoolAndObjects(const PoolInfo& poolInfo)
-  {
-    CreatePool(poolInfo.poolName_);
-
-    for (auto it = poolInfo.objects_.begin(); it != poolInfo.objects_.end(); ++it)
+    for (auto it = archetype.startingObjects_.begin(); it != archetype.startingObjects_.end(); ++it)
     {
-      CreateObject(poolInfo.poolName_, *it);
+      if (creation_system)
+      {
+        creation_system->CreateObject(*it, new_pool);
+      }
     }
+
+    systemManager_.Subscribe(new_pool);
   }
 
   Pool* ObjectManager::GetPool(const std::string& name) const

@@ -6,42 +6,32 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   A scene is a list of pools and game objects to spawn in a space.
+   A scene is a list of pools (and their objects) to spawn in a space.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
-////////////////////////////////////////////////////////////////////////////////
+ ////////////////////////////////////////////////////////////////////////////////
 #ifndef Scene_BARRAGE_H
 #define Scene_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Objects/Pools/PoolInfo.hpp>
+#include <Objects/Archetypes/PoolArchetype/PoolArchetype.hpp>
+
 #include <unordered_map>
+#include <string>
 
 namespace Barrage
-{  
-  //! contains all the information needed for a space to run a simulation
+{
+  //! A list of pools (and their objects) to spawn in a space
   class Scene
-	{
-    public:   
-      Scene();
+  {
+    public:
+      Scene(const std::string& name);
 
-      bool HasPool(const std::string& poolName);
-
-      void AddStartingPool(const PoolInfo& startingPool, unsigned* index = nullptr);
-
-      PoolInfo* GetPoolInfo(const std::string& poolName);
-
-      void RemovePool(const std::string& poolName, unsigned* index = nullptr);
-
-      bool HasObject(const std::string& poolName, const std::string& objectName);
-
-      void AddObject(const std::string& poolName, const std::string& objectName, unsigned* index = nullptr);
-
-      void RemoveObject(const std::string& poolName, const std::string& objectName, unsigned* index = nullptr);
-
-      std::vector<PoolInfo> startingPools_; //!< Collection of pools and objects the scene starts with
-	};
+    public:
+      std::string name_;
+      std::vector<PoolArchetype> pools_;
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -19,20 +19,24 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Components/EngineComponents.hpp"
+#include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
 
 namespace Barrage
 {
   //! Used to initialize an object pool
   class PoolArchetype
-	{
-    public:   
+  {
+    public:
       /**************************************************************/
       /*!
         \brief
-          Initializes the archetype with an empty map of components.
+          Constructs the pool archetype.
+
+        \param name
+          The name of the pool this archetype will create.
       */
       /**************************************************************/
-      PoolArchetype();
+      PoolArchetype(const std::string& name, unsigned capacity = 1);
 
       /**************************************************************/
       /*!
@@ -88,7 +92,7 @@ namespace Barrage
           The name of the tag to check for.
 
         \return
-          Returns true if the archetype contains the given tag, 
+          Returns true if the archetype contains the given tag,
           returns false otherwise.
       */
       /**************************************************************/
@@ -104,7 +108,7 @@ namespace Barrage
 
         \param index
           The index of the component array in the underlying vector
-          will be written to this variable if the component array 
+          will be written to this variable if the component array
           was removed. Otherwise, this variable will be unchanged.
       */
       /**************************************************************/
@@ -119,8 +123,8 @@ namespace Barrage
           The name of the tag to remove.
 
         \param index
-          The index of the tag in the underlying vector will be 
-          written to this variable if the tag was removed. Otherwise, 
+          The index of the tag in the underlying vector will be
+          written to this variable if the tag was removed. Otherwise,
           this variable will be unchanged.
       */
       /**************************************************************/
@@ -130,31 +134,31 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Helper function that copies a component map to this object's
-          component map. This object's old component map is deleted
-          first.
+          Deep copies a shared component map from "other" to "this".
 
         \param other
-          The component map to copy.
+          The map to copy.
       */
       /**************************************************************/
-      void CopyComponentMap(const SharedComponentMap& other);
+      void CopySharedComponentMap(const SharedComponentMap& other);
 
       /**************************************************************/
       /*!
         \brief
-          Helper function that delets the component map of this
-          object.
+          Deep deletes this object's shared component map.
       */
       /**************************************************************/
-      void DeleteComponentMap();
+      void DeleteSharedComponentMap();
 
     public:
-      SharedComponentMap sharedComponents_;               //!< Map of initialized shared components to copy
-      std::vector<std::string_view> componentArrayNames_; //!< List of names of component arrays to add to pool
-      std::vector<std::string_view> tags_;                //!< Tags that the new pool will have
+      std::string name_;                                  //!< Name of the pool this archetype will create
+      SharedComponentMap sharedComponents_;               //!< Initialized shared components to copy to the pool
+      std::vector<std::string_view> componentArrayNames_; //!< Names of the pool's component arrays
+      std::vector<std::string_view> tags_;                //!< Tags of the pool
       unsigned capacity_;                                 //!< The number of objects the pool will be able to hold
-	};
+      std::vector<ObjectArchetype> startingObjects_;      //!< The objects the pool starts with
+      std::vector<ObjectArchetype> spawnArchetypes_;      //!< Objects that can be spawned in the pool
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

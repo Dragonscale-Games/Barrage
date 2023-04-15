@@ -18,7 +18,6 @@
 
 #include "Objects/Systems/BaseSystem.hpp"
 #include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
-#include "Objects/Archetypes/ArchetypeManager.hpp"
 #include "Objects/SpawnFunctions/SpawnFunctionManager.hpp"
 #include "Objects/Pools/PoolManager.hpp"
 #include "Objects/Components/SharedComponents/Spawner.hpp"
@@ -44,18 +43,6 @@ namespace Barrage
       */
       /**************************************************************/
       void Update() override;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Sets the archetype manager the creation system will use
-          to get object archetypes.
-
-        \param archetypeManager
-          The archetype manager that holds all object archetypes.
-      */
-      /**************************************************************/
-      void SetArchetypeManager(ArchetypeManager& archetypeManager);
 
       /**************************************************************/
       /*!
@@ -186,7 +173,6 @@ namespace Barrage
       static void AssignHandles(Pool* pool);
 
     private:
-      ArchetypeManager* archetypeManager_;          //!< Used to get object archetypes
       SpawnFunctionManager* spawnFunctionManager_;  //!< Used to look up spawn functions
       PoolManager* poolManager_;                    //!< Used to get pools where objects will spawn
 	};

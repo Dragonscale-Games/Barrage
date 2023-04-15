@@ -18,12 +18,15 @@
 
 #include "Objects/Components/BaseClasses/SharedComponent.hpp"
 #include "Objects/Components/BaseClasses/ComponentArray.hpp"
+#include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
 
 #include <unordered_set>
+#include <unordered_map>
 
 namespace Barrage
 {
   typedef std::unordered_set<std::string_view> TagSet;
+  typedef std::unordered_map<std::string, ObjectArchetype> SpawnArchetypeMap;
   
   class Space;
 
@@ -150,7 +153,7 @@ namespace Barrage
       unsigned numActiveObjects_;           //!< Number of currently active objects
       unsigned numQueuedObjects_;           //!< Number of objects waiting to be spawned on the next tick
       const unsigned capacity_;             //!< Total number of objects the pool can hold
-
+      SpawnArchetypeMap spawnArchetypes_;   //!< Objects that can be spawned in the pool
       Space& space_;                        //!< The space the pool lives in
 
     private:

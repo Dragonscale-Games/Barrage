@@ -19,36 +19,45 @@
 
 namespace Barrage
 {
-  PoolArchetype::PoolArchetype() :
+  PoolArchetype::PoolArchetype(const std::string& name, unsigned capacity) :
+    name_(name),
     sharedComponents_(),
     componentArrayNames_(),
     tags_(),
-    capacity_(1)
+    capacity_(capacity),
+    startingObjects_(),
+    spawnArchetypes_()
   {
   }
 
   PoolArchetype::PoolArchetype(const PoolArchetype& other) :
+    name_(other.name_),
     sharedComponents_(),
     componentArrayNames_(other.componentArrayNames_),
     tags_(other.tags_),
-    capacity_(other.capacity_)
+    capacity_(other.capacity_),
+    startingObjects_(other.startingObjects_),
+    spawnArchetypes_(other.spawnArchetypes_)
   {
-    CopyComponentMap(other.sharedComponents_);
+    CopySharedComponentMap(other.sharedComponents_);
   }
 
   PoolArchetype& PoolArchetype::operator=(const PoolArchetype& other)
   {
+    name_ = other.name_;
+    CopySharedComponentMap(other.sharedComponents_);
     componentArrayNames_ = other.componentArrayNames_;
     tags_ = other.tags_;
     capacity_ = other.capacity_;
-    CopyComponentMap(other.sharedComponents_);
+    startingObjects_ = other.startingObjects_;
+    spawnArchetypes_ = other.spawnArchetypes_;
 
     return *this;
   }
 
   PoolArchetype::~PoolArchetype()
   {
-    DeleteComponentMap();
+    DeleteSharedComponentMap();
   }
 
   bool PoolArchetype::HasComponentArray(const std::string_view& componentArrayName)
@@ -56,6 +65,19 @@ namespace Barrage
     for (auto it = componentArrayNames_.begin(); it != componentArrayNames_.end(); ++it)
     {
       if (*it == componentArrayName)
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  bool PoolArchetype::HasTag(const std::string_view& tag)
+  {
+    for (auto it = tags_.begin(); it != tags_.end(); ++it)
+    {
+      if (*it == tag)
       {
         return true;
       }
@@ -72,7 +94,7 @@ namespace Barrage
       {
         if (index)
         {
-          *index = it - componentArrayNames_.begin();
+          *index = static_cast<unsigned>(it - componentArrayNames_.begin());
         }
 
         componentArrayNames_.erase(it);
@@ -89,7 +111,7 @@ namespace Barrage
       {
         if (index)
         {
-          *index = it - tags_.begin();
+          *index = static_cast<unsigned>(it - tags_.begin());
         }
 
         tags_.erase(it);
@@ -98,22 +120,19 @@ namespace Barrage
     }
   }
 
-  void PoolArchetype::CopyComponentMap(const SharedComponentMap& other)
+  void PoolArchetype::CopySharedComponentMap(const SharedComponentMap& other)
   {
-    DeleteComponentMap();
-
+    DeleteSharedComponentMap();
+    
     for (auto it = other.begin(); it != other.end(); ++it)
     {
-      SharedComponent* newArray = ComponentAllocator::AllocateSharedComponent(it->first, it->second);
-
-      if (newArray)
-      {
-        sharedComponents_[it->first] = newArray;
-      }
+      SharedComponent* newComponent = ComponentAllocator::AllocateSharedComponent(it->first);
+      newComponent->CopyToThis(*it->second);
+      sharedComponents_[it->first] = newComponent;
     }
   }
 
-  void PoolArchetype::DeleteComponentMap()
+  void PoolArchetype::DeleteSharedComponentMap()
   {
     for (auto it = sharedComponents_.begin(); it != sharedComponents_.end(); ++it)
     {

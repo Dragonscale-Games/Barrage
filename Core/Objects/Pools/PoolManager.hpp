@@ -66,7 +66,7 @@ namespace Barrage
           nullptr if creation fails.
       */
       /**************************************************************/
-      Pool* CreatePool(const std::string& name, const PoolArchetype& archetype);
+      Pool* CreatePool(const PoolArchetype& archetype);
 
       /**************************************************************/
       /*!

@@ -24,6 +24,7 @@ namespace Barrage
     numActiveObjects_(0),
     numQueuedObjects_(0),
     capacity_(capacity),
+    spawnArchetypes_(),
     space_(space)
   {
   }

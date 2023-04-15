@@ -18,7 +18,6 @@ namespace Barrage
 {
   CreationSystem::CreationSystem() :
     System(),
-    archetypeManager_(nullptr),
     spawnFunctionManager_(nullptr),
     poolManager_(nullptr)
   {
@@ -36,11 +35,6 @@ namespace Barrage
   {
     UpdatePoolGroup("Handle Pools", AssignHandles);
     UpdatePoolGroup("All Pools", SpawnObjects);
-  }
-
-  void CreationSystem::SetArchetypeManager(ArchetypeManager& archetypeManager)
-  {
-    archetypeManager_ = &archetypeManager;
   }
 
   void CreationSystem::SetSpawnFunctionManager(SpawnFunctionManager& spawnFunctionManager)
@@ -77,8 +71,8 @@ namespace Barrage
   
   void CreationSystem::QueueSpawns(Pool* sourcePool, SpawnType& spawnType)
   {
-    ObjectArchetype* object_archetype = archetypeManager_->GetObjectArchetype(spawnType.archetypeName_);
     Pool* destination_pool = poolManager_->GetPool(spawnType.destinationPoolName_);
+    ObjectArchetype& object_archetype = destination_pool->spawnArchetypes_.at(spawnType.archetypeName_);
     unsigned num_spawns = static_cast<unsigned>(spawnType.sourceIndices_.size());
     unsigned available_slots = destination_pool->GetAvailableSlots();
     unsigned start_index = destination_pool->numActiveObjects_ + destination_pool->numQueuedObjects_;
@@ -90,7 +84,7 @@ namespace Barrage
       
     if (num_spawns != 0)
     {
-      CreateObjects(*object_archetype, destination_pool, num_spawns, true);
+      CreateObjects(object_archetype, destination_pool, num_spawns, true);
       ApplySpawnFuncs(spawnType.spawnFuncs_, sourcePool, destination_pool, start_index, num_spawns, spawnType.sourceIndices_);
     }
 
@@ -105,7 +99,7 @@ namespace Barrage
     for (auto it = begin_it; it != end_it; ++it)
     {
       ComponentArray* destination_array = it->second;
-      ComponentArray* source_component = archetype.components_.at(it->first);
+      ComponentArray* source_component = archetype.componentArrays_.at(it->first);
 
       for (unsigned i = 0; i < numNewObjects; ++i)
       {

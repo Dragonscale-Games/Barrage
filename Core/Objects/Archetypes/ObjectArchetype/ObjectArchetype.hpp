@@ -8,28 +8,28 @@
  * \brief
    Used to initialize new objects by copying the values in its component map.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
-////////////////////////////////////////////////////////////////////////////////
+ ////////////////////////////////////////////////////////////////////////////////
 #ifndef ObjectArchetype_BARRAGE_H
 #define ObjectArchetype_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Components/EngineComponents.hpp"
+#include <Objects/Components/BaseClasses/ComponentArray.hpp>
 
 namespace Barrage
 {
-	//! Used to initialize an object
+  //! Used to initialize an object
   class ObjectArchetype
-	{
-    public:   
+  {
+    public:
       /**************************************************************/
       /*!
         \brief
           Initializes the archetype with an empty map of components.
       */
       /**************************************************************/
-      ObjectArchetype();
+      ObjectArchetype(const std::string& name);
 
       /**************************************************************/
       /*!
@@ -65,28 +65,26 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Helper function that copies a component map to this object's
-          component map. This object's old component map is deleted 
-          first.
+          Deep copies a component array map from "other" to "this".
 
         \param other
-          The component map to copy.
+          The map to copy.
       */
       /**************************************************************/
-      void CopyComponentMap(const ComponentArrayMap& other);
+      void CopyComponentArrayMap(const ComponentArrayMap& other);
 
       /**************************************************************/
       /*!
         \brief
-          Helper function that delets the component map of this
-          object.
+          Deep deletes this object's component array map.
       */
       /**************************************************************/
-      void DeleteComponentMap();
+      void DeleteComponentArrayMap();
 
     public:
-      ComponentArrayMap components_; //!< A map of initialized components to copy (each array has only one component)
-	};
+      std::string name_;                  //!< A name for an object created with this archetype (for debug purposes, as objects don't have names)
+      ComponentArrayMap componentArrays_; //!< A map of initialized components to copy (each array has only one component)
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

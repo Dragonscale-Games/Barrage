@@ -32,12 +32,12 @@ namespace Barrage
     }
   }
 
-  Pool* PoolManager::CreatePool(const std::string& name, const PoolArchetype& archetype)
+  Pool* PoolManager::CreatePool(const PoolArchetype& archetype)
   {
-    if (pools_.find(name) == pools_.end())
+    if (pools_.find(archetype.name_) == pools_.end())
     {
       Pool* new_pool = CreatePoolInternal(archetype);
-      pools_[name] = new_pool;
+      pools_[archetype.name_] = new_pool;
 
       return new_pool;
     }
@@ -111,6 +111,16 @@ namespace Barrage
         new_pool->sharedComponents_[it->first] = shared_component;
       }
     }
+    
+    // copy over spawn archetypes
+    for (auto it = archetype.spawnArchetypes_.begin(); it != archetype.spawnArchetypes_.end(); ++it)
+    {
+      const ObjectArchetype& spawnArchetype = *it;
+
+      new_pool->spawnArchetypes_.insert(std::make_pair(spawnArchetype.name_, spawnArchetype));
+    }
+
+
 
     return new_pool;
   }

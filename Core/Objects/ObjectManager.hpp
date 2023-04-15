@@ -15,7 +15,6 @@
 #define ObjectManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Archetypes/ArchetypeManager.hpp"
 #include "Pools/PoolManager.hpp"
 #include "Pools/PoolInfo.hpp"
 #include "Systems/SystemManager.hpp"
@@ -87,19 +86,7 @@ namespace Barrage
       // Pools
       // ===================================================================
 
-      void CreatePoolArchetype(const std::string& name);
-
-      void AddPoolArchetype(const std::string& name, PoolArchetype* archetype);
-
-      PoolArchetype* GetPoolArchetype(const std::string& name);
-
-      PoolArchetype* ExtractPoolArchetype(const std::string& name);
-
-      void DeletePoolArchetype(const std::string& name);
-
-      void CreatePool(const std::string& poolName);
-
-      void CreatePoolAndObjects(const PoolInfo& poolInfo);
+      void CreatePool(const PoolArchetype& archetype);
 
       Pool* GetPool(const std::string& name) const;
 
@@ -107,27 +94,7 @@ namespace Barrage
 
       void DeleteAllPools();
 
-      std::vector<std::string> GetPoolArchetypeNames();
-
       std::vector<std::string> GetPoolNames();
-
-      // ===================================================================
-      // Objects
-      // ===================================================================
-
-      void CreateObjectArchetype(const std::string& name, const std::vector<std::string_view>& componentArrayNames);
-
-      void AddObjectArchetype(const std::string& name, ObjectArchetype* archetype);
-
-      ObjectArchetype* GetObjectArchetype(const std::string& name);
-
-      ObjectArchetype* ExtractObjectArchetype(const std::string& name);
-
-      void DeleteObjectArchetype(const std::string& name);
-
-      void CreateObject(const std::string& poolName, const std::string& archetypeName);
-
-      std::vector<std::string> GetObjectArchetypeNames();
     
     private:
       template <typename T>
@@ -162,7 +129,6 @@ namespace Barrage
     private:
       Random rng_;
       ComponentAllocator componentAllocator_;
-      ArchetypeManager archetypeManager_;
       PoolManager poolManager_;
       SystemManager systemManager_;
       SpawnFunctionManager spawnFunctionManager_;
