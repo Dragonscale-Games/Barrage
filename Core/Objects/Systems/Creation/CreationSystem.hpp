@@ -47,19 +47,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Sets the spawn function manager the creation system will use
-          to look up spawn functions.
-
-        \param spawnFunctionManager
-          The spawn function manager that holds all registered 
-          spawn functions.
-      */
-      /**************************************************************/
-      void SetSpawnFunctionManager(SpawnFunctionManager& spawnFunctionManager);
-
-      /**************************************************************/
-      /*!
-        \brief
           Sets the pool manager the creation system will use to spawn
           objects into.
 
@@ -173,7 +160,6 @@ namespace Barrage
       static void AssignHandles(Pool* pool);
 
     private:
-      SpawnFunctionManager* spawnFunctionManager_;  //!< Used to look up spawn functions
       PoolManager* poolManager_;                    //!< Used to get pools where objects will spawn
 	};
 }

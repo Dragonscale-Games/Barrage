@@ -21,8 +21,7 @@ namespace Barrage
 {
   ObjectManager::ObjectManager(Space& space) :
     poolManager_(space),
-    systemManager_(),
-    spawnFunctionManager_()
+    systemManager_()
   {
     RegisterEngineComponents();
     RegisterEngineSystems();
@@ -31,7 +30,6 @@ namespace Barrage
 
     CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_.at("CreationSystem"));
 
-    creation_system->SetSpawnFunctionManager(spawnFunctionManager_);
     creation_system->SetPoolManager(poolManager_);
 
     RegisterCustomComponents();
@@ -67,11 +65,6 @@ namespace Barrage
       creation_system->CreateObject(*archetype, pool);
     }
   }*/
-
-  std::vector<std::string_view> ObjectManager::GetSpawnFunctionNames()
-  {
-    return spawnFunctionManager_.GetSpawnFunctionNames();
-  }
 
   std::vector<std::string_view> ObjectManager::GetRegisteredSystemNames()
   {
@@ -138,9 +131,9 @@ namespace Barrage
     systemManager_.SetUpdateOrder(updateOrderList);
   }
 
-  void ObjectManager::RegisterSpawnFunction(const std::string_view& name, SpawnFunction initializer)
+  void ObjectManager::RegisterSpawnFunction(const std::string_view& name, SpawnFunction spawnFunction)
   {
-    spawnFunctionManager_.RegisterSpawnFunction(name, initializer);
+    SpawnFunctionManager::RegisterSpawnFunction(name, spawnFunction);
   }
 
   void ObjectManager::RegisterEngineComponents()

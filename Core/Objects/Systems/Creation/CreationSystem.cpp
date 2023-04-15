@@ -18,7 +18,6 @@ namespace Barrage
 {
   CreationSystem::CreationSystem() :
     System(),
-    spawnFunctionManager_(nullptr),
     poolManager_(nullptr)
   {
     // this pool type has no required tags or components because all pools will be subscribed to the creation system
@@ -35,11 +34,6 @@ namespace Barrage
   {
     UpdatePoolGroup("Handle Pools", AssignHandles);
     UpdatePoolGroup("All Pools", SpawnObjects);
-  }
-
-  void CreationSystem::SetSpawnFunctionManager(SpawnFunctionManager& spawnFunctionManager)
-  {
-    spawnFunctionManager_ = &spawnFunctionManager;
   }
 
   void CreationSystem::SetPoolManager(PoolManager& poolManager)
@@ -123,7 +117,7 @@ namespace Barrage
 
     for (size_t i = 0; i < num_spawn_funcs; ++i)
     {
-      SpawnFunction spawn_function = spawnFunctionManager_->GetSpawnFunction(spawnFunctions[i]);
+      SpawnFunction spawn_function = SpawnFunctionManager::GetSpawnFunction(spawnFunctions[i]);
 
       if (spawn_function)
       {

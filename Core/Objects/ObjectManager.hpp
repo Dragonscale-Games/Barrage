@@ -58,12 +58,6 @@ namespace Barrage
       void Draw();
 
       // ===================================================================
-      // Spawn Functions
-      // ===================================================================
-
-      std::vector<std::string_view> GetSpawnFunctionNames();
-
-      // ===================================================================
       // Systems
       // ===================================================================
 
@@ -118,7 +112,6 @@ namespace Barrage
     private:
       PoolManager poolManager_;
       SystemManager systemManager_;
-      SpawnFunctionManager spawnFunctionManager_;
 	};
 }
 

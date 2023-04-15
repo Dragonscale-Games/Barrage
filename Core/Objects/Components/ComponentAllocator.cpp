@@ -23,10 +23,6 @@ namespace Barrage
 
   bool ComponentAllocator::componentArrayNamesSorted_ = false;
   bool ComponentAllocator::sharedComponentNamesSorted_ = false;
-  
-  ComponentAllocator::ComponentAllocator()
-  {
-  }
 
   ComponentArray* ComponentAllocator::AllocateComponentArray(const std::string_view& name, unsigned capacity)
   {

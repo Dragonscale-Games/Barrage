@@ -35,13 +35,7 @@ namespace Barrage
   class ComponentAllocator
 	{
     public:   
-      /**************************************************************/
-      /*!
-        \brief
-          Default constructor.
-      */
-      /**************************************************************/
-      ComponentAllocator();
+      ComponentAllocator() = delete;
 
       /**************************************************************/
       /*!
