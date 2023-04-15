@@ -78,12 +78,6 @@ namespace Barrage
       return;
     
     Pool* new_pool = poolManager_.CreatePool(archetype);
-
-    for (auto it = archetype.startingObjects_.begin(); it != archetype.startingObjects_.end(); ++it)
-    {
-      new_pool->CreateObject(*it);
-    }
-
     systemManager_.Subscribe(new_pool);
   }
 

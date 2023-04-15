@@ -108,6 +108,12 @@ namespace Barrage
       new_pool->AddSpawnArchetype(*it);
     }
 
+    // create starting objects
+    for (auto it = archetype.startingObjects_.begin(); it != archetype.startingObjects_.end(); ++it)
+    {
+      new_pool->CreateObject(*it);
+    }
+
     return new_pool;
   }
 }

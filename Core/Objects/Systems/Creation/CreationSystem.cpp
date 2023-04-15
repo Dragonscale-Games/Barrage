@@ -23,15 +23,15 @@ namespace Barrage
     PoolType all_pool_type;
     poolTypes_["All Pools"] = all_pool_type;
 
-    PoolType handle_pool_type;
+    /*PoolType handle_pool_type;
     handle_pool_type.AddSharedComponent("ObjectDirectory");
     handle_pool_type.AddComponentArray("DirectoryIndex");
-    poolTypes_["Handle Pools"] = handle_pool_type;
+    poolTypes_["Handle Pools"] = handle_pool_type;*/
   }
 
   void CreationSystem::Update()
   {
-    UpdatePoolGroup("Handle Pools", AssignHandles);
+    //UpdatePoolGroup("Handle Pools", AssignHandles);
     UpdatePoolGroup("All Pools", SpawnObjects);
   }
 
