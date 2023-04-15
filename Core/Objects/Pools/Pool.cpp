@@ -91,7 +91,7 @@ namespace Barrage
       numObjects = availableSlots;
     }
 
-    // if objects are queued for spawn, we need to move them out of the memory the new active objects will occupy
+    // if objects are queued for spawn, we need to shift them out of the memory the new active objects will occupy
     if (numQueuedObjects_)
     {
       ShiftQueuedObjects(numObjects);

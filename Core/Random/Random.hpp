@@ -38,11 +38,22 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the starting seed of the generator.
+          Gets the starting seed of the generator. This is the last
+          seed that was set in the constructor or by SetSeed().
       */
       /**************************************************************/
-      unsigned long long GetSeed();
+      unsigned long long GetStartingSeed();
       
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the current seed of the generator. This is what the
+          starting seed morphs into after some number of Generate()
+          calls.
+      */
+      /**************************************************************/
+      unsigned long long GetCurrentSeed();
+
       /**************************************************************/
       /*!
         \brief
@@ -84,10 +95,6 @@ namespace Barrage
       /*!
         \brief
           Generates a random int between min and max (inclusive).
-          
-          Guarantees the result will be random, with no result
-          likelier than any other result (that is, guarantees result
-          is sampled from a uniform distribution).
 
         \param min
           The minimum value of the range.
@@ -96,10 +103,31 @@ namespace Barrage
           The maximum value of the range.
 
         \return
-          Returns a random float between min and max (inclusive).
+          Returns a random int between min and max (inclusive).
       */
       /**************************************************************/
       int RangeInt(int min, int max);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Generates a random int between min and max (inclusive).
+
+          Guarantees the result will be sampled from a uniform
+          distribution (that is, guarantees the result is no likelier
+          than any other result).
+
+        \param min
+          The minimum value of the range.
+
+        \param max
+          The maximum value of the range.
+
+        \return
+          Returns a random int between min and max (inclusive).
+      */
+      /**************************************************************/
+      int RangeIntUniform(int min, int max);
 
     private:
       /**************************************************************/
@@ -119,7 +147,7 @@ namespace Barrage
           Returns a random 64-bit number.
       */
       /**************************************************************/
-      unsigned long long Generate();
+      unsigned long long GenerateValue();
 
       /**************************************************************/
       /*!

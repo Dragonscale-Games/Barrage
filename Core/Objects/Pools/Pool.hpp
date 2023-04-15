@@ -53,7 +53,7 @@ namespace Barrage
       
       Pool(const Pool& other) = delete;
 
-      Pool& operator=(const Pool& rhs) = delete;
+      Pool& operator=(const Pool& other) = delete;
       
       /**************************************************************/
       /*!
