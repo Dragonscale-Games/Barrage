@@ -21,7 +21,7 @@ namespace Barrage
 {
   System::System() :
     poolTypes_(),
-    pools_(),
+    poolGroups_(),
     systemManager_(nullptr)
   {
   }
@@ -34,14 +34,14 @@ namespace Barrage
       
       if (pool_type.MatchesPool(pool))
       {
-        pools_[it->first].push_back(pool);
+        poolGroups_[it->first].push_back(pool);
       }
     }
   }
 
   void System::Unsubscribe(Pool* pool)
   {
-    for (auto it = pools_.begin(); it != pools_.end(); ++it)
+    for (auto it = poolGroups_.begin(); it != poolGroups_.end(); ++it)
     {
       std::vector<Pool*>& pool_group = it->second;
 
@@ -71,9 +71,9 @@ namespace Barrage
 
   void System::UpdatePoolGroup(std::string_view group, PoolUpdateFunc function)
   {
-    if (pools_.find(group) != pools_.end())
+    if (poolGroups_.find(group) != poolGroups_.end())
     {
-      std::vector<Pool*>& pool_group = pools_[group];
+      std::vector<Pool*>& pool_group = poolGroups_[group];
 
       for (auto it = pool_group.begin(); it != pool_group.end(); ++it)
       {
@@ -84,7 +84,7 @@ namespace Barrage
 
   void System::UpdatePoolGroup(std::string_view group, PoolUpdateMemberFunc function)
   {
-    std::vector<Pool*>& pool_group = pools_[group];
+    std::vector<Pool*>& pool_group = poolGroups_[group];
 
     for (auto it = pool_group.begin(); it != pool_group.end(); ++it)
     {
@@ -94,8 +94,8 @@ namespace Barrage
 
   void System::UpdateInteraction(std::string_view group1, std::string_view group2, InteractionFunc function)
   {
-    std::vector<Pool*>& pool_group_1 = pools_[group1];
-    std::vector<Pool*>& pool_group_2 = pools_[group2];
+    std::vector<Pool*>& pool_group_1 = poolGroups_[group1];
+    std::vector<Pool*>& pool_group_2 = poolGroups_[group2];
 
     for (auto it = pool_group_1.begin(); it != pool_group_1.end(); ++it)
     {
@@ -108,8 +108,8 @@ namespace Barrage
 
   void System::UpdateInteraction(std::string_view group1, std::string_view group2, InteractionMemberFunc function)
   {
-    std::vector<Pool*>& pool_group_1 = pools_[group1];
-    std::vector<Pool*>& pool_group_2 = pools_[group2];
+    std::vector<Pool*>& pool_group_1 = poolGroups_[group1];
+    std::vector<Pool*>& pool_group_2 = poolGroups_[group2];
 
     for (auto it = pool_group_1.begin(); it != pool_group_1.end(); ++it)
     {
