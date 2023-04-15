@@ -22,7 +22,7 @@ namespace Barrage
   {
     ImGui::Begin("Inspector");
 
-    ObjectManager& objectManager = Engine::Instance->Spaces().GetSpace(Editor::Instance->Data().selectedSpace_)->GetObjectManager();
+    /*ObjectManager& objectManager = Engine::Instance->Spaces().GetSpace(Editor::Instance->Data().selectedSpace_)->GetObjectManager();
 
     if (!Editor::Instance->Data().selectedPool_.empty())
     {
@@ -81,7 +81,7 @@ namespace Barrage
         
         ImGui::PushID(Editor::Instance->Data().selectedObject_.c_str());
         
-        for (auto& component : objectArchetype->components_)
+        for (auto& component : objectArchetype->componentArrays_)
         {
           ComponentWidget::Use(component.first, component.second);
         }
@@ -90,7 +90,7 @@ namespace Barrage
       }
 
       
-    }
+    }*/
 
     ImGui::End();
   }

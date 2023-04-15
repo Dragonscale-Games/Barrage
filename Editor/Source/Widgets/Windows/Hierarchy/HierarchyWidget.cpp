@@ -23,7 +23,7 @@ namespace Barrage
   {
     ImGui::Begin("Hierarchy");
 
-    if (!Editor::Instance->Data().selectedScene_.empty())
+    /*if (!Editor::Instance->Data().selectedScene_.empty())
     {
       ImGui::Separator();
       ImGui::Spacing();
@@ -148,7 +148,7 @@ namespace Barrage
       }
 
       ScenePopupWidget::Use("Scene Popup");
-    }
+    }*/
 
     ImGui::End();
   }

@@ -38,7 +38,7 @@ namespace Barrage
 
   bool DeleteObject::Execute()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
     if (space == nullptr || scene == nullptr || !scene->HasObject(poolName_, objectName_))
@@ -66,25 +66,25 @@ namespace Barrage
     if (Editor::Instance->Data().selectedObject_ == objectName_)
     {
       Editor::Instance->Data().selectedObject_ = std::string();
-    }
+    }*/
 
     return true;
   }
 
   void DeleteObject::Undo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
     objectManager.AddObjectArchetype(objectName_, undoArchetype_);
     scene->AddObject(poolName_, objectName_, &undoObjectIndex_);
-    undoArchetype_ = nullptr;
+    undoArchetype_ = nullptr;*/
   }
 
   void DeleteObject::Redo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
@@ -94,6 +94,6 @@ namespace Barrage
     if (Editor::Instance->Data().selectedObject_ == objectName_)
     {
       Editor::Instance->Data().selectedObject_ = std::string();
-    }
+    }*/
   }
 }

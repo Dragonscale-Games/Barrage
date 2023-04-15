@@ -40,7 +40,7 @@ namespace Barrage
 
   bool CreateComponentArray::Execute()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
     if (space == nullptr || scene == nullptr || !scene->HasPool(poolName_))
@@ -79,12 +79,14 @@ namespace Barrage
       objectArchetype->components_[componentArrayName_] = componentArray;
     }
 
-    poolArchetype->componentArrayNames_.push_back(componentArrayName_);
+    poolArchetype->componentArrayNames_.push_back(componentArrayName_);*/
+
+    return true;
   }
 
   void CreateComponentArray::Undo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
     PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
@@ -97,12 +99,12 @@ namespace Barrage
       objectArchetype->components_.erase(componentArrayName_);
     }
 
-    poolArchetype->componentArrayNames_.pop_back();
+    poolArchetype->componentArrayNames_.pop_back();*/
   }
 
   void CreateComponentArray::Redo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
     PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
@@ -115,6 +117,6 @@ namespace Barrage
       redoComponentArrays_.erase(redoComponentArrays_.begin());
     }
 
-    poolArchetype->componentArrayNames_.push_back(componentArrayName_);
+    poolArchetype->componentArrayNames_.push_back(componentArrayName_);*/
   }
 }

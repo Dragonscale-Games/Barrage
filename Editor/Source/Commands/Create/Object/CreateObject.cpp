@@ -33,7 +33,7 @@ namespace Barrage
 
   bool CreateObject::Execute()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
     if (space == nullptr || scene == nullptr || !scene->HasPool(poolName_))
@@ -86,14 +86,14 @@ namespace Barrage
       return false;
     }
 
-    scenePool->objects_.push_back(objectName_);
+    scenePool->objects_.push_back(objectName_);*/
 
     return true;
   }
 
   void CreateObject::Undo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
@@ -103,17 +103,17 @@ namespace Barrage
     if (Editor::Instance->Data().selectedObject_ == objectName_)
     {
       Editor::Instance->Data().selectedObject_ = std::string();
-    }
+    }*/
   }
 
   void CreateObject::Redo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
     objectManager.AddObjectArchetype(objectName_, redoArchetype_);
     redoArchetype_ = nullptr;
-    scene->AddObject(poolName_, objectName_);
+    scene->AddObject(poolName_, objectName_);*/
   }
 }

@@ -111,20 +111,20 @@ namespace Barrage
 
     unsigned numTicks = engine_.Frames().ConsumeTicks();
 
-    TimePoint beginT;
-    TimePoint endT;
+    /*TimePoint beginT;
+    TimePoint endT;*/
 
-    //if (data_.gamePlaying_)
+    if (data_.gamePlaying_)
     {
       for (unsigned i = 0; i < numTicks; ++i)
       {
-        beginT = std::chrono::high_resolution_clock::now();
+        //beginT = std::chrono::high_resolution_clock::now();
         engine_.Spaces().Update();
-        endT = std::chrono::high_resolution_clock::now();
+        //endT = std::chrono::high_resolution_clock::now();
       }
     }
     
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
+    /*auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);*/
 
     commandQueue_.Process();
 
@@ -135,12 +135,12 @@ namespace Barrage
     }
 
     gui_.StartWidgets();
-    ImGui::Begin("Time Test");
+    /*ImGui::Begin("Time Test");
     ImGui::Text("Frame time (microseconds): ");
     ImGui::SameLine();
     ImGui::Text(numTicks ? std::to_string(duration.count()).c_str() : "0");
-    ImGui::End();
-    //UseWidgets();
+    ImGui::End();*/
+    UseWidgets();
     gui_.EndWidgets();
 
     HandleKeyboard();

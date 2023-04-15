@@ -206,10 +206,10 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the number of active objects in the pool.
+          Gets the number of active objects.
 
         \return
-          Returns the number of active objects in the pool.
+          Returns the number of active objects.
       */
       /**************************************************************/
       unsigned GetActiveObjectCount() const;
@@ -217,10 +217,10 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the number of objects queued for spawn in the pool.
+          Gets the number of objects queued for spawn.
 
         \return
-          Returns the number of objects queued for spawn in the pool.
+          Returns the number of objects queued for spawn.
       */
       /**************************************************************/
       unsigned GetQueuedObjectCount() const;

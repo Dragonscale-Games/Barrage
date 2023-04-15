@@ -18,8 +18,6 @@
 #include <Commands/Command.hpp>
 #include <Objects/Archetypes/PoolArchetype/PoolArchetype.hpp>
 #include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>
-#include <objects/Archetypes/ArchetypeManager.hpp>
-#include <Objects/Pools/PoolInfo.hpp>
 
 namespace Barrage
 {
@@ -87,9 +85,9 @@ namespace Barrage
       std::string poolName_;
 
       unsigned undoSceneIndex_;
-      PoolInfo undoScenePool_;
+      //PoolInfo undoScenePool_;
       PoolArchetype* undoPoolArchetype_;
-      ObjectArchetypeMap undoObjectArchetypes_;
+      //ObjectArchetypeMap undoObjectArchetypes_;
   };
 }
 

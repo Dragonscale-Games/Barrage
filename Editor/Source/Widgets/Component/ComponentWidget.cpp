@@ -11,16 +11,15 @@
  /* ======================================================================== */
 
 #include "ComponentWidget.hpp"
-#include "Objects/Components/BaseClasses/BaseComponent.hpp"
 #include "Widgets/Data/DataWidget.hpp"
 #include <iostream>
 #include "Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.hpp"
 #include "Widgets/Popups/SharedComponent/SharedComponentPopupWidget.hpp"
 namespace Barrage
 {
-  void ComponentWidget::Use(const std::string_view& componentName, Component* component)
+  void ComponentWidget::Use()
   {
-    if (component == nullptr)
+    /*if (component == nullptr)
     {
       return;
     }
@@ -39,7 +38,7 @@ namespace Barrage
     ComponentArrayPopupWidget::Use("Component Array Popup", componentName);
     SharedComponentPopupWidget::Use("Shared Component Popup", componentName);
 
-    ImGui::PopID();
+    ImGui::PopID();*/
   }
 
   void ComponentWidget::EditComponentArray(const std::string_view& componentName, ComponentArray* componentArray)

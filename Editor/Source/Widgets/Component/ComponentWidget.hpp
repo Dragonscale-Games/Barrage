@@ -42,7 +42,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      static void Use(const std::string_view& componentName, Component* component);
+      static void Use();
 
     private:
       /**************************************************************/

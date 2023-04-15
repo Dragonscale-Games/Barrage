@@ -34,7 +34,7 @@ namespace Barrage
 
   bool CreateSharedComponent::Execute()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
 
     if (space == nullptr)
     {
@@ -57,28 +57,28 @@ namespace Barrage
       return false;
     }
 
-    poolArchetype->sharedComponents_[componentName_] = component;
+    poolArchetype->sharedComponents_[componentName_] = component;*/
 
     return true;
   }
 
   void CreateSharedComponent::Undo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     ObjectManager& objectManager = space->GetObjectManager();
     PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
 
     redoComponent_ = poolArchetype->sharedComponents_[componentName_];
-    poolArchetype->sharedComponents_.erase(componentName_);
+    poolArchetype->sharedComponents_.erase(componentName_);*/
   }
 
   void CreateSharedComponent::Redo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     ObjectManager& objectManager = space->GetObjectManager();
     PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
 
     poolArchetype->sharedComponents_[componentName_] = redoComponent_;
-    redoComponent_ = nullptr;
+    redoComponent_ = nullptr;*/
   }
 }

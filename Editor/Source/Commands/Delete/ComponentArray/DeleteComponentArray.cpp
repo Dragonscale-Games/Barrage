@@ -37,7 +37,7 @@ namespace Barrage
 
   bool DeleteComponentArray::Execute()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
     if (space == nullptr || scene == nullptr || !scene->HasPool(poolName_))
@@ -71,14 +71,14 @@ namespace Barrage
       objectArchetype->components_.erase(componentArrayName_);
     }
 
-    poolArchetype->RemoveComponentArray(componentArrayName_, &undoIndex_);
+    poolArchetype->RemoveComponentArray(componentArrayName_, &undoIndex_);*/
 
     return true;
   }
 
   void DeleteComponentArray::Undo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
     PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
@@ -91,12 +91,12 @@ namespace Barrage
       undoComponentArrays_.erase(undoComponentArrays_.begin());
     }
 
-    poolArchetype->componentArrayNames_.insert(poolArchetype->componentArrayNames_.begin() + undoIndex_, componentArrayName_);
+    poolArchetype->componentArrayNames_.insert(poolArchetype->componentArrayNames_.begin() + undoIndex_, componentArrayName_);*/
   }
 
   void DeleteComponentArray::Redo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
     PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
@@ -109,6 +109,6 @@ namespace Barrage
       objectArchetype->components_.erase(componentArrayName_);
     }
 
-    poolArchetype->RemoveComponentArray(componentArrayName_, &undoIndex_);
+    poolArchetype->RemoveComponentArray(componentArrayName_, &undoIndex_);*/
   }
 }

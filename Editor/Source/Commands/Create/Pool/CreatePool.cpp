@@ -31,7 +31,7 @@ namespace Barrage
 
   bool CreatePool::Execute()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
     if (space == nullptr || scene == nullptr)
@@ -68,14 +68,14 @@ namespace Barrage
       return false;
     }
 
-    scene->AddStartingPool(poolName_);
+    scene->AddStartingPool(poolName_);*/
 
     return true;
   }
 
   void CreatePool::Undo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
@@ -85,17 +85,17 @@ namespace Barrage
     if (Editor::Instance->Data().selectedPool_ == poolName_)
     {
       Editor::Instance->Data().selectedPool_ = std::string();
-    }
+    }*/
   }
 
   void CreatePool::Redo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     ObjectManager& objectManager = space->GetObjectManager();
 
     objectManager.AddPoolArchetype(poolName_, redoArchetype_);
     redoArchetype_ = nullptr;
-    scene->AddStartingPool(poolName_);
+    scene->AddStartingPool(poolName_);*/
   }
 }
