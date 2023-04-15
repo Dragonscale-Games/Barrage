@@ -82,30 +82,31 @@ namespace Barrage
     spawnArchetypes_.insert(std::make_pair(spawnArchetype.name_, spawnArchetype));
   }
 
-  void Pool::CreateObjects(const ObjectArchetype& archetype, unsigned numObjects)
+  void Pool::CreateObject(const ObjectArchetype& archetype)
   {
     unsigned availableSlots = GetAvailableSlots();
-
-    if (numObjects > availableSlots)
+    
+    if (availableSlots == 0)
     {
-      numObjects = availableSlots;
+      return;
     }
 
     // if objects are queued for spawn, we need to shift them out of the memory the new active objects will occupy
     if (numQueuedObjects_)
     {
-      ShiftQueuedObjects(numObjects);
+      ShiftQueuedObjects(1);
     }
 
     unsigned startIndex = numActiveObjects_;
 
-    CreateObjectsInternal(archetype, startIndex, numObjects);
+    CreateObjectsInternal(archetype, startIndex, 1);
 
-    numActiveObjects_ += numObjects;
+    numActiveObjects_++;
   }
 
-  void Pool::QueueSpawns(const ObjectArchetype& archetype, unsigned numObjects)
+  void Pool::QueueSpawns(SpawnInfo& spawnInfo)
   {
+    unsigned numObjects = spawnInfo.sourceIndices_.size();
     unsigned availableSlots = GetAvailableSlots();
 
     if (numObjects > availableSlots)
@@ -114,9 +115,12 @@ namespace Barrage
     }
 
     unsigned startIndex = numActiveObjects_ + numQueuedObjects_;
+    ObjectArchetype& archetype = spawnArchetypes_.at(spawnInfo.archetypeName_);
 
     CreateObjectsInternal(archetype, startIndex, numObjects);
 
+
+    spawnInfo.sourceIndices_.clear();
     numQueuedObjects_ += numObjects;
   }
 

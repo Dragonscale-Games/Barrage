@@ -63,7 +63,7 @@ namespace Barrage
     }
   }
   
-  void CreationSystem::QueueSpawns(Pool* sourcePool, SpawnType& spawnType)
+  void CreationSystem::QueueSpawns(Pool* sourcePool, SpawnInfo& spawnType)
   {
     Pool* destination_pool = poolManager_->GetPool(spawnType.destinationPoolName_);
     const ObjectArchetype& object_archetype = destination_pool->GetSpawnArchetype(spawnType.archetypeName_);

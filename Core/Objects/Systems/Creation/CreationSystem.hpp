@@ -18,9 +18,10 @@
 
 #include "Objects/Systems/BaseSystem.hpp"
 #include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
-#include "Objects/SpawnFunctions/SpawnFunctionManager.hpp"
+#include "Objects/Spawning/SpawnFunctionManager.hpp"
 #include "Objects/Pools/PoolManager.hpp"
 #include "Objects/Components/SharedComponents/Spawner.hpp"
+#include "Objects/Spawning/SpawnInfo.hpp"
 
 namespace Barrage
 {
@@ -86,7 +87,7 @@ namespace Barrage
           Holds information about how and where to spawn the objects.
       */
       /**************************************************************/
-      void QueueSpawns(Pool* sourcePool, SpawnType& spawnType);
+      void QueueSpawns(Pool* sourcePool, SpawnInfo& spawnType);
 
     private:
       /**************************************************************/

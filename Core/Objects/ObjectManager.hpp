@@ -17,7 +17,7 @@
 
 #include "Pools/PoolManager.hpp"
 #include "Systems/SystemManager.hpp"
-#include "SpawnFunctions/SpawnFunctionManager.hpp"
+#include "Spawning/SpawnFunctionManager.hpp"
 #include "Random/Random.hpp"
 
 namespace Barrage

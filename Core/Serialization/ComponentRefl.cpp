@@ -26,17 +26,6 @@ namespace Barrage
   void ReflectBarrageCore()
   { 
     // Shared Components.
-    
-    // Spawn Type
-    rttr::registration::class_<SpawnType>("SpawnType")
-      .property("archetypeName", &SpawnType::archetypeName_)
-      .property("destinationPoolName", &SpawnType::destinationPoolName_)
-      .property("spawnFuncs", &SpawnType::spawnFuncs_);
-
-    // Spawner
-    rttr::registration::class_<Spawner>("Spawner")
-      .property("spawnTypes", &Spawner::spawnTypes_);
-    rttr::type::get<Spawner*>();
 
     // Sprite
     rttr::registration::class_<Sprite>("Sprite")

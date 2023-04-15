@@ -19,6 +19,7 @@
 #include "Objects/Components/BaseClasses/SharedComponent.hpp"
 #include "Objects/Components/BaseClasses/ComponentArray.hpp"
 #include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
+#include "Objects/Spawning/SpawnInfo.hpp"
 
 #include <unordered_set>
 #include <unordered_map>
@@ -117,7 +118,9 @@ namespace Barrage
       /*!
         \brief
           Creates a given number of active objects in the pool from
-          an object archetype.
+          an object archetype. This should generally only be used
+          on scene creation; QueueSpawns() should be used while the
+          scene is running.
 
         \param archetype
           The archetype used to construct the objects.
@@ -127,23 +130,19 @@ namespace Barrage
           pool, the excess objects are not created.
       */
       /**************************************************************/
-      void CreateObjects(const ObjectArchetype& archetype, unsigned numObjects);
+      void CreateObject(const ObjectArchetype& archetype);
 
       /**************************************************************/
       /*!
         \brief
-          Queues a given number of objects for spawning on the next
-          creation system update.
+          Queues a number of objects for spawning on the next creation 
+          system update.
 
-        \param archetype
-          The archetype used to construct the objects.
-
-        \param numObjects
-          The number of objects to queue. If this would overfill the
-          pool, the excess objects are not queued.
+        \param spawnInfo
+          Contains the information needed to spawn the object.
       */
       /**************************************************************/
-      void QueueSpawns(const ObjectArchetype& archetype, unsigned numObjects);
+      void QueueSpawns(SpawnInfo& spawnInfo);
 
       /**************************************************************/
       /*!

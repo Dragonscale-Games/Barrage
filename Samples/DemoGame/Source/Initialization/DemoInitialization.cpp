@@ -17,6 +17,7 @@
 #include <Objects/ObjectManager.hpp>
 #include "../Components/DemoComponents.hpp"
 #include "../SpawnTypes.hpp"
+#include <Objects/Spawning/SpawnInfo.hpp>
 
 namespace Demo
 {
@@ -177,7 +178,7 @@ namespace Demo
 
     pool_archetype.tags_.push_back("Spawner");
 
-    SpawnType bullet_spawn_type;
+    SpawnInfo bullet_spawn_type;
     bullet_spawn_type.archetypeName_ = "Bullet Object";
     bullet_spawn_type.destinationPoolName_ = "Bullet Pool";
     bullet_spawn_type.spawnFuncs_.push_back("MatchPosition");
