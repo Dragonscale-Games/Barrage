@@ -34,7 +34,22 @@ namespace Barrage
   class Pool
   {
     public:  
-      // default constructor is private below - only a pool manager should construct pools
+      /**************************************************************/
+      /*!
+        \brief
+          Constructs an object pool.
+
+        \param name
+          The name of the pool (for debugging).
+
+        \param capacity
+          The number of objects the pool will be able to hold.
+
+        \param space
+          The space the pool lives in.
+      */
+      /**************************************************************/
+      Pool(const std::string& name, unsigned capacity, Space& space);
       
       Pool(const Pool& other) = delete;
 
@@ -47,6 +62,88 @@ namespace Barrage
       */
       /**************************************************************/
       ~Pool();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds a tag to the pool.
+
+        \param name
+          The name of the tag to add.
+      */
+      /**************************************************************/
+      void AddTag(const std::string_view& name);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds a component array to the pool whose capacity matches
+          the pool's.
+
+        \param name
+          The name of the component array to add. It must have been
+          previously registered in the component allocator, or this
+          function has no effect.
+      */
+      /**************************************************************/
+      void AddComponentArray(const std::string_view& name);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds a shared component to the pool. Initial values can be
+          optionally set by an initializer.
+
+        \param name
+          The name of the shared component to add. It must have been
+          previously registered in the component allocator, or this
+          function has no effect.
+      */
+      /**************************************************************/
+      void AddSharedComponent(const std::string_view& name, SharedComponent* initializer = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds a spawn archetype to the pool.
+
+        \param spawnArchetype
+          The spawn archetype to add.
+      */
+      /**************************************************************/
+      void AddSpawnArchetype(const ObjectArchetype& spawnArchetype);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Creates a given number of active objects in the pool from
+          an object archetype.
+
+        \param archetype
+          The archetype used to construct the objects.
+
+        \param numObjects
+          The number of objects to create. If this would overfill the
+          pool, the excess objects are not created.
+      */
+      /**************************************************************/
+      void CreateObjects(const ObjectArchetype& archetype, unsigned numObjects);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Queues a given number of objects for spawning on the next
+          creation system update.
+
+        \param archetype
+          The archetype used to construct the objects.
+
+        \param numObjects
+          The number of objects to queue. If this would overfill the
+          pool, the excess objects are not queued.
+      */
+      /**************************************************************/
+      void QueueSpawns(const ObjectArchetype& archetype, unsigned numObjects);
 
       /**************************************************************/
       /*!
@@ -107,6 +204,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the number of active objects in the pool.
+
+        \return
+          Returns the number of available object slots in the pool.
+      */
+      /**************************************************************/
+      unsigned GetActiveObjectCount() const;
+
+      /**************************************************************/
+      /*!
+        \brief
           Get a reference to a given component array. Throws an
           out_of_range exception if no component array matches the
           input name.
@@ -146,31 +254,66 @@ namespace Barrage
       template <typename T>
       SharedComponentT<T>* GetSharedComponent(const std::string_view& componentName);
 
-    public:
-      TagSet tags_;                         //!< Holds the pool's tags
-      ComponentArrayMap componentArrays_;   //!< Holds component arrays and their names
-      SharedComponentMap sharedComponents_; //!< Holds shared components and their names
-      unsigned numActiveObjects_;           //!< Number of currently active objects
-      unsigned numQueuedObjects_;           //!< Number of objects waiting to be spawned on the next tick
-      const unsigned capacity_;             //!< Total number of objects the pool can hold
-      SpawnArchetypeMap spawnArchetypes_;   //!< Objects that can be spawned in the pool
-      Space& space_;                        //!< The space the pool lives in
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the spawn archetype with the given name. Throws an
+          out_of_range exception if no spawn archetype matches the
+          input name.
+
+        \param index
+          The index of the spawn archetype.
+
+        \return
+          Returns a reference to the spawn archetype with the given
+          name.
+      */
+      /**************************************************************/
+      const ObjectArchetype& GetSpawnArchetype(const std::string& name) const;
 
     private:
       /**************************************************************/
       /*!
         \brief
-          Initializes the capacity of an object pool. Components are
-          added by a pool manager, not by this function.
+          Shifts all queued objects to the right by some number of
+          places. Used to make room for active objects if they are
+          being created directly.
 
-        \param capacity
-          The number of objects the pool will be able to hold.
-
-        \param space
-          The space the pool lives in.
+        \param numberOfPlaces
+          The number of places to shift the queued objects to the
+          right in the array.
       */
       /**************************************************************/
-      Pool(unsigned capacity, Space& space);
+      void ShiftQueuedObjects(unsigned numberOfPlaces);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copies an object archetype to a range of objects in the
+          pool.
+
+        \param archetype
+          The archetype used to construct the objects.
+
+        \param index
+          The index of the first new object.
+
+        \param numObjects
+          The number of objects to create.
+      */
+      /**************************************************************/
+      void CreateObjectsInternal(const ObjectArchetype& archetype, unsigned index, unsigned numObjects);
+
+    public:
+      ComponentArrayMap componentArrays_;   //!< Holds component arrays and their names
+      SharedComponentMap sharedComponents_; //!< Holds shared components and their names
+      SpawnArchetypeMap spawnArchetypes_;   //!< Objects that can be spawned in the pool
+      TagSet tags_;                         //!< Holds the pool's tags
+      unsigned numActiveObjects_;           //!< Number of currently active objects
+      unsigned numQueuedObjects_;           //!< Number of objects waiting to be spawned on the next tick
+      const unsigned capacity_;             //!< Total number of objects the pool can hold
+      std::string name_;                    //!< Name of the pool
+      Space& space_;                        //!< The space the pool lives in
 
     friend class PoolManager;
   };

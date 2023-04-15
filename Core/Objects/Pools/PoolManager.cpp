@@ -82,7 +82,7 @@ namespace Barrage
 
   Pool* PoolManager::CreatePoolInternal(const PoolArchetype& archetype)
   {
-    Pool* new_pool = new Pool(archetype.capacity_, space_);
+    Pool* new_pool = new Pool(archetype.name_, archetype.capacity_, space_);
 
     // add tags
     for (const std::string_view& tag : archetype.tags_)
@@ -119,8 +119,6 @@ namespace Barrage
 
       new_pool->spawnArchetypes_.insert(std::make_pair(spawnArchetype.name_, spawnArchetype));
     }
-
-
 
     return new_pool;
   }
