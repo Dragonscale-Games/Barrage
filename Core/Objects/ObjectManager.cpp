@@ -74,7 +74,7 @@ namespace Barrage
 
   void ObjectManager::CreatePool(const PoolArchetype& archetype)
   {
-    if (archetype.capacity_ == 0)
+    if (archetype.GetCapacity() == 0)
       return;
     
     Pool* new_pool = poolManager_.CreatePool(archetype);

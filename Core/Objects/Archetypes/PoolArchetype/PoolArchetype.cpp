@@ -36,10 +36,12 @@ namespace Barrage
     componentArrayNames_(other.componentArrayNames_),
     tags_(other.tags_),
     capacity_(other.capacity_),
-    startingObjects_(other.startingObjects_),
-    spawnArchetypes_(other.spawnArchetypes_)
+    startingObjects_(),
+    spawnArchetypes_()
   {
     CopySharedComponentMap(other.sharedComponents_);
+    CopyStartingObjects(other.startingObjects_);
+    CopySpawnArchetypes(other.spawnArchetypes_);
   }
 
   PoolArchetype& PoolArchetype::operator=(const PoolArchetype& other)
@@ -49,8 +51,8 @@ namespace Barrage
     componentArrayNames_ = other.componentArrayNames_;
     tags_ = other.tags_;
     capacity_ = other.capacity_;
-    startingObjects_ = other.startingObjects_;
-    spawnArchetypes_ = other.spawnArchetypes_;
+    CopyStartingObjects(other.startingObjects_);
+    CopySpawnArchetypes(other.spawnArchetypes_);
 
     return *this;
   }
@@ -60,7 +62,42 @@ namespace Barrage
     DeleteSharedComponentMap();
   }
 
-  bool PoolArchetype::HasComponentArray(const std::string_view& componentArrayName)
+  const std::string& PoolArchetype::GetName() const
+  {
+    return name_;
+  }
+
+  const SharedComponentMap& PoolArchetype::GetSharedComponents() const
+  {
+    return sharedComponents_;
+  }
+
+  const std::vector<std::string_view>& PoolArchetype::GetComponentArrayNames() const
+  {
+    return componentArrayNames_;
+  }
+
+  const std::vector<std::string_view>& PoolArchetype::GetTags() const
+  {
+    return tags_;
+  }
+
+  unsigned PoolArchetype::GetCapacity() const
+  {
+    return capacity_;
+  }
+
+  const std::vector<ObjectArchetype*>& PoolArchetype::GetStartingObjects() const
+  {
+    return startingObjects_;
+  }
+
+  const std::vector<ObjectArchetype*>& PoolArchetype::GetSpawnArchetypes() const
+  {
+    return spawnArchetypes_;
+  }
+
+  bool PoolArchetype::HasComponentArray(const std::string_view& componentArrayName) const
   {
     for (auto it = componentArrayNames_.begin(); it != componentArrayNames_.end(); ++it)
     {
@@ -73,7 +110,7 @@ namespace Barrage
     return false;
   }
 
-  bool PoolArchetype::HasTag(const std::string_view& tag)
+  bool PoolArchetype::HasTag(const std::string_view& tag) const
   {
     for (auto it = tags_.begin(); it != tags_.end(); ++it)
     {
@@ -85,8 +122,66 @@ namespace Barrage
 
     return false;
   }
+  
+  void PoolArchetype::AddSharedComponent(std::string_view name, SharedComponent* sharedComponent)
+  {
+    if (sharedComponents_.count(name))
+    {
+      return;
+    }
 
-  void PoolArchetype::RemoveComponentArray(const std::string_view& componentArrayName, unsigned* index)
+    sharedComponents_.insert(std::make_pair(name, sharedComponent));
+  }
+
+  void PoolArchetype::AddComponentArrayName(const std::string_view& componentArrayName, unsigned* index)
+  {
+    if (index && componentArrayNames_.size() > *index)
+    {
+      componentArrayNames_.insert(componentArrayNames_.begin() + *index, componentArrayName);
+    }
+    else
+    {
+      componentArrayNames_.push_back(componentArrayName);
+    }
+  }
+
+  void PoolArchetype::AddTag(const std::string_view& tag, unsigned* index)
+  {
+    if (index && tags_.size() > *index)
+    {
+      tags_.insert(tags_.begin() + *index, tag);
+    }
+    else
+    {
+      tags_.push_back(tag);
+    }
+  }
+
+  void PoolArchetype::AddStartingObject(ObjectArchetype* archetype, unsigned* index)
+  {
+    if (index && startingObjects_.size() > *index)
+    {
+      startingObjects_.insert(startingObjects_.begin() + *index, archetype);
+    }
+    else
+    {
+      startingObjects_.push_back(archetype);
+    }
+  }
+
+  void PoolArchetype::AddSpawnArchetype(ObjectArchetype* archetype, unsigned* index)
+  {
+    if (index && spawnArchetypes_.size() > *index)
+    {
+      spawnArchetypes_.insert(spawnArchetypes_.begin() + *index, archetype);
+    }
+    else
+    {
+      spawnArchetypes_.push_back(archetype);
+    }
+  }
+
+  void PoolArchetype::RemoveComponentArrayName(const std::string_view& componentArrayName, unsigned* index)
   {
     for (auto it = componentArrayNames_.begin(); it != componentArrayNames_.end(); ++it)
     {
@@ -132,6 +227,26 @@ namespace Barrage
     }
   }
 
+  void PoolArchetype::CopyStartingObjects(const std::vector<ObjectArchetype*>& other)
+  {
+    DeleteStartingObjects();
+
+    for (auto it = other.begin(); it != other.end(); ++it)
+    {
+      startingObjects_.push_back(new ObjectArchetype(**it));
+    }
+  }
+
+  void PoolArchetype::CopySpawnArchetypes(const std::vector<ObjectArchetype*>& other)
+  {
+    DeleteSpawnArchetypes();
+
+    for (auto it = other.begin(); it != other.end(); ++it)
+    {
+      spawnArchetypes_.push_back(new ObjectArchetype(**it));
+    }
+  }
+
   void PoolArchetype::DeleteSharedComponentMap()
   {
     for (auto it = sharedComponents_.begin(); it != sharedComponents_.end(); ++it)
@@ -140,5 +255,25 @@ namespace Barrage
     }
 
     sharedComponents_.clear();
+  }
+
+  void PoolArchetype::DeleteStartingObjects()
+  {
+    for (auto it = startingObjects_.begin(); it != startingObjects_.end(); ++it)
+    {
+      delete *it;
+    }
+
+    startingObjects_.clear();
+  }
+
+  void PoolArchetype::DeleteSpawnArchetypes()
+  {
+    for (auto it = spawnArchetypes_.begin(); it != spawnArchetypes_.end(); ++it)
+    {
+      delete *it;
+    }
+
+    spawnArchetypes_.clear();
   }
 }

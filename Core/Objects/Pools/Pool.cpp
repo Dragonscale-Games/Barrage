@@ -74,12 +74,14 @@ namespace Barrage
 
   void Pool::AddSpawnArchetype(const ObjectArchetype& spawnArchetype)
   {
-    if (spawnArchetypes_.count(spawnArchetype.name_))
+    const std::string& name = spawnArchetype.GetName();
+    
+    if (spawnArchetypes_.count(name))
     {
       return;
     }
 
-    spawnArchetypes_.insert(std::make_pair(spawnArchetype.name_, spawnArchetype));
+    spawnArchetypes_.insert(std::make_pair(name, spawnArchetype));
   }
 
   void Pool::CreateObject(const ObjectArchetype& archetype)
@@ -106,7 +108,7 @@ namespace Barrage
 
   void Pool::QueueSpawns(Pool* sourcePool, SpawnInfo& spawnInfo)
   {
-    unsigned numObjects = spawnInfo.sourceIndices_.size();
+    unsigned numObjects = static_cast<unsigned>(spawnInfo.sourceIndices_.size());
     unsigned availableSlots = GetAvailableSlots();
 
     if (numObjects > availableSlots)
@@ -184,7 +186,7 @@ namespace Barrage
     for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
     {
       ComponentArray* destination_array = it->second;
-      ComponentArray* source_component = archetype.componentArrays_.at(it->first);
+      const ComponentArray* source_component = archetype.GetComponentArrays().at(it->first);
 
       for (unsigned i = 0; i < numObjects; ++i)
       {

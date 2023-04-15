@@ -34,10 +34,12 @@ namespace Barrage
 
   Pool* PoolManager::CreatePool(const PoolArchetype& archetype)
   {
-    if (pools_.find(archetype.name_) == pools_.end())
+    const std::string& archetypeName = archetype.GetName();
+    
+    if (pools_.find(archetypeName) == pools_.end())
     {
       Pool* new_pool = CreatePoolInternal(archetype);
-      pools_[archetype.name_] = new_pool;
+      pools_[archetypeName] = new_pool;
 
       return new_pool;
     }
@@ -82,36 +84,41 @@ namespace Barrage
 
   Pool* PoolManager::CreatePoolInternal(const PoolArchetype& archetype)
   {
-    Pool* new_pool = new Pool(archetype.name_, archetype.capacity_, space_);
+    Pool* new_pool = new Pool(archetype.GetName(), archetype.GetCapacity(), space_);
 
     // add tags
-    for (const std::string_view& tag : archetype.tags_)
+    const std::vector<std::string_view> tags = archetype.GetTags();
+    for (const std::string_view& tag : tags)
     {
       new_pool->AddTag(tag);
     }
 
     // allocate component arrays
-    for (const std::string_view& component_array_name : archetype.componentArrayNames_)
+    const std::vector<std::string_view> componentArrayNames = archetype.GetComponentArrayNames();
+    for (const std::string_view& component_array_name : componentArrayNames)
     {
       new_pool->AddComponentArray(component_array_name);
     }
 
     // allocate and initialize shared components
-    for (auto it = archetype.sharedComponents_.begin(); it != archetype.sharedComponents_.end(); ++it)
+    const SharedComponentMap& sharedComponents = archetype.GetSharedComponents();
+    for (auto it = sharedComponents.begin(); it != sharedComponents.end(); ++it)
     {
       new_pool->AddSharedComponent(it->first, it->second);
     }
     
     // copy over spawn archetypes
-    for (auto it = archetype.spawnArchetypes_.begin(); it != archetype.spawnArchetypes_.end(); ++it)
+    const std::vector<ObjectArchetype*>& spawnArchetypes = archetype.GetSpawnArchetypes();
+    for (auto it = spawnArchetypes.begin(); it != spawnArchetypes.end(); ++it)
     {
-      new_pool->AddSpawnArchetype(*it);
+      new_pool->AddSpawnArchetype(**it);
     }
 
     // create starting objects
-    for (auto it = archetype.startingObjects_.begin(); it != archetype.startingObjects_.end(); ++it)
+    const std::vector<ObjectArchetype*>& startingObjects = archetype.GetStartingObjects();
+    for (auto it = startingObjects.begin(); it != startingObjects.end(); ++it)
     {
-      new_pool->CreateObject(*it);
+      new_pool->CreateObject(**it);
     }
 
     return new_pool;

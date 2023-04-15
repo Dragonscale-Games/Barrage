@@ -28,9 +28,24 @@ namespace Barrage
     public:
       Scene(const std::string& name);
 
-    public:
+      Scene(const Scene& other);
+
+      Scene& operator=(const Scene& other);
+
+      ~Scene();
+
+      const std::vector<PoolArchetype*>& GetPoolArchetypes();
+
+      void AddPoolArchetype(PoolArchetype* archetype, unsigned* index = nullptr);
+
+    private:
+      void CopyPoolArchetypes(const std::vector<PoolArchetype*>& other);
+
+      void DeletePoolArchetypes();
+
+    private:
       std::string name_;
-      std::vector<PoolArchetype> pools_;
+      std::vector<PoolArchetype*> poolArchetypes_;
   };
 }
 

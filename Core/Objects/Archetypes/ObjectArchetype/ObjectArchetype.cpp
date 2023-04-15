@@ -42,6 +42,26 @@ namespace Barrage
     DeleteComponentArrayMap();
   }
 
+  const std::string& ObjectArchetype::GetName() const
+  {
+    return name_;
+  }
+
+  const ComponentArrayMap& ObjectArchetype::GetComponentArrays() const
+  {
+    return componentArrays_;
+  }
+
+  void ObjectArchetype::AddComponentArray(std::string_view name, ComponentArray* componentArray)
+  {
+    if (componentArrays_.count(name))
+    {
+      return;
+    }
+
+    componentArrays_.insert(std::make_pair(name, componentArray));
+  }
+
   void ObjectArchetype::CopyComponentArrayMap(const ComponentArrayMap& other)
   {
     DeleteComponentArrayMap();

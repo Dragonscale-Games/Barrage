@@ -61,6 +61,43 @@ namespace Barrage
       /**************************************************************/
       ~ObjectArchetype();
 
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the name of the object archetype.
+
+        \return
+          Returns the name of the object archetype.
+      */
+      /**************************************************************/
+      const std::string& GetName() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the component arrays of the object archetype.
+
+        \return
+          Returns the component arrays of the object archetype.
+      */
+      /**************************************************************/
+      const ComponentArrayMap& GetComponentArrays() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds a component array to the object archetype. Has no effect
+          if a component array with the given name already exists.
+
+        \param name
+          The name of the component array.
+
+        \param componentArray
+          The component array to add.
+      */
+      /**************************************************************/
+      void AddComponentArray(std::string_view name, ComponentArray* componentArray);
+
     private:
       /**************************************************************/
       /*!
@@ -81,7 +118,7 @@ namespace Barrage
       /**************************************************************/
       void DeleteComponentArrayMap();
 
-    public:
+    private:
       std::string name_;                  //!< A name for an object created with this archetype (for debug purposes, as objects don't have names)
       ComponentArrayMap componentArrays_; //!< A map of initialized components to copy (each array has only one component)
   };

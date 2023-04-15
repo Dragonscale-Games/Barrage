@@ -94,6 +94,11 @@ namespace Barrage
   {
     if (undoStack_.empty())
     {
+      if (log)
+      {
+        LogWidget::AddEntry("Nothing to undo.");
+      }
+
       return;
     }
 
@@ -126,6 +131,11 @@ namespace Barrage
   {
     if (redoStack_.empty())
     {
+      if (log)
+      {
+        LogWidget::AddEntry("Nothing to redo.");
+      }
+
       return false;
     }
     
