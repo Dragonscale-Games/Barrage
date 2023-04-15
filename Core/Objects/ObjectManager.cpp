@@ -20,7 +20,6 @@
 namespace Barrage
 {
   ObjectManager::ObjectManager(Space& space) :
-    rng_(),
     poolManager_(space),
     systemManager_(),
     spawnFunctionManager_()

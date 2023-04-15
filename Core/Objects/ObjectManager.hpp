@@ -116,7 +116,6 @@ namespace Barrage
       void SetSystemUpdateOrder();
 
     private:
-      Random rng_;
       PoolManager poolManager_;
       SystemManager systemManager_;
       SpawnFunctionManager spawnFunctionManager_;
