@@ -87,37 +87,25 @@ namespace Barrage
     // add tags
     for (const std::string_view& tag : archetype.tags_)
     {
-      new_pool->tags_.insert(tag);
+      new_pool->AddTag(tag);
     }
 
     // allocate component arrays
     for (const std::string_view& component_array_name : archetype.componentArrayNames_)
     {
-      ComponentArray* component_array = ComponentAllocator::AllocateComponentArray(component_array_name, archetype.capacity_);
-
-      if (component_array)
-      {
-        new_pool->componentArrays_[component_array_name] = component_array;
-      }
+      new_pool->AddComponentArray(component_array_name);
     }
 
     // allocate and initialize shared components
     for (auto it = archetype.sharedComponents_.begin(); it != archetype.sharedComponents_.end(); ++it)
     {
-      SharedComponent* shared_component = ComponentAllocator::AllocateSharedComponent(it->first, it->second);
-
-      if (shared_component)
-      {
-        new_pool->sharedComponents_[it->first] = shared_component;
-      }
+      new_pool->AddSharedComponent(it->first, it->second);
     }
     
     // copy over spawn archetypes
     for (auto it = archetype.spawnArchetypes_.begin(); it != archetype.spawnArchetypes_.end(); ++it)
     {
-      const ObjectArchetype& spawnArchetype = *it;
-
-      new_pool->spawnArchetypes_.insert(std::make_pair(spawnArchetype.name_, spawnArchetype));
+      new_pool->AddSpawnArchetype(*it);
     }
 
     return new_pool;

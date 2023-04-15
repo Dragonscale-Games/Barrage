@@ -207,10 +207,21 @@ namespace Barrage
           Gets the number of active objects in the pool.
 
         \return
-          Returns the number of available object slots in the pool.
+          Returns the number of active objects in the pool.
       */
       /**************************************************************/
       unsigned GetActiveObjectCount() const;
+      
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the number of objects queued for spawn in the pool.
+
+        \return
+          Returns the number of objects queued for spawn in the pool.
+      */
+      /**************************************************************/
+      unsigned GetQueuedObjectCount() const;
 
       /**************************************************************/
       /*!
@@ -304,7 +315,7 @@ namespace Barrage
       /**************************************************************/
       void CreateObjectsInternal(const ObjectArchetype& archetype, unsigned index, unsigned numObjects);
 
-    public:
+    private:
       ComponentArrayMap componentArrays_;   //!< Holds component arrays and their names
       SharedComponentMap sharedComponents_; //!< Holds shared components and their names
       SpawnArchetypeMap spawnArchetypes_;   //!< Objects that can be spawned in the pool
@@ -315,7 +326,8 @@ namespace Barrage
       std::string name_;                    //!< Name of the pool
       Space& space_;                        //!< The space the pool lives in
 
-    friend class PoolManager;
+      friend class CreationSystem;
+      friend class DestructionSystem;
   };
 }
 

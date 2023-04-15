@@ -145,6 +145,11 @@ namespace Barrage
     return numActiveObjects_;
   }
 
+  unsigned Pool::GetQueuedObjectCount() const
+  {
+    return numQueuedObjects_;
+  }
+
   const ObjectArchetype& Pool::GetSpawnArchetype(const std::string& name) const
   {
     return spawnArchetypes_.at(name);

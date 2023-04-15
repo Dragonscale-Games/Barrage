@@ -57,7 +57,7 @@ namespace Barrage
       ObjectDirectory& object_directory = destinationPool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
       DirectoryIndexArray& directory_index_array = *destinationPool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
 
-      unsigned object_index = destinationPool->numActiveObjects_ - 1;
+      unsigned object_index = destinationPool->GetActiveObjectCount() - 1;
       DirectoryIndex& directory_index = directory_index_array.Data(object_index);
       directory_index.index_ = object_directory.CreateHandle(object_index);
     }
@@ -66,10 +66,10 @@ namespace Barrage
   void CreationSystem::QueueSpawns(Pool* sourcePool, SpawnType& spawnType)
   {
     Pool* destination_pool = poolManager_->GetPool(spawnType.destinationPoolName_);
-    ObjectArchetype& object_archetype = destination_pool->spawnArchetypes_.at(spawnType.archetypeName_);
+    const ObjectArchetype& object_archetype = destination_pool->GetSpawnArchetype(spawnType.archetypeName_);
     unsigned num_spawns = static_cast<unsigned>(spawnType.sourceIndices_.size());
     unsigned available_slots = destination_pool->GetAvailableSlots();
-    unsigned start_index = destination_pool->numActiveObjects_ + destination_pool->numQueuedObjects_;
+    unsigned start_index = destination_pool->GetActiveObjectCount() + destination_pool->GetQueuedObjectCount();
 
     if (available_slots < num_spawns)
     {

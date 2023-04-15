@@ -87,7 +87,7 @@ namespace Barrage
         Sprite& pool_sprite = pool->GetSharedComponent<Sprite>("Sprite")->Data();
 
         drawing.DrawInstancedQuad(
-          pool->numActiveObjects_, 
+          pool->GetActiveObjectCount(),
           positions, scales, 
           rotations, tex_coords, pool_sprite.texture_.c_str());
       }
