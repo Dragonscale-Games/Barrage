@@ -61,9 +61,6 @@ namespace Barrage
       /*!
         \brief
           Processes the latest command in the queue (if one exists).
-
-        \return
-          Returns true if a command was successfully processed.
       */
       /**************************************************************/
       void Process();
@@ -73,7 +70,7 @@ namespace Barrage
         \brief
           Undoes the most recent command. If multiple commands are 
           "chained", undoes the entire chain. 
-          (See Command.hpp for explanation of chaining.)
+          (See Command.hpp constructor for explanation of chaining.)
 
         \param log
           If "true", outputs the undo action to the log.
