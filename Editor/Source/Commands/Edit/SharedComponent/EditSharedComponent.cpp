@@ -1,38 +1,36 @@
 /* ======================================================================== */
 /*!
- * \file            CreateSharedComponent.cpp
+ * \file            EditSharedComponent.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Adds a shared component to a pool archetype.
+   Edits the value of a shared component in an pool archetype.
  */
  /* ======================================================================== */
 
-#include "CreateSharedComponent.hpp"
+#include "EditSharedComponent.hpp"
 #include <Editor/Editor.hpp>
 
 namespace Barrage
 {
-  CreateSharedComponent::CreateSharedComponent(
+  EditSharedComponent::EditSharedComponent(
     const std::string& sceneName,
     const std::string& poolName,
-    const std::string_view& sharedComponentName) :
-    Command("Added " + std::string(sharedComponentName) + " to " + poolName + "."),
+    const std::string_view& sharedComponentName,
+    const rttr::variant& newValue,
+    bool chainUndo) :
+    Command("Value changed. (" + std::string(sharedComponentName.data()) + ")", chainUndo),
     sceneName_(sceneName),
     poolName_(poolName),
     sharedComponentName_(sharedComponentName),
-    redoComponent_(nullptr)
+    newValue_(newValue),
+    oldValue_()
   {
   }
 
-  CreateSharedComponent::~CreateSharedComponent()
-  {
-    delete redoComponent_;
-  }
-
-  bool CreateSharedComponent::Execute()
+  bool EditSharedComponent::Execute()
   {
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
@@ -43,37 +41,39 @@ namespace Barrage
 
     PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    if (poolArchetype == nullptr || poolArchetype->HasSharedComponent(sharedComponentName_))
+    if (poolArchetype == nullptr)
     {
       return false;
     }
 
-    SharedComponent* sharedComponent = ComponentAllocator::AllocateSharedComponent(sharedComponentName_);
+    SharedComponent* sharedComponent = poolArchetype->GetSharedComponent(sharedComponentName_);
 
     if (sharedComponent == nullptr)
     {
       return false;
     }
 
-    poolArchetype->AddSharedComponent(sharedComponentName_, sharedComponent);
+    oldValue_ = sharedComponent->GetRTTRValue();
+    sharedComponent->SetRTTRValue(newValue_);
 
     return true;
   }
 
-  void CreateSharedComponent::Undo()
+  void EditSharedComponent::Undo()
   {
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    SharedComponent* sharedComponent = poolArchetype->GetSharedComponent(sharedComponentName_);
 
-    redoComponent_ = poolArchetype->ExtractSharedComponent(sharedComponentName_);
+    sharedComponent->SetRTTRValue(oldValue_);
   }
 
-  void CreateSharedComponent::Redo()
+  void EditSharedComponent::Redo()
   {
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    SharedComponent* sharedComponent = poolArchetype->GetSharedComponent(sharedComponentName_);
 
-    poolArchetype->AddSharedComponent(sharedComponentName_, redoComponent_);
-    redoComponent_ = nullptr;
+    sharedComponent->SetRTTRValue(newValue_);
   }
 }

@@ -47,12 +47,12 @@ add_executable(Editor "Source/main.cpp"
 
 "Source/Editor/EditorData.cpp"
  "Source/Widgets/MainMenu/MainMenuWidget.cpp" 
- "Source/Widgets/Component/ComponentWidget.cpp"  
+   
  "Source/Widgets/Data/DataWidget.cpp" 
  "Source/Widgets/Windows/Log/LogWidget.cpp"  
  "Source/Commands/Command.cpp" 
  "Source/Commands/CommandQueue.cpp" 
- "Source/Commands/ChangeValue/ChangeValue.cpp" 
+  
  "Source/Commands/Create/Pool/CreatePool.cpp" 
  "Source/Commands/Create/Object/CreateObject.cpp" 
  "Source/Widgets/Popups/Object/ObjectPopupWidget.cpp" 
@@ -63,7 +63,15 @@ add_executable(Editor "Source/main.cpp"
  "Source/Commands/Create/ComponentArray/CreateComponentArray.cpp" 
  "Source/Commands/Create/SharedComponent/CreateSharedComponent.cpp" 
  "Source/Commands/Delete/ComponentArray/DeleteComponentArray.cpp" 
- "Source/Commands/Delete/SharedComponent/DeleteSharedComponent.cpp" "Source/Widgets/Popups/SharedComponent/SharedComponentPopupWidget.cpp" "Source/Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.cpp"  "Source/Widgets/Modals/ComponentArray/ComponentArrayModal.cpp" "Source/Widgets/Modals/SharedComponent/SharedComponentModal.cpp")
+ "Source/Commands/Delete/SharedComponent/DeleteSharedComponent.cpp" 
+ "Source/Widgets/Popups/SharedComponent/SharedComponentPopupWidget.cpp" 
+ "Source/Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.cpp"  
+ "Source/Widgets/Modals/ComponentArray/ComponentArrayModal.cpp" 
+ "Source/Widgets/Modals/SharedComponent/SharedComponentModal.cpp" 
+ "Source/Widgets/Component/ComponentArray/ComponentArrayWidget.cpp" 
+ "Source/Widgets/Component/SharedComponent/SharedComponentWidget.cpp"  
+ "Source/Commands/Edit/ComponentArray/EditComponentArray.cpp" 
+ "Source/Commands/Edit/SharedComponent/EditSharedComponent.cpp")
 
 target_link_libraries(Editor PUBLIC BarrageCore imgui)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

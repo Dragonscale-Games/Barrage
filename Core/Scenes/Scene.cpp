@@ -40,6 +40,26 @@ namespace Barrage
     DeletePoolArchetypes();
   }
 
+  bool Scene::HasPool(const std::string& name)
+  {
+    return GetPoolArchetype(name) != nullptr;
+  }
+
+  PoolArchetype* Scene::GetPoolArchetype(const std::string& name)
+  {
+    for (auto it = poolArchetypes_.begin(); it != poolArchetypes_.end(); ++it)
+    {
+      PoolArchetype* archetype = *it;
+
+      if (archetype->GetName() == name)
+      {
+        return archetype;
+      }
+    }
+
+    return nullptr;
+  }
+
   const std::vector<PoolArchetype*>& Scene::GetPoolArchetypes()
   {
     return poolArchetypes_;
@@ -55,6 +75,28 @@ namespace Barrage
     {
       poolArchetypes_.push_back(archetype);
     }
+  }
+
+  PoolArchetype* Scene::ExtractPoolArchetype(const std::string& name, unsigned* index)
+  {
+    for (auto it = poolArchetypes_.begin(); it != poolArchetypes_.end(); ++it)
+    {
+      PoolArchetype* archetype = *it;
+
+      if (archetype->GetName() == name)
+      {
+        if (index)
+        {
+          *index = static_cast<unsigned>(it - poolArchetypes_.begin());
+        }
+
+        poolArchetypes_.erase(it);
+
+        return archetype;
+      }
+    }
+    
+    return nullptr;
   }
 
   void Scene::CopyPoolArchetypes(const std::vector<PoolArchetype*>& other)

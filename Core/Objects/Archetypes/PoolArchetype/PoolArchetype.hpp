@@ -71,6 +71,70 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Tells whether an object archetype with the given name 
+          exists in the pool archetype's starting objects or spawn 
+          archetypes.
+
+        \param name
+          The name of the object archetype.
+
+        \return
+          Returns true if the object archetype exists, returns false
+          otherwise.
+      */
+      /**************************************************************/
+      bool HasObjectArchetype(const std::string& name);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Checks if the archetype contains a shared component with
+          the given name.
+
+        \param name
+          The name of the shared component to check for.
+
+        \return
+          Returns true if the archetype contains the given shared
+          component, returns false otherwise.
+      */
+      /**************************************************************/
+      bool HasSharedComponent(const std::string_view& name);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Checks if the archetype contains a component array with the
+          given name.
+
+        \param componentArrayName
+          The name of the component array to check for.
+
+        \return
+          Returns true if the archetype contains the given component
+          array, returns false otherwise.
+      */
+      /**************************************************************/
+      bool HasComponentArray(const std::string_view& componentArrayName) const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Checks if the archetype contains a given tag.
+
+        \param tag
+          The name of the tag to check for.
+
+        \return
+          Returns true if the archetype contains the given tag,
+          returns false otherwise.
+      */
+      /**************************************************************/
+      bool HasTag(const std::string_view& tag) const;
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the name of the object archetype.
 
         \return
@@ -78,6 +142,38 @@ namespace Barrage
       */
       /**************************************************************/
       const std::string& GetName() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the object archetype with the given name if it exists
+          in the pool archetype's starting objects or spawn
+          archetypes.
+
+        \param name
+          The name of the object archetype.
+
+        \return
+          Returns the object archetype if it exists, returns nullptr
+          otherwise.
+      */
+      /**************************************************************/
+      ObjectArchetype* GetObjectArchetype(const std::string& name);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the shared component with the given name if it exists.
+
+        \param name
+          The name of the shared component.
+
+        \return
+          Returns the shared component if it exists, returns nullptr
+          otherwise.
+      */
+      /**************************************************************/
+      SharedComponent* PoolArchetype::GetSharedComponent(const std::string_view& name);
 
       /**************************************************************/
       /*!
@@ -144,36 +240,6 @@ namespace Barrage
       */
       /**************************************************************/
       const std::vector<ObjectArchetype*>& GetSpawnArchetypes() const;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Checks if the archetype contains a component array.
-
-        \param componentArrayName
-          The name of the component array to check for.
-
-        \return
-          Returns true if the archetype contains the given component
-          array, returns false otherwise.
-      */
-      /**************************************************************/
-      bool HasComponentArray(const std::string_view& componentArrayName) const;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Checks if the archetype contains a given tag.
-
-        \param tag
-          The name of the tag to check for.
-
-        \return
-          Returns true if the archetype contains the given tag,
-          returns false otherwise.
-      */
-      /**************************************************************/
-      bool HasTag(const std::string_view& tag) const;
 
       /**************************************************************/
       /*!
@@ -281,6 +347,39 @@ namespace Barrage
       */
       /**************************************************************/
       void RemoveTag(const std::string_view& tag, unsigned* index = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Removes and gets a starting object archetype from the pool
+          archetype.
+
+        \param name
+          The name of the starting object archetype to extract.
+
+        \param index
+          The index of the starting object in the underlying vector 
+          will be written to this variable if the tag was removed. 
+          Otherwise, this variable will be unchanged.
+      */
+      /**************************************************************/
+      ObjectArchetype* ExtractStartingObject(const std::string& name, unsigned* index = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Removes and returns a shared component from the pool
+          archetype if it exists.
+
+        \param name
+          The name of the shared component to extract.
+
+        \return
+          Returns a pointer to the shared component if it exists,
+          returns nullptr otherwise.
+      */
+      /**************************************************************/
+      SharedComponent* ExtractSharedComponent(const std::string_view& name);
 
     private:
       /**************************************************************/

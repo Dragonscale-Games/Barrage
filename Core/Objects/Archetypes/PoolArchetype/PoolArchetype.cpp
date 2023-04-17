@@ -62,9 +62,82 @@ namespace Barrage
     DeleteSharedComponentMap();
   }
 
+  bool PoolArchetype::HasObjectArchetype(const std::string& name)
+  {
+    return GetObjectArchetype(name) != nullptr;
+  }
+
+  bool PoolArchetype::HasSharedComponent(const std::string_view& name)
+  {
+    return GetSharedComponent(name) != nullptr;
+  }
+
+  bool PoolArchetype::HasComponentArray(const std::string_view& componentArrayName) const
+  {
+    for (auto it = componentArrayNames_.begin(); it != componentArrayNames_.end(); ++it)
+    {
+      if (*it == componentArrayName)
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  bool PoolArchetype::HasTag(const std::string_view& tag) const
+  {
+    for (auto it = tags_.begin(); it != tags_.end(); ++it)
+    {
+      if (*it == tag)
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   const std::string& PoolArchetype::GetName() const
   {
     return name_;
+  }
+
+  ObjectArchetype* PoolArchetype::GetObjectArchetype(const std::string& name)
+  {
+    for (auto it = startingObjects_.begin(); it != startingObjects_.end(); ++it)
+    {
+      ObjectArchetype* archetype = *it;
+
+      if (archetype->GetName() == name)
+      {
+        return archetype;
+      }
+    }
+
+    for (auto it = spawnArchetypes_.begin(); it != spawnArchetypes_.end(); ++it)
+    {
+      ObjectArchetype* archetype = *it;
+
+      if (archetype->GetName() == name)
+      {
+        return archetype;
+      }
+    }
+    
+    return nullptr;
+  }
+
+  SharedComponent* PoolArchetype::GetSharedComponent(const std::string_view& name)
+  {
+    if (sharedComponents_.count(name))
+    {
+      return sharedComponents_.at(name);
+    }
+    else
+    {
+      return nullptr;
+    }
   }
 
   const SharedComponentMap& PoolArchetype::GetSharedComponents() const
@@ -95,32 +168,6 @@ namespace Barrage
   const std::vector<ObjectArchetype*>& PoolArchetype::GetSpawnArchetypes() const
   {
     return spawnArchetypes_;
-  }
-
-  bool PoolArchetype::HasComponentArray(const std::string_view& componentArrayName) const
-  {
-    for (auto it = componentArrayNames_.begin(); it != componentArrayNames_.end(); ++it)
-    {
-      if (*it == componentArrayName)
-      {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  bool PoolArchetype::HasTag(const std::string_view& tag) const
-  {
-    for (auto it = tags_.begin(); it != tags_.end(); ++it)
-    {
-      if (*it == tag)
-      {
-        return true;
-      }
-    }
-
-    return false;
   }
   
   void PoolArchetype::AddSharedComponent(std::string_view name, SharedComponent* sharedComponent)
@@ -159,6 +206,11 @@ namespace Barrage
 
   void PoolArchetype::AddStartingObject(ObjectArchetype* archetype, unsigned* index)
   {
+    if (HasObjectArchetype(archetype->GetName()))
+    {
+      return;
+    }
+    
     if (index && startingObjects_.size() > *index)
     {
       startingObjects_.insert(startingObjects_.begin() + *index, archetype);
@@ -171,6 +223,11 @@ namespace Barrage
 
   void PoolArchetype::AddSpawnArchetype(ObjectArchetype* archetype, unsigned* index)
   {
+    if (HasObjectArchetype(archetype->GetName()))
+    {
+      return;
+    }
+    
     if (index && spawnArchetypes_.size() > *index)
     {
       spawnArchetypes_.insert(spawnArchetypes_.begin() + *index, archetype);
@@ -213,6 +270,40 @@ namespace Barrage
         return;
       }
     }
+  }
+
+  ObjectArchetype* PoolArchetype::ExtractStartingObject(const std::string& name, unsigned* index)
+  {
+    for (auto it = startingObjects_.begin(); it != startingObjects_.end(); ++it)
+    {
+      ObjectArchetype* archetype = *it;
+      
+      if (archetype->GetName() == name)
+      {
+        if (index)
+        {
+          *index = static_cast<unsigned>(it - startingObjects_.begin());
+        }
+
+        startingObjects_.erase(it);
+
+        return archetype;
+      }
+    }
+
+    return nullptr;
+  }
+
+  SharedComponent* PoolArchetype::ExtractSharedComponent(const std::string_view& name)
+  {
+    if (sharedComponents_.count(name) == 0)
+    {
+      return nullptr;
+    }
+    
+    SharedComponent* sharedComponent = sharedComponents_.at(name);
+    sharedComponents_.erase(name);
+    return sharedComponent;
   }
 
   void PoolArchetype::CopySharedComponentMap(const SharedComponentMap& other)

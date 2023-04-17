@@ -16,10 +16,21 @@
 
 namespace Barrage
 {
-  ObjectArchetype::ObjectArchetype(const std::string& name) :
+  ObjectArchetype::ObjectArchetype(const std::string& name, const std::vector<std::string_view>& componentArrayNames) :
     name_(name),
     componentArrays_()
   {
+    for (auto it = componentArrayNames.begin(); it != componentArrayNames.end(); ++it)
+    {
+      const std::string_view& name = *it;
+
+      ComponentArray* newArray = ComponentAllocator::AllocateComponentArray(name, 1);
+
+      if (newArray && componentArrays_.count(name) == 0)
+      {
+        componentArrays_.insert(std::make_pair(name, newArray));
+      }
+    }
   }
 
   ObjectArchetype::ObjectArchetype(const ObjectArchetype& other) :
@@ -42,9 +53,26 @@ namespace Barrage
     DeleteComponentArrayMap();
   }
 
+  bool ObjectArchetype::HasComponentArray(const std::string_view& name) const
+  {
+    return componentArrays_.count(name) > 0;
+  }
+
   const std::string& ObjectArchetype::GetName() const
   {
     return name_;
+  }
+
+  ComponentArray* ObjectArchetype::GetComponentArray(const std::string_view& name)
+  {
+    if (componentArrays_.count(name) == 0)
+    {
+      return nullptr;
+    }
+    else
+    {
+      return componentArrays_.at(name);
+    }
   }
 
   const ComponentArrayMap& ObjectArchetype::GetComponentArrays() const
@@ -60,6 +88,19 @@ namespace Barrage
     }
 
     componentArrays_.insert(std::make_pair(name, componentArray));
+  }
+
+  ComponentArray* ObjectArchetype::ExtractComponentArray(std::string_view name)
+  {
+    if (componentArrays_.count(name) == 0)
+    {
+      return nullptr;
+    }
+    
+    ComponentArray* componentArray = componentArrays_.at(name);
+    componentArrays_.erase(name);
+
+    return componentArray;
   }
 
   void ObjectArchetype::CopyComponentArrayMap(const ComponentArrayMap& other)

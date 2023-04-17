@@ -26,6 +26,7 @@
 
 #include <unordered_set>
 #include <chrono>
+#include <iostream>
 
 namespace Barrage
 {
@@ -111,8 +112,8 @@ namespace Barrage
 
     unsigned numTicks = engine_.Frames().ConsumeTicks();
 
-    /*TimePoint beginT;
-    TimePoint endT;*/
+    TimePoint beginT;
+    TimePoint endT;
 
     if (data_.gamePlaying_)
     {
@@ -123,16 +124,20 @@ namespace Barrage
         //endT = std::chrono::high_resolution_clock::now();
       }
     }
-    
-    /*auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);*/
 
     commandQueue_.Process();
 
     if (data_.sceneIsDirty_)
     {
+      //beginT = std::chrono::high_resolution_clock::now();
       engine_.Spaces().GetSpace(data_.selectedSpace_)->SetScene(data_.selectedScene_);
       data_.sceneIsDirty_ = false;
+      //endT = std::chrono::high_resolution_clock::now();
+      //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
+      //std::cout << "Scene set time: " << duration.count() << " microseconds" << std::endl;
     }
+
+    //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
 
     gui_.StartWidgets();
     /*ImGui::Begin("Time Test");
@@ -196,20 +201,20 @@ namespace Barrage
 
   void Editor::HandleKeyboard()
   {
-    long long bigDelayMilliseconds = 500000;
-    long long smallDelayMilliseconds = 100000;
+    long long bigDelayMicroseconds = 500000;
+    long long smallDelayMicroseconds = 100000;
     
     if (engine_.Input().KeyIsDown(KEY_CTRL_LEFT) && engine_.Input().KeyIsDown(KEY_Z))
     {
       if (engine_.Input().KeyTriggered(KEY_Z))
       {
         commandQueue_.Undo();
-        repeatTimer_ = bigDelayMilliseconds;
+        repeatTimer_ = bigDelayMicroseconds;
       }
       else if (repeatTimer_ <= 0)
       {
         commandQueue_.Undo();
-        repeatTimer_ = smallDelayMilliseconds;
+        repeatTimer_ = smallDelayMicroseconds;
       }
       else
       {
@@ -221,12 +226,12 @@ namespace Barrage
       if (engine_.Input().KeyTriggered(KEY_Y))
       {
         commandQueue_.Redo();
-        repeatTimer_ = bigDelayMilliseconds;
+        repeatTimer_ = bigDelayMicroseconds;
       }
       else if (repeatTimer_ <= 0)
       {
         commandQueue_.Redo();
-        repeatTimer_ = smallDelayMilliseconds;
+        repeatTimer_ = smallDelayMicroseconds;
       }
       else
       {

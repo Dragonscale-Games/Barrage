@@ -17,12 +17,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
+#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>
 #include <Objects/Components/BaseClasses/ComponentArray.hpp>
-#include <vector>
+#include <unordered_map>
 #include <string_view>
 
 namespace Barrage
 {
+  typedef std::unordered_map<std::string, ComponentArray*> RedoComponentArrayMap;
+  
   //! Adds a component array to a pool and its objects
   class CreateComponentArray : public Command
   {
@@ -31,9 +34,6 @@ namespace Barrage
       /*!
         \brief
           Constructs the command.
-
-        \param spaceName
-          The space containing the pool.
 
         \param sceneName
           The scene containing the pool.
@@ -46,7 +46,6 @@ namespace Barrage
       */
       /**************************************************************/
       CreateComponentArray(
-        const std::string& spaceName,
         const std::string& sceneName,
         const std::string& poolName,
         const std::string_view& componentArrayName);
@@ -90,13 +89,36 @@ namespace Barrage
       /**************************************************************/
       void Redo() override;
 
+      /**************************************************************/
+      /*!
+        \brief
+          Removes the component array from each object in the input
+          vector.
+
+        \param objects
+          The objects to remove the component array from.
+      */
+      /**************************************************************/
+      void RemoveComponentArraysFromObjects(const std::vector<ObjectArchetype*>& objects);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Replaces the original component arrays on each object in 
+          the input vector.
+
+        \param objects
+          The objects to replace the component array on.
+      */
+      /**************************************************************/
+      void ReplaceComponentArraysOnObjects(const std::vector<ObjectArchetype*>& objects);
+
     private:
-      std::string spaceName_;
       std::string sceneName_;
       std::string poolName_;
       std::string_view componentArrayName_;
 
-      std::vector<ComponentArray*> redoComponentArrays_;
+      RedoComponentArrayMap redoComponentArrays_;
   };
 }
 

@@ -1,59 +1,67 @@
 /* ======================================================================== */
 /*!
- * \file            CreateObject.hpp
+ * \file            EditComponentArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Creates a new (empty) object archetype and adds that object to a pool
-   in the scene.
+   Edits the value of a component array in an object archetype.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef CreateObject_BARRAGE_H
-#define CreateObject_BARRAGE_H
+#ifndef EditComponentArray_BARRAGE_H
+#define EditComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
-#include <stack>
-#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>
+#include <rttr/variant.h>
+#include <string_view>
 
 namespace Barrage
 {
-  //! Creates an object and adds it to a pool in the scene
-  class CreateObject : public Command
+  //! Edits the value of a component array in an object archetype
+  class EditComponentArray : public Command
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Constructs the CreateObject command.
+          Constructs the command.
 
         \param sceneName
-          The name of the scene to place the object in.
+          The scene containing the relevant pool.
 
         \param poolName
-          The name of the pool to create the object in.
-      */
-      /**************************************************************/
-      CreateObject(const std::string& sceneName, const std::string& poolName);
+          The pool archetype containing the relevant object.
 
-      /**************************************************************/
-      /*!
-        \brief
-          Deallocates resources.
+        \param objectName
+          The object archetype with the component array to edit.
+
+        \param componentArrayName
+          The name of the component array to edit.
+
+        \param newValue
+          The new value to write to the component array.
+
+        \param chainUndo
+          Whether undo chaining is enabled for this command.
       */
       /**************************************************************/
-      ~CreateObject();
+      EditComponentArray(
+        const std::string& sceneName,
+        const std::string& poolName,
+        const std::string& objectName,
+        const std::string_view& componentArrayName,
+        const rttr::variant& newValue,
+        bool chainUndo);
 
     private:
       /**************************************************************/
       /*!
         \brief
-          Creates the object archetype and adds it to a pool in the 
-          scene.
+          Writes a new value to a component array.
 
         \return
           Returns true if the command was successful, returns false
@@ -65,8 +73,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Removes the object archetype from the pool in the scene 
-          and removes it from the archetype manager.
+          Undoes the command.
       */
       /**************************************************************/
       void Undo() override;
@@ -74,8 +81,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Adds the previously removed object archetype back to the
-          archetype manager and the pool in the scene.
+          Redoes the command.
       */
       /**************************************************************/
       void Redo() override;
@@ -84,12 +90,13 @@ namespace Barrage
       std::string sceneName_;
       std::string poolName_;
       std::string objectName_;
+      std::string_view componentArrayName_;
 
-      ObjectArchetype* redoArchetype_;
+      rttr::variant newValue_;
+      rttr::variant oldValue_;
   };
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
-#endif // CreateObject_BARRAGE_H
+#endif // EditComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

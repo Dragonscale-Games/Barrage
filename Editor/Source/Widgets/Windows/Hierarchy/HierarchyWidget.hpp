@@ -15,6 +15,9 @@
 #define HierarchyWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <Objects/Archetypes/PoolArchetype/PoolArchetype.hpp>
+#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>
+
 #include <imgui/imgui.h>
 #include <string_view>
 
@@ -33,6 +36,12 @@ namespace Barrage
       static void Use();
 
     private:
+      static void SceneGUI();
+
+      static bool PoolGUI(PoolArchetype* poolArchetype);
+
+      static bool ObjectGUI(const std::string poolName, ObjectArchetype* objectArchetype);
+      
       /**************************************************************/
       /*!
         \brief

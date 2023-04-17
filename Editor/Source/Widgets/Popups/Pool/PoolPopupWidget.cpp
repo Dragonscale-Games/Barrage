@@ -32,7 +32,7 @@ namespace Barrage
 
     if (ImGui::Selectable("Create object"))
     {
-      Editor::Instance->Command().Send(new CreateObject(editorData.selectedSpace_, editorData.selectedScene_, editorData.selectedPool_));
+      Editor::Instance->Command().Send(new CreateObject(editorData.selectedScene_, editorData.selectedPool_));
     }
 
     ImGui::Spacing();
@@ -59,7 +59,7 @@ namespace Barrage
 
     if (ImGui::Selectable("Delete pool"))
     {
-      Editor::Instance->Command().Send(new DeletePool(editorData.selectedSpace_, editorData.selectedScene_, editorData.selectedPool_));
+      Editor::Instance->Command().Send(new DeletePool(editorData.selectedScene_, editorData.selectedPool_));
     }
 
     ImGui::EndPopup();

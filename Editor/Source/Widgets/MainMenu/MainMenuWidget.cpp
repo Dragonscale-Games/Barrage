@@ -74,9 +74,8 @@ namespace Barrage
     {
       if (ImGui::MenuItem("Pool"))
       {
-        std::string& space = Editor::Instance->Data().selectedSpace_;
         std::string& scene = Editor::Instance->Data().selectedScene_;
-        Editor::Instance->Command().Send(new CreatePool(space, scene));
+        Editor::Instance->Command().Send(new CreatePool(scene));
       }
 
       if (Editor::Instance->Data().selectedPool_.empty())
@@ -86,10 +85,9 @@ namespace Barrage
 
       if (ImGui::MenuItem("Object"))
       {
-        std::string& space = Editor::Instance->Data().selectedSpace_;
         std::string& scene = Editor::Instance->Data().selectedScene_;
         std::string& pool = Editor::Instance->Data().selectedPool_;
-        Editor::Instance->Command().Send(new CreateObject(space, scene, pool));
+        Editor::Instance->Command().Send(new CreateObject(scene, pool));
       }
 
       if (Editor::Instance->Data().selectedPool_.empty())

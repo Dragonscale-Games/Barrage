@@ -29,7 +29,7 @@ namespace Barrage
           Initializes the archetype with an empty map of components.
       */
       /**************************************************************/
-      ObjectArchetype(const std::string& name);
+      ObjectArchetype(const std::string& name, const std::vector<std::string_view>& componentArrayNames = std::vector<std::string_view>());
 
       /**************************************************************/
       /*!
@@ -64,6 +64,21 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Checks if the archetype contains a component array.
+
+        \param name
+          The name of the component array to check for.
+
+        \return
+          Returns true if the archetype contains the given component
+          array, returns false otherwise.
+      */
+      /**************************************************************/
+      bool HasComponentArray(const std::string_view& name) const;
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the name of the object archetype.
 
         \return
@@ -71,6 +86,21 @@ namespace Barrage
       */
       /**************************************************************/
       const std::string& GetName() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the component array with the given name if it exists.
+
+        \param name
+          The name of the component array to get.
+
+        \return
+          Returns a pointer to the component array if it exists on
+          the object archetype, returns nullptr otherwise.
+      */
+      /**************************************************************/
+      ComponentArray* GetComponentArray(const std::string_view& name);
 
       /**************************************************************/
       /*!
@@ -97,6 +127,21 @@ namespace Barrage
       */
       /**************************************************************/
       void AddComponentArray(std::string_view name, ComponentArray* componentArray);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Removes and gets a component array from the object 
+          archetype.
+
+        \param name
+          The name of the component array to extract.
+
+        \return
+          Returns a pointer to the extracted component array.
+      */
+      /**************************************************************/
+      ComponentArray* ExtractComponentArray(std::string_view name);
 
     private:
       /**************************************************************/

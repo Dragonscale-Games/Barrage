@@ -1,59 +1,63 @@
 /* ======================================================================== */
 /*!
- * \file            CreateObject.hpp
+ * \file            EditSharedComponent.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Creates a new (empty) object archetype and adds that object to a pool
-   in the scene.
+   Edits the value of a shared component in an pool archetype.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef CreateObject_BARRAGE_H
-#define CreateObject_BARRAGE_H
+#ifndef EditSharedComponent_BARRAGE_H
+#define EditSharedComponent_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
-#include <stack>
-#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>
+#include <rttr/variant.h>
+#include <string_view>
 
 namespace Barrage
 {
-  //! Creates an object and adds it to a pool in the scene
-  class CreateObject : public Command
+  //! Edits the value of a shared component in an pool archetype
+  class EditSharedComponent : public Command
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Constructs the CreateObject command.
+          Constructs the command.
 
         \param sceneName
-          The name of the scene to place the object in.
+          The scene containing the relevant pool.
 
         \param poolName
-          The name of the pool to create the object in.
-      */
-      /**************************************************************/
-      CreateObject(const std::string& sceneName, const std::string& poolName);
+          The pool archetype containing the shared component to edit.
 
-      /**************************************************************/
-      /*!
-        \brief
-          Deallocates resources.
+        \param sharedComponentName
+          The name of the shared component to edit.
+
+        \param newValue
+          The new value to write to the shared component.
+
+        \param chainUndo
+          Whether undo chaining is enabled for this command.
       */
       /**************************************************************/
-      ~CreateObject();
+      EditSharedComponent(
+        const std::string& sceneName,
+        const std::string& poolName,
+        const std::string_view& sharedComponentName,
+        const rttr::variant& newValue,
+        bool chainUndo);
 
     private:
       /**************************************************************/
       /*!
         \brief
-          Creates the object archetype and adds it to a pool in the 
-          scene.
+          Writes a new value to a shared component.
 
         \return
           Returns true if the command was successful, returns false
@@ -65,8 +69,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Removes the object archetype from the pool in the scene 
-          and removes it from the archetype manager.
+          Undoes the command.
       */
       /**************************************************************/
       void Undo() override;
@@ -74,8 +77,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Adds the previously removed object archetype back to the
-          archetype manager and the pool in the scene.
+          Redoes the command.
       */
       /**************************************************************/
       void Redo() override;
@@ -83,13 +85,13 @@ namespace Barrage
     private:
       std::string sceneName_;
       std::string poolName_;
-      std::string objectName_;
+      std::string_view sharedComponentName_;
 
-      ObjectArchetype* redoArchetype_;
+      rttr::variant newValue_;
+      rttr::variant oldValue_;
   };
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
-#endif // CreateObject_BARRAGE_H
+#endif // EditSharedComponent_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

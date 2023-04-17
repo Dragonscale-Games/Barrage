@@ -65,6 +65,8 @@ namespace Barrage
     }
     else
     {
+      std::string logMessage = "Failed to execute \"" + currentCommand_->message_ + "\".";
+      LogWidget::AddEntry(logMessage.c_str());
       delete currentCommand_;
     }
 

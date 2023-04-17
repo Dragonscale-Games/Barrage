@@ -16,13 +16,13 @@
 namespace Barrage
 {
   DeleteSharedComponent::DeleteSharedComponent(
-    const std::string& spaceName,
+    const std::string& sceneName,
     const std::string& poolName,
-    const std::string_view& componentName) :
-    Command("Removed " + std::string(componentName) + " from " + poolName + "."),
-    spaceName_(spaceName),
+    const std::string_view& sharedComponentName) :
+    Command("Removed " + std::string(sharedComponentName) + " from " + poolName + "."),
+    sceneName_(sceneName),
     poolName_(poolName),
-    componentName_(componentName),
+    sharedComponentName_(sharedComponentName),
     undoComponent_(nullptr)
   {
   }
@@ -34,44 +34,39 @@ namespace Barrage
 
   bool DeleteSharedComponent::Execute()
   {
-    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
-    if (space == nullptr)
+    if (scene == nullptr)
     {
       return false;
     }
 
-    ObjectManager& objectManager = space->GetObjectManager();
-    PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
+    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    if (poolArchetype == nullptr || !poolArchetype->sharedComponents_.count(componentName_))
+    if (poolArchetype == nullptr || !poolArchetype->HasSharedComponent(sharedComponentName_))
     {
       return false;
     }
 
-    undoComponent_ = poolArchetype->sharedComponents_.at(componentName_);
-    poolArchetype->sharedComponents_.erase(componentName_);*/
+    undoComponent_ = poolArchetype->ExtractSharedComponent(sharedComponentName_);
 
     return true;
   }
 
   void DeleteSharedComponent::Undo()
   {
-    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
-    ObjectManager& objectManager = space->GetObjectManager();
-    PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
-
-    poolArchetype->sharedComponents_[componentName_] = undoComponent_;
-    undoComponent_ = nullptr;*/
+    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    
+    poolArchetype->AddSharedComponent(sharedComponentName_, undoComponent_);
+    undoComponent_ = nullptr;
   }
 
   void DeleteSharedComponent::Redo()
   {
-    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
-    ObjectManager& objectManager = space->GetObjectManager();
-    PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
-
-    undoComponent_ = poolArchetype->sharedComponents_.at(componentName_);
-    poolArchetype->sharedComponents_.erase(componentName_);*/
+    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    
+    undoComponent_ = poolArchetype->ExtractSharedComponent(sharedComponentName_);
   }
 }

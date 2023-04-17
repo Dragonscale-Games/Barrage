@@ -17,16 +17,14 @@
 namespace Barrage
 {
   DeleteObject::DeleteObject(
-    const std::string& spaceName, 
     const std::string& sceneName, 
     const std::string& poolName, 
     const std::string& objectName) :
     Command("Deleted object. (" + objectName + ")"),
-    spaceName_(spaceName),
     sceneName_(sceneName),
     poolName_(poolName),
     objectName_(objectName),
-    undoObjectIndex_(),
+    undoIndex_(0),
     undoArchetype_(nullptr)
   {
   }
@@ -38,62 +36,54 @@ namespace Barrage
 
   bool DeleteObject::Execute()
   {
-    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
-    if (space == nullptr || scene == nullptr || !scene->HasObject(poolName_, objectName_))
+    if (scene == nullptr)
     {
       return false;
     }
 
-    PoolInfo* scenePool = scene->GetPoolInfo(poolName_);
+    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    if (scenePool == nullptr)
+    if (poolArchetype == nullptr)
     {
       return false;
     }
 
-    ObjectManager& objectManager = space->GetObjectManager();
-    undoArchetype_ = objectManager.ExtractObjectArchetype(objectName_);
+    undoArchetype_ = poolArchetype->ExtractStartingObject(objectName_, &undoIndex_);
 
     if (undoArchetype_ == nullptr)
     {
       return false;
     }
 
-    scene->RemoveObject(poolName_, objectName_, &undoObjectIndex_);
-
     if (Editor::Instance->Data().selectedObject_ == objectName_)
     {
       Editor::Instance->Data().selectedObject_ = std::string();
-    }*/
+    }
 
     return true;
   }
 
   void DeleteObject::Undo()
   {
-    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    ObjectManager& objectManager = space->GetObjectManager();
+    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    objectManager.AddObjectArchetype(objectName_, undoArchetype_);
-    scene->AddObject(poolName_, objectName_, &undoObjectIndex_);
-    undoArchetype_ = nullptr;*/
+    poolArchetype->AddStartingObject(undoArchetype_, &undoIndex_);
+    undoArchetype_ = nullptr;
   }
 
   void DeleteObject::Redo()
   {
-    /*Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    ObjectManager& objectManager = space->GetObjectManager();
+    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    undoArchetype_ = objectManager.ExtractObjectArchetype(objectName_);
-    scene->RemoveObject(poolName_, objectName_, &undoObjectIndex_);
+    undoArchetype_ = poolArchetype->ExtractStartingObject(objectName_, &undoIndex_);
 
     if (Editor::Instance->Data().selectedObject_ == objectName_)
     {
       Editor::Instance->Data().selectedObject_ = std::string();
-    }*/
+    }
   }
 }

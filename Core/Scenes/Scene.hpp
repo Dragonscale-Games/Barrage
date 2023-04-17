@@ -34,9 +34,15 @@ namespace Barrage
 
       ~Scene();
 
+      bool HasPool(const std::string& name);
+
+      PoolArchetype* GetPoolArchetype(const std::string& name);
+
       const std::vector<PoolArchetype*>& GetPoolArchetypes();
 
       void AddPoolArchetype(PoolArchetype* archetype, unsigned* index = nullptr);
+
+      PoolArchetype* ExtractPoolArchetype(const std::string& name, unsigned* index = nullptr);
 
     private:
       void CopyPoolArchetypes(const std::vector<PoolArchetype*>& other);

@@ -27,7 +27,7 @@ namespace Barrage
     if (ImGui::Selectable("Remove"))
     {
       EditorData& editorData = Editor::Instance->Data();
-      Editor::Instance->Command().Send(new DeleteSharedComponent(editorData.selectedSpace_, editorData.selectedPool_, componentName));
+      Editor::Instance->Command().Send(new DeleteSharedComponent(editorData.selectedScene_, editorData.selectedPool_, componentName));
     }
 
     ImGui::EndPopup();

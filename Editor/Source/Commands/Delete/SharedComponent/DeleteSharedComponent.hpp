@@ -30,20 +30,20 @@ namespace Barrage
         \brief
           Constructs the command.
 
-        \param spaceName
-          The space containing the pool.
+        \param sceneName
+          The scene containing the pool.
 
         \param poolName
           The pool to remove the component from.
 
-        \param componentName
-          The component to remove.
+        \param sharedComponentName
+          The shared component to remove.
       */
       /**************************************************************/
       DeleteSharedComponent(
-        const std::string& spaceName,
+        const std::string& sceneName,
         const std::string& poolName,
-        const std::string_view& componentName);
+        const std::string_view& sharedComponentName);
 
       /**************************************************************/
       /*!
@@ -57,7 +57,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-
+          Deletes a shared component from a pool archetype.
 
         \return
           Returns true if the command was successful, returns false
@@ -83,9 +83,9 @@ namespace Barrage
       void Redo() override;
 
     private:
-      std::string spaceName_;
+      std::string sceneName_;
       std::string poolName_;
-      std::string_view componentName_;
+      std::string_view sharedComponentName_;
 
       SharedComponent* undoComponent_;
   };

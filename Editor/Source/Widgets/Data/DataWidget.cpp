@@ -18,10 +18,43 @@
 
 namespace Barrage
 {
-  DataWidgetFunctionMap DataWidget::widgetFunctions_ = DataWidgetFunctionMap();
+  DataWidget::DataObject::DataObject(const std::string& name, rttr::variant& value) :
+    name_(name),
+    value_(value),
+    valueWasSet_(false),
+    chainUndoEnabled_(false)
+  {
+  }
+
+  const std::string& DataWidget::DataObject::GetName()
+  {
+    return name_;
+  }
+
+  rttr::variant DataWidget::DataObject::GetRTTRValue()
+  {
+    return value_;
+  }
+
+  void DataWidget::DataObject::SetChainUndo(bool enable)
+  {
+    chainUndoEnabled_ = enable;
+  }
+
+  bool DataWidget::DataObject::ChainUndoEnabled()
+  {
+    return chainUndoEnabled_;
+  }
+
+  bool DataWidget::DataObject::ValueWasSet()
+  {
+    return valueWasSet_;
+  }
+  
+  DataWidget::DataWidgetFunctionMap DataWidget::widgetFunctions_ = DataWidget::DataWidgetFunctionMap();
   bool DataWidget::initialized_ = false;
   
-  void DataWidget::Use(rttr::variant& object, rttr::string_view name, bool treeNode)
+  void DataWidget::Use(DataObject& object, bool treeNode)
   {
     if (!initialized_)
     {
@@ -29,8 +62,8 @@ namespace Barrage
       initialized_ = true;
     }
 
-    rttr::type objectType = object.get_type();
-    
+    rttr::type objectType = object.value_.get_type();
+
     if (!objectType.is_valid())
     {
       ImGui::Text("Error: Unregistered type");
@@ -44,33 +77,31 @@ namespace Barrage
       typeName.pop_back();
     }
 
-    if (name.empty())
+    if (object.name_.empty())
     {
-      name = typeName;
+      object.name_ = typeName;
     }
 
     if (widgetFunctions_.find(typeName) != widgetFunctions_.end())
     {
       DataWidgetFunction function = widgetFunctions_.at(typeName);
-      DataObject* dataObject = new DataObject(name.data(), object);
-      function(*dataObject);
-
-      if (dataObject->ValueWasSet())
-      {
-        Editor::Instance->Command().Send(dataObject);
-      }
-      else
-      {
-        delete dataObject;
-      }
+      function(object);
     }
-    else if (!treeNode || ImGui::TreeNode(name.data()))
+    else if (!treeNode || ImGui::TreeNode(object.name_.c_str()))
     {
       for (auto& prop : objectType.get_properties())
       {
-        rttr::variant property = prop.get_value(object);
-
-        Use(property, prop.get_name(), true);;
+        rttr::variant property = prop.get_value(object.value_);
+        DataObject propObject(prop.get_name().data(), property);
+        
+        Use(propObject, true);
+        
+        if (propObject.ValueWasSet())
+        {
+          prop.set_value(object.value_, propObject.value_);
+          object.valueWasSet_ = true;
+          object.chainUndoEnabled_ = propObject.chainUndoEnabled_;
+        }
       }
 
       if (treeNode)
@@ -101,7 +132,7 @@ namespace Barrage
   {
     float value = object.GetValue<float>();
 
-    bool fieldChanged = ImGui::DragFloat(object.GetValueName().c_str(), &value);
+    bool fieldChanged = ImGui::DragFloat(object.GetName().c_str(), &value);
 
     if (ImGui::IsItemActive())
     {
@@ -118,7 +149,7 @@ namespace Barrage
   {
     double value = object.GetValue<double>();
 
-    bool fieldChanged = ImGui::DragScalar(object.GetValueName().c_str(), ImGuiDataType_Double, &value);
+    bool fieldChanged = ImGui::DragScalar(object.GetName().c_str(), ImGuiDataType_Double, &value);
 
     if (ImGui::IsItemActive())
     {
@@ -135,7 +166,7 @@ namespace Barrage
   {
     int value = object.GetValue<int>();
 
-    bool fieldChanged = ImGui::DragInt(object.GetValueName().c_str(), &value);
+    bool fieldChanged = ImGui::DragInt(object.GetName().c_str(), &value);
 
     if (ImGui::IsItemActive())
     {
@@ -154,7 +185,7 @@ namespace Barrage
 
     const ImU32 one_step = 1;
 
-    bool fieldChanged = ImGui::InputScalar(object.GetValueName().c_str(), ImGuiDataType_U32, &value, &one_step);
+    bool fieldChanged = ImGui::InputScalar(object.GetName().c_str(), ImGuiDataType_U32, &value, &one_step);
 
     if (ImGui::IsItemActive())
     {
@@ -169,42 +200,42 @@ namespace Barrage
 
   void DataWidget::CharWidget(DataObject& object)
   {
-    std::string text = object.GetValueName();
+    std::string text = object.GetName();
     text += " (char)";
     ImGui::Text(text.c_str());
   }
 
   void DataWidget::UnsignedCharWidget(DataObject& object)
   {
-    std::string text = object.GetValueName();
+    std::string text = object.GetName();
     text += " (uchar)";
     ImGui::Text(text.c_str());
   }
 
   void DataWidget::ShortWidget(DataObject& object)
   {
-    std::string text = object.GetValueName();
+    std::string text = object.GetName();
     text += " (short)";
     ImGui::Text(text.c_str());
   }
 
   void DataWidget::UnsignedShortWidget(DataObject& object)
   {
-    std::string text = object.GetValueName();
+    std::string text = object.GetName();
     text += " (ushort)";
     ImGui::Text(text.c_str());
   }
 
   void DataWidget::LongLongWidget(DataObject& object)
   {
-    std::string text = object.GetValueName();
+    std::string text = object.GetName();
     text += " (long long)";
     ImGui::Text(text.c_str());
   }
 
   void DataWidget::UnsignedLongLongWidget(DataObject& object)
   {
-    std::string text = object.GetValueName();
+    std::string text = object.GetName();
     text += " (unsigned long long)";
     ImGui::Text(text.c_str());
   }
@@ -213,7 +244,7 @@ namespace Barrage
   {
     std::string value = object.GetValue<std::string>();
 
-    bool fieldChanged = ImGui::InputText(object.GetValueName().c_str(), &value);
+    bool fieldChanged = ImGui::InputText(object.GetName().c_str(), &value);
 
     if (ImGui::IsItemActive())
     {
@@ -281,7 +312,7 @@ namespace Barrage
     {
       object.SetChainUndo(true);
     }
-
+    
     if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
     {
       object.SetValue(sprite);

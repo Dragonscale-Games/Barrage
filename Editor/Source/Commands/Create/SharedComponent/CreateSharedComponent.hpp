@@ -29,9 +29,6 @@ namespace Barrage
       /*!
         \brief
           Constructs the command.
-          
-        \param spaceName
-          The space containing the pool.
 
         \param poolName
           The pool to place the component in. 
@@ -41,9 +38,9 @@ namespace Barrage
       */
       /**************************************************************/
       CreateSharedComponent(
-        const std::string& spaceName, 
+        const std::string& sceneName, 
         const std::string& poolName, 
-        const std::string_view& componentName);
+        const std::string_view& sharedComponentName);
 
       /**************************************************************/
       /*!
@@ -82,10 +79,10 @@ namespace Barrage
       /**************************************************************/
       void Redo() override;
 
-    private:
-      std::string spaceName_;     
+    private: 
+      std::string sceneName_;
       std::string poolName_;      
-      std::string_view componentName_;
+      std::string_view sharedComponentName_;
 
       SharedComponent* redoComponent_;
   };
