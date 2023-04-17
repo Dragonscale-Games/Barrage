@@ -161,7 +161,7 @@ namespace Barrage
       void ClearRedoStack();
 
     private:
-      Command* currentCommand_;         //!< Commands added to the queue are stored here until execution
+      Command* currentCommand_;        //!< Commands added to the queue are stored here until execution
       std::stack<Command*> undoStack_; //!< Stores all previously executed commands
       std::stack<Command*> redoStack_; //!< Stores all previously undone commands (clears when a new command is processed)
   };
