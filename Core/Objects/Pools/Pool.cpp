@@ -116,18 +116,18 @@ namespace Barrage
       numObjects = availableSlots;
     }
 
-    if (numObjects == 0)
+    if (numObjects != 0)
     {
-      return;
+      unsigned startIndex = numActiveObjects_ + numQueuedObjects_;
+      ObjectArchetype& archetype = spawnArchetypes_.at(spawnInfo.archetypeName_);
+
+      CreateObjectsInternal(archetype, startIndex, numObjects);
+      ApplySpawnFuncs(sourcePool, spawnInfo, startIndex, numObjects);
+
+      numQueuedObjects_ += numObjects;
     }
 
-    unsigned startIndex = numActiveObjects_ + numQueuedObjects_;
-    ObjectArchetype& archetype = spawnArchetypes_.at(spawnInfo.archetypeName_);
-
-    CreateObjectsInternal(archetype, startIndex, numObjects);
-    ApplySpawnFuncs(sourcePool, spawnInfo, startIndex, numObjects);
-
-    numQueuedObjects_ += numObjects;
+    spawnInfo.sourceIndices_.clear();
   }
 
   bool Pool::HasTag(const std::string_view& tag) const

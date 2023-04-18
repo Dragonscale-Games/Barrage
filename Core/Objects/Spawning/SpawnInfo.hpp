@@ -25,7 +25,7 @@ namespace Barrage
   {
     std::string archetypeName_;                //!< Name of object archetype that will be spawned
     std::vector<std::string> spawnFunctions_;  //!< List of spawn functions to apply
-    std::vector<unsigned> sourceIndices_;      //!< Indices of spawner objects
+    std::vector<unsigned> sourceIndices_;      //!< Indices of spawner objects (cleared after spawn)
   };
 }
 
