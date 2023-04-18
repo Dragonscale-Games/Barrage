@@ -179,7 +179,6 @@ namespace Demo
 
     SpawnInfo bullet_spawn_type;
     bullet_spawn_type.archetypeName_ = "Bullet Object";
-    bullet_spawn_type.destinationPoolName_ = "Bullet Pool";
     bullet_spawn_type.spawnFunctions_.push_back("MatchPosition");
     bullet_spawn_type.spawnFunctions_.push_back("RandomDirection");
 
