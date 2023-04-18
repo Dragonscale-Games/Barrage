@@ -155,9 +155,11 @@ namespace Barrage
     
     if (scene == nullptr)
     {
+      LogWidget::AddEntry("Could not load scene \"" + editorData.selectedScene_ + "\".");
       return;
     }
     
+    LogWidget::AddEntry("Loaded scene \"" + editorData.selectedScene_ + "\" from \"" + path + "\".");
     editorData.nextScene_ = scene;
   }
 }
