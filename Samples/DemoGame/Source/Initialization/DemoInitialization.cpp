@@ -28,7 +28,7 @@ namespace Demo
     Space* demo_space = new Space;
     Scene* demo_scene = CreateDemoScene();
 
-    Engine::Instance->Scenes().AddScene("Demo Scene", demo_scene);
+    Engine::Instance->Scenes().AddScene(demo_scene);
     demo_space->SetScene("Demo Scene");
 
     return demo_space;

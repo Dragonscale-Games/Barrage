@@ -267,10 +267,10 @@ namespace Barrage
   {
     // The object being serialized as an unwrapped object.
     rttr::variant unwrappedObject = object;
-
+    
     if (!type)
     {
-      BREAKPOINT();
+      //BREAKPOINT();
       return;
     }
 
@@ -356,7 +356,7 @@ namespace Barrage
     {
       // Go through all properties and attempt to serialize them.
       rttr::array_range<rttr::property> properties = type.get_properties();
-      assert(properties.size() > 0);
+      //assert(properties.size() > 0);
       for (auto property : properties)
       {
         using rapidjson::CrtAllocator;

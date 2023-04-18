@@ -31,7 +31,7 @@ namespace Barrage
 
       ~SceneManager();
 
-      void AddScene(const std::string name, Scene* scene);
+      void AddScene(Scene* scene);
 
       Scene* GetScene(const std::string name);
 

@@ -11,6 +11,10 @@
  /* ======================================================================== */
 
 #include "Scene.hpp"
+#include <cstdio>
+#include "rapidjson/filewritestream.h"
+#include "rapidjson/filereadstream.h"
+#include <rapidjson/prettywriter.h>
 
 namespace Barrage
 {
@@ -18,6 +22,26 @@ namespace Barrage
     name_(name),
     poolArchetypes_()
   {
+  }
+
+  Scene::Scene(const rapidjson::Value& data) :
+    name_("Unknown Scene"),
+    poolArchetypes_()
+  {
+    if (!data.IsObject())
+    {
+      return;
+    }
+    
+    if (data.HasMember("Name") && data["Name"].IsString())
+    {
+      name_ = data["Name"].GetString();
+    }
+    
+    if (data.HasMember("Pools") && data["Pools"].IsArray())
+    {
+      DeserializePoolArchetypes(data["Pools"]);
+    }
   }
 
   Scene::Scene(const Scene& other) :
@@ -45,6 +69,11 @@ namespace Barrage
     return GetPoolArchetype(name) != nullptr;
   }
 
+  const std::string& Scene::GetName()
+  {
+    return name_;
+  }
+
   PoolArchetype* Scene::GetPoolArchetype(const std::string& name)
   {
     for (auto it = poolArchetypes_.begin(); it != poolArchetypes_.end(); ++it)
@@ -67,6 +96,12 @@ namespace Barrage
 
   void Scene::AddPoolArchetype(PoolArchetype* archetype, unsigned* index)
   {
+    if (archetype == nullptr || HasPool(archetype->GetName()))
+    {
+      delete archetype;
+      return;
+    }
+    
     if (index && poolArchetypes_.size() > *index)
     {
       poolArchetypes_.insert(poolArchetypes_.begin() + *index, archetype);
@@ -99,6 +134,74 @@ namespace Barrage
     return nullptr;
   }
 
+  rapidjson::Value Scene::Serialize(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
+  {
+    rapidjson::Value sceneObject;
+    sceneObject.SetObject();
+
+    rapidjson::Value nameValue(name_.c_str(), static_cast<rapidjson::SizeType>(name_.size()), allocator);
+    sceneObject.AddMember("Name", nameValue, allocator);
+
+    rapidjson::Value poolArchetypesObject = SerializePoolArchetypes(allocator);
+    sceneObject.AddMember("Pools", poolArchetypesObject, allocator);
+
+    return sceneObject;
+  }
+
+  bool Scene::SaveToFile(Scene* scene, const std::string& path)
+  {
+    FILE* outFile = nullptr;
+    fopen_s(&outFile, path.c_str(), "wb");
+
+    if (outFile == nullptr)
+    {
+      return false;
+    }
+
+    rapidjson::Document d;
+    rapidjson::Value sceneObject = scene->Serialize(d.GetAllocator());
+
+    char* writeBuffer = new char[65536];
+    rapidjson::FileWriteStream outStream(outFile, writeBuffer, sizeof(writeBuffer));
+
+    rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(outStream);
+    sceneObject.Accept(writer);
+
+    delete[] writeBuffer;
+    fclose(outFile);
+
+    return true;
+  }
+
+  Scene* Scene::LoadFromFile(const std::string& path)
+  {
+    FILE* inFile = nullptr;
+    fopen_s(&inFile, path.c_str(), "rb");
+
+    if (inFile == nullptr)
+    {
+      return nullptr;
+    }
+
+    char* readBuffer = new char[65536];
+    rapidjson::FileReadStream inStream(inFile, readBuffer, sizeof(readBuffer));
+
+    rapidjson::Document document;
+    rapidjson::ParseResult success = document.ParseStream(inStream);
+
+    delete[] readBuffer;
+    fclose(inFile);
+
+    if (!success)
+    {
+      return nullptr;
+    }
+
+    Scene* scene = new Scene(document);
+
+    return scene;
+  }
+
   void Scene::CopyPoolArchetypes(const std::vector<PoolArchetype*>& other)
   {
     DeletePoolArchetypes();
@@ -117,5 +220,32 @@ namespace Barrage
     }
 
     poolArchetypes_.clear();
+  }
+
+  rapidjson::Value Scene::SerializePoolArchetypes(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
+  {
+    rapidjson::Value poolArchetypeArray;
+    poolArchetypeArray.SetArray();
+
+    for (auto it = poolArchetypes_.begin(); it != poolArchetypes_.end(); ++it)
+    {
+      PoolArchetype* archetype = *it;
+      rapidjson::Value archetypeObject = archetype->Serialize(allocator);
+      poolArchetypeArray.PushBack(archetypeObject, allocator);
+    }
+
+    return poolArchetypeArray;
+  }
+
+  void Scene::DeserializePoolArchetypes(const rapidjson::Value& data)
+  {
+    for (auto it = data.Begin(); it != data.End(); ++it)
+    {
+      if (it->IsObject())
+      {
+        PoolArchetype* poolArchetype = new PoolArchetype(*it);
+        AddPoolArchetype(poolArchetype);
+      }
+    }
   }
 }

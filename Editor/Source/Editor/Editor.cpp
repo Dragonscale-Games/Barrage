@@ -127,6 +127,11 @@ namespace Barrage
 
     commandQueue_.Process();
 
+    if (data_.nextScene_)
+    {
+      ChangeScene();
+    }
+
     if (data_.sceneIsDirty_)
     {
       //beginT = std::chrono::high_resolution_clock::now();
@@ -238,5 +243,20 @@ namespace Barrage
         repeatTimer_ -= engine_.Frames().DT();
       }
     }
+  }
+
+  void Editor::ChangeScene()
+  {
+    Scene* scene = data_.nextScene_;
+    
+    if (scene == nullptr)
+    {
+      return;
+    }
+
+    engine_.Scenes().AddScene(scene);
+    data_.selectedScene_ = scene->GetName();
+    data_.nextScene_ = nullptr;
+    data_.sceneIsDirty_ = true;
   }
 }

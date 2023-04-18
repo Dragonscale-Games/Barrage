@@ -29,6 +29,7 @@ namespace Barrage
   /*************************************************************************/
   /*!
     \brief
+      Serializes an RTTR object into a rapidjson value.
     \param object
       The object being serialized. It must be registered through
       rttr.
@@ -43,7 +44,7 @@ namespace Barrage
   /*************************************************************************/
   /*!
     \brief
-      Deserializes an object given the JSON data for it.
+      Deserializes a rapidjson value into an RTTR object.
     \param object
       The object to deserialize from JSON data.
     \param data

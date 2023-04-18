@@ -23,6 +23,18 @@ namespace Barrage
 
     if (ImGui::BeginMenu("File"))
     {
+      if (ImGui::MenuItem("Save scene"))
+      {
+        SaveScene();
+      }
+      
+      if (ImGui::MenuItem("Load scene"))
+      {
+        LoadScene();
+      }
+
+      ImGui::Separator();
+
       if (ImGui::MenuItem("Exit"))
       {
         Editor::Instance->Data().isRunning_ = false;
@@ -99,5 +111,53 @@ namespace Barrage
     }
 
     ImGui::EndMainMenuBar();
+  }
+
+  void MainMenuWidget::SaveScene()
+  {
+    EditorData& editorData = Editor::Instance->Data();
+
+    if (editorData.selectedScene_.empty())
+    {
+      return;
+    }
+
+    Scene* scene = Engine::Instance->Scenes().GetScene(editorData.selectedScene_);
+
+    if (scene == nullptr)
+    {
+      return;
+    }
+
+    std::string path = editorData.selectedScene_ + ".scene";
+    if (Scene::SaveToFile(scene, path))
+    {
+      LogWidget::AddEntry("Saved scene \"" + editorData.selectedScene_ + "\" to \"" + path + "\".");
+    }
+    else
+    {
+      LogWidget::AddEntry("Could not save scene \"" + editorData.selectedScene_ + "\".");
+    }
+  }
+
+  void MainMenuWidget::LoadScene()
+  {
+    EditorData& editorData = Editor::Instance->Data();
+
+    if (editorData.selectedScene_.empty())
+    {
+      return;
+    }
+
+    std::string path = editorData.selectedScene_ + ".scene";
+
+    Scene* scene = Scene::LoadFromFile(path);
+    
+    if (scene == nullptr)
+    {
+      return;
+    }
+    
+    editorData.nextScene_ = scene;
   }
 }

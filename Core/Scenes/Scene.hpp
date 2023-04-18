@@ -19,6 +19,7 @@
 
 #include <unordered_map>
 #include <string>
+#include "Serialization/Serializer.hpp"
 
 namespace Barrage
 {
@@ -28,6 +29,8 @@ namespace Barrage
     public:
       Scene(const std::string& name);
 
+      Scene(const rapidjson::Value& data);
+
       Scene(const Scene& other);
 
       Scene& operator=(const Scene& other);
@@ -35,6 +38,8 @@ namespace Barrage
       ~Scene();
 
       bool HasPool(const std::string& name);
+
+      const std::string& GetName();
 
       PoolArchetype* GetPoolArchetype(const std::string& name);
 
@@ -44,10 +49,20 @@ namespace Barrage
 
       PoolArchetype* ExtractPoolArchetype(const std::string& name, unsigned* index = nullptr);
 
+      rapidjson::Value Serialize(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+      static bool SaveToFile(Scene* scene, const std::string& path);
+
+      static Scene* LoadFromFile(const std::string& path);
+
     private:
       void CopyPoolArchetypes(const std::vector<PoolArchetype*>& other);
 
       void DeletePoolArchetypes();
+
+      rapidjson::Value SerializePoolArchetypes(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+      void DeserializePoolArchetypes(const rapidjson::Value& data);
 
     private:
       std::string name_;

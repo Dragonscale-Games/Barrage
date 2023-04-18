@@ -72,6 +72,21 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Tells the allocator how to allocate a shared component for
+          a given type.
+
+        \tparam T
+          The type of component data the shared component will wrap.
+
+        \param componentName
+          The name of the component's C++ class.
+      */
+      /**************************************************************/
+      static void RegisterTag(const std::string_view& tag);
+
+      /**************************************************************/
+      /*!
+        \brief
           Creates a component array whose type matches the given name. 
           If no component array with that name has been registered, 
           returns nullptr.
@@ -117,6 +132,57 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the string literal name of a component array (wrapped 
+          in a string_view) if it has been registered.
+
+        \param componentArray
+          The component array to get the name of.
+
+        \return
+          Returns the string literal name of a component array 
+          (wrapped in a string_view) if it has been registered, 
+          returns an empty string_view otherwise.
+      */
+      /**************************************************************/
+      static std::string_view GetComponentArrayLiteral(const std::string_view& componentArray);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the string literal name of a shared component (wrapped
+          in a string_view) if it has been registered.
+
+        \param sharedComponent
+          The shared component to get the name of.
+
+        \return
+          Returns the string literal name of a shared component
+          (wrapped in a string_view) if it has been registered,
+          returns an empty string_view otherwise.
+      */
+      /**************************************************************/
+      static std::string_view GetSharedComponentLiteral(const std::string_view& sharedComponent);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the string literal name of a tag (wrapped in a
+          string_view) if it has been registered.
+
+        \param tag
+          The tag to get the name of.
+
+        \return
+          Returns the string literal name of a tag (wrapped in a
+          string_view) if it has been registered, returns an empty 
+          string_view otherwise.
+      */
+      /**************************************************************/
+      static std::string_view GetTagLiteral(const std::string_view& tag);
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the list of all registered component arrays.
 
         \return
@@ -135,6 +201,17 @@ namespace Barrage
       */
       /**************************************************************/
       static const std::vector<std::string_view>& GetSharedComponentNames();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the list of all registered shared components.
+
+        \return
+          Returns the list of all registered shared components.
+      */
+      /**************************************************************/
+      static const std::vector<std::string_view>& GetTagNames();
 
     private:
       /**************************************************************/
@@ -179,12 +256,15 @@ namespace Barrage
     private:
       static ComponentArrayAllocMap componentArrayAllocMap_;   //!< Maps names of component arrays to their allocation functions
       static SharedComponentAllocMap sharedComponentAllocMap_; //!< Maps names of shared components to their allocation functions
+      static TagSet tagSet_;                                   //!< Set of all tags registered with the engine
 
       static std::vector<std::string_view> componentArrayNames_;    //!< The names of all registered component arrays
       static std::vector<std::string_view> sharedComponentNames_;   //!< The names of all registered shared components
+      static std::vector<std::string_view> tagNames_;
 
       static bool componentArrayNamesSorted_;
       static bool sharedComponentNamesSorted_; 
+      static bool tagNamesSorted_;
 	};
 }
 

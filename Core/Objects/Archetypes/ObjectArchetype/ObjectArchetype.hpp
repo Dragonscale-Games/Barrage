@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Objects/Components/BaseClasses/ComponentArray.hpp>
+#include <Serialization/Serializer.hpp>
 
 namespace Barrage
 {
@@ -30,6 +31,17 @@ namespace Barrage
       */
       /**************************************************************/
       ObjectArchetype(const std::string& name, const std::vector<std::string_view>& componentArrayNames = std::vector<std::string_view>());
+
+      /**************************************************************/
+      /*!
+        \brief
+          Constructs the archetype using JSON data.
+
+        \param data
+          The JSON data to deserialize into this object.
+      */
+      /**************************************************************/
+      ObjectArchetype(const rapidjson::Value& data);
 
       /**************************************************************/
       /*!
@@ -143,6 +155,17 @@ namespace Barrage
       /**************************************************************/
       ComponentArray* ExtractComponentArray(std::string_view name);
 
+      /**************************************************************/
+      /*!
+        \brief
+          Serializes the object archetype into a rapidjson value.
+
+        \return
+          Returns the serialized rapidjson value.
+      */
+      /**************************************************************/
+      rapidjson::Value Serialize(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
     private:
       /**************************************************************/
       /*!
@@ -162,6 +185,29 @@ namespace Barrage
       */
       /**************************************************************/
       void DeleteComponentArrayMap();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Serializes the object archetype's component arrays into a 
+          rapidjson value.
+
+        \return
+          Returns the serialized rapidjson value.
+      */
+      /**************************************************************/
+      rapidjson::Value SerializeComponentArrays(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deserializes a JSON of component arrays into this archetype.
+
+        \param data
+          The JSON of component arrays to deserialize.
+      */
+      /**************************************************************/
+      void DeserializeComponentArrays(const rapidjson::Value& data);
 
     private:
       std::string name_;                  //!< A name for an object created with this archetype (for debug purposes, as objects don't have names)

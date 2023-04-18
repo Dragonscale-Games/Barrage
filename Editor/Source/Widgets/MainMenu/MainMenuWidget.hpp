@@ -30,6 +30,11 @@ namespace Barrage
       */
       /**************************************************************/
       static void Use();
+
+    private:
+      static void SaveScene();
+
+      static void LoadScene();
   };
 }
 

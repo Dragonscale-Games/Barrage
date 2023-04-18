@@ -20,6 +20,7 @@
 
 #include "Objects/Components/EngineComponents.hpp"
 #include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
+#include "Serialization/Serializer.hpp"
 
 namespace Barrage
 {
@@ -37,6 +38,17 @@ namespace Barrage
       */
       /**************************************************************/
       PoolArchetype(const std::string& name, unsigned capacity = 1);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Constructs the archetype using JSON data.
+
+        \param data
+          The JSON data to deserialize into this object.
+      */
+      /**************************************************************/
+      PoolArchetype(const rapidjson::Value& data);
 
       /**************************************************************/
       /*!
@@ -254,7 +266,7 @@ namespace Barrage
           The shared component to add.
       */
       /**************************************************************/
-      void AddSharedComponent(std::string_view name, SharedComponent* sharedComponent);
+      void AddSharedComponent(const std::string_view& name, SharedComponent* sharedComponent);
 
       /**************************************************************/
       /*!
@@ -381,6 +393,17 @@ namespace Barrage
       /**************************************************************/
       SharedComponent* ExtractSharedComponent(const std::string_view& name);
 
+      /**************************************************************/
+      /*!
+        \brief
+          Serializes the pool archetype into a rapidjson value.
+
+        \return
+          Returns the serialized rapidjson value.
+      */
+      /**************************************************************/
+      rapidjson::Value Serialize(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
     private:
       /**************************************************************/
       /*!
@@ -439,15 +462,129 @@ namespace Barrage
       /**************************************************************/
       void DeleteSpawnArchetypes();
 
+      /**************************************************************/
+      /*!
+        \brief
+          Serializes the pool archetype's shared components into a
+          rapidjson value.
+
+        \return
+          Returns the serialized rapidjson value.
+      */
+      /**************************************************************/
+      rapidjson::Value SerializeSharedComponents(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Serializes a vector of string_views into a rapidjson
+          value.
+
+        \param strings
+          The string_view vector to serialize.
+
+        \return
+          Returns the serialized rapidjson value.
+      */
+      /**************************************************************/
+      rapidjson::Value SerializeStringViews(const std::vector<std::string_view>& strings, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Serializes a vector of object archetypes into a rapidjson
+          value.
+
+        \param objects
+          The object archetype vector to serialize.
+
+        \return
+          Returns the serialized rapidjson value.
+      */
+      /**************************************************************/
+      rapidjson::Value SerializeObjectArchetypes(const std::vector<ObjectArchetype*>& objects, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deserializes a JSON of shared components into this archetype.
+
+        \param data
+          The JSON of shared components to deserialize.
+      */
+      /**************************************************************/
+      void DeserializeSharedComponents(const rapidjson::Value& data);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deserializes a JSON of component array names into this 
+          archetype.
+
+        \param data
+          The JSON of component array names to deserialize.
+      */
+      /**************************************************************/
+      void DeserializeComponentArrayNames(const rapidjson::Value& data);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deserializes a JSON of tags into this archetype.
+
+        \param data
+          The JSON of tags to deserialize.
+      */
+      /**************************************************************/
+      void DeserializeTags(const rapidjson::Value& data);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deserializes a JSON of starting objects into this archetype.
+
+        \param data
+          The JSON of starting objects to deserialize.
+      */
+      /**************************************************************/
+      void DeserializeStartingObjects(const rapidjson::Value& data);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deserializes a JSON of spawn archetypes into this archetype.
+
+        \param data
+          The JSON of spawn archetypes to deserialize.
+      */
+      /**************************************************************/
+      void DeserializeSpawnArchetypes(const rapidjson::Value& data);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Determines whether an object archetype has the component
+          arrays expected by the pool.
+
+        \param objectArchetype
+          The object archetype to validate.
+
+        \return
+          Returns true if the object archetype's component arrays 
+          match the pool's, returns false otherwise.
+      */
+      /**************************************************************/
+      bool ObjectArchetypeIsValid(ObjectArchetype* objectArchetype);
+
     private:
       std::string name_;                                  //!< Name of the pool this archetype will create
+      unsigned capacity_;                                 //!< The number of objects the pool will be able to hold
       SharedComponentMap sharedComponents_;               //!< Initialized shared components to copy to the pool
       std::vector<std::string_view> componentArrayNames_; //!< Names of the pool's component arrays
       std::vector<std::string_view> tags_;                //!< Tags of the pool
-      unsigned capacity_;                                 //!< The number of objects the pool will be able to hold
 
-      std::vector<ObjectArchetype*> startingObjects_;      //!< The objects the pool starts with
-      std::vector<ObjectArchetype*> spawnArchetypes_;      //!< Objects that can be spawned in the pool
+      std::vector<ObjectArchetype*> startingObjects_;     //!< The objects the pool starts with
+      std::vector<ObjectArchetype*> spawnArchetypes_;     //!< Objects that can be spawned in the pool
   };
 }
 

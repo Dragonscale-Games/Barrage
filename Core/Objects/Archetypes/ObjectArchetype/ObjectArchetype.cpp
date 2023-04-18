@@ -22,14 +22,34 @@ namespace Barrage
   {
     for (auto it = componentArrayNames.begin(); it != componentArrayNames.end(); ++it)
     {
-      const std::string_view& name = *it;
+      const std::string_view& componentArrayName = *it;
 
-      ComponentArray* newArray = ComponentAllocator::AllocateComponentArray(name, 1);
+      ComponentArray* newArray = ComponentAllocator::AllocateComponentArray(componentArrayName, 1);
 
-      if (newArray && componentArrays_.count(name) == 0)
+      if (newArray && componentArrays_.count(componentArrayName) == 0)
       {
-        componentArrays_.insert(std::make_pair(name, newArray));
+        componentArrays_.insert(std::make_pair(componentArrayName, newArray));
       }
+    }
+  }
+
+  ObjectArchetype::ObjectArchetype(const rapidjson::Value& data) :
+    name_("Unknown Object"),
+    componentArrays_()
+  {
+    if (!data.IsObject())
+    {
+      return;
+    }
+
+    if (data.HasMember("Name") && data["Name"].IsString())
+    {
+      name_ = data["Name"].GetString();
+    }
+
+    if (data.HasMember("Components") && data["Components"].IsObject())
+    {
+      DeserializeComponentArrays(data["Components"]);
     }
   }
 
@@ -82,12 +102,15 @@ namespace Barrage
 
   void ObjectArchetype::AddComponentArray(std::string_view name, ComponentArray* componentArray)
   {
-    if (componentArrays_.count(name))
+    std::string_view key = ComponentAllocator::GetComponentArrayLiteral(name);
+    
+    if (key.empty() || componentArrays_.count(key))
     {
+      delete componentArray;
       return;
     }
 
-    componentArrays_.insert(std::make_pair(name, componentArray));
+    componentArrays_.insert(std::make_pair(key, componentArray));
   }
 
   ComponentArray* ObjectArchetype::ExtractComponentArray(std::string_view name)
@@ -101,6 +124,20 @@ namespace Barrage
     componentArrays_.erase(name);
 
     return componentArray;
+  }
+
+  rapidjson::Value ObjectArchetype::Serialize(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
+  {
+    rapidjson::Value archetypeObject;
+    archetypeObject.SetObject();
+
+    rapidjson::Value nameValue(name_.c_str(), name_.size(), allocator);
+    archetypeObject.AddMember("Name", nameValue, allocator);
+
+    rapidjson::Value componentsObject = SerializeComponentArrays(allocator);
+    archetypeObject.AddMember("Components", componentsObject, allocator);
+
+    return archetypeObject;
   }
 
   void ObjectArchetype::CopyComponentArrayMap(const ComponentArrayMap& other)
@@ -123,5 +160,39 @@ namespace Barrage
     }
 
     componentArrays_.clear();
+  }
+
+  rapidjson::Value ObjectArchetype::SerializeComponentArrays(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
+  {
+    rapidjson::Value componentsObject;
+    componentsObject.SetObject();
+    
+    for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
+    {
+      rapidjson::Value componentObject = Barrage::Serialize(it->second->GetRTTRValue(0), allocator);
+      rapidjson::Value componentKey(it->first.data(), it->first.size(), allocator);
+      componentsObject.AddMember(componentKey, componentObject, allocator);
+    }
+    
+    return componentsObject;
+  }
+
+  void ObjectArchetype::DeserializeComponentArrays(const rapidjson::Value& data)
+  {
+    for (auto it = data.MemberBegin(); it != data.MemberEnd(); ++it)
+    {
+      std::string name = it->name.GetString();
+      
+      ComponentArray* componentArray = ComponentAllocator::AllocateComponentArray(name, 1);
+
+      if (componentArray)
+      {
+        rttr::variant value = componentArray->GetRTTRValue(0);
+        rttr::type type = rttr::type::get_by_name(name);
+        Barrage::Deserialize(value, it->value, type);
+        componentArray->SetRTTRValue(value, 0);
+        AddComponentArray(name, componentArray);
+      }
+    }
   }
 }

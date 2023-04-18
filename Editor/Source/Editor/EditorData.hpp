@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <string_view>
+#include <Scenes/Scene.hpp>
 
 namespace Barrage
 {
@@ -29,6 +30,7 @@ namespace Barrage
     bool sceneIsDirty_;                        //!< Flag for when user changes something in current scene
     bool openSharedComponentModal_;            //!< Flag for when user opens the "add shared component" modal
     bool openComponentArrayModal_;             //!< Flag for when user opens the "add component array" modal
+    Scene* nextScene_;                         //!< On a scene change, the new scene is temporarily held here
     std::string selectedSpace_;                //!< The currently selected space
     std::string selectedScene_;                //!< The currently selected scene
     std::string selectedPool_;                 //!< The currently selected pool
