@@ -19,6 +19,7 @@
 #include "Systems/DemoSystems.hpp"
 #include "Components/DemoComponents.hpp"
 #include "SpawnFuncs/DemoSpawnFuncs.hpp"
+#include "Objects/Components/ComponentAllocator.hpp"
 
 namespace Barrage
 {
@@ -31,6 +32,10 @@ namespace Barrage
     RegisterSharedComponent<Demo::CircleCollider>("CircleCollider");
     RegisterSharedComponent<Demo::Player>("Player");
     RegisterSharedComponent<Demo::RNG>("RNG");
+
+    ComponentAllocator::RegisterTag("Bullet");
+    ComponentAllocator::RegisterTag("Bullet Pool");
+    ComponentAllocator::RegisterTag("Spawner");
   }
 
   void ObjectManager::RegisterCustomSystems()
