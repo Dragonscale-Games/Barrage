@@ -129,8 +129,8 @@ namespace Barrage
       Pool* CreatePoolInternal(const PoolArchetype& archetype);
 
     private:
-      PoolMap pools_;                          //!< The collection of all object pools
-      Space& space_;                           //!< The space where the pools live
+      PoolMap pools_; //!< The collection of all object pools
+      Space& space_;  //!< The space where the pools live
 	};
 }
 
