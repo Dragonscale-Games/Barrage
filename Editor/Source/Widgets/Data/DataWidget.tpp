@@ -16,13 +16,39 @@
 #define DataWidget_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <stdexcept>
+
 namespace Barrage
 {
   template <typename T>
-  void DataWidget::Use(T& object, rttr::string_view name, bool treeNode)
+  T DataWidget::DataObject::GetValue()
+  {
+    if (!value_.is_type<T>())
+    {
+      throw std::runtime_error("RTTR variant did not match input type in DataObject::GetValue()");
+    }
+    
+    return value_.get_value<T>();
+  }
+
+  template <typename T>
+  void DataWidget::DataObject::SetValue(const T& newValue)
+  {
+    if (!value_.is_type<T>())
+    {
+      throw std::runtime_error("RTTR variant did not match input type in DataObject::SetValue()");
+    }
+
+    value_ = newValue;
+    valueWasSet_ = true;
+  }
+  
+  template <typename T>
+  void DataWidget::Use(T& object, const std::string& name, bool treeNode)
   {
     rttr::variant objectPointer = &object;
-    DataWidget::Use(objectPointer, name, treeNode);
+    DataObject dataObject(name, objectPointer);
+    DataWidget::Use(dataObject, treeNode);
   }
   
   template <typename T>

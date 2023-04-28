@@ -18,8 +18,6 @@
 #include <Commands/Command.hpp>
 #include <Objects/Archetypes/PoolArchetype/PoolArchetype.hpp>
 #include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>
-#include <objects/Archetypes/ArchetypeManager.hpp>
-#include <Objects/Pools/PoolInfo.hpp>
 
 namespace Barrage
 {
@@ -32,9 +30,6 @@ namespace Barrage
         \brief
           Constructs the DeletePool command.
 
-        \param spaceName
-          The name of the space to remove the pool from.
-
         \param sceneName
           The name of the scene to remove the pool from.
 
@@ -42,10 +37,7 @@ namespace Barrage
           The name of the pool to remove.
       */
       /**************************************************************/
-      DeletePool(
-        const std::string& spaceName,
-        const std::string& sceneName,
-        const std::string& poolName);
+      DeletePool(const std::string& sceneName, const std::string& poolName);
 
       ~DeletePool();
 
@@ -82,14 +74,11 @@ namespace Barrage
       void Redo() override;
 
     private:
-      std::string spaceName_;
       std::string sceneName_;
       std::string poolName_;
 
-      unsigned undoSceneIndex_;
-      PoolInfo undoScenePool_;
+      unsigned undoIndex_;
       PoolArchetype* undoPoolArchetype_;
-      ObjectArchetypeMap undoObjectArchetypes_;
   };
 }
 

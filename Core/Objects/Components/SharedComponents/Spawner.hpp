@@ -17,53 +17,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../BaseClasses/SharedComponent.hpp"
+#include "Objects/Spawning/SpawnInfo.hpp"
 
 #include <unordered_map>
 #include <string>
 
 namespace Barrage
 { 
-  //!< Holds all information needed to spawn an object from another object
-  struct SpawnType
-  {
-    std::string archetypeName_;           //!< Name of object archetype that will be spawned
-    std::string destinationPoolName_;     //!< Name of pool the new object will spawn in
-    std::vector<std::string> spawnFuncs_; //!< List of spawn functions to apply
-    std::vector<unsigned> sourceIndices_; //!< Indices of spawner objects
-
-    inline SpawnType() :
-      archetypeName_(),
-      destinationPoolName_(),
-      spawnFuncs_(),
-      sourceIndices_()
-    {
-      sourceIndices_.reserve(100);
-    }
-
-    inline SpawnType(const SpawnType& rhs) :
-      archetypeName_(rhs.archetypeName_),
-      destinationPoolName_(rhs.destinationPoolName_),
-      spawnFuncs_(rhs.spawnFuncs_),
-      sourceIndices_(rhs.sourceIndices_)
-    {
-      sourceIndices_.reserve(100);
-    }
-
-    inline SpawnType& operator=(const SpawnType& rhs)
-    {
-      archetypeName_ = rhs.archetypeName_;
-      destinationPoolName_ = rhs.destinationPoolName_;
-      spawnFuncs_ = rhs.spawnFuncs_;
-      sourceIndices_ = rhs.sourceIndices_;
-
-      sourceIndices_.reserve(100);
-
-      return *this;
-    }
-  };
-  
   typedef unsigned SpawnTypeId;
-  typedef std::unordered_map<SpawnTypeId, SpawnType> SpawnTypeMap;
+  typedef std::unordered_map<SpawnTypeId, SpawnInfo> SpawnTypeMap;
 
   //! Component that allows objects to spawn other objects
   class Spawner

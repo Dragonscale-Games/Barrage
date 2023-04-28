@@ -37,16 +37,21 @@ namespace Barrage
     }
   }
 
-  void SceneManager::AddScene(const std::string name, Scene* scene)
+  void SceneManager::AddScene(Scene* scene)
   {
-    if (scenes_.find(name) == scenes_.end())
+    if (scene == nullptr)
     {
-      scenes_[name] = scene;
+      return;
     }
-    else
+    
+    std::string sceneName = scene->GetName();
+
+    if (scenes_.count(sceneName))
     {
-      delete scene;
+      delete scenes_.at(sceneName);
     }
+
+    scenes_[sceneName] = scene;
   }
 
   Scene* SceneManager::GetScene(const std::string name)

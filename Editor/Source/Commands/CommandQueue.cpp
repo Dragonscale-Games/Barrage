@@ -65,6 +65,8 @@ namespace Barrage
     }
     else
     {
+      std::string logMessage = "Failed to execute \"" + currentCommand_->message_ + "\".";
+      LogWidget::AddEntry(logMessage.c_str());
       delete currentCommand_;
     }
 
@@ -94,6 +96,11 @@ namespace Barrage
   {
     if (undoStack_.empty())
     {
+      if (log)
+      {
+        LogWidget::AddEntry("Nothing to undo.");
+      }
+
       return;
     }
 
@@ -126,6 +133,11 @@ namespace Barrage
   {
     if (redoStack_.empty())
     {
+      if (log)
+      {
+        LogWidget::AddEntry("Nothing to redo.");
+      }
+
       return false;
     }
     

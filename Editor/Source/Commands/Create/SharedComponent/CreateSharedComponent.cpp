@@ -16,13 +16,13 @@
 namespace Barrage
 {
   CreateSharedComponent::CreateSharedComponent(
-    const std::string& spaceName,
+    const std::string& sceneName,
     const std::string& poolName,
-    const std::string_view& componentName) :
-    Command("Added " + std::string(componentName) + " to " + poolName + "."),
-    spaceName_(spaceName),
+    const std::string_view& sharedComponentName) :
+    Command("Added " + std::string(sharedComponentName) + " to " + poolName + "."),
+    sceneName_(sceneName),
     poolName_(poolName),
-    componentName_(componentName),
+    sharedComponentName_(sharedComponentName),
     redoComponent_(nullptr)
   {
   }
@@ -34,51 +34,46 @@ namespace Barrage
 
   bool CreateSharedComponent::Execute()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
+    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
-    if (space == nullptr)
+    if (scene == nullptr)
     {
       return false;
     }
 
-    ObjectManager& objectManager = space->GetObjectManager();
-    ComponentAllocator& componentAllocator = objectManager.GetComponentAllocator();
-    PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
+    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    if (poolArchetype == nullptr || poolArchetype->sharedComponents_.count(componentName_))
+    if (poolArchetype == nullptr || poolArchetype->HasSharedComponent(sharedComponentName_))
     {
       return false;
     }
 
-    SharedComponent* component = componentAllocator.AllocateSharedComponent(componentName_);
+    SharedComponent* sharedComponent = ComponentAllocator::AllocateSharedComponent(sharedComponentName_);
 
-    if (component == nullptr)
+    if (sharedComponent == nullptr)
     {
       return false;
     }
 
-    poolArchetype->sharedComponents_[componentName_] = component;
+    poolArchetype->AddSharedComponent(sharedComponentName_, sharedComponent);
 
     return true;
   }
 
   void CreateSharedComponent::Undo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
-    ObjectManager& objectManager = space->GetObjectManager();
-    PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    redoComponent_ = poolArchetype->sharedComponents_[componentName_];
-    poolArchetype->sharedComponents_.erase(componentName_);
+    redoComponent_ = poolArchetype->ExtractSharedComponent(sharedComponentName_);
   }
 
   void CreateSharedComponent::Redo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
-    ObjectManager& objectManager = space->GetObjectManager();
-    PoolArchetype* poolArchetype = objectManager.GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    poolArchetype->sharedComponents_[componentName_] = redoComponent_;
+    poolArchetype->AddSharedComponent(sharedComponentName_, redoComponent_);
     redoComponent_ = nullptr;
   }
 }

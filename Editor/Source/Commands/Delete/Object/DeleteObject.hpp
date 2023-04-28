@@ -29,9 +29,6 @@ namespace Barrage
         \brief
           Constructs the DeleteObject command.
 
-        \param spaceName
-          The name of the space to remove the object from.
-
         \param sceneName
           The name of the scene to remove the object from.
 
@@ -43,7 +40,6 @@ namespace Barrage
       */
       /**************************************************************/
       DeleteObject(
-        const std::string& spaceName, 
         const std::string& sceneName, 
         const std::string& poolName, 
         const std::string& objectName);
@@ -89,12 +85,11 @@ namespace Barrage
       void Redo() override;
 
     private:
-      std::string spaceName_;
       std::string sceneName_;
       std::string poolName_;
       std::string objectName_;
 
-      unsigned undoObjectIndex_;
+      unsigned undoIndex_;
       ObjectArchetype* undoArchetype_;
   };
 }

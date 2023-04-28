@@ -63,7 +63,7 @@ namespace Barrage
 
       if (ImGui::Button("Add", ImVec2(120.0f, 0.0f))) 
       { 
-        Editor::Instance->Command().Send(new CreateSharedComponent(editorData.selectedSpace_, editorData.selectedPool_, editorData.selectedSharedComponent_));
+        Editor::Instance->Command().Send(new CreateSharedComponent(editorData.selectedScene_, editorData.selectedPool_, editorData.selectedSharedComponent_));
         ImGui::CloseCurrentPopup(); 
       }
       ImGui::SameLine();
@@ -76,6 +76,11 @@ namespace Barrage
     else
     {
       ImGui::Text("No shared components registered.");
+
+      if (ImGui::Button("Cancel", ImVec2(120.0f, 0.0f)))
+      {
+        ImGui::CloseCurrentPopup();
+      }
     }
 
     ImGui::EndPopup();

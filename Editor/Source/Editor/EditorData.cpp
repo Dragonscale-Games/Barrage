@@ -20,6 +20,7 @@ namespace Barrage
     sceneIsDirty_(false),
     openSharedComponentModal_(false),
     openComponentArrayModal_(false),
+    nextScene_(nullptr),
     selectedSpace_(),
     selectedScene_(),
     selectedPool_(),

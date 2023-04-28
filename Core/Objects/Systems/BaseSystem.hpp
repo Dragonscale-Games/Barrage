@@ -32,7 +32,7 @@ namespace Barrage
   class System;
   
   typedef std::unordered_map<std::string_view, PoolType> PoolTypeMap;
-  typedef std::map<std::string_view, std::vector<Pool*>> OrderedPoolMap;
+  typedef std::map<std::string_view, std::vector<Pool*>> PoolGroupMap;
 
   typedef void (*PoolUpdateFunc)(Pool*);
   typedef void (*InteractionFunc)(Pool*, Pool*);
@@ -172,7 +172,7 @@ namespace Barrage
 
     protected:
       PoolTypeMap poolTypes_;        //!< Holds all pool types the system cares about
-      OrderedPoolMap pools_;         //!< Holds all subscribed pools in a specific order
+      PoolGroupMap poolGroups_;      //!< Holds all subscribed pools in a specific order
       SystemManager* systemManager_; //!< Holds all of a given Object Manager's systems (including this system)
 
     friend class SystemManager;

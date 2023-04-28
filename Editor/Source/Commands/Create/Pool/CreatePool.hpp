@@ -30,14 +30,11 @@ namespace Barrage
         \brief
           Constructs the CreatePool command.
 
-        \param spaceName
-          The name of the space to construct the pool in.
-
         \param sceneName
           The scene to place the pool in.
       */
       /**************************************************************/
-      CreatePool(const std::string& spaceName, const std::string& sceneName);
+      CreatePool(const std::string& sceneName);
 
       /**************************************************************/
       /*!
@@ -63,8 +60,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Removes the pool archetype from the scene and the archetype
-          manager.
+          Removes the pool archetype from the scene.
       */
       /**************************************************************/
       void Undo() override;
@@ -73,13 +69,12 @@ namespace Barrage
       /*!
         \brief
           Adds the previously removed pool archetype back to the 
-          archetype manager and the scene.
+          scene.
       */
       /**************************************************************/
       void Redo() override;
 
     private:
-      std::string spaceName_;
       std::string sceneName_;
       std::string poolName_;
 

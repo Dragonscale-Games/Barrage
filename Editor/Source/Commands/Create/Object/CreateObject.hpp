@@ -18,7 +18,7 @@
 
 #include <Commands/Command.hpp>
 #include <stack>
-#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>>
+#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>
 
 namespace Barrage
 {
@@ -31,9 +31,6 @@ namespace Barrage
         \brief
           Constructs the CreateObject command.
 
-        \param spaceName
-          The name of the space to place the object in.
-
         \param sceneName
           The name of the scene to place the object in.
 
@@ -41,7 +38,7 @@ namespace Barrage
           The name of the pool to create the object in.
       */
       /**************************************************************/
-      CreateObject(const std::string& spaceName, const std::string& sceneName, const std::string& poolName);
+      CreateObject(const std::string& sceneName, const std::string& poolName);
 
       /**************************************************************/
       /*!
@@ -84,7 +81,6 @@ namespace Barrage
       void Redo() override;
 
     private:
-      std::string spaceName_;
       std::string sceneName_;
       std::string poolName_;
       std::string objectName_;

@@ -6,42 +6,68 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   A scene is a list of pools and game objects to spawn in a space.
+   A scene is a list of pools (and their objects) to spawn in a space.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
-////////////////////////////////////////////////////////////////////////////////
+ ////////////////////////////////////////////////////////////////////////////////
 #ifndef Scene_BARRAGE_H
 #define Scene_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Objects/Pools/PoolInfo.hpp>
+#include <Objects/Archetypes/PoolArchetype/PoolArchetype.hpp>
+
 #include <unordered_map>
+#include <string>
+#include "Serialization/Serializer.hpp"
 
 namespace Barrage
-{  
-  //! contains all the information needed for a space to run a simulation
+{
+  //! A list of pools (and their objects) to spawn in a space
   class Scene
-	{
-    public:   
-      Scene();
+  {
+    public:
+      Scene(const std::string& name);
 
-      bool HasPool(const std::string& poolName);
+      Scene(const rapidjson::Value& data);
 
-      void AddStartingPool(const PoolInfo& startingPool, unsigned* index = nullptr);
+      Scene(const Scene& other);
 
-      PoolInfo* GetPoolInfo(const std::string& poolName);
+      Scene& operator=(const Scene& other);
 
-      void RemovePool(const std::string& poolName, unsigned* index = nullptr);
+      ~Scene();
 
-      bool HasObject(const std::string& poolName, const std::string& objectName);
+      bool HasPool(const std::string& name);
 
-      void AddObject(const std::string& poolName, const std::string& objectName, unsigned* index = nullptr);
+      const std::string& GetName();
 
-      void RemoveObject(const std::string& poolName, const std::string& objectName, unsigned* index = nullptr);
+      PoolArchetype* GetPoolArchetype(const std::string& name);
 
-      std::vector<PoolInfo> startingPools_; //!< Collection of pools and objects the scene starts with
-	};
+      const std::vector<PoolArchetype*>& GetPoolArchetypes();
+
+      void AddPoolArchetype(PoolArchetype* archetype, unsigned* index = nullptr);
+
+      PoolArchetype* ExtractPoolArchetype(const std::string& name, unsigned* index = nullptr);
+
+      rapidjson::Value Serialize(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+      static bool SaveToFile(Scene* scene, const std::string& path);
+
+      static Scene* LoadFromFile(const std::string& path);
+
+    private:
+      void CopyPoolArchetypes(const std::vector<PoolArchetype*>& other);
+
+      void DeletePoolArchetypes();
+
+      rapidjson::Value SerializePoolArchetypes(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+      void DeserializePoolArchetypes(const rapidjson::Value& data);
+
+    private:
+      std::string name_;
+      std::vector<PoolArchetype*> poolArchetypes_;
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

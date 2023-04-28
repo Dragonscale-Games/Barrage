@@ -111,6 +111,14 @@ namespace Barrage
       /**************************************************************/
       void HandleKeyboard();
 
+      /**************************************************************/
+      /*!
+        \brief
+          Changes the scene being worked on.
+      */
+      /**************************************************************/
+      void ChangeScene();
+
     private:
       Engine engine_;             //!< Barrage game engine
       GUI gui_;                   //!< Contains all widgets/user controls

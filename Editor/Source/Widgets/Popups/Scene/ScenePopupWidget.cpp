@@ -27,7 +27,7 @@ namespace Barrage
     if (ImGui::Selectable("Create pool"))
     {
       EditorData& editorData = Editor::Instance->Data();
-      Editor::Instance->Command().Send(new CreatePool(editorData.selectedSpace_, editorData.selectedScene_));
+      Editor::Instance->Command().Send(new CreatePool(editorData.selectedScene_));
     }
 
     ImGui::EndPopup();

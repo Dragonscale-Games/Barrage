@@ -69,15 +69,15 @@ add_library(BarrageCore STATIC
   "Objects/Systems/Creation/CreationSystem.cpp"       
   "Objects/Systems/Draw/DrawSystem.cpp"              
   
-  "Objects/SpawnFunctions/SpawnFunctionManager.cpp"  
-  "Objects/Archetypes/ArchetypeManager.cpp"       
+  "Objects/Spawning/SpawnFunctionManager.cpp"  
+         
   "Objects/Pools/PoolManager.cpp"                        
   "Objects/Systems/SystemManager.cpp"                   
   "Objects/Components/ComponentAllocator.cpp"              
   "Objects/Archetypes/ObjectArchetype/ObjectArchetype.cpp" 
   "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
   "Objects/Pools/PoolType.cpp"  
-  "Objects/Pools/PoolInfo.cpp" 
+   
 
   "Math/Curves.hpp" "Math/Curves.tpp"
 
@@ -107,7 +107,7 @@ add_library(BarrageCore STATIC
   "Utilities/RecursionTable.hpp" "Utilities/RecursionTable.tpp"
   "Utilities/Logger.hpp" "Utilities/Logger.cpp"
 
- "Serialization/DataWrapper.cpp")
+  "Objects/Spawning/SpawnInfo.cpp" )
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

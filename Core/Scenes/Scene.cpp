@@ -8,142 +8,243 @@
  * \brief
    A scene is a list of pools and game objects to spawn in a space.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 #include "Scene.hpp"
+#include <cstdio>
+#include "rapidjson/filewritestream.h"
+#include "rapidjson/filereadstream.h"
+#include <rapidjson/prettywriter.h>
 
 namespace Barrage
 {
-  Scene::Scene() :
-    startingPools_()
+  Scene::Scene(const std::string& name) :
+    name_(name),
+    poolArchetypes_()
   {
   }
 
-  bool Scene::HasPool(const std::string& poolName)
+  Scene::Scene(const rapidjson::Value& data) :
+    name_("Unknown Scene"),
+    poolArchetypes_()
   {
-    for (auto it = startingPools_.begin(); it != startingPools_.end(); ++it)
-    {
-      if (it->poolName_ == poolName)
-      {
-        return true;
-      }
-    }
-    
-    return false;
-  }
-
-  void Scene::AddStartingPool(const PoolInfo& startingPool, unsigned* index)
-  {
-    if (HasPool(startingPool.poolName_))
+    if (!data.IsObject())
     {
       return;
     }
-
-    if (index)
+    
+    if (data.HasMember("Name") && data["Name"].IsString())
     {
-      startingPools_.insert(startingPools_.begin() + *index, startingPool);
+      name_ = data["Name"].GetString();
     }
-    else
+    
+    if (data.HasMember("Pools") && data["Pools"].IsArray())
     {
-      startingPools_.push_back(startingPool);
+      DeserializePoolArchetypes(data["Pools"]);
     }
   }
 
-  PoolInfo* Scene::GetPoolInfo(const std::string& poolName)
+  Scene::Scene(const Scene& other) :
+    name_(other.name_),
+    poolArchetypes_()
   {
-    for (auto it = startingPools_.begin(); it != startingPools_.end(); ++it)
+    CopyPoolArchetypes(other.poolArchetypes_);
+  }
+
+  Scene& Scene::operator=(const Scene& other)
+  {
+    name_ = other.name_;
+    CopyPoolArchetypes(other.poolArchetypes_);
+
+    return *this;
+  }
+
+  Scene::~Scene()
+  {
+    DeletePoolArchetypes();
+  }
+
+  bool Scene::HasPool(const std::string& name)
+  {
+    return GetPoolArchetype(name) != nullptr;
+  }
+
+  const std::string& Scene::GetName()
+  {
+    return name_;
+  }
+
+  PoolArchetype* Scene::GetPoolArchetype(const std::string& name)
+  {
+    for (auto it = poolArchetypes_.begin(); it != poolArchetypes_.end(); ++it)
     {
-      if (it->poolName_ == poolName)
+      PoolArchetype* archetype = *it;
+
+      if (archetype->GetName() == name)
       {
-        return &(*it);
+        return archetype;
       }
     }
 
     return nullptr;
   }
 
-  void Scene::RemovePool(const std::string& poolName, unsigned* index)
+  const std::vector<PoolArchetype*>& Scene::GetPoolArchetypes()
   {
-    for (auto it = startingPools_.begin(); it != startingPools_.end(); ++it)
-    {
-      if (it->poolName_ == poolName)
-      {
-        if (index)
-        {
-          *index = it - startingPools_.begin();
-        }
-        
-        startingPools_.erase(it);
-        return;
-      }
-    }
+    return poolArchetypes_;
   }
 
-  bool Scene::HasObject(const std::string& poolName, const std::string& objectName)
+  void Scene::AddPoolArchetype(PoolArchetype* archetype, unsigned* index)
   {
-    for (auto it = startingPools_.begin(); it != startingPools_.end(); ++it)
+    if (archetype == nullptr || HasPool(archetype->GetName()))
     {
-      PoolInfo& pool = *it;
-      
-      if (pool.poolName_ == poolName)
-      {
-        for (auto jt = pool.objects_.begin(); jt != pool.objects_.end(); ++jt)
-        {
-          if (*jt == objectName)
-          {
-            return true;
-          }
-        }
-      }
-    }
-
-    return false;
-  }
-
-  void Scene::AddObject(const std::string& poolName, const std::string& objectName, unsigned* index)
-  {    
-    if (HasObject(poolName, objectName))
-    {
+      delete archetype;
       return;
     }
     
-    for (auto it = startingPools_.begin(); it != startingPools_.end(); ++it)
+    if (index && poolArchetypes_.size() > *index)
     {
-      if (it->poolName_ == poolName)
-      {
-        if (index)
-        {
-          it->objects_.insert(it->objects_.begin() + *index, objectName);
-        }
-        else
-        {
-          it->objects_.push_back(objectName);
-        }
-      }
+      poolArchetypes_.insert(poolArchetypes_.begin() + *index, archetype);
+    }
+    else
+    {
+      poolArchetypes_.push_back(archetype);
     }
   }
 
-  void Scene::RemoveObject(const std::string& poolName, const std::string& objectName, unsigned* index)
+  PoolArchetype* Scene::ExtractPoolArchetype(const std::string& name, unsigned* index)
   {
-    for (auto it = startingPools_.begin(); it != startingPools_.end(); ++it)
+    for (auto it = poolArchetypes_.begin(); it != poolArchetypes_.end(); ++it)
     {
-      PoolInfo& pool = *it;
+      PoolArchetype* archetype = *it;
 
-      if (pool.poolName_ == poolName)
+      if (archetype->GetName() == name)
       {
-        for (auto jt = pool.objects_.begin(); jt != pool.objects_.end(); ++jt)
+        if (index)
         {
-          if (*jt == objectName)
-          {
-            if (index)
-            {
-              *index = jt - pool.objects_.begin();
-            }
-            
-            pool.objects_.erase(jt);
-            return;
-          }
+          *index = static_cast<unsigned>(it - poolArchetypes_.begin());
         }
+
+        poolArchetypes_.erase(it);
+
+        return archetype;
+      }
+    }
+    
+    return nullptr;
+  }
+
+  rapidjson::Value Scene::Serialize(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
+  {
+    rapidjson::Value sceneObject;
+    sceneObject.SetObject();
+
+    rapidjson::Value nameValue(name_.c_str(), static_cast<rapidjson::SizeType>(name_.size()), allocator);
+    sceneObject.AddMember("Name", nameValue, allocator);
+
+    rapidjson::Value poolArchetypesObject = SerializePoolArchetypes(allocator);
+    sceneObject.AddMember("Pools", poolArchetypesObject, allocator);
+
+    return sceneObject;
+  }
+
+  bool Scene::SaveToFile(Scene* scene, const std::string& path)
+  {
+    FILE* outFile = nullptr;
+    fopen_s(&outFile, path.c_str(), "wb");
+
+    if (outFile == nullptr)
+    {
+      return false;
+    }
+
+    rapidjson::Document d;
+    rapidjson::Value sceneObject = scene->Serialize(d.GetAllocator());
+
+    char* writeBuffer = new char[65536];
+    rapidjson::FileWriteStream outStream(outFile, writeBuffer, sizeof(writeBuffer));
+
+    rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(outStream);
+    sceneObject.Accept(writer);
+
+    delete[] writeBuffer;
+    fclose(outFile);
+
+    return true;
+  }
+
+  Scene* Scene::LoadFromFile(const std::string& path)
+  {
+    FILE* inFile = nullptr;
+    fopen_s(&inFile, path.c_str(), "rb");
+
+    if (inFile == nullptr)
+    {
+      return nullptr;
+    }
+
+    char* readBuffer = new char[65536];
+    rapidjson::FileReadStream inStream(inFile, readBuffer, sizeof(readBuffer));
+
+    rapidjson::Document document;
+    rapidjson::ParseResult success = document.ParseStream(inStream);
+
+    delete[] readBuffer;
+    fclose(inFile);
+
+    if (!success)
+    {
+      return nullptr;
+    }
+
+    Scene* scene = new Scene(document);
+
+    return scene;
+  }
+
+  void Scene::CopyPoolArchetypes(const std::vector<PoolArchetype*>& other)
+  {
+    DeletePoolArchetypes();
+
+    for (auto it = other.begin(); it != other.end(); ++it)
+    {
+      poolArchetypes_.push_back(new PoolArchetype(**it));
+    }
+  }
+
+  void Scene::DeletePoolArchetypes()
+  {
+    for (auto it = poolArchetypes_.begin(); it != poolArchetypes_.end(); ++it)
+    {
+      delete* it;
+    }
+
+    poolArchetypes_.clear();
+  }
+
+  rapidjson::Value Scene::SerializePoolArchetypes(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
+  {
+    rapidjson::Value poolArchetypeArray;
+    poolArchetypeArray.SetArray();
+
+    for (auto it = poolArchetypes_.begin(); it != poolArchetypes_.end(); ++it)
+    {
+      PoolArchetype* archetype = *it;
+      rapidjson::Value archetypeObject = archetype->Serialize(allocator);
+      poolArchetypeArray.PushBack(archetypeObject, allocator);
+    }
+
+    return poolArchetypeArray;
+  }
+
+  void Scene::DeserializePoolArchetypes(const rapidjson::Value& data)
+  {
+    for (auto it = data.Begin(); it != data.End(); ++it)
+    {
+      if (it->IsObject())
+      {
+        PoolArchetype* poolArchetype = new PoolArchetype(*it);
+        AddPoolArchetype(poolArchetype);
       }
     }
   }

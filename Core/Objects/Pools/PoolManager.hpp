@@ -37,7 +37,7 @@ namespace Barrage
           Default constructor.
       */
       /**************************************************************/
-      PoolManager(ComponentAllocator& componentAllocator, Space& space);
+      PoolManager(Space& space);
 
       /**************************************************************/
       /*!
@@ -66,7 +66,7 @@ namespace Barrage
           nullptr if creation fails.
       */
       /**************************************************************/
-      Pool* CreatePool(const std::string& name, const PoolArchetype& archetype);
+      Pool* CreatePool(const PoolArchetype& archetype);
 
       /**************************************************************/
       /*!
@@ -129,9 +129,8 @@ namespace Barrage
       Pool* CreatePoolInternal(const PoolArchetype& archetype);
 
     private:
-      PoolMap pools_;                          //!< The collection of all object pools
-      ComponentAllocator& componentAllocator_; //!< Component allocator the pool manager will use
-      Space& space_;                           //!< The space where the pools live
+      PoolMap pools_; //!< The collection of all object pools
+      Space& space_;  //!< The space where the pools live
 	};
 }
 

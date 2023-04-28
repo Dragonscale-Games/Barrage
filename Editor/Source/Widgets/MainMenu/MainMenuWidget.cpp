@@ -23,6 +23,18 @@ namespace Barrage
 
     if (ImGui::BeginMenu("File"))
     {
+      if (ImGui::MenuItem("Save scene"))
+      {
+        SaveScene();
+      }
+      
+      if (ImGui::MenuItem("Load scene"))
+      {
+        LoadScene();
+      }
+
+      ImGui::Separator();
+
       if (ImGui::MenuItem("Exit"))
       {
         Editor::Instance->Data().isRunning_ = false;
@@ -74,9 +86,8 @@ namespace Barrage
     {
       if (ImGui::MenuItem("Pool"))
       {
-        std::string& space = Editor::Instance->Data().selectedSpace_;
         std::string& scene = Editor::Instance->Data().selectedScene_;
-        Editor::Instance->Command().Send(new CreatePool(space, scene));
+        Editor::Instance->Command().Send(new CreatePool(scene));
       }
 
       if (Editor::Instance->Data().selectedPool_.empty())
@@ -86,10 +97,9 @@ namespace Barrage
 
       if (ImGui::MenuItem("Object"))
       {
-        std::string& space = Editor::Instance->Data().selectedSpace_;
         std::string& scene = Editor::Instance->Data().selectedScene_;
         std::string& pool = Editor::Instance->Data().selectedPool_;
-        Editor::Instance->Command().Send(new CreateObject(space, scene, pool));
+        Editor::Instance->Command().Send(new CreateObject(scene, pool));
       }
 
       if (Editor::Instance->Data().selectedPool_.empty())
@@ -101,5 +111,55 @@ namespace Barrage
     }
 
     ImGui::EndMainMenuBar();
+  }
+
+  void MainMenuWidget::SaveScene()
+  {
+    EditorData& editorData = Editor::Instance->Data();
+
+    if (editorData.selectedScene_.empty())
+    {
+      return;
+    }
+
+    Scene* scene = Engine::Instance->Scenes().GetScene(editorData.selectedScene_);
+
+    if (scene == nullptr)
+    {
+      return;
+    }
+
+    std::string path = editorData.selectedScene_ + ".scene";
+    if (Scene::SaveToFile(scene, path))
+    {
+      LogWidget::AddEntry("Saved scene \"" + editorData.selectedScene_ + "\" to \"" + path + "\".");
+    }
+    else
+    {
+      LogWidget::AddEntry("Could not save scene \"" + editorData.selectedScene_ + "\".");
+    }
+  }
+
+  void MainMenuWidget::LoadScene()
+  {
+    EditorData& editorData = Editor::Instance->Data();
+
+    if (editorData.selectedScene_.empty())
+    {
+      return;
+    }
+
+    std::string path = editorData.selectedScene_ + ".scene";
+
+    Scene* scene = Scene::LoadFromFile(path);
+    
+    if (scene == nullptr)
+    {
+      LogWidget::AddEntry("Could not load scene \"" + editorData.selectedScene_ + "\".");
+      return;
+    }
+    
+    LogWidget::AddEntry("Loaded scene \"" + editorData.selectedScene_ + "\" from \"" + path + "\".");
+    editorData.nextScene_ = scene;
   }
 }

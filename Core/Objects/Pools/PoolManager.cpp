@@ -14,12 +14,12 @@
 #include "stdafx.h"
 #include "PoolManager.hpp"
 #include "Spaces/Space.hpp"
+#include "Objects/Components/ComponentAllocator.hpp"
 
 namespace Barrage
 {
-  PoolManager::PoolManager(ComponentAllocator& componentAllocator, Space& space) :
+  PoolManager::PoolManager(Space& space) :
     pools_(),
-    componentAllocator_(componentAllocator),
     space_(space)
   {
   }
@@ -32,12 +32,14 @@ namespace Barrage
     }
   }
 
-  Pool* PoolManager::CreatePool(const std::string& name, const PoolArchetype& archetype)
+  Pool* PoolManager::CreatePool(const PoolArchetype& archetype)
   {
-    if (pools_.find(name) == pools_.end())
+    const std::string& archetypeName = archetype.GetName();
+    
+    if (pools_.find(archetypeName) == pools_.end())
     {
       Pool* new_pool = CreatePoolInternal(archetype);
-      pools_[name] = new_pool;
+      pools_[archetypeName] = new_pool;
 
       return new_pool;
     }
@@ -82,34 +84,41 @@ namespace Barrage
 
   Pool* PoolManager::CreatePoolInternal(const PoolArchetype& archetype)
   {
-    Pool* new_pool = new Pool(archetype.capacity_, space_);
+    Pool* new_pool = new Pool(archetype.GetName(), archetype.GetCapacity(), space_);
 
     // add tags
-    for (const std::string_view& tag : archetype.tags_)
+    const std::vector<std::string_view> tags = archetype.GetTags();
+    for (const std::string_view& tag : tags)
     {
-      new_pool->tags_.insert(tag);
+      new_pool->AddTag(tag);
     }
 
     // allocate component arrays
-    for (const std::string_view& component_array_name : archetype.componentArrayNames_)
+    const std::vector<std::string_view> componentArrayNames = archetype.GetComponentArrayNames();
+    for (const std::string_view& component_array_name : componentArrayNames)
     {
-      ComponentArray* component_array = componentAllocator_.AllocateComponentArray(component_array_name, archetype.capacity_);
-
-      if (component_array)
-      {
-        new_pool->componentArrays_[component_array_name] = component_array;
-      }
+      new_pool->AddComponentArray(component_array_name);
     }
 
     // allocate and initialize shared components
-    for (auto it = archetype.sharedComponents_.begin(); it != archetype.sharedComponents_.end(); ++it)
+    const SharedComponentMap& sharedComponents = archetype.GetSharedComponents();
+    for (auto it = sharedComponents.begin(); it != sharedComponents.end(); ++it)
     {
-      SharedComponent* shared_component = componentAllocator_.AllocateSharedComponent(it->first, it->second);
+      new_pool->AddSharedComponent(it->first, it->second);
+    }
+    
+    // copy over spawn archetypes
+    const std::vector<ObjectArchetype*>& spawnArchetypes = archetype.GetSpawnArchetypes();
+    for (auto it = spawnArchetypes.begin(); it != spawnArchetypes.end(); ++it)
+    {
+      new_pool->AddSpawnArchetype(**it);
+    }
 
-      if (shared_component)
-      {
-        new_pool->sharedComponents_[it->first] = shared_component;
-      }
+    // create starting objects
+    const std::vector<ObjectArchetype*>& startingObjects = archetype.GetStartingObjects();
+    for (auto it = startingObjects.begin(); it != startingObjects.end(); ++it)
+    {
+      new_pool->CreateObject(**it);
     }
 
     return new_pool;

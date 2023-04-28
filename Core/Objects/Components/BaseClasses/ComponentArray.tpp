@@ -26,7 +26,35 @@ namespace Barrage
   {
     data_ = new T[capacity];
   }
-  
+  template <typename T>
+  ComponentArrayT<T>::ComponentArrayT(const ComponentArrayT<T>& other) :
+    data_(nullptr),
+    capacity_(other.capacity_)
+  {
+    data_ = new T[capacity_];
+
+    for (unsigned i = 0; i < capacity_; ++i)
+    {
+      data_[i] = other.data_[i];
+    }
+  }
+
+  template <typename T>
+  ComponentArrayT<T>& ComponentArrayT<T>::operator=(const ComponentArrayT<T>& other)
+  {
+    capacity_ = other.capacity_;
+
+    delete[] data_;
+    data_ = new T[capacity_];
+
+    for (unsigned i = 0; i < capacity_; ++i)
+    {
+      data_[i] = other.data_[i];
+    }
+
+    return *this;
+  }
+
   template <typename T>
   ComponentArrayT<T>::~ComponentArrayT()
   {

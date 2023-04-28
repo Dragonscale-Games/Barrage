@@ -26,6 +26,7 @@
 
 #include <unordered_set>
 #include <chrono>
+#include <iostream>
 
 namespace Barrage
 {
@@ -114,33 +115,42 @@ namespace Barrage
     TimePoint beginT;
     TimePoint endT;
 
-    //if (data_.gamePlaying_)
+    if (data_.gamePlaying_)
     {
       for (unsigned i = 0; i < numTicks; ++i)
       {
-        beginT = std::chrono::high_resolution_clock::now();
+        //beginT = std::chrono::high_resolution_clock::now();
         engine_.Spaces().Update();
-        endT = std::chrono::high_resolution_clock::now();
+        //endT = std::chrono::high_resolution_clock::now();
       }
     }
-    
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
 
     commandQueue_.Process();
 
-    if (data_.sceneIsDirty_)
+    if (data_.nextScene_)
     {
-      engine_.Spaces().GetSpace(data_.selectedSpace_)->SetScene(data_.selectedScene_);
-      data_.sceneIsDirty_ = false;
+      ChangeScene();
     }
 
+    if (data_.sceneIsDirty_)
+    {
+      //beginT = std::chrono::high_resolution_clock::now();
+      engine_.Spaces().GetSpace(data_.selectedSpace_)->SetScene(data_.selectedScene_);
+      data_.sceneIsDirty_ = false;
+      //endT = std::chrono::high_resolution_clock::now();
+      //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
+      //std::cout << "Scene set time: " << duration.count() << " microseconds" << std::endl;
+    }
+
+    //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
+
     gui_.StartWidgets();
-    ImGui::Begin("Time Test");
+    /*ImGui::Begin("Time Test");
     ImGui::Text("Frame time (microseconds): ");
     ImGui::SameLine();
     ImGui::Text(numTicks ? std::to_string(duration.count()).c_str() : "0");
-    ImGui::End();
-    //UseWidgets();
+    ImGui::End();*/
+    UseWidgets();
     gui_.EndWidgets();
 
     HandleKeyboard();
@@ -196,20 +206,20 @@ namespace Barrage
 
   void Editor::HandleKeyboard()
   {
-    long long bigDelayMilliseconds = 500000;
-    long long smallDelayMilliseconds = 100000;
+    long long bigDelayMicroseconds = 500000;
+    long long smallDelayMicroseconds = 100000;
     
     if (engine_.Input().KeyIsDown(KEY_CTRL_LEFT) && engine_.Input().KeyIsDown(KEY_Z))
     {
       if (engine_.Input().KeyTriggered(KEY_Z))
       {
         commandQueue_.Undo();
-        repeatTimer_ = bigDelayMilliseconds;
+        repeatTimer_ = bigDelayMicroseconds;
       }
       else if (repeatTimer_ <= 0)
       {
         commandQueue_.Undo();
-        repeatTimer_ = smallDelayMilliseconds;
+        repeatTimer_ = smallDelayMicroseconds;
       }
       else
       {
@@ -221,17 +231,32 @@ namespace Barrage
       if (engine_.Input().KeyTriggered(KEY_Y))
       {
         commandQueue_.Redo();
-        repeatTimer_ = bigDelayMilliseconds;
+        repeatTimer_ = bigDelayMicroseconds;
       }
       else if (repeatTimer_ <= 0)
       {
         commandQueue_.Redo();
-        repeatTimer_ = smallDelayMilliseconds;
+        repeatTimer_ = smallDelayMicroseconds;
       }
       else
       {
         repeatTimer_ -= engine_.Frames().DT();
       }
     }
+  }
+
+  void Editor::ChangeScene()
+  {
+    Scene* scene = data_.nextScene_;
+    
+    if (scene == nullptr)
+    {
+      return;
+    }
+
+    engine_.Scenes().AddScene(scene);
+    data_.selectedScene_ = scene->GetName();
+    data_.nextScene_ = nullptr;
+    data_.sceneIsDirty_ = true;
   }
 }

@@ -15,9 +15,8 @@
 
 namespace Barrage
 {
-  CreatePool::CreatePool(const std::string& spaceName, const std::string& sceneName) :
+  CreatePool::CreatePool(const std::string& sceneName) :
     Command("New pool created."),
-    spaceName_(spaceName),
     sceneName_(sceneName),
     poolName_(),
     redoArchetype_(nullptr)
@@ -31,15 +30,12 @@ namespace Barrage
 
   bool CreatePool::Execute()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
 
-    if (space == nullptr || scene == nullptr)
+    if (scene == nullptr)
     {
       return false;
     }
-
-    ObjectManager& objectManager = space->GetObjectManager();
 
     unsigned counter = 0;
 
@@ -54,33 +50,18 @@ namespace Barrage
 
       counter++;
 
-    } while (objectManager.GetPoolArchetype(poolName_));
+    } while (scene->GetPoolArchetype(poolName_));
 
-    if (scene->HasPool(poolName_))
-    {
-      return false;
-    }
-
-    objectManager.CreatePoolArchetype(poolName_);
-
-    if (objectManager.GetPoolArchetype(poolName_) == nullptr)
-    {
-      return false;
-    }
-
-    scene->AddStartingPool(poolName_);
+    scene->AddPoolArchetype(new PoolArchetype(poolName_, 1));
 
     return true;
   }
 
   void CreatePool::Undo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    ObjectManager& objectManager = space->GetObjectManager();
 
-    redoArchetype_ = objectManager.ExtractPoolArchetype(poolName_);
-    scene->RemovePool(poolName_);
+    redoArchetype_ = scene->ExtractPoolArchetype(poolName_);
 
     if (Editor::Instance->Data().selectedPool_ == poolName_)
     {
@@ -90,12 +71,9 @@ namespace Barrage
 
   void CreatePool::Redo()
   {
-    Space* space = Engine::Instance->Spaces().GetSpace(spaceName_);
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    ObjectManager& objectManager = space->GetObjectManager();
 
-    objectManager.AddPoolArchetype(poolName_, redoArchetype_);
+    scene->AddPoolArchetype(redoArchetype_);
     redoArchetype_ = nullptr;
-    scene->AddStartingPool(poolName_);
   }
 }

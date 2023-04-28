@@ -80,10 +80,10 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the name of the command.
+          Gets the command's execution message.
 
         \return
-          Returns the name of the command.
+          Returns the command's execution message.
       */
       /**************************************************************/
       std::string GetMessage();
@@ -118,15 +118,15 @@ namespace Barrage
           Undo() function. You can assume it will only be called
           directly after Undo() is called. 
 
-          This function will often look similar to Execute(), and
+          This function will often look similar to Execute(), and it
           may be the same in some cases.
       */
       /**************************************************************/
       virtual void Redo() = 0;
 
     protected:
-      std::string message_;
-      bool chains_;
+      std::string message_; //!< message shown in the log window when the command executes
+      bool chains_;         //!< tracks whether the command "chains" during an undo (see constructor for explanation)
 
     friend class CommandQueue;
   };

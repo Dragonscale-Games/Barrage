@@ -36,14 +36,8 @@ namespace Barrage
   class SpawnFunctionManager
 	{
     public:   
-      /**************************************************************/
-      /*!
-        \brief
-          Default constructor.
-      */
-      /**************************************************************/
-      SpawnFunctionManager();
-
+      SpawnFunctionManager() = delete;
+      
       /**************************************************************/
       /*!
         \brief
@@ -56,7 +50,7 @@ namespace Barrage
           The spawn function to add.
       */
       /**************************************************************/
-      void RegisterSpawnFunction(const std::string_view& name, SpawnFunction spawnFunction);
+      static void RegisterSpawnFunction(const std::string_view& name, SpawnFunction spawnFunction);
 
       /**************************************************************/
       /*!
@@ -71,7 +65,7 @@ namespace Barrage
           if it doesn't exist.
       */
       /**************************************************************/
-      SpawnFunction GetSpawnFunction(const std::string_view& name);
+      static SpawnFunction GetSpawnFunction(const std::string_view& name);
 
       /**************************************************************/
       /*!
@@ -82,11 +76,11 @@ namespace Barrage
           Returns the list of all registered initializers.
       */
       /**************************************************************/
-      std::vector<std::string_view> GetSpawnFunctionNames();
+      static std::vector<std::string_view> GetSpawnFunctionNames();
 
     private:
-      SpawnFunctionMap spawnFunctions_;                  //!< The collection of registered spawn functions
-      std::vector<std::string_view> spawnFunctionNames_; //!< The names of all registered spawn functions
+      static SpawnFunctionMap spawnFunctions_;                  //!< The collection of registered spawn functions
+      static std::vector<std::string_view> spawnFunctionNames_; //!< The names of all registered spawn functions
 	};
 }
 

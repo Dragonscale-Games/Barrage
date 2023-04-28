@@ -56,7 +56,7 @@ namespace Demo
 
     BoundaryBox& boundary_box = pool->GetSharedComponent<BoundaryBox>("BoundaryBox")->Data();
 
-    unsigned num_bullets = pool->numActiveObjects_;
+    unsigned num_bullets = pool->GetActiveObjectCount();
 
     for (unsigned i = 0; i < num_bullets; ++i)
     {
@@ -81,8 +81,8 @@ namespace Demo
 
     float collision_radius = player_collider.radius_ + bullet_collider.radius_;
 
-    unsigned num_players = player_pool->numActiveObjects_;
-    unsigned num_bullets = bullet_pool->numActiveObjects_;
+    unsigned num_players = player_pool->GetActiveObjectCount();
+    unsigned num_bullets = bullet_pool->GetActiveObjectCount();
 
     for (unsigned i = 0; i < num_players; ++i)
     {
