@@ -33,6 +33,8 @@
 #include <rttr/variant.h>
 #include <rapidjson/document.h>
 
+#include "Utilities/RuntimeError.hpp"
+
 namespace
 {
   bool IsRapidJsonPrimitive(const rttr::type& type)
@@ -263,15 +265,14 @@ namespace Barrage
     return value;
   }
 
-  void Deserialize(rttr::variant& object, const rapidjson::Value& data, rttr::type type)
+  void Deserialize(rttr::variant& object, const rapidjson::Value& data, rttr::type type) noexcept(false)
   {
     // The object being serialized as an unwrapped object.
     rttr::variant unwrappedObject = object;
     
     if (!type)
     {
-      //BREAKPOINT();
-      return;
+      throw RuntimeError("Failed to interpret type of deserialized object");
     }
 
     // We care about the contents of all wrapper types.
@@ -341,8 +342,10 @@ namespace Barrage
           Deserialize(value, valueContents, valueType);
 
           auto success = objectAsMap.insert(key, value);
-          (void)success;
-          assert(success.second);
+          if (!success.second)
+          {
+            throw RuntimeError("Failed to insert member into map during deserialization");
+          }
         }
       }
     }
@@ -374,15 +377,18 @@ namespace Barrage
 
           Deserialize(propertyVariant, propertyData, propertyType);
           bool success = property.set_value(object, propertyVariant);
-          assert(success);
-          UNREFERENCED(success);
+          
+          if (!success)
+          {
+            throw RuntimeError("Failed to read class property during deserialization");
+          }
         }
       }
     }
     // Uhhhh... we shouldn't be here.
     else
     {
-      BREAKPOINT();
+      throw RuntimeError("Failed to interpret type of deserialized object");
     }
   }
 }

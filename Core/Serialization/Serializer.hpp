@@ -51,7 +51,7 @@ namespace Barrage
       The object representing the JSON data being read.
   */
   /*************************************************************************/
-  void Deserialize(rttr::variant& object, const rapidjson::Value& data, rttr::type type);
+  void Deserialize(rttr::variant& object, const rapidjson::Value& data, rttr::type type) noexcept(false);
   /*************************************************************************/
   /*!
     \brief
@@ -66,11 +66,11 @@ namespace Barrage
   */
   /*************************************************************************/
   template <class T>
-  void Deserialize(T& object, const rapidjson::Value& data);
+  void Deserialize(T& object, const rapidjson::Value& data) noexcept(false);
   /*************************************************************************/
   /*************************************************************************/
   template <class T>
-  void Deserialize(T& object, const rapidjson::Value& data, const rttr::type& type);
+  void Deserialize(T& object, const rapidjson::Value& data, const rttr::type& type) noexcept(false);
 }
 
 #include "Serializer.tpp"

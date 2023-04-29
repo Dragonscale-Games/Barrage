@@ -236,10 +236,7 @@ namespace Barrage
     CHECK_GL( glEnableVertexAttribArray(translationIndex) );
     CHECK_GL( glEnableVertexAttribArray(scaleIndex) );
     CHECK_GL( glEnableVertexAttribArray(rotationIndex) );
-    CHECK_GL( glEnableVertexAttribArray(uvMapIndex) );
-
-    int maxAttributes;
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxAttributes);
+    CHECK_GL( glEnableVertexAttribArray(texCoordIndex) );
 
     // Unbind the instanced mesh.
     CHECK_GL( glBindVertexArray(0) );
