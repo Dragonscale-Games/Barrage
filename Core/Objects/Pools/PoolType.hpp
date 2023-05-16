@@ -44,19 +44,32 @@ namespace Barrage
           The tag to add.
       */
       /**************************************************************/
-      void AddTag(const std::string& tag);
+      void AddTag(const std::string_view& tag);
 
       /**************************************************************/
       /*!
         \brief
-          Adds the name of a component to the pool type.
+          Adds a component array to the pool type.
 
         \param name
-          The component name to add.
+          The name of the C++ class used in the component array. This
+          should match the name passed to RegisterComponentArray<>();
       */
       /**************************************************************/
-      void AddComponentName(const std::string& name);
+      void AddComponentArray(const std::string_view& name);
       
+      /**************************************************************/
+      /*!
+        \brief
+          Adds a shared component to the pool type.
+
+        \param name
+          The name of the C++ class used in the shared component. This
+          should match the name passed to RegisterSharedComponent<>();
+      */
+      /**************************************************************/
+      void AddSharedComponent(const std::string_view& name);
+
       /**************************************************************/
       /*!
         \brief
@@ -74,8 +87,9 @@ namespace Barrage
       bool MatchesPool(Pool* pool);
 
     private:
-      std::vector<std::string> tags_;           //!< The tags of the pool type
-      std::vector<std::string> componentNames_; //!< The component names of the pool type
+      std::vector<std::string_view> tags_;                 //!< The tags of the pool type
+      std::vector<std::string_view> componentArrayNames_;  //!< The component arrays of the pool type
+      std::vector<std::string_view> sharedComponentNames_; //!< The shared components of the pool type
 	};
 }
 

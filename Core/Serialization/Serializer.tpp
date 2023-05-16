@@ -18,7 +18,7 @@
 namespace Barrage
 {
   template <class T>
-  void Deserialize(T& object, const rapidjson::Value& data)
+  void Deserialize(T& object, const rapidjson::Value& data) noexcept(false)
   {
     rttr::variant objectVariant(object);
     Deserialize(objectVariant, data, objectVariant.get_type());
@@ -27,7 +27,7 @@ namespace Barrage
   }
 
   template <class T>
-  void Deserialize(T& object, const rapidjson::Value& data, const rttr::type& type)
+  void Deserialize(T& object, const rapidjson::Value& data, const rttr::type& type) noexcept(false)
   {
     rttr::variant objectVariant(object);
     if (objectVariant.can_convert(type))

@@ -1,7 +1,7 @@
 /* ========================================================================= */
 /*!
  *
- * \file            Serializer.tpp
+ * \file            Serializer.cpp
  * \author          David Wong Cascante
  * \par             dragonscale.games.llc\@gmail.com
 
@@ -20,16 +20,20 @@
 //  ===========================================================================
 
 #include <stdafx.h>
+#include <string>
 #include "Serializer.hpp"
 
 #include <iostream>
 #include <unordered_map>
 #include <string_view>
+#include <string>
 
 #include <rttr/type.h>
 #include <rttr/property.h>
 #include <rttr/variant.h>
 #include <rapidjson/document.h>
+
+#include "Utilities/RuntimeError.hpp"
 
 namespace
 {
@@ -261,15 +265,14 @@ namespace Barrage
     return value;
   }
 
-  void Deserialize(rttr::variant& object, const rapidjson::Value& data, rttr::type type)
+  void Deserialize(rttr::variant& object, const rapidjson::Value& data, rttr::type type) noexcept(false)
   {
     // The object being serialized as an unwrapped object.
     rttr::variant unwrappedObject = object;
-
+    
     if (!type)
     {
-      BREAKPOINT();
-      return;
+      throw RuntimeError("Failed to interpret type of deserialized object");
     }
 
     // We care about the contents of all wrapper types.
@@ -339,8 +342,10 @@ namespace Barrage
           Deserialize(value, valueContents, valueType);
 
           auto success = objectAsMap.insert(key, value);
-          (void)success;
-          assert(success.second);
+          if (!success.second)
+          {
+            throw RuntimeError("Failed to insert member into map during deserialization");
+          }
         }
       }
     }
@@ -354,7 +359,7 @@ namespace Barrage
     {
       // Go through all properties and attempt to serialize them.
       rttr::array_range<rttr::property> properties = type.get_properties();
-      assert(properties.size() > 0);
+      //assert(properties.size() > 0);
       for (auto property : properties)
       {
         using rapidjson::CrtAllocator;
@@ -372,15 +377,18 @@ namespace Barrage
 
           Deserialize(propertyVariant, propertyData, propertyType);
           bool success = property.set_value(object, propertyVariant);
-          assert(success);
-          UNREFERENCED(success);
+          
+          if (!success)
+          {
+            throw RuntimeError("Failed to read class property during deserialization");
+          }
         }
       }
     }
     // Uhhhh... we shouldn't be here.
     else
     {
-      BREAKPOINT();
+      throw RuntimeError("Failed to interpret type of deserialized object");
     }
   }
 }

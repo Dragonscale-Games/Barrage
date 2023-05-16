@@ -39,8 +39,8 @@ struct SerializationTest
 
   std::array<int, 5> iArray;
 
-  Barrage::CircleCollider circle;
-  Barrage::BoundaryBox boundary;
+  //Barrage::CircleCollider circle;
+  //Barrage::BoundaryBox boundary;
   std::string s;
   
   int i;
@@ -58,7 +58,7 @@ struct SerializationTest
 struct GameFrameTest
 {
   size_t frameID_;
-  Barrage::CircleCollider circle_;
+  //Barrage::CircleCollider circle_;
 };
 
 struct SimulationTest
@@ -76,7 +76,7 @@ Barrage::ReflectBarrageCore();
 // A temporary test of what a frame might look like.
 rttr::registration::class_<GameFrameTest>("GameFrameTest")
 .property("frameID", &GameFrameTest::frameID_)
-.property("circle", &GameFrameTest::circle_)
+//.property("circle", &GameFrameTest::circle_)
 .constructor<>()(
     rttr::policy::ctor::as_object
   );
@@ -101,8 +101,8 @@ rttr::registration::class_<SerializationTest>("SerializationTest")
 .property("iArray", &SerializationTest::iArray)
 
 .property("s", &SerializationTest::s)
-.property("circle", &SerializationTest::circle)
-.property("boundary", &SerializationTest::boundary)
+//.property("circle", &SerializationTest::circle)
+//.property("boundary", &SerializationTest::boundary)
 
 .property("i", &SerializationTest::i)
 .property("u", &SerializationTest::u)
@@ -217,8 +217,8 @@ void SaveJSONDemo(Barrage::FileManager& manager)
 }
 
 #include <Serialization/Serializer.hpp>
-#include <Objects/Components/SharedComponents/CircleCollider.hpp>
-#include <Objects/Components/SharedComponents/BoundaryBox.hpp>
+//#include <Objects/Components/SharedComponents/CircleCollider.hpp>
+//#include <Objects/Components/SharedComponents/BoundaryBox.hpp>
 void SerializationDemo(Barrage::FileManager& manager)
 {
   using Barrage::ObjectSource;
@@ -230,16 +230,16 @@ void SerializationDemo(Barrage::FileManager& manager)
   SimulationTest readSimulation;
 
   {
-    using Barrage::CircleCollider;
-    CircleCollider circle;
-    circle.radius_ = 25.0f;
-
-    using Barrage::BoundaryBox;
-    BoundaryBox box;
-    box.xMin_ = 0.0f;
-    box.yMin_ = 0.0f;
-    box.xMax_ = 50.0f;
-    box.yMax_ = 30.0f;
+    //using Barrage::CircleCollider;
+    //CircleCollider circle;
+    //circle.radius_ = 25.0f;
+    //
+    //using Barrage::BoundaryBox;
+    //BoundaryBox box;
+    //box.xMin_ = 0.0f;
+    //box.yMin_ = 0.0f;
+    //box.xMax_ = 50.0f;
+    //box.yMax_ = 30.0f;
 
     colliders.siMap = { { "one", 1 }, { "two", 2 }, {"three", 3} };
 
@@ -255,8 +255,8 @@ void SerializationDemo(Barrage::FileManager& manager)
     colliders.f = 3.0f;
     colliders.d = 4.0;
     colliders.s = "Hello World!";
-    colliders.boundary = box;
-    colliders.circle = circle;
+    //colliders.boundary = box;
+    //colliders.circle = circle;
 
     SimulationTest simulation = {};
     size_t simulationLength = 5u;
@@ -269,8 +269,8 @@ void SerializationDemo(Barrage::FileManager& manager)
       // Do a fake simulation of this circle collider expanding.
       const float dt = 1.0f / 16.0f;
       const float velocity = 2.0f;
-      circle.radius_ += dt * velocity;
-      frameData.circle_ = circle;
+      //circle.radius_ += dt * velocity;
+      //frameData.circle_ = circle;
       // Add the frame to the simulation.
       simulation.frames_.push_back(frameData);
     }
@@ -298,7 +298,7 @@ void SerializationDemo(Barrage::FileManager& manager)
   {
     const ObjectSource& objectSource = manager.Load<ObjectSource>(manager.GetUserPath(), "SampleCollider.json");
     const rapidjson::Document& doc = objectSource.GetDocument();
-    const rapidjson::Value& root = doc.GetObject();
+    const rapidjson::GenericObject<true, rapidjson::Value>& root = doc.GetObject();
     Barrage::Deserialize(readColliders, root["SerializationTest"]);
     Barrage::Deserialize(readSimulation, root["Simulation"]);
   }

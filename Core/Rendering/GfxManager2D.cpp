@@ -401,12 +401,6 @@ namespace Barrage
     {
       CHECK_GL( glDeleteBuffers(NUM_BUFFERS, &vbo[0]) );
     }
-    /*
-    for (MeshData& vao : internalMeshes_)
-    {
-      CHECK_GL( glDeleteVertexArrays(1, &vao.internalMeshID_) );
-    }
-    */
     // Clean up all the textures.
     for (TextureData& texture : internalTextures_)
     {
@@ -527,7 +521,6 @@ namespace Barrage
         // then we don't have to change anything... it's already gone.
         // Otherwise, we have to read just the index the resource
         // points to.
-        // TODO: Figure out a better way of doing this, maybe with an assert?
         *(resourceList[i].internalResource_) = static_cast<int>(i);
         // Eliminate the smart pointer and it's now defunct resources.
         // We do it after setting the resource (even if it's deleted)
@@ -554,9 +547,6 @@ namespace Barrage
     std::swap(internalMeshes_[i], internalMeshes_.back());
     // Clear the OpenGL resources associated with clearing a mesh.
     CHECK_GL( glDeleteBuffers(NUM_BUFFERS, meshBuffers_.back().data()) );
-    /*
-    CHECK_GL( glDeleteVertexArrays(1, &internalMeshes_.back().internalMeshID_) );
-    */
     // Kick out the bucket with the old resources.
     meshBuffers_.pop_back();
     internalMeshes_.pop_back();

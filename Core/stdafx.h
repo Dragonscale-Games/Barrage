@@ -6,7 +6,7 @@
  * \par             david.wongcascante\@gmail.com
 
  * \brief
- * All common code and includes to be included by all files.
+ * All common code to be included by all files.
  */
 /* ======================================================================== */
 
@@ -72,13 +72,13 @@
 /****************************************************************************/
 /*!
   \brief
-    Makes calling pointers to member functions trivial.
+    Simplifies calling member functions through pointers.
 
   \param object
     The object to invoke the function on.
 
   \param memberFuncPtr
-    The pointer to a member function defined for the object above.
+    The pointer to a member function on that object.
 */
 /****************************************************************************/
-#define CALL_MEMBER_FN(object, memberFuncPtr) ((object).*(memberFuncPtr))
+#define CALL_MEMBER_FN(object, memberFunctionPtr) ((object).*(memberFunctionPtr))

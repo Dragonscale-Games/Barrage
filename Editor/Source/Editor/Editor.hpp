@@ -16,7 +16,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Engine/Engine.hpp>
+#include "EditorData.hpp"
 #include "GUI/GUI.hpp"
+#include "Commands/CommandQueue.hpp"
+
+#include "Widgets/Windows/Log/LogWidget.hpp"
+
+#include <string_view>
 
 namespace Barrage
 {
@@ -24,6 +30,8 @@ namespace Barrage
   class Editor
 	{
     public:   
+      static Editor* Instance;
+      
       /**************************************************************/
       /*!
         \brief
@@ -39,6 +47,28 @@ namespace Barrage
       */
       /**************************************************************/
       void Run();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the public editor data that widgets can modify.
+
+        \return
+          Returns a reference to the editor's public data.
+      */
+      /**************************************************************/
+      EditorData& Data();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the editor's command queue.
+
+        \return
+          Returns a reference to the editor's command queue.
+      */
+      /**************************************************************/
+      CommandQueue& Command();
 
     private:
       /**************************************************************/
@@ -68,18 +98,34 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          TEMPORARY: Just testing out ImGui
+          Displays all editor widgets.
       */
       /**************************************************************/
-      void MakeTestWidget();
+      void UseWidgets();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Handles keyboard shortcuts and other keyboard input.
+      */
+      /**************************************************************/
+      void HandleKeyboard();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Changes the scene being worked on.
+      */
+      /**************************************************************/
+      void ChangeScene();
 
     private:
-      Engine engine_;       //!< Barrage game engine
-      GUI gui_;             //!< Contains all widgets/user controls
-      long long frameTime_; //!< TEMPORARY: holds the current frame time in milliseconds
-      unsigned numTicks_;   //!< TEMPORARY: holds number of ticks that should be performed this frame
-      bool statePaused_;    //!< TEMPORARY: stores whether game state is paused
-      bool isRunning_;      //!< Keeps track of whether the editor is running
+      Engine engine_;             //!< Barrage game engine
+      GUI gui_;                   //!< Contains all widgets/user controls
+      EditorData data_;           //!< Public settings and data for the editor
+      CommandQueue commandQueue_; //!< Allows commands to be sent and processed
+
+      long long repeatTimer_;
 	};
 }
 

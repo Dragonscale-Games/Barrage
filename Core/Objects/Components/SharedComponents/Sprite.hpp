@@ -21,19 +21,16 @@
 namespace Barrage
 {
   //! Holds all information needed to draw the objects in a pool
-  class Sprite : public SharedComponent
+  class Sprite
   {
     public:
       std::string texture_; //!< Name of the texture to draw with
       unsigned layer_;      //!< Layer of the drawn object (lower layers are drawn beneath higher ones)
 
       inline Sprite() : texture_(), layer_(0) {}
-
-      inline std::string GetClassName() override { return "Sprite"; }
-
-      // Notify rttr of the component hierarchy.
-      RTTR_ENABLE()
   };
+
+  typedef SharedComponentT<Sprite> SharedSprite;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

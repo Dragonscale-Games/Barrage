@@ -22,8 +22,10 @@
 
 namespace Barrage
 {
-  //! Maps system names to systems
+  //! Maps pool names to pools
   typedef std::unordered_map<std::string, Pool*> PoolMap;
+
+  class Space;
 
   //! <class description>
   class PoolManager
@@ -35,7 +37,7 @@ namespace Barrage
           Default constructor.
       */
       /**************************************************************/
-      PoolManager(ComponentAllocator& componentAllocator);
+      PoolManager(Space& space);
 
       /**************************************************************/
       /*!
@@ -57,17 +59,14 @@ namespace Barrage
 
         \param archetype
           The archetype carrying information about all the components
-          the new object pool will contain.
-
-        \param capacity
-          The maximum number of objects the pool will be able to hold.
+          the new object pool will contain and its capacity.
 
         \return
           Returns a pointer to the newly created object pool. Returns
           nullptr if creation fails.
       */
       /**************************************************************/
-      Pool* CreatePool(const std::string& name, const PoolArchetype& archetype, unsigned capacity);
+      Pool* CreatePool(const PoolArchetype& archetype);
 
       /**************************************************************/
       /*!
@@ -127,11 +126,11 @@ namespace Barrage
           nullptr if creation fails.
       */
       /**************************************************************/
-      Pool* CreatePoolInternal(const PoolArchetype& archetype, unsigned capacity);
+      Pool* CreatePoolInternal(const PoolArchetype& archetype);
 
     private:
-      PoolMap pools_;                          //!< The collection of all object pools
-      ComponentAllocator& componentAllocator_; //!< Component allocator the pool manager will use
+      PoolMap pools_; //!< The collection of all object pools
+      Space& space_;  //!< The space where the pools live
 	};
 }
 

@@ -35,6 +35,8 @@ namespace Barrage
       void Draw();
 
       void AddSpace(const std::string& name, Space* space);
+      
+      Space* GetSpace(const std::string& name);
 
       void SetSpacePaused(const std::string& name, bool isPaused);
 

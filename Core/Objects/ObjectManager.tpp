@@ -15,16 +15,24 @@
 #define ObjectManager_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "Components/ComponentAllocator.hpp"
+
 namespace Barrage
 {
   template <typename T>
-  void ObjectManager::RegisterComponent(const std::string& componentName)
+  void ObjectManager::RegisterComponentArray(const std::string_view& componentName)
   {
-    componentAllocator_.RegisterComponent<T>(componentName);
+    ComponentAllocator::RegisterComponentArray<T>(componentName);
   }
 
   template <typename T>
-  void ObjectManager::RegisterSystem(const std::string& systemName)
+  void ObjectManager::RegisterSharedComponent(const std::string_view& componentName)
+  {
+    ComponentAllocator::RegisterSharedComponent<T>(componentName);
+  }
+
+  template <typename T>
+  void ObjectManager::RegisterSystem(const std::string_view& systemName)
   {
     systemManager_.RegisterSystem<T>(systemName);
   }

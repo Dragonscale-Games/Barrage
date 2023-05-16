@@ -20,46 +20,77 @@ namespace Barrage
   static const unsigned BASIC_2D_SPRITE_POOLS = 0;
   
   DrawSystem::DrawSystem() :
-    System()
+    System(),
+    drawPools_()
   {
     PoolType basic_sprite_type;
-    basic_sprite_type.AddComponentName("PositionArray");
-    basic_sprite_type.AddComponentName("ScaleArray");
-    basic_sprite_type.AddComponentName("RotationArray");
-    basic_sprite_type.AddComponentName("Sprite");
-    poolTypes_[BASIC_2D_SPRITE_POOLS] = basic_sprite_type;
+    basic_sprite_type.AddComponentArray("Position");
+    basic_sprite_type.AddComponentArray("Scale");
+    basic_sprite_type.AddComponentArray("Rotation");
+    basic_sprite_type.AddSharedComponent("Sprite");
+    basic_sprite_type.AddComponentArray("TextureSpace");
+    poolTypes_["Basic 2D Sprite Pools"] = basic_sprite_type;
   }
   
   void DrawSystem::Subscribe(Pool* pool)
   {
-    if (poolTypes_[BASIC_2D_SPRITE_POOLS].MatchesPool(pool))
+    if (poolTypes_["Basic 2D Sprite Pools"].MatchesPool(pool))
     {
-      Sprite* pool_sprite = dynamic_cast<Sprite*>(pool->sharedComponents_.at("Sprite"));
+      Sprite& pool_sprite = pool->GetSharedComponent<Sprite>("Sprite")->Data();
       
-      pools_.insert(std::pair<unsigned, Pool*>(pool_sprite->layer_, pool));
+      drawPools_[pool_sprite.layer_].push_back(pool);
+    }
+  }
+
+  void DrawSystem::Unsubscribe(Pool* pool)
+  {
+    for (auto it = drawPools_.begin(); it != drawPools_.end(); ++it)
+    {
+      std::vector<Pool*>& pool_group = it->second;
+
+      for (auto jt = pool_group.begin(); jt != pool_group.end(); /* iterator incremented in body */)
+      {
+        if (*jt == pool)
+        {
+          jt = pool_group.erase(jt);
+        }
+        else
+        {
+          ++jt;
+        }
+      }
     }
   }
 
   void DrawSystem::Draw()
   {
-    // Get the drawing system.
     GfxDraw2D& drawing = Engine::Instance->Drawing();
 
-    for (auto it = pools_.begin(); it != pools_.end(); ++it)
+    for (auto it = drawPools_.begin(); it != drawPools_.end(); ++it)
     {
-      Pool* pool = it->second;
+      std::vector<Pool*>& pool_group = drawPools_[it->first];
+      
+      for (auto jt = pool_group.begin(); jt != pool_group.end(); ++jt)
+      {
+        Pool* pool = *jt;
 
-      PositionArray& position_array = *pool->GetComponentArray<PositionArray>("PositionArray");
-      ScaleArray& scale_array = *pool->GetComponentArray<ScaleArray>("ScaleArray");
-      RotationArray& rotation_array = *pool->GetComponentArray<RotationArray>("RotationArray");
+        PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
+        ScaleArray& scale_array = *pool->GetComponentArray<Scale>("Scale");
+        RotationArray& rotation_array = *pool->GetComponentArray<Rotation>("Rotation");
+        TextureSpaceArray& tex_space_array = *pool->GetComponentArray<TextureSpace>("TextureSpace");
 
-      glm::vec2* positions = reinterpret_cast<glm::vec2*>(position_array.data_);
-      glm::vec2* scales = reinterpret_cast<glm::vec2*>(scale_array.data_);
-      float* rotations = reinterpret_cast<float*>(rotation_array.data_);
+        glm::vec2* positions = reinterpret_cast<glm::vec2*>(position_array.data_);
+        glm::vec2* scales = reinterpret_cast<glm::vec2*>(scale_array.data_);
+        glm::vec4* tex_coords = reinterpret_cast<glm::vec4*>(tex_space_array.data_);
+        float* rotations = reinterpret_cast<float*>(rotation_array.data_);
 
-      Sprite& pool_sprite = *pool->GetSharedComponent<Sprite>("Sprite");
+        Sprite& pool_sprite = pool->GetSharedComponent<Sprite>("Sprite")->Data();
 
-      drawing.DrawInstancedQuad(pool->size_, positions, scales, rotations, pool_sprite.texture_.c_str());
+        drawing.DrawInstancedQuad(
+          pool->GetActiveObjectCount(),
+          positions, scales, 
+          rotations, tex_coords, pool_sprite.texture_.c_str());
+      }
     }
   }
 }

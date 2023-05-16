@@ -33,12 +33,45 @@
 set(BARRAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 add_executable(Editor "Source/main.cpp" 
-"Source/GUI/GUI.cpp" "Source/GUI/GUI.hpp" 
-"Source/Editor/Editor.cpp" "Source/Editor/Editor.hpp"
+"Source/GUI/GUI.cpp" 
+"Source/Editor/Editor.cpp"
 "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Registration.cpp"
-"${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Systems/SpawnSystem.cpp" "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Systems/SpawnSystem.hpp"
-"${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization/DemoInitialization.cpp" "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization/DemoInitialization.hpp"
-)
+"../Samples/DemoGame/Source/Systems/Collision/CollisionSystem.cpp"
+"../Samples/DemoGame/Source/Systems/Movement/MovementSystem.cpp"
+"../Samples/DemoGame/Source/Systems/Spawn/SpawnSystem.cpp"
+"${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization/DemoInitialization.cpp" 
+"../Samples/DemoGame/Source/SpawnFuncs/Direction/DirectionFuncs.cpp"
+"../Samples/DemoGame/Source/SpawnFuncs/Position/PositionFuncs.cpp"
+"Source/Widgets/Windows/Hierarchy/HierarchyWidget.cpp"
+"Source/Widgets/Windows/Inspector/InspectorWidget.cpp"
+
+"Source/Editor/EditorData.cpp"
+ "Source/Widgets/MainMenu/MainMenuWidget.cpp" 
+   
+ "Source/Widgets/Data/DataWidget.cpp" 
+ "Source/Widgets/Windows/Log/LogWidget.cpp"  
+ "Source/Commands/Command.cpp" 
+ "Source/Commands/CommandQueue.cpp" 
+  
+ "Source/Commands/Create/Pool/CreatePool.cpp" 
+ "Source/Commands/Create/Object/CreateObject.cpp" 
+ "Source/Widgets/Popups/Object/ObjectPopupWidget.cpp" 
+ "Source/Widgets/Popups/Pool/PoolPopupWidget.cpp" 
+ "Source/Widgets/Popups/Scene/ScenePopupWidget.cpp" 
+ "Source/Commands/Delete/Object/DeleteObject.cpp" 
+ "Source/Commands/Delete/Pool/DeletePool.cpp" 
+ "Source/Commands/Create/ComponentArray/CreateComponentArray.cpp" 
+ "Source/Commands/Create/SharedComponent/CreateSharedComponent.cpp" 
+ "Source/Commands/Delete/ComponentArray/DeleteComponentArray.cpp" 
+ "Source/Commands/Delete/SharedComponent/DeleteSharedComponent.cpp" 
+ "Source/Widgets/Popups/SharedComponent/SharedComponentPopupWidget.cpp" 
+ "Source/Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.cpp"  
+ "Source/Widgets/Modals/ComponentArray/ComponentArrayModal.cpp" 
+ "Source/Widgets/Modals/SharedComponent/SharedComponentModal.cpp" 
+ "Source/Widgets/Component/ComponentArray/ComponentArrayWidget.cpp" 
+ "Source/Widgets/Component/SharedComponent/SharedComponentWidget.cpp"  
+ "Source/Commands/Edit/ComponentArray/EditComponentArray.cpp" 
+ "Source/Commands/Edit/SharedComponent/EditSharedComponent.cpp")
 
 target_link_libraries(Editor PUBLIC BarrageCore imgui)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

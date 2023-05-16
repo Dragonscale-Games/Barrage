@@ -15,31 +15,22 @@
 
 #include "Components/EngineComponents.hpp"
 #include "Systems/EngineSystems.hpp"
-#include "SpawnFuncs/EngineSpawnFuncs.hpp"
+#include "Spaces/Space.hpp"
 
 namespace Barrage
 {
-  ObjectManager::ObjectManager() :
-    componentAllocator_(),
-    archetypeManager_(componentAllocator_),
-    poolManager_(componentAllocator_),
-    systemManager_(),
-    spawnFuncManager_()
+  ObjectManager::ObjectManager(Space& space) :
+    poolManager_(space),
+    systemManager_()
   {
     RegisterEngineComponents();
     RegisterEngineSystems();
-    RegisterEngineSpawnFuncs();
+    RegisterEngineSpawnFunctions();
     SetDefaultSystemUpdateOrder();
-
-    CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_.at("CreationSystem"));
-
-    creation_system->SetArchetypeManager(archetypeManager_);
-    creation_system->SetSpawnFuncManager(spawnFuncManager_);
-    creation_system->SetPoolManager(poolManager_);
 
     RegisterCustomComponents();
     RegisterCustomSystems();
-    RegisterCustomSpawnFuncs();
+    RegisterCustomSpawnFunctions();
     SetSystemUpdateOrder();
   }
 
@@ -58,7 +49,7 @@ namespace Barrage
     }
   }
 
-  void ObjectManager::CreateObject(const std::string& poolName, const std::string& archetypeName)
+  /*void ObjectManager::CreateObject(const std::string& poolName, const std::string& archetypeName)
   {
     Pool* pool = poolManager_.GetPool(poolName);
     ObjectArchetype* archetype = archetypeManager_.GetObjectArchetype(archetypeName);
@@ -69,75 +60,25 @@ namespace Barrage
     {
       creation_system->CreateObject(*archetype, pool);
     }
-  }
+  }*/
 
-  std::vector<std::string> ObjectManager::GetComponentArrayNames()
-  {
-    return componentAllocator_.GetComponentArrayNames();
-  }
-
-  std::vector<std::string> ObjectManager::GetSharedComponentNames()
-  {
-    return componentAllocator_.GetSharedComponentNames();
-  }
-
-  std::vector<std::string> ObjectManager::GetSpawnFuncNames()
-  {
-    return spawnFuncManager_.GetSpawnFuncNames();
-  }
-
-  std::vector<std::string> ObjectManager::GetRegisteredSystemNames()
+  std::vector<std::string_view> ObjectManager::GetRegisteredSystemNames()
   {
     return systemManager_.GetRegisteredSystemNames();
   }
 
-  std::vector<std::string> ObjectManager::GetSystemUpdateOrder()
+  std::vector<std::string_view> ObjectManager::GetSystemUpdateOrder()
   {
     return systemManager_.GetSystemUpdateOrder();
   }
 
-  void ObjectManager::AddPoolArchetype(const std::string& name, PoolArchetype* archetype)
+  void ObjectManager::CreatePool(const PoolArchetype& archetype)
   {
-    archetypeManager_.AddPoolArchetype(name, archetype);
-  }
-
-  void ObjectManager::AddObjectArchetype(const std::string& name, ObjectArchetype* archetype)
-  {
-    archetypeManager_.AddObjectArchetype(name, archetype);
-  }
-
-  std::vector<std::string> ObjectManager::GetPoolArchetypeNames()
-  {
-    return archetypeManager_.GetPoolArchetypeNames();
-  }
-
-  std::vector<std::string> ObjectManager::GetObjectArchetypeNames()
-  {
-    return archetypeManager_.GetObjectArchetypeNames();
-  }
-
-  void ObjectManager::CreatePool(const std::string& poolName, const std::string& archetypeName, unsigned capacity)
-  {
-    if (capacity == 0)
+    if (archetype.GetCapacity() == 0)
       return;
-
-    PoolArchetype* pool_archetype = archetypeManager_.GetPoolArchetype(archetypeName);
     
-    if (pool_archetype)
-    {
-      Pool* new_pool = poolManager_.CreatePool(poolName, *pool_archetype, capacity);
-      systemManager_.Subscribe(new_pool);
-    }
-  }
-
-  void ObjectManager::CreatePoolAndObjects(const PoolInfo& poolInfo)
-  {
-    CreatePool(poolInfo.poolName_, poolInfo.archetypeName_, poolInfo.capacity_);
-
-    for (auto it = poolInfo.objects_.begin(); it != poolInfo.objects_.end(); ++it)
-    {
-      CreateObject(poolInfo.poolName_, *it);
-    }
+    Pool* new_pool = poolManager_.CreatePool(archetype);
+    systemManager_.Subscribe(new_pool);
   }
 
   Pool* ObjectManager::GetPool(const std::string& name) const
@@ -171,33 +112,29 @@ namespace Barrage
     return poolManager_.GetPoolNames();
   }
 
-  void ObjectManager::SetSystemUpdateOrder(const std::vector<std::string>& updateOrderList)
+  void ObjectManager::SetSystemUpdateOrder(const std::vector<std::string_view>& updateOrderList)
   {
     systemManager_.SetUpdateOrder(updateOrderList);
   }
 
-  void ObjectManager::RegisterSpawnFunc(const std::string name, SpawnFunc initializer)
+  void ObjectManager::RegisterSpawnFunction(const std::string_view& name, SpawnFunction spawnFunction)
   {
-    spawnFuncManager_.RegisterSpawnFunc(name, initializer);
+    SpawnFunctionManager::RegisterSpawnFunction(name, spawnFunction);
   }
 
   void ObjectManager::RegisterEngineComponents()
   {
-    RegisterComponent<AngularSpeedArray>("AngularSpeedArray");
-    RegisterComponent<DestructibleArray>("DestructibleArray");
-    RegisterComponent<DirectoryIndexArray>("DirectoryIndexArray");
-    RegisterComponent<LifetimeArray>("LifetimeArray");
-    RegisterComponent<PositionArray>("PositionArray");
-    RegisterComponent<RotationArray>("RotationArray");
-    RegisterComponent<ScaleArray>("ScaleArray");
-    RegisterComponent<VelocityArray>("VelocityArray");
+    RegisterComponentArray<Destructible>("Destructible");
+    RegisterComponentArray<DirectoryIndex>("DirectoryIndex");
+    RegisterComponentArray<Parent>("Parent");
+    RegisterComponentArray<Position>("Position");
+    RegisterComponentArray<Rotation>("Rotation");
+    RegisterComponentArray<Scale>("Scale");
+    RegisterComponentArray<TextureSpace>("TextureSpace");
 
-    RegisterComponent<BoundaryBox>("BoundaryBox");
-    RegisterComponent<CircleCollider>("CircleCollider");
-    RegisterComponent<ObjectDirectory>("ObjectDirectory");
-    RegisterComponent<Spawner>("Spawner");
-    RegisterComponent<Sprite>("Sprite");
-    RegisterComponent<RNG>("RNG");
+    RegisterSharedComponent<ObjectDirectory>("ObjectDirectory");
+    RegisterSharedComponent<Spawner>("Spawner");
+    RegisterSharedComponent<Sprite>("Sprite");
   }
 
   void ObjectManager::RegisterEngineSystems()
@@ -205,25 +142,19 @@ namespace Barrage
     RegisterSystem<CreationSystem>("CreationSystem");
     RegisterSystem<DestructionSystem>("DestructionSystem");
     RegisterSystem<DrawSystem>("DrawSystem");
-    RegisterSystem<MovementSystem>("MovementSystem");
-    RegisterSystem<CollisionSystem>("CollisionSystem");
   }
 
-  void ObjectManager::RegisterEngineSpawnFuncs()
+  void ObjectManager::RegisterEngineSpawnFunctions()
   {
-    RegisterSpawnFunc("RandomDirection", Spawn::RandomDirection);
-    RegisterSpawnFunc("MatchPosition", Spawn::MatchPosition);
+
   }
 
   void ObjectManager::SetDefaultSystemUpdateOrder()
   {
-    std::vector<std::string> update_order;
+    std::vector<std::string_view> update_order;
 
     update_order.push_back("CreationSystem");
     update_order.push_back("DestructionSystem");
-    update_order.push_back("MovementSystem");
-    update_order.push_back("CreationSystem");
-    update_order.push_back("CollisionSystem");
 
     SetSystemUpdateOrder(update_order);
   }

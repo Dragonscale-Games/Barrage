@@ -27,15 +27,12 @@ namespace Barrage
     //!< An object's index in the ObjectDirectory
     struct DirectoryIndex
     {
-        unsigned index_; //!< An object's index in the HandleDirectory
+        unsigned index_; //!< An object's index in the ObjectDirectory
 
         inline DirectoryIndex() : index_(NO_HANDLE) {}
     };
 
     typedef ComponentArrayT<DirectoryIndex> DirectoryIndexArray;
-
-    template <>
-    inline std::string DirectoryIndexArray::GetClassName() { return "DirectoryIndexArray"; }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -30,9 +30,14 @@ namespace Barrage
     }
   }
 
-  unsigned long long Random::GetSeed()
+  unsigned long long Random::GetStartingSeed()
   {
     return startSeed_;
+  }
+
+  unsigned long long Random::GetCurrentSeed()
+  {
+    return currentSeed_;
   }
 
   void Random::SetSeed(unsigned long long seed)
@@ -48,6 +53,11 @@ namespace Barrage
     }
   }
 
+  void Random::ResetSeed()
+  {
+    currentSeed_ = startSeed_;
+  }
+
   float Random::RangeFloat(float min, float max)
   {
     return min + Float() * (max - min);
@@ -55,35 +65,48 @@ namespace Barrage
 
   int Random::RangeInt(int min, int max)
   {
-    // if input is dirty, just return min
     if (min >= max)
     {
       return min;
     }
-    
-    // figure out how many results are possible within the range
+
+    unsigned long long possible_results = static_cast<unsigned long long>(static_cast<long long>(max) - static_cast<long long>(min)) + 1;
+
+    unsigned long long generated_number = GenerateValue();
+
+    generated_number %= possible_results;
+
+    int result = min + static_cast<int>(generated_number);
+
+    return result;
+  }
+
+  int Random::RangeIntUniform(int min, int max)
+  {
+    if (min >= max)
+    {
+      return min;
+    }
+
     unsigned long long possible_results = static_cast<unsigned long long>(static_cast<long long>(max) - static_cast<long long>(min)) + 1;
 
     // find the maximum acceptable generated number, which is the biggest number the generator can
     // roll that makes the sample space a positive integer multiple of the number of possible results
     unsigned long long max_roll = (ULLONG_MAX / possible_results) * possible_results - 1;
 
-    // will eventually be a random number between 0 and (possible_results - 1)
     unsigned long long generated_number;
 
     // try to generate an acceptable uniformly distributed number - stop if it takes too long (exceptionally rare)
     for (int i = 0; i < 100; i++)
     {
-      generated_number = Generate();
+      generated_number = GenerateValue();
 
       if (generated_number <= max_roll)
         break;
     }
 
-    // map generated number to range between 0 and (possible_results - 1)
     generated_number %= possible_results;
 
-    // our result is the minimum number plus a random number between 0 and (max - min + 1)
     int result = min + static_cast<int>(generated_number);
 
     return result;
@@ -135,7 +158,7 @@ namespace Barrage
     currentSeed_ = seed;
   }
 
-  unsigned long long Random::Generate()
+  unsigned long long Random::GenerateValue()
   {
     // xorshift algorithm from page 4 of George Marsaglia's paper "Xorshift RNGs"
     currentSeed_ ^= (currentSeed_ << 13);
@@ -148,6 +171,6 @@ namespace Barrage
   float Random::Float()
   {
     // Generate() returns a number between 0 and (ULLONG_MAX - 1)
-    return static_cast<float>(Generate()) / static_cast<float>(ULLONG_MAX - 1);
+    return static_cast<float>(GenerateValue()) / static_cast<float>(ULLONG_MAX - 1);
   }
 }

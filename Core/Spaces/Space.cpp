@@ -13,33 +13,39 @@
 
 #include "stdafx.h"
 #include "Space.hpp"
+#include "Engine/Engine.hpp"
 
 namespace Barrage
 {
   Space::Space() :
-    objectManager_(),
-    scenes_(),
-    paused_(false)
+    actionManager_(),
+    objectManager_(*this),
+    rng_(),
+    paused_(false),
+    visible_(true)
   {
-  }
-
-  Space::~Space()
-  {
-    for (auto it = scenes_.begin(); it != scenes_.end(); ++it)
-    {
-      delete it->second;
-    }
   }
 
   void Space::Update()
   {
     if (!paused_)
+    {
+      actionManager_.Update();
       objectManager_.Update();
+    }
   }
 
   void Space::Draw()
   {
-    objectManager_.Draw();
+    if (visible_)
+    {
+      objectManager_.Draw();
+    }
+  }
+
+  ActionManager& Space::GetActionManager()
+  {
+    return actionManager_;
   }
 
   ObjectManager& Space::GetObjectManager()
@@ -47,32 +53,28 @@ namespace Barrage
     return objectManager_;
   }
 
-  void Space::AddScene(const std::string& name, Scene* scene)
+  Random& Space::GetRNG()
   {
-    if (scenes_.find(name) == scenes_.end())
-    {
-      scenes_[name] = scene;
-    }
-    else
-    {
-      delete scene;
-    }
+    return rng_;
   }
 
-  void Space::SetScene(const std::string name)
+  void Space::SetScene(const std::string& name)
   {
-    if (scenes_.find(name) == scenes_.end())
-      return;
+    Scene* new_scene = Engine::Instance->Scenes().GetScene(name);
 
-    objectManager_.DeleteAllPools();
+    if (new_scene == nullptr)
+      return;
     
-    Scene* scene = scenes_.at(name);
-    const std::vector<PoolInfo>& starting_pools = scene->GetStartingPools();
+    objectManager_.DeleteAllPools();
+
+    const std::vector<PoolArchetype*>& starting_pools = new_scene->GetPoolArchetypes();
 
     for (auto it = starting_pools.begin(); it != starting_pools.end(); ++it)
     {
-      objectManager_.CreatePoolAndObjects(*it);
+      objectManager_.CreatePool(**it);
     }
+
+    rng_.SetSeed();
   }
 
   void Space::SetPaused(bool isPaused)
@@ -80,8 +82,18 @@ namespace Barrage
     paused_ = isPaused;
   }
 
-  bool Space::IsPaused()
+  void Space::SetVisible(bool isVisible)
+  {
+    visible_ = isVisible;
+  }
+
+  bool Space::IsPaused() const
   {
     return paused_;
+  }
+
+  bool Space::IsVisible() const
+  {
+    return visible_;
   }
 }

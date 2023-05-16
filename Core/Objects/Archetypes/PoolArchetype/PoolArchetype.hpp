@@ -19,20 +19,58 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Components/EngineComponents.hpp"
+#include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
+#include "Serialization/Serializer.hpp"
 
 namespace Barrage
 {
   //! Used to initialize an object pool
   class PoolArchetype
-	{
-    public:   
+  {
+    public:
       /**************************************************************/
       /*!
         \brief
-          Initializes the archetype with an empty map of components.
+          Constructs the pool archetype.
+
+        \param name
+          The name of the pool this archetype will create.
       */
       /**************************************************************/
-      PoolArchetype();
+      PoolArchetype(const std::string& name, unsigned capacity = 1);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Constructs the archetype using JSON data.
+
+        \param data
+          The JSON data to deserialize into this object.
+      */
+      /**************************************************************/
+      PoolArchetype(const rapidjson::Value& data);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copy constructor.
+
+        \param other
+          The archetype to copy.
+      */
+      /**************************************************************/
+      PoolArchetype(const PoolArchetype& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copy assignment operator.
+
+        \param other
+          The archetype to copy.
+      */
+      /**************************************************************/
+      PoolArchetype& operator=(const PoolArchetype& other);
 
       /**************************************************************/
       /*!
@@ -42,11 +80,512 @@ namespace Barrage
       /**************************************************************/
       ~PoolArchetype();
 
-    public:
-      SharedComponentMap sharedComponents_;          //!< Map of initialized shared components to copy
-      std::vector<std::string> componentArrayNames_; //!< List of names of component arrays to add to pool
-      std::vector<std::string> tags_;                //!< Tags that the new pool will have
-	};
+      /**************************************************************/
+      /*!
+        \brief
+          Tells whether an object archetype with the given name 
+          exists in the pool archetype's starting objects or spawn 
+          archetypes.
+
+        \param name
+          The name of the object archetype.
+
+        \return
+          Returns true if the object archetype exists, returns false
+          otherwise.
+      */
+      /**************************************************************/
+      bool HasObjectArchetype(const std::string& name);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Checks if the archetype contains a shared component with
+          the given name.
+
+        \param name
+          The name of the shared component to check for.
+
+        \return
+          Returns true if the archetype contains the given shared
+          component, returns false otherwise.
+      */
+      /**************************************************************/
+      bool HasSharedComponent(const std::string_view& name);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Checks if the archetype contains a component array with the
+          given name.
+
+        \param componentArrayName
+          The name of the component array to check for.
+
+        \return
+          Returns true if the archetype contains the given component
+          array, returns false otherwise.
+      */
+      /**************************************************************/
+      bool HasComponentArray(const std::string_view& componentArrayName) const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Checks if the archetype contains a given tag.
+
+        \param tag
+          The name of the tag to check for.
+
+        \return
+          Returns true if the archetype contains the given tag,
+          returns false otherwise.
+      */
+      /**************************************************************/
+      bool HasTag(const std::string_view& tag) const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the name of the object archetype.
+
+        \return
+          Returns the name of the object archetype.
+      */
+      /**************************************************************/
+      const std::string& GetName() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the object archetype with the given name if it exists
+          in the pool archetype's starting objects or spawn
+          archetypes.
+
+        \param name
+          The name of the object archetype.
+
+        \return
+          Returns the object archetype if it exists, returns nullptr
+          otherwise.
+      */
+      /**************************************************************/
+      ObjectArchetype* GetObjectArchetype(const std::string& name);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the shared component with the given name if it exists.
+
+        \param name
+          The name of the shared component.
+
+        \return
+          Returns the shared component if it exists, returns nullptr
+          otherwise.
+      */
+      /**************************************************************/
+      SharedComponent* PoolArchetype::GetSharedComponent(const std::string_view& name);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the pool archetype's shared components.
+
+        \return
+          Returns the pool archetype's shared components.
+      */
+      /**************************************************************/
+      const SharedComponentMap& GetSharedComponents() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the names of the pool archetype's component arrays.
+
+        \return
+          Returns the names of the pool archetype's component arrays.
+      */
+      /**************************************************************/
+      const std::vector<std::string_view>& GetComponentArrayNames() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the pool archetype's tags.
+
+        \return
+          Returns the pool archetype's tags.
+      */
+      /**************************************************************/
+      const std::vector<std::string_view>& GetTags() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the capacity of the pool archetype.
+
+        \return
+          Returns the capacity of the pool archetype.
+      */
+      /**************************************************************/
+      unsigned GetCapacity() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the capacity of the pool archetype.
+
+        \return
+          Returns the capacity of the pool archetype.
+      */
+      /**************************************************************/
+      const std::vector<ObjectArchetype*>& GetStartingObjects() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the capacity of the pool archetype.
+
+        \return
+          Returns the capacity of the pool archetype.
+      */
+      /**************************************************************/
+      const std::vector<ObjectArchetype*>& GetSpawnArchetypes() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds a shared component to the pool archetype. Has no effect
+          if a shared component with the given name already exists.
+
+        \param name
+          The name of the shared component.
+
+        \param sharedComponent
+          The shared component to add.
+      */
+      /**************************************************************/
+      void AddSharedComponent(const std::string_view& name, SharedComponent* sharedComponent);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds a component array name to the archetype.
+
+        \param componentArrayName
+          The name of the component array name to add.
+
+        \param index
+          Optional, allows the tag to be inserted at a specific index
+          in the vector.
+      */
+      /**************************************************************/
+      void AddComponentArrayName(const std::string_view& componentArrayName, unsigned* index = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds a tag to the archetype.
+
+        \param tag
+          The name of the tag to add.
+
+        \param index
+          Optional, allows the tag to be inserted at a specific index
+          in the vector.
+      */
+      /**************************************************************/
+      void AddTag(const std::string_view& tag, unsigned* index = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds a starting object to the pool archetype.
+
+        \param archetype
+          The object archetype to add.
+
+        \param index
+          Optional, allows the tag to be inserted at a specific index
+          in the vector.
+      */
+      /**************************************************************/
+      void AddStartingObject(ObjectArchetype* archetype, unsigned* index = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds a spawn archetype to the pool archetype.
+
+        \param archetype
+          The spawn archetype to add.
+
+        \param index
+          Optional, allows the tag to be inserted at a specific index
+          in the vector.
+      */
+      /**************************************************************/
+      void AddSpawnArchetype(ObjectArchetype* archetype, unsigned* index = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Removes a component array name from the archetype.
+
+        \param componentArrayName
+          The name of the component array to remove.
+
+        \param index
+          The index of the component array in the underlying vector
+          will be written to this variable if the component array
+          was removed. Otherwise, this variable will be unchanged.
+      */
+      /**************************************************************/
+      void RemoveComponentArrayName(const std::string_view& componentArrayName, unsigned* index = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Removes a tag from the archetype.
+
+        \param tag
+          The name of the tag to remove.
+
+        \param index
+          The index of the tag in the underlying vector will be
+          written to this variable if the tag was removed. Otherwise,
+          this variable will be unchanged.
+      */
+      /**************************************************************/
+      void RemoveTag(const std::string_view& tag, unsigned* index = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Removes and gets a starting object archetype from the pool
+          archetype.
+
+        \param name
+          The name of the starting object archetype to extract.
+
+        \param index
+          The index of the starting object in the underlying vector 
+          will be written to this variable if the tag was removed. 
+          Otherwise, this variable will be unchanged.
+      */
+      /**************************************************************/
+      ObjectArchetype* ExtractStartingObject(const std::string& name, unsigned* index = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Removes and returns a shared component from the pool
+          archetype if it exists.
+
+        \param name
+          The name of the shared component to extract.
+
+        \return
+          Returns a pointer to the shared component if it exists,
+          returns nullptr otherwise.
+      */
+      /**************************************************************/
+      SharedComponent* ExtractSharedComponent(const std::string_view& name);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Serializes the pool archetype into a rapidjson value.
+
+        \return
+          Returns the serialized rapidjson value.
+      */
+      /**************************************************************/
+      rapidjson::Value Serialize(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+    private:
+      /**************************************************************/
+      /*!
+        \brief
+          Deep copies a shared component map from "other" to "this".
+
+        \param other
+          The map to copy.
+      */
+      /**************************************************************/
+      void CopySharedComponentMap(const SharedComponentMap& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deep copies a starting object vector from "other" to "this".
+
+        \param other
+          The vector to copy.
+      */
+      /**************************************************************/
+      void CopyStartingObjects(const std::vector<ObjectArchetype*>& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deep copies a spawn archetype vector from "other" to "this".
+
+        \param other
+          The vector to copy.
+      */
+      /**************************************************************/
+      void CopySpawnArchetypes(const std::vector<ObjectArchetype*>& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deep deletes this object's shared component map.
+      */
+      /**************************************************************/
+      void DeleteSharedComponentMap();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deep deletes this object's starting object vector.
+      */
+      /**************************************************************/
+      void DeleteStartingObjects();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deep deletes this object's spawn archetype vector.
+      */
+      /**************************************************************/
+      void DeleteSpawnArchetypes();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Serializes the pool archetype's shared components into a
+          rapidjson value.
+
+        \return
+          Returns the serialized rapidjson value.
+      */
+      /**************************************************************/
+      rapidjson::Value SerializeSharedComponents(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Serializes a vector of string_views into a rapidjson
+          value.
+
+        \param strings
+          The string_view vector to serialize.
+
+        \return
+          Returns the serialized rapidjson value.
+      */
+      /**************************************************************/
+      rapidjson::Value SerializeStringViews(const std::vector<std::string_view>& strings, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Serializes a vector of object archetypes into a rapidjson
+          value.
+
+        \param objects
+          The object archetype vector to serialize.
+
+        \return
+          Returns the serialized rapidjson value.
+      */
+      /**************************************************************/
+      rapidjson::Value SerializeObjectArchetypes(const std::vector<ObjectArchetype*>& objects, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deserializes a JSON of shared components into this archetype.
+
+        \param data
+          The JSON of shared components to deserialize.
+      */
+      /**************************************************************/
+      void DeserializeSharedComponents(const rapidjson::Value& data);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deserializes a JSON of component array names into this 
+          archetype.
+
+        \param data
+          The JSON of component array names to deserialize.
+      */
+      /**************************************************************/
+      void DeserializeComponentArrayNames(const rapidjson::Value& data);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deserializes a JSON of tags into this archetype.
+
+        \param data
+          The JSON of tags to deserialize.
+      */
+      /**************************************************************/
+      void DeserializeTags(const rapidjson::Value& data);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deserializes a JSON of starting objects into this archetype.
+
+        \param data
+          The JSON of starting objects to deserialize.
+      */
+      /**************************************************************/
+      void DeserializeStartingObjects(const rapidjson::Value& data);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Deserializes a JSON of spawn archetypes into this archetype.
+
+        \param data
+          The JSON of spawn archetypes to deserialize.
+      */
+      /**************************************************************/
+      void DeserializeSpawnArchetypes(const rapidjson::Value& data);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Determines whether an object archetype has the component
+          arrays expected by the pool.
+
+        \param objectArchetype
+          The object archetype to validate.
+
+        \return
+          Returns true if the object archetype's component arrays 
+          match the pool's, returns false otherwise.
+      */
+      /**************************************************************/
+      bool ObjectArchetypeIsValid(ObjectArchetype* objectArchetype);
+
+    private:
+      std::string name_;                                  //!< Name of the pool this archetype will create
+      unsigned capacity_;                                 //!< The number of objects the pool will be able to hold
+      SharedComponentMap sharedComponents_;               //!< Initialized shared components to copy to the pool
+      std::vector<std::string_view> componentArrayNames_; //!< Names of the pool's component arrays
+      std::vector<std::string_view> tags_;                //!< Tags of the pool
+
+      std::vector<ObjectArchetype*> startingObjects_;     //!< The objects the pool starts with
+      std::vector<ObjectArchetype*> spawnArchetypes_;     //!< Objects that can be spawned in the pool
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

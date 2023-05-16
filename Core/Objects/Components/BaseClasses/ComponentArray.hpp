@@ -18,13 +18,15 @@
 #define ComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "BaseComponent.hpp"
 #include <vector>
+#include <string>
+#include <rttr/rttr_enable.h>
+#include <rttr/variant.h>
 
 namespace Barrage
 { 
   //! Base component array class that all component arrays inherit from
-  class ComponentArray : public Component
+  class ComponentArray
   {
     public:
       /**************************************************************/
@@ -34,17 +36,6 @@ namespace Barrage
       */
       /**************************************************************/
       virtual ~ComponentArray() = default;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Allocates the component array for a given component type.
-
-        \param capacity
-          The number of elements in the component array.
-      */
-      /**************************************************************/
-      virtual void Allocate(unsigned capacity) = 0;
 
       /**************************************************************/
       /*!
@@ -69,13 +60,30 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Used to identify this object as a component array.
+          Gets an rttr::variant representation of the component at
+          some index. Should not generally be used except for
+          serialization/the editor.
+
+        \param index
+          The index of the component to get.
 
         \return
-          Returns the "ARRAY" component type.
+          Returns the value of the component as an rttr::variant.
       */
       /**************************************************************/
-      virtual Component::Type GetType() override;
+      virtual rttr::variant GetRTTRValue(int index) = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the component value at some index using an rttr::variant.
+          Should not generally be used except for serialization or
+          the editor.
+      */
+      /**************************************************************/
+      virtual void SetRTTRValue(const rttr::variant& value, int index) = 0;
+
+      RTTR_ENABLE()
   };
 
   //! All component arrays are a specialization of this template
@@ -86,10 +94,35 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Initializes with a null component array.
+          Constructs a component array with the given capacity.
+
+        \param capacity
+          The number of components held in the array.
       */
       /**************************************************************/
-      ComponentArrayT();
+      ComponentArrayT(unsigned capacity = 1);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copy constructor.
+
+        \param other
+          The array to copy.
+      */
+      /**************************************************************/
+      ComponentArrayT(const ComponentArrayT<T>& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copy assignment operator.
+
+        \param other
+          The array to copy.
+      */
+      /**************************************************************/
+      ComponentArrayT<T>& operator=(const ComponentArrayT<T>& other);
 
       /**************************************************************/
       /*!
@@ -97,24 +130,15 @@ namespace Barrage
           Deallocates component array.
       */
       /**************************************************************/
-      virtual ~ComponentArrayT();
-
-      /**************************************************************/
-      /*!
-        \brief
-          Allocates component array with the given number of elements.
-
-        \param capacity
-          The number of elements in the component array.
-      */
-      /**************************************************************/
-      void Allocate(unsigned capacity) override;
+      ~ComponentArrayT() override;
 
       /**************************************************************/
       /*!
         \brief
           Copies a component from some source component array to a
-          recipient component in this component array.
+          recipient component in this component array. The arrays
+          should be the same type (this function is not safety
+          checked).
 
         \param source
           The component array holding the component to copy from. The
@@ -142,26 +166,43 @@ namespace Barrage
           Returns a reference to the accessed component.
       */
       /**************************************************************/
-      T& operator[](int i);
+      T& Data(int index);
 
       /**************************************************************/
       /*!
         \brief
-          Allows user to determine the name of the component's child
-          class (for use with reflection).
+          Gets an rttr::variant representation of the component at
+          some index. Should not generally be used except for
+          serialization/the editor.
+
+        \param index
+          The index of the component to get.
 
         \return
-          Returns the name of the component's child class.
+          Returns the value of the component as an rttr::variant.
       */
       /**************************************************************/
-      std::string GetClassName() override;
+      rttr::variant GetRTTRValue(int index) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the component value at some index using an rttr::variant.
+          Should not generally be used except for serialization or
+          the editor.
+      */
+      /**************************************************************/
+      void SetRTTRValue(const rttr::variant& value, int index) override;
 
     public:
       T* data_;
+      unsigned capacity_;
+
+    RTTR_ENABLE(ComponentArray)
   };
 
   //! Associates each component array with its name
-  typedef std::unordered_map<std::string, ComponentArray*> ComponentArrayMap;
+  typedef std::unordered_map<std::string_view, ComponentArray*> ComponentArrayMap;
 }
 
 #include "ComponentArray.tpp"

@@ -13,6 +13,7 @@
 #include "DemoGame.hpp"
 #include "../Initialization/DemoInitialization.hpp"
 #include <Engine/Engine.hpp>
+#include <iostream>
 
 namespace Demo
 {
@@ -74,10 +75,21 @@ namespace Demo
     
     engine_.Input().Update();
 
+    TimePoint beginT;
+    TimePoint endT;
+
     unsigned num_ticks = engine_.Frames().ConsumeTicks();
     for (unsigned i = 0; i < num_ticks; ++i)
     {
+      beginT = std::chrono::high_resolution_clock::now();
       engine_.Spaces().Update();
+      endT = std::chrono::high_resolution_clock::now();
+    }
+
+    if (num_ticks)
+    {
+      auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
+      std::cout << "Frame time (microseconds): " << duration.count() << std::endl;
     }
 
     Barrage::WindowManager& windowing = engine_.Windowing();

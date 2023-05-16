@@ -23,11 +23,11 @@ namespace Demo
 
   Barrage::Scene* CreateDemoScene();
 
-  void CreatePlayerArchetypes(Barrage::ObjectManager& objectManager);
+  void CreatePlayerArchetypes(Barrage::Scene& scene);
 
-  void CreateBulletArchetypes(Barrage::ObjectManager& objectManager);
+  void CreateBulletArchetypes(Barrage::Scene& scene);
 
-  void CreateSpawnerArchetypes(Barrage::ObjectManager& objectManager);
+  void CreateSpawnerArchetypes(Barrage::Scene& scene);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

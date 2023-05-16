@@ -21,7 +21,14 @@ namespace Barrage
   Engine::Engine() :
     framerateController_(),
     inputManager_(),
-    spaceManager_()
+    sceneManager_(),
+    spaceManager_(),
+    gfxManager_(),
+    gfxRenderer_(),
+    gfxFactory_(),
+    gfxRegistry_(),
+    gfxDrawSystem_(),
+    windowManager_()
   {
   }
 
@@ -46,6 +53,8 @@ namespace Barrage
 
     inputManager_.Initialize(windowManager_.GetInternalHandle());
     framerateController_.Initialize(windowManager_.GetInternalHandle(), FramerateController::FpsCap::FPS_120, true);
+
+    logger_.AddFileLogger("logs/trace.txt");
   }
 
   void Engine::Shutdown()
@@ -80,6 +89,11 @@ namespace Barrage
   InputManager& Engine::Input()
   {
     return inputManager_;
+  }
+
+  SceneManager& Engine::Scenes()
+  {
+    return sceneManager_;
   }
 
   SpaceManager& Engine::Spaces()

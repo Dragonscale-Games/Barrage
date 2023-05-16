@@ -50,6 +50,13 @@ namespace Barrage
 
     return min + static_cast<T>((max - min) * lerpFactor);
   }
+
+  template <typename T>
+  T& Dereference(T* pointer, bool& ok)
+  {
+    ok = true;
+    return *pointer;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -128,6 +128,16 @@ namespace Barrage
     /*************************************************************************/
     GfxManager2D::ResourceID FindShader(const char* keyname);
 
+    /*************************************************************************/
+    /*!
+      \brief
+        Gets a list of the names of all registered textures.
+      \return
+        Returns a list of the names of all registered textures.
+    */
+    /*************************************************************************/
+    std::vector<std::string> GetTextureNames();
+
   private:
     
     //! The pointer to a factory.

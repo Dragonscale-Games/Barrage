@@ -15,14 +15,15 @@
 #define ObjectManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Archetypes/ArchetypeManager.hpp"
 #include "Pools/PoolManager.hpp"
-#include "Pools/PoolInfo.hpp"
 #include "Systems/SystemManager.hpp"
-#include "SpawnFuncs/SpawnFuncManager.hpp"
+#include "Spawning/SpawnFunctionManager.hpp"
+#include "Random/Random.hpp"
 
 namespace Barrage
 { 
+  class Space;
+  
   //! Main point of contact for game object manipulation
   class ObjectManager
 	{
@@ -34,7 +35,7 @@ namespace Barrage
           systems, and initializers.
       */
       /**************************************************************/
-      ObjectManager();
+      ObjectManager(Space& space);
 
       // ===================================================================
       // Game loop
@@ -57,36 +58,18 @@ namespace Barrage
       void Draw();
 
       // ===================================================================
-      // Components
-      // ===================================================================
-
-      std::vector<std::string> GetComponentArrayNames();
-
-      std::vector<std::string> GetSharedComponentNames();
-
-      // ===================================================================
-      // Initializers
-      // ===================================================================
-
-      std::vector<std::string> GetSpawnFuncNames();
-
-      // ===================================================================
       // Systems
       // ===================================================================
 
-      std::vector<std::string> GetRegisteredSystemNames();
+      std::vector<std::string_view> GetRegisteredSystemNames();
 
-      std::vector<std::string> GetSystemUpdateOrder();
+      std::vector<std::string_view> GetSystemUpdateOrder();
 
       // ===================================================================
       // Pools
       // ===================================================================
 
-      void AddPoolArchetype(const std::string& name, PoolArchetype* archetype);
-
-      void CreatePool(const std::string& poolName, const std::string& archetypeName, unsigned capacity = 1);
-
-      void CreatePoolAndObjects(const PoolInfo& poolInfo);
+      void CreatePool(const PoolArchetype& archetype);
 
       Pool* GetPool(const std::string& name) const;
 
@@ -94,36 +77,27 @@ namespace Barrage
 
       void DeleteAllPools();
 
-      std::vector<std::string> GetPoolArchetypeNames();
-
       std::vector<std::string> GetPoolNames();
-
-      // ===================================================================
-      // Objects
-      // ===================================================================
-
-      void AddObjectArchetype(const std::string& name, ObjectArchetype* archetype);
-
-      void CreateObject(const std::string& poolName, const std::string& archetypeName);
-
-      std::vector<std::string> GetObjectArchetypeNames();
     
     private:
       template <typename T>
-      void RegisterComponent(const std::string& componentName);
+      void RegisterComponentArray(const std::string_view& componentName);
 
       template <typename T>
-      void RegisterSystem(const std::string& systemName);
+      void RegisterSharedComponent(const std::string_view& componentName);
 
-      void RegisterSpawnFunc(const std::string name, SpawnFunc spawnFunction);
+      template <typename T>
+      void RegisterSystem(const std::string_view& systemName);
 
-      void SetSystemUpdateOrder(const std::vector<std::string>& updateOrderList);
+      void RegisterSpawnFunction(const std::string_view& name, SpawnFunction spawnFunction);
+
+      void SetSystemUpdateOrder(const std::vector<std::string_view>& updateOrderList);
 
       void RegisterEngineComponents();
 
       void RegisterEngineSystems();
 
-      void RegisterEngineSpawnFuncs();
+      void RegisterEngineSpawnFunctions();
 
       void SetDefaultSystemUpdateOrder();
 
@@ -131,16 +105,13 @@ namespace Barrage
 
       void RegisterCustomSystems();
 
-      void RegisterCustomSpawnFuncs();
+      void RegisterCustomSpawnFunctions();
 
       void SetSystemUpdateOrder();
 
     private:
-      ComponentAllocator componentAllocator_;
-      ArchetypeManager archetypeManager_;
       PoolManager poolManager_;
       SystemManager systemManager_;
-      SpawnFuncManager spawnFuncManager_;
 	};
 }
 

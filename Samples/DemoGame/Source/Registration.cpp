@@ -15,27 +15,53 @@
 /* ======================================================================== */
 
 #include <Objects/ObjectManager.hpp>
-#include <Source/Systems/SpawnSystem.hpp>
+
+#include "Systems/DemoSystems.hpp"
+#include "Components/DemoComponents.hpp"
+#include "SpawnFuncs/DemoSpawnFuncs.hpp"
+#include "Objects/Components/ComponentAllocator.hpp"
 
 namespace Barrage
 {
   void ObjectManager::RegisterCustomComponents()
   {
+    RegisterComponentArray<Demo::AngularSpeed>("AngularSpeed");
+    RegisterComponentArray<Demo::Velocity>("Velocity");
 
+    RegisterSharedComponent<Demo::BoundaryBox>("BoundaryBox");
+    RegisterSharedComponent<Demo::CircleCollider>("CircleCollider");
+    RegisterSharedComponent<Demo::Player>("Player");
+    RegisterSharedComponent<Demo::RNG>("RNG");
+
+    ComponentAllocator::RegisterTag("Bullet");
+    ComponentAllocator::RegisterTag("Bullet Pool");
+    ComponentAllocator::RegisterTag("Spawner");
   }
 
   void ObjectManager::RegisterCustomSystems()
   {
+    RegisterSystem<Demo::CollisionSystem>("CollisionSystem");
+    RegisterSystem<Demo::MovementSystem>("MovementSystem");
     RegisterSystem<Demo::SpawnSystem>("SpawnSystem");
   }
 
-  void ObjectManager::RegisterCustomSpawnFuncs()
+  void ObjectManager::RegisterCustomSpawnFunctions()
   {
-
+    RegisterSpawnFunction("MatchPosition", Demo::Spawn::MatchPosition);
+    RegisterSpawnFunction("RandomDirection", Demo::Spawn::RandomDirection);
   }
 
   void ObjectManager::SetSystemUpdateOrder()
   {
-    
+    std::vector<std::string_view> update_order;
+
+    update_order.push_back("CreationSystem");
+    update_order.push_back("DestructionSystem");
+    update_order.push_back("MovementSystem");
+    update_order.push_back("SpawnSystem");
+    update_order.push_back("CreationSystem");
+    update_order.push_back("CollisionSystem");
+
+    SetSystemUpdateOrder(update_order);
   }
 }

@@ -24,16 +24,20 @@
 #include "Objects/Components/EngineComponents.hpp"
 #include <map>
 #include <unordered_map>
+#include <string_view>
 
 namespace Barrage
 {
-  typedef std::unordered_map<unsigned, PoolType> PoolTypeMap;
-  typedef std::multimap<unsigned, Pool*> OrderedPoolMap;
+  class SystemManager;
+  class System;
+  
+  typedef std::unordered_map<std::string_view, PoolType> PoolTypeMap;
+  typedef std::map<std::string_view, std::vector<Pool*>> PoolGroupMap;
 
   typedef void (*PoolUpdateFunc)(Pool*);
   typedef void (*InteractionFunc)(Pool*, Pool*);
-
-  class SystemManager;
+  typedef void (System::* PoolUpdateMemberFunc)(Pool*);
+  typedef void (System::* InteractionMemberFunc)(Pool*, Pool*);
 
   //! Base object system class that all object systems should inherit from
   class System
@@ -76,7 +80,7 @@ namespace Barrage
           and, if so, unsubscribes it from the system.
       */
       /**************************************************************/
-      void Unsubscribe(Pool* pool);
+      virtual void Unsubscribe(Pool* pool);
 
       /**************************************************************/
       /*!
@@ -113,7 +117,22 @@ namespace Barrage
           The function to apply to these pools.
       */
       /**************************************************************/
-      void UpdatePoolGroup(unsigned group, PoolUpdateFunc function);
+      void UpdatePoolGroup(std::string_view group, PoolUpdateFunc function);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Applies the given system member function to all pools in 
+          the given group.
+
+        \param group
+          The key of the pool group.
+
+        \param function
+          The function to apply to these pools.
+      */
+      /**************************************************************/
+      void UpdatePoolGroup(std::string_view group, PoolUpdateMemberFunc function);
 
       /**************************************************************/
       /*!
@@ -131,12 +150,30 @@ namespace Barrage
           The function to apply to these pools.
       */
       /**************************************************************/
-      void UpdateInteraction(unsigned group1, unsigned group2, InteractionFunc function);
+      void UpdateInteraction(std::string_view group1, std::string_view group2, InteractionFunc function);
+
+      /**************************************************************/
+      /*!
+        \brief
+          For each pool in group 1, applies the given system member 
+          function to all pools in group 2.
+
+        \param group1
+          The key of the first pool group in the interaction.
+
+        \param group2
+          The key of the second pool group in the interaction.
+
+        \param function
+          The function to apply to these pools.
+      */
+      /**************************************************************/
+      void UpdateInteraction(std::string_view group1, std::string_view group2, InteractionMemberFunc function);
 
     protected:
       PoolTypeMap poolTypes_;        //!< Holds all pool types the system cares about
-      OrderedPoolMap pools_;         //!< Holds all subscribed pools in a specific order
-      SystemManager* systemManager_; //!< Manager that contains this system
+      PoolGroupMap poolGroups_;      //!< Holds all subscribed pools in a specific order
+      SystemManager* systemManager_; //!< Holds all of a given Object Manager's systems (including this system)
 
     friend class SystemManager;
   };

@@ -24,7 +24,7 @@
 namespace Barrage
 {
   //! Maps system names to systems
-  typedef std::unordered_map<std::string, System*> SystemMap;
+  typedef std::unordered_map<std::string_view, System*> SystemMap;
 
   //! <class description>
   class SystemManager
@@ -61,7 +61,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      void RegisterSystem(const std::string& systemName);
+      void RegisterSystem(const std::string_view& systemName);
 
       /**************************************************************/
       /*!
@@ -74,7 +74,7 @@ namespace Barrage
           An ordered list of system names.
       */
       /**************************************************************/
-      void SetUpdateOrder(const std::vector<std::string>& updateOrderList);
+      void SetUpdateOrder(const std::vector<std::string_view>& updateOrderList);
 
       /**************************************************************/
       /*!
@@ -112,7 +112,7 @@ namespace Barrage
           the system is not registered.
       */
       /**************************************************************/
-      System* GetSystem(const std::string& name);
+      System* GetSystem(const std::string_view& name);
 
       /**************************************************************/
       /*!
@@ -123,7 +123,7 @@ namespace Barrage
           Returns the list of all registered systems.
       */
       /**************************************************************/
-      std::vector<std::string> GetRegisteredSystemNames();
+      std::vector<std::string_view> GetRegisteredSystemNames();
 
       /**************************************************************/
       /*!
@@ -136,12 +136,12 @@ namespace Barrage
           they're updating.
       */
       /**************************************************************/
-      std::vector<std::string> GetSystemUpdateOrder();
+      std::vector<std::string_view> GetSystemUpdateOrder();
 
     private:
-      SystemMap systems_;                        //!< The collection of registered systems
-      std::vector<std::string> systemNames_;     //!< The names of all registered systems
-      std::vector<std::string> updateOrderList_; //!< The order the systems will update in
+      SystemMap systems_;                             //!< The collection of registered systems
+      std::vector<std::string_view> systemNames_;     //!< The names of all registered systems
+      std::vector<std::string_view> updateOrderList_; //!< The order the systems will update in
 
     friend class ObjectManager;
 	};

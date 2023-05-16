@@ -19,6 +19,7 @@
 //  ===========================================================================
 // Includes
 //  ===========================================================================
+#include <string>
 #include <rapidjson/document.h>
 #include <rapidjson/allocators.h>
 #include <rttr/registration.h>
@@ -28,6 +29,7 @@ namespace Barrage
   /*************************************************************************/
   /*!
     \brief
+      Serializes an RTTR object into a rapidjson value.
     \param object
       The object being serialized. It must be registered through
       rttr.
@@ -42,14 +44,14 @@ namespace Barrage
   /*************************************************************************/
   /*!
     \brief
-      Deserializes an object given the JSON data for it.
+      Deserializes a rapidjson value into an RTTR object.
     \param object
       The object to deserialize from JSON data.
     \param data
       The object representing the JSON data being read.
   */
   /*************************************************************************/
-  void Deserialize(rttr::variant& object, const rapidjson::Value& data, rttr::type type);
+  void Deserialize(rttr::variant& object, const rapidjson::Value& data, rttr::type type) noexcept(false);
   /*************************************************************************/
   /*!
     \brief
@@ -64,11 +66,11 @@ namespace Barrage
   */
   /*************************************************************************/
   template <class T>
-  void Deserialize(T& object, const rapidjson::Value& data);
+  void Deserialize(T& object, const rapidjson::Value& data) noexcept(false);
   /*************************************************************************/
   /*************************************************************************/
   template <class T>
-  void Deserialize(T& object, const rapidjson::Value& data, const rttr::type& type);
+  void Deserialize(T& object, const rapidjson::Value& data, const rttr::type& type) noexcept(false);
 }
 
 #include "Serializer.tpp"

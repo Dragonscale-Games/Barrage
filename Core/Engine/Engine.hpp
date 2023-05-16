@@ -18,11 +18,13 @@
 
 #include "FramerateController/FramerateController.hpp"
 #include "Input/InputManager.hpp"
-#include "SimpleRenderer/SimpleRenderer.hpp"
 #include "Spaces/SpaceManager.hpp"
+#include "Scenes/SceneManager.hpp"
 
 #include "Rendering/GfxDraw2D.hpp"
 #include "Rendering/WindowManager.hpp"
+
+#include "Utilities/Logger.hpp"
 
 namespace Barrage
 {   
@@ -100,6 +102,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the engine's scene manager.
+
+        \return
+          Returns a reference to the engine's scene manager.
+      */
+      /**************************************************************/
+      SceneManager& Scenes();
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the engine's space manager.
 
         \return
@@ -121,6 +134,7 @@ namespace Barrage
     private:
       FramerateController framerateController_; //!< Framerate controller
       InputManager inputManager_;               //!< Input manager
+      SceneManager sceneManager_;               //!< Scene manager
       SpaceManager spaceManager_;               //!< Space manager
       GfxManager2D gfxManager_;
       GfxRenderer2D gfxRenderer_;
@@ -128,6 +142,7 @@ namespace Barrage
       GfxRegistry2D gfxRegistry_;
       GfxDraw2D gfxDrawSystem_;                 //!< The drawing system.
       WindowManager windowManager_;             //!< The windowing manager.
+      Logger logger_;
 	};
 }
 
