@@ -6,7 +6,8 @@ layout (location = 3) in vec2 scale;
 layout (location = 4) in float rotation;
 layout (location = 5) in vec4 texCoords;
 
-uniform mat4 projection;
+uniform mat4 projection = mat4(1);
+uniform mat4 camera = mat4(1);
 
 out FS_DATA
 {
@@ -19,7 +20,7 @@ void main(void)
   vec2 v = scale * vertex;
   v = vec2( v.x * cos(rotation) - v.y * sin(rotation), v.x * sin(rotation) + v.y * cos(rotation) );
   v += position;
-  gl_Position = projection * vec4(v, 0.0, 1.0);
+  gl_Position = projection * camera * vec4(v, 0.0, 1.0);
   // Send over data over to the fragment shader.
   vs_out.uv = texCoords.zw * uv + texCoords.xy;
 }

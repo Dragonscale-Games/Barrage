@@ -67,6 +67,12 @@ namespace Barrage
     renderer_->SetViewportSpace(dimensions);
   }
 
+  void GfxDraw2D::SetCameraTransform(const glm::vec2& position, float zoom, RADIAN rotation)
+  {
+    assert(renderer_);
+    renderer_->SetCameraTransform(position, zoom, rotation);
+  }
+
   void GfxDraw2D::StartFrame()
   {
     assert(renderer_);

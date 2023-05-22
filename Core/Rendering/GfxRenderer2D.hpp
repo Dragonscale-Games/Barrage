@@ -137,6 +137,20 @@ namespace Barrage
     */
     /*************************************************************************/
     void SetViewportSpace(const glm::ivec2& dimensions);
+    /*************************************************************************/
+    /*!
+      \brief
+        Sets the camera's transform in the renderer itself.
+      \remarks
+        This function rebuilds the camera matrix from scratch every call.
+      \param position
+        The position of the camera in world coordiantes.
+      \param zoom
+        The zoom factor which scales the world.
+      \param rotation
+    */
+    /*************************************************************************/
+    void SetCameraTransform(const glm::vec2& position, float zoom, RADIAN rotation);
     
     /*************************************************************************/
     /*!
@@ -186,9 +200,10 @@ namespace Barrage
     
   private:
 
-    struct Viewport //! A structure used to maintain the data about the viewport.
+    struct ConstantBuffer //! A structure used to maintain the data about the viewport.
     {
       glm::mat4 projection_; //!< The projection matrix of the renderer's viewport.
+      glm::mat4 camera_;     //!< The matrix to the canonical camera space.
     };
     
     /*************************************************************************/
@@ -241,7 +256,7 @@ namespace Barrage
 
     GLuint renderState_;                      //!< The vertex array object for the renderer.
     glm::vec4 clearColor_;                    //!< The color to clear the screen.
-    Viewport viewport_;                       //!< The viewport for this renderer.
+    ConstantBuffer constants_;                //!< The viewport for this renderer.
     InternalState current_;                   //!< The current resource state.
     GfxManager2D* manager_;                   //!< The graphics manager rendering everything for.
     GfxManager2D::MeshID instancedMesh_;      //!< The mesh used to render everything instanced.

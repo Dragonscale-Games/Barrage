@@ -91,9 +91,10 @@ int main()
     constexpr int size = 2;
     glm::vec2 positions[size] = { glm::vec2(-100 + settings.width_ / 2, settings.height_ / 2), glm::vec2(100 + settings.width_ / 2, settings.height_ / 2) };
     glm::vec2 scales[size] = { glm::vec2(150.0f), glm::vec2(50.0f, 120.0f) };
+    glm::vec4 uvs[size] = { glm::vec4(glm::vec2(0), glm::vec2(1)), glm::vec4(glm::vec2(0), glm::vec2(1)) };
     RADIAN rotations[size] = { 0.25f * (22.0f / 7.0f), 0.0f };
     drawing.StartFrame();
-    drawing.DrawInstancedQuad(size, positions, scales, rotations, "sample");
+    drawing.DrawInstancedQuad(size, positions, scales, rotations, uvs, "sample");
     drawing.EndFrame();
   }
   

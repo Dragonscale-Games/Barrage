@@ -243,6 +243,52 @@ namespace Barrage
         repeatTimer_ -= engine_.Frames().DT();
       }
     }
+
+    // Very very temp.
+    // This code is not important, feel free to take it out whenever.
+    static float zoom = 1.0f;
+    static float angle = 0.0f;
+    static glm::vec2 position(0.0f);
+
+    constexpr float zoomFactor = 1e-6f;
+    constexpr float velocity = 1e-3f;
+
+    if(engine_.Input().KeyIsDown(KEY_Z))
+    {
+      zoom += zoomFactor * engine_.Frames().DT();
+    }
+    if (engine_.Input().KeyIsDown(KEY_C))
+    {
+      zoom -= zoomFactor * engine_.Frames().DT();
+    }
+
+    if (engine_.Input().KeyIsDown(KEY_Q))
+    {
+      angle += zoomFactor * engine_.Frames().DT();
+    }
+    if (engine_.Input().KeyIsDown(KEY_E))
+    {
+      angle -= zoomFactor * engine_.Frames().DT();
+    }
+
+    if (engine_.Input().KeyIsDown(KEY_D))
+    {
+      position.x += velocity * engine_.Frames().DT();
+    }
+    if (engine_.Input().KeyIsDown(KEY_A))
+    {
+      position.x -= velocity * engine_.Frames().DT();
+    }
+    if (engine_.Input().KeyIsDown(KEY_W))
+    {
+      position.y += velocity * engine_.Frames().DT();
+    }
+    if (engine_.Input().KeyIsDown(KEY_S))
+    {
+      position.y -= velocity * engine_.Frames().DT();
+    }
+
+    engine_.Drawing().SetCameraTransform(position, zoom, angle);
   }
 
   void Editor::ChangeScene()

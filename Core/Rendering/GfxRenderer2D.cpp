@@ -26,7 +26,7 @@
 namespace Barrage
 {
   GfxRenderer2D::GfxRenderer2D() :
-    clearColor_(glm::vec3(0.0f), 1.0f), viewport_{ glm::mat4(1.0f) },
+    clearColor_(glm::vec3(0.0f), 1.0f), constants_{ glm::mat4(1.0f) },
     manager_(nullptr), instancedBuffers_{ 0 }
   {
   }
@@ -73,18 +73,32 @@ namespace Barrage
   void GfxRenderer2D::SetViewportSpace(const glm::ivec2& dimensions)
   {
     /*
-    viewport_.projection_ =
+    constants_.projection_ =
       glm::ortho(
         static_cast<float>(-dimensions.x) / 2.0f,
         static_cast<float>(dimensions.x) / 2.0f,
         static_cast<float>(-dimensions.y) / 2.0f,
         static_cast<float>(dimensions.y) / 2.0f);
     */
-    viewport_.projection_ =
-      glm::ortho(
-        0.0f, 1920.0f, 
-        0.0f, 1080.0f);
+    //constants_.projection_ = glm::ortho<float>(0, dimensions.x, 0, dimensions.y);
+    //constants_.projection_ = glm::ortho<float>(0.0f, 1920.0f, 0.0f, 1080.0f);
+    constants_.projection_ = glm::ortho<float>(-1920.0f / 2, +1920.0f / 2, -1080.0f / 2, 1080.0f / 2);
     CHECK_GL( glViewport(0, 0, dimensions.x, dimensions.y) );
+  }
+
+  void GfxRenderer2D::SetCameraTransform(const glm::vec2& position, float zoom, RADIAN rotation)
+  {
+    constexpr glm::mat4 iden(1.0f);
+    constexpr glm::vec2 offset = 0.5f * glm::vec2(1920, 1080);
+
+    using glm::vec3;
+    using glm::translate;
+    using glm::scale;
+    using glm::rotate;
+
+    constants_.camera_ =
+      translate(iden, vec3(position, 0)) * rotate(iden, rotation, vec3(0, 0, 1)) * scale(iden, vec3(zoom)) *
+      translate(iden, vec3(-offset, 0));
   }
 
   void GfxRenderer2D::AddRequest(const InstancedRequest& request)
@@ -137,14 +151,19 @@ namespace Barrage
         current_.shaderIndex_ = resource.shaderIndex_;
         int shaderID = static_cast<int>(resourceShaders[current_.shaderIndex_]);
         CHECK_GL( glUseProgram(shaderID) );
-        // Set the uniform for the projection matrix.
-        GLint projectionUniform = glGetUniformLocation(shaderID, "projection"); CHECK_GL((void)0);
+
+        const GLint projectionUniform = glGetUniformLocation(shaderID, "projection"); CHECK_GL((void)0);
+        const GLint cameraUniform = glGetUniformLocation(shaderID, "camera"); CHECK_GL((void)0);
+        const GLint colorTextureUniform = glGetUniformLocation(shaderID, "colorTex"); CHECK_GL((void)0);
+
         if (projectionUniform != -1)
         {
-          CHECK_GL( glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(viewport_.projection_)) );
+          CHECK_GL( glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, glm::value_ptr(constants_.projection_)) );
         }
-        // Set the uniform for the color texture if it exists.
-        GLint colorTextureUniform = glGetUniformLocation(shaderID, "colorTex"); CHECK_GL((void)0);
+        if (cameraUniform != -1)
+        {
+          CHECK_GL( glUniformMatrix4fv(cameraUniform, 1, GL_FALSE, glm::value_ptr(constants_.camera_)) );
+        }
         if(colorTextureUniform != -1)
         {
           CHECK_GL( glUniform1i(colorTextureUniform, 0) );
@@ -284,9 +303,8 @@ namespace Barrage
     CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(decltype(*request.transform_.rotations_)) * request.transform_.count_,
       request.transform_.rotations_, GL_STREAM_DRAW) );
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedBuffers_[TEXCOORD_BUFFER]) );
-    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4)* request.transform_.count_,
+    CHECK_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(decltype(*request.transform_.uvMaps_)) * request.transform_.count_,
       request.transform_.texCoords_, GL_STREAM_DRAW) );
-
 
     // Make sure to bind the correct buffer.
     CHECK_GL( glBindBuffer(GL_ARRAY_BUFFER, instancedVertexBuffers[GfxManager2D::VERTICES]) );

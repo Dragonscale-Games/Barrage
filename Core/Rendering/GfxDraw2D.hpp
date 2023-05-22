@@ -83,6 +83,20 @@ namespace Barrage
     */
     /*************************************************************************/
     void SetViewportSpace(const glm::ivec2& dimensions);
+    /*************************************************************************/
+    /*!
+      \brief
+        Sets the camera's transform in the renderer itself.
+      \remarks
+        This function rebuilds the camera matrix from scratch every call.
+      \param position
+        The position of the camera in world coordiantes.
+      \param zoom
+        The zoom factor which scales the world.
+      \param rotation
+    */
+    /*************************************************************************/
+    void SetCameraTransform(const glm::vec2& position, float zoom, RADIAN rotation);
 
     /*************************************************************************/
     /*!
