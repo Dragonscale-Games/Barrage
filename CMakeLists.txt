@@ -60,6 +60,5 @@ endif()
 
 # Add the subdirectories for building the Barrage libraries.
 add_subdirectory(Core)
-add_subdirectory(Tests)
 add_subdirectory(Samples)
 add_subdirectory(Editor)

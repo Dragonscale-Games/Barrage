@@ -67,6 +67,12 @@ namespace Demo
 
     Barrage::Space* demo_space = CreateDemoSpace();
     engine_.Spaces().AddSpace("Demo Space", demo_space);
+
+    float zoom = 1.0f;
+    float angle = 0.0f;
+    glm::vec2 position(0.0f);
+
+    engine_.Drawing().SetCameraTransform(position, zoom, angle);
   }
 
   void Game::Update()
