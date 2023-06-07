@@ -38,13 +38,13 @@ namespace Barrage
         Record,
         Replay
       };
-    
+
       struct StateChange
       {
         uint32_t tick_;
         uint32_t action_;
       };
-    
+
       ActionManager();
 
       void MapActionKey(ACTION action, KEY key);
