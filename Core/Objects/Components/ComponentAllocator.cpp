@@ -15,22 +15,35 @@
 
 namespace Barrage
 {
+  ComponentAllocMap ComponentAllocator::componentAllocMap_ = ComponentAllocMap();
   ComponentArrayAllocMap ComponentAllocator::componentArrayAllocMap_ = ComponentArrayAllocMap();
-  SharedComponentAllocMap ComponentAllocator::sharedComponentAllocMap_ = SharedComponentAllocMap();
   TagSet ComponentAllocator::tagSet_ = TagSet();
 
+  std::vector<std::string_view> ComponentAllocator::componentNames_ = std::vector<std::string_view>();
   std::vector<std::string_view> ComponentAllocator::componentArrayNames_ = std::vector<std::string_view>();
-  std::vector<std::string_view> ComponentAllocator::sharedComponentNames_ = std::vector<std::string_view>();
   std::vector<std::string_view> ComponentAllocator::tagNames_ = std::vector<std::string_view>();
 
+  bool ComponentAllocator::componentNamesSorted_ = false;
   bool ComponentAllocator::componentArrayNamesSorted_ = false;
-  bool ComponentAllocator::sharedComponentNamesSorted_ = false;
   bool ComponentAllocator::tagNamesSorted_ = false;
 
   void ComponentAllocator::RegisterTag(const std::string_view& tag)
   {
     tagSet_.insert(tag);
     tagNamesSorted_ = false;
+  }
+
+  Component* ComponentAllocator::AllocateComponent(const std::string_view& name, Component* initializer)
+  {
+    if (componentAllocMap_.find(name) == componentAllocMap_.end())
+    {
+      return nullptr;
+    }
+    else
+    {
+      ComponentAllocFunc function = componentAllocMap_.at(name);
+      return function(initializer);
+    }
   }
 
   ComponentArray* ComponentAllocator::AllocateComponentArray(const std::string_view& name, unsigned capacity)
@@ -46,24 +59,11 @@ namespace Barrage
     }
   }
 
-  SharedComponent* ComponentAllocator::AllocateSharedComponent(const std::string_view& name, SharedComponent* initializer)
+  std::string_view ComponentAllocator::GetComponentLiteral(const std::string_view& component)
   {
-    if (sharedComponentAllocMap_.find(name) == sharedComponentAllocMap_.end())
-    {
-      return nullptr;
-    }
-    else
-    {
-      SharedComponentAllocFunc function = sharedComponentAllocMap_.at(name);
-      return function(initializer);
-    }
-  }
+    auto iterator = componentAllocMap_.find(component);
 
-  std::string_view ComponentAllocator::GetComponentArrayLiteral(const std::string_view& componentArray)
-  {
-    auto iterator = componentArrayAllocMap_.find(componentArray);
-
-    if (iterator != componentArrayAllocMap_.end())
+    if (iterator != componentAllocMap_.end())
     {
       return iterator->first;
     }
@@ -73,11 +73,11 @@ namespace Barrage
     }
   }
 
-  std::string_view ComponentAllocator::GetSharedComponentLiteral(const std::string_view& sharedComponent)
+  std::string_view ComponentAllocator::GetComponentArrayLiteral(const std::string_view& componentArray)
   {
-    auto iterator = sharedComponentAllocMap_.find(sharedComponent);
+    auto iterator = componentArrayAllocMap_.find(componentArray);
 
-    if (iterator != sharedComponentAllocMap_.end())
+    if (iterator != componentArrayAllocMap_.end())
     {
       return iterator->first;
     }
@@ -101,6 +101,17 @@ namespace Barrage
     }
   }
 
+  const std::vector<std::string_view>& ComponentAllocator::GetComponentNames()
+  {
+    if (!componentNamesSorted_)
+    {
+      std::sort(componentNames_.begin(), componentNames_.end());
+      componentNamesSorted_ = true;
+    }
+
+    return componentNames_;
+  }
+
   const std::vector<std::string_view>& ComponentAllocator::GetComponentArrayNames()
   {
     if (!componentArrayNamesSorted_)
@@ -108,21 +119,10 @@ namespace Barrage
       std::sort(componentArrayNames_.begin(), componentArrayNames_.end());
       componentArrayNamesSorted_ = true;
     }
-    
+
     return componentArrayNames_;
   }
-
-  const std::vector<std::string_view>& ComponentAllocator::GetSharedComponentNames()
-  {
-    if (!sharedComponentNamesSorted_)
-    {
-      std::sort(sharedComponentNames_.begin(), sharedComponentNames_.end());
-      sharedComponentNamesSorted_ = true;
-    }
-    
-    return sharedComponentNames_;
-  }
-
+  
   const std::vector<std::string_view>& ComponentAllocator::GetTagNames()
   {
     if (!tagNamesSorted_)

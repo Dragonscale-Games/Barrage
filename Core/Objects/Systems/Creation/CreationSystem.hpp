@@ -20,7 +20,7 @@
 #include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
 #include "Objects/Spawning/SpawnFunctionManager.hpp"
 #include "Objects/Pools/PoolManager.hpp"
-#include "Objects/Components/SharedComponents/Spawner.hpp"
+#include "Objects/Components/Components/Spawner.hpp"
 #include "Objects/Spawning/SpawnInfo.hpp"
 
 namespace Barrage

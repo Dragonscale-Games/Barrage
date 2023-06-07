@@ -6,10 +6,9 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Used to initialize an object pool. Provides starting values of shared
-   components using its shared component map. Only provides names of component
-   arrays, as components in component arrays are initialized later with an
-   ObjectArchetype.
+   Used to initialize an object pool. Provides starting values of components
+   on the pool. Only provides names of component arrays, as components in
+   component arrays are initialized later with an ObjectArchetype.
  */
  /* ======================================================================== */
 
@@ -100,18 +99,18 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Checks if the archetype contains a shared component with
-          the given name.
+          Checks if the archetype contains a component with the 
+          given name.
 
         \param name
-          The name of the shared component to check for.
+          The name of the component to check for.
 
         \return
-          Returns true if the archetype contains the given shared
-          component, returns false otherwise.
+          Returns true if the archetype contains the component, 
+          returns false otherwise.
       */
       /**************************************************************/
-      bool HasSharedComponent(const std::string_view& name);
+      bool HasComponent(const std::string_view& name);
 
       /**************************************************************/
       /*!
@@ -119,7 +118,7 @@ namespace Barrage
           Checks if the archetype contains a component array with the
           given name.
 
-        \param componentArrayName
+        \param name
           The name of the component array to check for.
 
         \return
@@ -127,7 +126,7 @@ namespace Barrage
           array, returns false otherwise.
       */
       /**************************************************************/
-      bool HasComponentArray(const std::string_view& componentArrayName) const;
+      bool HasComponentArray(const std::string_view& name) const;
 
       /**************************************************************/
       /*!
@@ -175,28 +174,28 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the shared component with the given name if it exists.
+          Gets the component with the given name if it exists.
 
         \param name
-          The name of the shared component.
+          The name of the component.
 
         \return
-          Returns the shared component if it exists, returns nullptr
+          Returns the component if it exists, returns nullptr
           otherwise.
       */
       /**************************************************************/
-      SharedComponent* PoolArchetype::GetSharedComponent(const std::string_view& name);
+      Component* PoolArchetype::GetComponent(const std::string_view& name);
 
       /**************************************************************/
       /*!
         \brief
-          Gets the pool archetype's shared components.
+          Gets the pool archetype's components.
 
         \return
-          Returns the pool archetype's shared components.
+          Returns the pool archetype's components.
       */
       /**************************************************************/
-      const SharedComponentMap& GetSharedComponents() const;
+      const ComponentMap& GetComponents() const;
 
       /**************************************************************/
       /*!
@@ -256,32 +255,32 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Adds a shared component to the pool archetype. Has no effect
-          if a shared component with the given name already exists.
+          Adds a component to the pool archetype. Has no effect
+          if a component with the given name already exists.
 
         \param name
-          The name of the shared component.
+          The name of the component.
 
-        \param sharedComponent
-          The shared component to add.
+        \param component
+          The component to add.
       */
       /**************************************************************/
-      void AddSharedComponent(const std::string_view& name, SharedComponent* sharedComponent);
+      void AddComponent(const std::string_view& name, Component* component);
 
       /**************************************************************/
       /*!
         \brief
           Adds a component array name to the archetype.
 
-        \param componentArrayName
-          The name of the component array name to add.
+        \param name
+          The name of the component array to add.
 
         \param index
-          Optional, allows the tag to be inserted at a specific index
+          Optional, allows the name to be inserted at a specific index
           in the vector.
       */
       /**************************************************************/
-      void AddComponentArrayName(const std::string_view& componentArrayName, unsigned* index = nullptr);
+      void AddComponentArrayName(const std::string_view& name, unsigned* index = nullptr);
 
       /**************************************************************/
       /*!
@@ -380,18 +379,18 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Removes and returns a shared component from the pool
-          archetype if it exists.
+          Removes and returns a component from the pool archetype if 
+          it exists.
 
         \param name
-          The name of the shared component to extract.
+          The name of the component to extract.
 
         \return
-          Returns a pointer to the shared component if it exists,
-          returns nullptr otherwise.
+          Returns a pointer to the component if it exists, returns 
+          nullptr otherwise.
       */
       /**************************************************************/
-      SharedComponent* ExtractSharedComponent(const std::string_view& name);
+      Component* ExtractComponent(const std::string_view& name);
 
       /**************************************************************/
       /*!
@@ -408,13 +407,13 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Deep copies a shared component map from "other" to "this".
+          Deep copies a component map from "other" to "this".
 
         \param other
           The map to copy.
       */
       /**************************************************************/
-      void CopySharedComponentMap(const SharedComponentMap& other);
+      void CopyComponentMap(const ComponentMap& other);
 
       /**************************************************************/
       /*!
@@ -441,10 +440,10 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Deep deletes this object's shared component map.
+          Deep deletes this archetype's component map.
       */
       /**************************************************************/
-      void DeleteSharedComponentMap();
+      void DeleteComponentMap();
 
       /**************************************************************/
       /*!
@@ -465,14 +464,14 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Serializes the pool archetype's shared components into a
+          Serializes the pool archetype's components into a
           rapidjson value.
 
         \return
           Returns the serialized rapidjson value.
       */
       /**************************************************************/
-      rapidjson::Value SerializeSharedComponents(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+      rapidjson::Value SerializeComponents(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
 
       /**************************************************************/
       /*!
@@ -507,13 +506,13 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Deserializes a JSON of shared components into this archetype.
+          Deserializes a JSON of components into this archetype.
 
         \param data
-          The JSON of shared components to deserialize.
+          The JSON of components to deserialize.
       */
       /**************************************************************/
-      void DeserializeSharedComponents(const rapidjson::Value& data);
+      void DeserializeComponents(const rapidjson::Value& data);
 
       /**************************************************************/
       /*!
@@ -579,7 +578,7 @@ namespace Barrage
     private:
       std::string name_;                                  //!< Name of the pool this archetype will create
       unsigned capacity_;                                 //!< The number of objects the pool will be able to hold
-      SharedComponentMap sharedComponents_;               //!< Initialized shared components to copy to the pool
+      ComponentMap components_;                           //!< Initialized components to copy to the pool
       std::vector<std::string_view> componentArrayNames_; //!< Names of the pool's component arrays
       std::vector<std::string_view> tags_;                //!< Tags of the pool
 

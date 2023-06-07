@@ -15,7 +15,7 @@
 #define SpawnTypes_DEMO_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Components/SharedComponents/Spawner.hpp"
+#include "Objects/Components/Components/Spawner.hpp"
 
 namespace Demo
 {

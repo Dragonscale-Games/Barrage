@@ -16,7 +16,7 @@
 #define Pool_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Components/BaseClasses/SharedComponent.hpp"
+#include "Objects/Components/BaseClasses/Component.hpp"
 #include "Objects/Components/BaseClasses/ComponentArray.hpp"
 #include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
 #include "Objects/Spawning/SpawnInfo.hpp"
@@ -78,6 +78,20 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Adds a component to the pool. Initial values can be
+          optionally set by an initializer.
+
+        \param name
+          The name of the component to add. It must have been
+          previously registered in the component allocator, or this
+          function has no effect.
+      */
+      /**************************************************************/
+      void AddComponent(const std::string_view& name, Component* initializer = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
           Adds a component array to the pool whose capacity matches
           the pool's.
 
@@ -88,20 +102,6 @@ namespace Barrage
       */
       /**************************************************************/
       void AddComponentArray(const std::string_view& name);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Adds a shared component to the pool. Initial values can be
-          optionally set by an initializer.
-
-        \param name
-          The name of the shared component to add. It must have been
-          previously registered in the component allocator, or this
-          function has no effect.
-      */
-      /**************************************************************/
-      void AddSharedComponent(const std::string_view& name, SharedComponent* initializer = nullptr);
 
       /**************************************************************/
       /*!
@@ -165,6 +165,21 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Determines if a pool has a given  component.
+
+        \param componentName
+          The name of the component to check for.
+
+        \return
+          Returns true if the pool has the component, returns
+          false otherwise.
+      */
+      /**************************************************************/
+      bool HasComponent(const std::string_view& componentName);
+
+      /**************************************************************/
+      /*!
+        \brief
           Determines if a pool has a given component array.
 
         \param componentArrayName
@@ -176,21 +191,6 @@ namespace Barrage
       */
       /**************************************************************/
       bool HasComponentArray(const std::string_view& componentArrayName);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Determines if a pool has a given shared component.
-
-        \param sharedComponentName
-          The name of the shared component to check for.
-
-        \return
-          Returns true if the pool has the shared component, returns
-          false otherwise.
-      */
-      /**************************************************************/
-      bool HasSharedComponent(const std::string_view& sharedComponentName);
 
       /**************************************************************/
       /*!
@@ -228,6 +228,26 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Get a reference to a given component. Throws an
+          out_of_range exception if no component matches the
+          input name.
+
+        \tparam T
+          The type of component to get.
+
+        \param componentName
+          The name of the component to get.
+
+        \return
+          Returns a reference to the component with the given name.
+      */
+      /**************************************************************/
+      template <typename T>
+      ComponentT<T>* GetComponent(const std::string_view& componentName);
+
+      /**************************************************************/
+      /*!
+        \brief
           Get a reference to a given component array. Throws an
           out_of_range exception if no component array matches the
           input name.
@@ -245,27 +265,6 @@ namespace Barrage
       /**************************************************************/
       template <typename T>
       ComponentArrayT<T>* GetComponentArray(const std::string_view& componentName);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Get a reference to a given shared component. Throws an
-          out_of_range exception if no shared component matches the
-          input name.
-
-        \tparam T
-          The type of shared component to get.
-
-        \param componentName
-          The name of the shared component to get.
-
-        \return
-          Returns a reference to the shared component with the given
-          name.
-      */
-      /**************************************************************/
-      template <typename T>
-      SharedComponentT<T>* GetSharedComponent(const std::string_view& componentName);
 
       /**************************************************************/
       /*!
@@ -333,18 +332,18 @@ namespace Barrage
           The number of objects to apply spawn functions to.
       */
       /**************************************************************/
-      void ApplySpawnFuncs(Pool* sourcePool, const SpawnInfo& spawnInfo, unsigned startIndex, unsigned numObjects);
+      void ApplySpawnFunctions(Pool* sourcePool, const SpawnInfo& spawnInfo, unsigned startIndex, unsigned numObjects);
 
     private:
-      ComponentArrayMap componentArrays_;   //!< Holds component arrays and their names
-      SharedComponentMap sharedComponents_; //!< Holds shared components and their names
-      SpawnArchetypeMap spawnArchetypes_;   //!< Objects that can be spawned in the pool
-      TagSet tags_;                         //!< Holds the pool's tags
-      unsigned numActiveObjects_;           //!< Number of currently active objects
-      unsigned numQueuedObjects_;           //!< Number of objects waiting to be spawned on the next tick
-      const unsigned capacity_;             //!< Total number of objects the pool can hold
-      std::string name_;                    //!< Name of the pool
-      Space& space_;                        //!< The space the pool lives in
+      ComponentMap components_;           //!< Holds shared components and their names
+      ComponentArrayMap componentArrays_; //!< Holds component arrays and their names
+      SpawnArchetypeMap spawnArchetypes_; //!< Objects that can be spawned in the pool
+      TagSet tags_;                       //!< Holds the pool's tags
+      unsigned numActiveObjects_;         //!< Number of currently active objects
+      unsigned numQueuedObjects_;         //!< Number of objects waiting to be spawned on the next tick
+      const unsigned capacity_;           //!< Total number of objects the pool can hold
+      std::string name_;                  //!< Name of the pool
+      Space& space_;                      //!< The space the pool lives in
 
       friend class CreationSystem;
       friend class DestructionSystem;

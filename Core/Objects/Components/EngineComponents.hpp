@@ -23,9 +23,9 @@
 #include "ComponentArrays/ScaleArray.hpp"
 #include "ComponentArrays/TextureSpaceArray.hpp"
 
-#include "SharedComponents/ObjectDirectory.hpp"
-#include "SharedComponents/Spawner.hpp"
-#include "SharedComponents/Sprite.hpp"
+#include "Components/ObjectDirectory.hpp"
+#include "Components/Spawner.hpp"
+#include "Components/Sprite.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif // EngineComponents_BARRAGE_H

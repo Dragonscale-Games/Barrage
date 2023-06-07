@@ -18,8 +18,8 @@
 namespace Barrage
 {
   Pool::Pool(const std::string& name, unsigned capacity, Space& space) :
+    components_(),
     componentArrays_(),
-    sharedComponents_(),
     spawnArchetypes_(),
     tags_(),
     numActiveObjects_(0),
@@ -32,14 +32,14 @@ namespace Barrage
 
   Pool::~Pool()
   {
-    // deallocate component arrays
-    for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
+    // deallocate components
+    for (auto it = components_.begin(); it != components_.end(); ++it)
     {
       delete it->second;
     }
-
-    // deallocate shared components
-    for (auto it = sharedComponents_.begin(); it != sharedComponents_.end(); ++it)
+    
+    // deallocate component arrays
+    for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
     {
       delete it->second;
     }
@@ -48,6 +48,17 @@ namespace Barrage
   void Pool::AddTag(const std::string_view& name)
   {
     tags_.insert(name);
+  }
+
+  void Pool::AddComponent(const std::string_view& name, Component* initializer)
+  {
+    if (components_.count(name))
+    {
+      return;
+    }
+
+    Component* newComponent = ComponentAllocator::AllocateComponent(name, initializer);
+    components_[name] = newComponent;
   }
 
   void Pool::AddComponentArray(const std::string_view& name)
@@ -59,17 +70,6 @@ namespace Barrage
 
     ComponentArray* newArray = ComponentAllocator::AllocateComponentArray(name, capacity_);
     componentArrays_[name] = newArray;
-  }
-
-  void Pool::AddSharedComponent(const std::string_view& name, SharedComponent* initializer)
-  {
-    if (sharedComponents_.count(name))
-    {
-      return;
-    }
-
-    SharedComponent* newComponent = ComponentAllocator::AllocateSharedComponent(name, initializer);
-    sharedComponents_[name] = newComponent;
   }
 
   void Pool::AddSpawnArchetype(const ObjectArchetype& spawnArchetype)
@@ -122,7 +122,7 @@ namespace Barrage
       ObjectArchetype& archetype = spawnArchetypes_.at(spawnInfo.archetypeName_);
 
       CreateObjectsInternal(archetype, startIndex, numObjects);
-      ApplySpawnFuncs(sourcePool, spawnInfo, startIndex, numObjects);
+      ApplySpawnFunctions(sourcePool, spawnInfo, startIndex, numObjects);
 
       numQueuedObjects_ += numObjects;
     }
@@ -135,14 +135,14 @@ namespace Barrage
     return tags_.count(tag);
   }
 
+  bool Pool::HasComponent(const std::string_view& componentName)
+  {
+    return components_.count(componentName);
+  }
+
   bool Pool::HasComponentArray(const std::string_view& componentArrayName)
   {
     return componentArrays_.count(componentArrayName);
-  }
-
-  bool Pool::HasSharedComponent(const std::string_view& sharedComponentName)
-  {
-    return sharedComponents_.count(sharedComponentName);
   }
 
   unsigned Pool::GetAvailableSlots() const
@@ -195,7 +195,7 @@ namespace Barrage
     }
   }
 
-  void Pool::ApplySpawnFuncs(Pool* sourcePool, const SpawnInfo& spawnInfo, unsigned startIndex, unsigned numObjects)
+  void Pool::ApplySpawnFunctions(Pool* sourcePool, const SpawnInfo& spawnInfo, unsigned startIndex, unsigned numObjects)
   {
     const std::vector<std::string>& spawnFunctions = spawnInfo.spawnFunctions_;
     size_t spawnFunctionCount = spawnFunctions.size();

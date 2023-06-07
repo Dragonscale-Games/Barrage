@@ -20,15 +20,15 @@
 namespace Barrage
 {
   template <typename T>
+  void ObjectManager::RegisterComponent(const std::string_view& componentName)
+  {
+    ComponentAllocator::RegisterComponent<T>(componentName);
+  }
+  
+  template <typename T>
   void ObjectManager::RegisterComponentArray(const std::string_view& componentName)
   {
     ComponentAllocator::RegisterComponentArray<T>(componentName);
-  }
-
-  template <typename T>
-  void ObjectManager::RegisterSharedComponent(const std::string_view& componentName)
-  {
-    ComponentAllocator::RegisterSharedComponent<T>(componentName);
   }
 
   template <typename T>

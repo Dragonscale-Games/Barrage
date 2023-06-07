@@ -39,13 +39,13 @@ namespace Demo
 
     PoolType player_type;
     player_type.AddComponentArray("Position");
-    player_type.AddSharedComponent("Player");
+    player_type.AddComponent("Player");
     poolTypes_["Player Pools"] = player_type;
 
     PoolType bounded_player_type;
     bounded_player_type.AddComponentArray("Position");
-    bounded_player_type.AddSharedComponent("BoundaryBox");
-    bounded_player_type.AddSharedComponent("Player");
+    bounded_player_type.AddComponent("BoundaryBox");
+    bounded_player_type.AddComponent("Player");
     poolTypes_["Bounded Player Pools"] = bounded_player_type;
   }
 
@@ -59,7 +59,7 @@ namespace Demo
 
   void MovementSystem::UpdatePlayerMovement(Pool* pool)
   {
-    Player& player = pool->GetSharedComponent<Player>("Player")->Data();
+    Player& player = pool->GetComponent<Player>("Player")->Data();
 
     float speed = 0.0f;
     Velocity player_velocity;
@@ -107,7 +107,7 @@ namespace Demo
   void MovementSystem::UpdatePlayerBounds(Pool* pool)
   {
     PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
-    BoundaryBox& bounds = pool->GetSharedComponent<BoundaryBox>("BoundaryBox")->Data();
+    BoundaryBox& bounds = pool->GetComponent<BoundaryBox>("BoundaryBox")->Data();
 
     unsigned num_objects = pool->GetActiveObjectCount();
 

@@ -43,7 +43,7 @@ namespace Barrage
 
   void CreationSystem::AssignHandles(Pool* pool)
   {
-    ObjectDirectory& object_directory = pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
+    ObjectDirectory& object_directory = pool->GetComponent<ObjectDirectory>("ObjectDirectory")->Data();
     DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
 
     unsigned start_index = pool->numActiveObjects_;

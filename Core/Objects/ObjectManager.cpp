@@ -132,9 +132,9 @@ namespace Barrage
     RegisterComponentArray<Scale>("Scale");
     RegisterComponentArray<TextureSpace>("TextureSpace");
 
-    RegisterSharedComponent<ObjectDirectory>("ObjectDirectory");
-    RegisterSharedComponent<Spawner>("Spawner");
-    RegisterSharedComponent<Sprite>("Sprite");
+    RegisterComponent<ObjectDirectory>("ObjectDirectory");
+    RegisterComponent<Spawner>("Spawner");
+    RegisterComponent<Sprite>("Sprite");
   }
 
   void ObjectManager::RegisterEngineSystems()

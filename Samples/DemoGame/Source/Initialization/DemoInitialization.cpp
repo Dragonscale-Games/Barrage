@@ -49,26 +49,26 @@ namespace Demo
   {
     PoolArchetype* pool_archetype = new PoolArchetype("Player Pool");
 
-    SharedPlayer* player = new SharedPlayer;
+    PlayerComponent* player = new PlayerComponent;
     player->Data().speedFast_ = 7.0f;
     player->Data().speedSlow_ = 3.5f;
-    pool_archetype->AddSharedComponent("Player", player);
+    pool_archetype->AddComponent("Player", player);
 
-    SharedCircleCollider* circle_collider = new SharedCircleCollider;
+    CircleColliderComponent* circle_collider = new CircleColliderComponent;
     circle_collider->Data().radius_ = 16.0f;
-    pool_archetype->AddSharedComponent("CircleCollider", circle_collider);
+    pool_archetype->AddComponent("CircleCollider", circle_collider);
 
-    SharedSprite* sprite = new SharedSprite;
+    SpriteComponent* sprite = new SpriteComponent;
     sprite->Data().layer_ = 0;
     sprite->Data().texture_ = "TestShip";
-    pool_archetype->AddSharedComponent("Sprite", sprite);
+    pool_archetype->AddComponent("Sprite", sprite);
 
-    SharedBoundaryBox* boundary_box = new SharedBoundaryBox;
+    BoundaryBoxComponent* boundary_box = new BoundaryBoxComponent;
     boundary_box->Data().xMin_ = 32.0f;
     boundary_box->Data().xMax_ = 1920.0f - 32.0f;
     boundary_box->Data().yMin_ = 32.0f;
     boundary_box->Data().yMax_ = 1080.0f - 32.0f;
-    pool_archetype->AddSharedComponent("BoundaryBox", boundary_box);
+    pool_archetype->AddComponent("BoundaryBox", boundary_box);
 
     pool_archetype->AddComponentArrayName("Position");
     pool_archetype->AddComponentArrayName("Rotation");
@@ -115,21 +115,21 @@ namespace Demo
     pool_archetype->AddTag("Bullet");
     pool_archetype->AddTag("Bullet Pool");
 
-    SharedCircleCollider* circle_collider = new SharedCircleCollider;
+    CircleColliderComponent* circle_collider = new CircleColliderComponent;
     circle_collider->Data().radius_ = 16.0f;
-    pool_archetype->AddSharedComponent("CircleCollider", circle_collider);
+    pool_archetype->AddComponent("CircleCollider", circle_collider);
 
-    SharedSprite* sprite = new SharedSprite;
+    SpriteComponent* sprite = new SpriteComponent;
     sprite->Data().layer_ = 1;
     sprite->Data().texture_ = "TestBullet";
-    pool_archetype->AddSharedComponent("Sprite", sprite);
+    pool_archetype->AddComponent("Sprite", sprite);
 
-    SharedBoundaryBox* boundary_box = new SharedBoundaryBox;
+    BoundaryBoxComponent* boundary_box = new BoundaryBoxComponent;
     boundary_box->Data().xMin_ = -16.0f;
     boundary_box->Data().xMax_ = 1920.0f + 16.0f;
     boundary_box->Data().yMin_ = -16.0f;
     boundary_box->Data().yMax_ = 1080.0f + 16.0f;
-    pool_archetype->AddSharedComponent("BoundaryBox", boundary_box);
+    pool_archetype->AddComponent("BoundaryBox", boundary_box);
 
     pool_archetype->AddComponentArrayName("Position");
     pool_archetype->AddComponentArrayName("Rotation");
@@ -182,12 +182,12 @@ namespace Demo
     bullet_spawn_type.spawnFunctions_.push_back("MatchPosition");
     bullet_spawn_type.spawnFunctions_.push_back("RandomDirection");
 
-    SharedSpawner* spawner = new SharedSpawner;
+    SpawnerComponent* spawner = new SpawnerComponent;
     spawner->Data().spawnTypes_[BULLET_SPAWN_TYPE] = bullet_spawn_type;
-    pool_archetype->AddSharedComponent("Spawner", spawner);
+    pool_archetype->AddComponent("Spawner", spawner);
 
-    SharedRNG* rng = new SharedRNG;
-    pool_archetype->AddSharedComponent("RNG", rng);
+    RNGComponent* rng = new RNGComponent;
+    pool_archetype->AddComponent("RNG", rng);
 
     pool_archetype->AddComponentArrayName("Position");
 

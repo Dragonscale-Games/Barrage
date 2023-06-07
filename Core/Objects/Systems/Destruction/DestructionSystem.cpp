@@ -45,7 +45,7 @@ namespace Barrage
   {
     DestructibleArray& destructible_array = *pool->GetComponentArray<Destructible>("Destructible");
     DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
-    ObjectDirectory& object_directory = pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
+    ObjectDirectory& object_directory = pool->GetComponent<ObjectDirectory>("ObjectDirectory")->Data();
 
     unsigned num_objects = pool->numActiveObjects_;
 
@@ -63,7 +63,7 @@ namespace Barrage
   void DestructionSystem::UpdateAliveHandles(Pool* pool)
   {
     DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
-    ObjectDirectory& object_directory = pool->GetSharedComponent<ObjectDirectory>("ObjectDirectory")->Data();
+    ObjectDirectory& object_directory = pool->GetComponent<ObjectDirectory>("ObjectDirectory")->Data();
 
     unsigned num_objects = pool->numActiveObjects_;
 

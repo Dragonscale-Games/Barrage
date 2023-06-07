@@ -131,7 +131,7 @@ namespace Barrage
     rapidjson::Value archetypeObject;
     archetypeObject.SetObject();
 
-    rapidjson::Value nameValue(name_.c_str(), name_.size(), allocator);
+    rapidjson::Value nameValue(name_.c_str(), static_cast<rapidjson::SizeType>(name_.size()), allocator);
     archetypeObject.AddMember("Name", nameValue, allocator);
 
     rapidjson::Value componentsObject = SerializeComponentArrays(allocator);
@@ -170,7 +170,7 @@ namespace Barrage
     for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
     {
       rapidjson::Value componentObject = Barrage::Serialize(it->second->GetRTTRValue(0), allocator);
-      rapidjson::Value componentKey(it->first.data(), it->first.size(), allocator);
+      rapidjson::Value componentKey(it->first.data(), static_cast<rapidjson::SizeType>(it->first.size()), allocator);
       componentsObject.AddMember(componentKey, componentObject, allocator);
     }
     

@@ -93,6 +93,13 @@ namespace Barrage
       new_pool->AddTag(tag);
     }
 
+    // allocate and initialize components
+    const ComponentMap& components = archetype.GetComponents();
+    for (auto it = components.begin(); it != components.end(); ++it)
+    {
+      new_pool->AddComponent(it->first, it->second);
+    }
+
     // allocate component arrays
     const std::vector<std::string_view> componentArrayNames = archetype.GetComponentArrayNames();
     for (const std::string_view& component_array_name : componentArrayNames)
@@ -100,13 +107,6 @@ namespace Barrage
       new_pool->AddComponentArray(component_array_name);
     }
 
-    // allocate and initialize shared components
-    const SharedComponentMap& sharedComponents = archetype.GetSharedComponents();
-    for (auto it = sharedComponents.begin(); it != sharedComponents.end(); ++it)
-    {
-      new_pool->AddSharedComponent(it->first, it->second);
-    }
-    
     // copy over spawn archetypes
     const std::vector<ObjectArchetype*>& spawnArchetypes = archetype.GetSpawnArchetypes();
     for (auto it = spawnArchetypes.begin(); it != spawnArchetypes.end(); ++it)

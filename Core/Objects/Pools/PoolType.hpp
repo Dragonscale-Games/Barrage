@@ -49,6 +49,18 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Adds a component to the pool type.
+
+        \param name
+          The name of the C++ class used in the component. This
+          should match the name passed to RegisterComponent<>();
+      */
+      /**************************************************************/
+      void AddComponent(const std::string_view& name);
+
+      /**************************************************************/
+      /*!
+        \brief
           Adds a component array to the pool type.
 
         \param name
@@ -57,18 +69,6 @@ namespace Barrage
       */
       /**************************************************************/
       void AddComponentArray(const std::string_view& name);
-      
-      /**************************************************************/
-      /*!
-        \brief
-          Adds a shared component to the pool type.
-
-        \param name
-          The name of the C++ class used in the shared component. This
-          should match the name passed to RegisterSharedComponent<>();
-      */
-      /**************************************************************/
-      void AddSharedComponent(const std::string_view& name);
 
       /**************************************************************/
       /*!
@@ -87,9 +87,9 @@ namespace Barrage
       bool MatchesPool(Pool* pool);
 
     private:
-      std::vector<std::string_view> tags_;                 //!< The tags of the pool type
-      std::vector<std::string_view> componentArrayNames_;  //!< The component arrays of the pool type
-      std::vector<std::string_view> sharedComponentNames_; //!< The shared components of the pool type
+      std::vector<std::string_view> tags_;                //!< The tags of the pool type
+      std::vector<std::string_view> componentNames_;      //!< The components of the pool type
+      std::vector<std::string_view> componentArrayNames_; //!< The component arrays of the pool type
 	};
 }
 

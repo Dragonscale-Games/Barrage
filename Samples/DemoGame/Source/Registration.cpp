@@ -28,10 +28,10 @@ namespace Barrage
     RegisterComponentArray<Demo::AngularSpeed>("AngularSpeed");
     RegisterComponentArray<Demo::Velocity>("Velocity");
 
-    RegisterSharedComponent<Demo::BoundaryBox>("BoundaryBox");
-    RegisterSharedComponent<Demo::CircleCollider>("CircleCollider");
-    RegisterSharedComponent<Demo::Player>("Player");
-    RegisterSharedComponent<Demo::RNG>("RNG");
+    RegisterComponent<Demo::BoundaryBox>("BoundaryBox");
+    RegisterComponent<Demo::CircleCollider>("CircleCollider");
+    RegisterComponent<Demo::Player>("Player");
+    RegisterComponent<Demo::RNG>("RNG");
 
     ComponentAllocator::RegisterTag("Bullet");
     ComponentAllocator::RegisterTag("Bullet Pool");

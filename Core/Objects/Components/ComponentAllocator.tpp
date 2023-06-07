@@ -18,6 +18,19 @@
 namespace Barrage
 {
   template <typename T>
+  void ComponentAllocator::RegisterComponent(const std::string_view& componentName)
+  {
+    if (componentAllocMap_.count(componentName))
+    {
+      return;
+    }
+
+    componentAllocMap_[componentName] = &ComponentAllocator::AllocateComponent<T>;
+    componentNames_.push_back(componentName);
+    componentNamesSorted_ = false;
+  }
+  
+  template <typename T>
   void ComponentAllocator::RegisterComponentArray(const std::string_view& componentName)
   {
     if (componentArrayAllocMap_.count(componentName))
@@ -31,16 +44,17 @@ namespace Barrage
   }
 
   template <typename T>
-  void ComponentAllocator::RegisterSharedComponent(const std::string_view& componentName)
+  Component* ComponentAllocator::AllocateComponent(Component* initializer)
   {
-    if (sharedComponentAllocMap_.count(componentName))
+    ComponentT<T>* new_component = new ComponentT<T>;
+    ComponentT<T>* initializer_full = dynamic_cast<ComponentT<T>*>(initializer);
+
+    if (initializer_full)
     {
-      return;
+      new_component->Data() = initializer_full->Data();
     }
 
-    sharedComponentAllocMap_[componentName] = &ComponentAllocator::AllocateSharedComponent<T>;
-    sharedComponentNames_.push_back(componentName);
-    sharedComponentNamesSorted_ = false;
+    return new_component;
   }
 
   template <typename T>
@@ -49,20 +63,6 @@ namespace Barrage
     ComponentArrayT<T>* new_component_array = new ComponentArrayT<T>(capacity);
 
     return new_component_array;
-  }
-
-  template <typename T>
-  SharedComponent* ComponentAllocator::AllocateSharedComponent(SharedComponent* initializer)
-  {
-    SharedComponentT<T>* new_component = new SharedComponentT<T>;
-    SharedComponentT<T>* initializer_full = dynamic_cast<SharedComponentT<T>*>(initializer);
-
-    if (initializer_full)
-    {
-      new_component->Data() = initializer_full->Data();
-    }
-
-    return new_component;
   }
 }
 

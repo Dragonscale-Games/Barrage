@@ -6,10 +6,9 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Used to initialize an object pool. Provides starting values of shared
-   components using its shared component map. Only provides names of component 
-   arrays, as components in component arrays are initialized later with an
-   ObjectArchetype.
+   Used to initialize an object pool. Provides starting values of components
+   on the pool. Only provides names of component arrays, as components in 
+   component arrays are initialized later with an ObjectArchetype.
  */
 /* ======================================================================== */
 
@@ -22,7 +21,7 @@ namespace Barrage
   PoolArchetype::PoolArchetype(const std::string& name, unsigned capacity) :
     name_(name),
     capacity_(capacity),
-    sharedComponents_(),
+    components_(),
     componentArrayNames_(),
     tags_(),
     startingObjects_(),
@@ -33,7 +32,7 @@ namespace Barrage
   PoolArchetype::PoolArchetype(const rapidjson::Value& data) :
     name_("Unknown Pool"),
     capacity_(1),
-    sharedComponents_(),
+    components_(),
     componentArrayNames_(),
     tags_(),
     startingObjects_(),
@@ -54,9 +53,9 @@ namespace Barrage
       capacity_ = data["Capacity"].GetUint();
     }
 
-    if (data.HasMember("Shared Components") && data["Shared Components"].IsObject())
+    if (data.HasMember("Components") && data["Components"].IsObject())
     {
-      DeserializeSharedComponents(data["Shared Components"]);
+      DeserializeComponents(data["Components"]);
     }
 
     if (data.HasMember("Component Arrays") && data["Component Arrays"].IsArray())
@@ -82,14 +81,14 @@ namespace Barrage
 
   PoolArchetype::PoolArchetype(const PoolArchetype& other) :
     name_(other.name_),
-    sharedComponents_(),
+    components_(),
     componentArrayNames_(other.componentArrayNames_),
     tags_(other.tags_),
     capacity_(other.capacity_),
     startingObjects_(),
     spawnArchetypes_()
   {
-    CopySharedComponentMap(other.sharedComponents_);
+    CopyComponentMap(other.components_);
     CopyStartingObjects(other.startingObjects_);
     CopySpawnArchetypes(other.spawnArchetypes_);
   }
@@ -97,7 +96,7 @@ namespace Barrage
   PoolArchetype& PoolArchetype::operator=(const PoolArchetype& other)
   {
     name_ = other.name_;
-    CopySharedComponentMap(other.sharedComponents_);
+    CopyComponentMap(other.components_);
     componentArrayNames_ = other.componentArrayNames_;
     tags_ = other.tags_;
     capacity_ = other.capacity_;
@@ -109,7 +108,7 @@ namespace Barrage
 
   PoolArchetype::~PoolArchetype()
   {
-    DeleteSharedComponentMap();
+    DeleteComponentMap();
   }
 
   bool PoolArchetype::HasObjectArchetype(const std::string& name)
@@ -117,9 +116,9 @@ namespace Barrage
     return GetObjectArchetype(name) != nullptr;
   }
 
-  bool PoolArchetype::HasSharedComponent(const std::string_view& name)
+  bool PoolArchetype::HasComponent(const std::string_view& name)
   {
-    return GetSharedComponent(name) != nullptr;
+    return GetComponent(name) != nullptr;
   }
 
   bool PoolArchetype::HasComponentArray(const std::string_view& componentArrayName) const
@@ -178,11 +177,11 @@ namespace Barrage
     return nullptr;
   }
 
-  SharedComponent* PoolArchetype::GetSharedComponent(const std::string_view& name)
+  Component* PoolArchetype::GetComponent(const std::string_view& name)
   {
-    if (sharedComponents_.count(name))
+    if (components_.count(name))
     {
-      return sharedComponents_.at(name);
+      return components_.at(name);
     }
     else
     {
@@ -190,9 +189,9 @@ namespace Barrage
     }
   }
 
-  const SharedComponentMap& PoolArchetype::GetSharedComponents() const
+  const ComponentMap& PoolArchetype::GetComponents() const
   {
-    return sharedComponents_;
+    return components_;
   }
 
   const std::vector<std::string_view>& PoolArchetype::GetComponentArrayNames() const
@@ -220,17 +219,17 @@ namespace Barrage
     return spawnArchetypes_;
   }
   
-  void PoolArchetype::AddSharedComponent(const std::string_view& name, SharedComponent* sharedComponent)
+  void PoolArchetype::AddComponent(const std::string_view& name, Component* sharedComponent)
   {
-    std::string_view key = ComponentAllocator::GetSharedComponentLiteral(name);
+    std::string_view key = ComponentAllocator::GetComponentLiteral(name);
 
-    if (key.empty() || sharedComponents_.count(key))
+    if (key.empty() || components_.count(key))
     {
       delete sharedComponent;
       return;
     }
 
-    sharedComponents_.insert(std::make_pair(key, sharedComponent));
+    components_.insert(std::make_pair(key, sharedComponent));
   }
 
   void PoolArchetype::AddComponentArrayName(const std::string_view& componentArrayName, unsigned* index)
@@ -363,16 +362,16 @@ namespace Barrage
     return nullptr;
   }
 
-  SharedComponent* PoolArchetype::ExtractSharedComponent(const std::string_view& name)
+  Component* PoolArchetype::ExtractComponent(const std::string_view& name)
   {
-    if (sharedComponents_.count(name) == 0)
+    if (components_.count(name) == 0)
     {
       return nullptr;
     }
     
-    SharedComponent* sharedComponent = sharedComponents_.at(name);
-    sharedComponents_.erase(name);
-    return sharedComponent;
+    Component* component = components_.at(name);
+    components_.erase(name);
+    return component;
   }
 
   rapidjson::Value PoolArchetype::Serialize(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
@@ -380,13 +379,13 @@ namespace Barrage
     rapidjson::Value archetypeObject;
     archetypeObject.SetObject();
 
-    rapidjson::Value nameValue(name_.c_str(), name_.size(), allocator);
+    rapidjson::Value nameValue(name_.c_str(), static_cast<rapidjson::SizeType>(name_.size()), allocator);
     archetypeObject.AddMember("Name", nameValue, allocator);
 
     archetypeObject.AddMember("Capacity", capacity_, allocator);
 
-    rapidjson::Value sharedComponentsObject = SerializeSharedComponents(allocator);
-    archetypeObject.AddMember("Shared Components", sharedComponentsObject, allocator);
+    rapidjson::Value componentsObject = SerializeComponents(allocator);
+    archetypeObject.AddMember("Components", componentsObject, allocator);
 
     rapidjson::Value componentArrayNamesObject = SerializeStringViews(componentArrayNames_, allocator);
     archetypeObject.AddMember("Component Arrays", componentArrayNamesObject, allocator);
@@ -403,15 +402,15 @@ namespace Barrage
     return archetypeObject;
   }
 
-  void PoolArchetype::CopySharedComponentMap(const SharedComponentMap& other)
+  void PoolArchetype::CopyComponentMap(const ComponentMap& other)
   {
-    DeleteSharedComponentMap();
+    DeleteComponentMap();
     
     for (auto it = other.begin(); it != other.end(); ++it)
     {
-      SharedComponent* newComponent = ComponentAllocator::AllocateSharedComponent(it->first);
+      Component* newComponent = ComponentAllocator::AllocateComponent(it->first);
       newComponent->CopyToThis(*it->second);
-      sharedComponents_[it->first] = newComponent;
+      components_[it->first] = newComponent;
     }
   }
 
@@ -435,14 +434,14 @@ namespace Barrage
     }
   }
 
-  void PoolArchetype::DeleteSharedComponentMap()
+  void PoolArchetype::DeleteComponentMap()
   {
-    for (auto it = sharedComponents_.begin(); it != sharedComponents_.end(); ++it)
+    for (auto it = components_.begin(); it != components_.end(); ++it)
     {
       delete it->second;
     }
 
-    sharedComponents_.clear();
+    components_.clear();
   }
 
   void PoolArchetype::DeleteStartingObjects()
@@ -465,15 +464,15 @@ namespace Barrage
     spawnArchetypes_.clear();
   }
 
-  rapidjson::Value PoolArchetype::SerializeSharedComponents(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
+  rapidjson::Value PoolArchetype::SerializeComponents(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator)
   {
     rapidjson::Value componentsObject;
     componentsObject.SetObject();
 
-    for (auto it = sharedComponents_.begin(); it != sharedComponents_.end(); ++it)
+    for (auto it = components_.begin(); it != components_.end(); ++it)
     {
       rapidjson::Value componentObject = Barrage::Serialize(it->second->GetRTTRValue(), allocator);
-      rapidjson::Value componentKey(it->first.data(), it->first.size(), allocator);
+      rapidjson::Value componentKey(it->first.data(), static_cast<rapidjson::SizeType>(it->first.size()), allocator);
       componentsObject.AddMember(componentKey, componentObject, allocator);
     }
 
@@ -487,7 +486,7 @@ namespace Barrage
 
     for (auto it = strings.begin(); it != strings.end(); ++it)
     {
-      rapidjson::Value string(it->data(), it->size(), allocator);
+      rapidjson::Value string(it->data(), static_cast<rapidjson::SizeType>(it->size()), allocator);
       stringsArray.PushBack(string, allocator);
     }
 
@@ -509,21 +508,21 @@ namespace Barrage
     return objectArchetypeArray;
   }
 
-  void PoolArchetype::DeserializeSharedComponents(const rapidjson::Value& data)
+  void PoolArchetype::DeserializeComponents(const rapidjson::Value& data)
   {
     for (auto it = data.MemberBegin(); it != data.MemberEnd(); ++it)
     {
       std::string name = it->name.GetString();
       
-      SharedComponent* sharedComponent = ComponentAllocator::AllocateSharedComponent(name);
+      Component* component = ComponentAllocator::AllocateComponent(name);
     
-      if (sharedComponent)
+      if (component)
       {
-        rttr::variant value = sharedComponent->GetRTTRValue();
+        rttr::variant value = component->GetRTTRValue();
         rttr::type type = rttr::type::get_by_name(name);
         Barrage::Deserialize(value, it->value, type);
-        sharedComponent->SetRTTRValue(value);
-        AddSharedComponent(name, sharedComponent);
+        component->SetRTTRValue(value);
+        AddComponent(name, component);
       }
     }
   }

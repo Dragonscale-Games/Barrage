@@ -18,10 +18,10 @@
 #include "ComponentArrays/AngularSpeedArray.hpp"
 #include "ComponentArrays/VelocityArray.hpp"
 
-#include "SharedComponents/BoundaryBox.hpp"
-#include "SharedComponents/CircleCollider.hpp"
-#include "SharedComponents/Player.hpp"
-#include "SharedComponents/RNG.hpp"
+#include "Components/BoundaryBox.hpp"
+#include "Components/CircleCollider.hpp"
+#include "Components/Player.hpp"
+#include "Components/RNG.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif // DemoComponents_DEMO_H

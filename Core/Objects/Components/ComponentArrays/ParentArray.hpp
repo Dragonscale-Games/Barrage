@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../BaseClasses/ComponentArray.hpp"
-#include "../SharedComponents/ObjectDirectory.hpp"
+#include "../Components/ObjectDirectory.hpp"
 
 namespace Barrage
 {

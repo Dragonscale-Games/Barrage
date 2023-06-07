@@ -27,7 +27,7 @@ namespace Barrage
     basic_sprite_type.AddComponentArray("Position");
     basic_sprite_type.AddComponentArray("Scale");
     basic_sprite_type.AddComponentArray("Rotation");
-    basic_sprite_type.AddSharedComponent("Sprite");
+    basic_sprite_type.AddComponent("Sprite");
     basic_sprite_type.AddComponentArray("TextureSpace");
     poolTypes_["Basic 2D Sprite Pools"] = basic_sprite_type;
   }
@@ -36,7 +36,7 @@ namespace Barrage
   {
     if (poolTypes_["Basic 2D Sprite Pools"].MatchesPool(pool))
     {
-      Sprite& pool_sprite = pool->GetSharedComponent<Sprite>("Sprite")->Data();
+      Sprite& pool_sprite = pool->GetComponent<Sprite>("Sprite")->Data();
       
       drawPools_[pool_sprite.layer_].push_back(pool);
     }
@@ -84,7 +84,7 @@ namespace Barrage
         glm::vec4* tex_coords = reinterpret_cast<glm::vec4*>(tex_space_array.data_);
         float* rotations = reinterpret_cast<float*>(rotation_array.data_);
 
-        Sprite& pool_sprite = pool->GetSharedComponent<Sprite>("Sprite")->Data();
+        Sprite& pool_sprite = pool->GetComponent<Sprite>("Sprite")->Data();
 
         drawing.DrawInstancedQuad(
           pool->GetActiveObjectCount(),

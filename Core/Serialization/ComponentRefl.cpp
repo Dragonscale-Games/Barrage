@@ -25,15 +25,12 @@ namespace Barrage
 {
   void ReflectBarrageCore()
   { 
-    // Shared Components.
 
     // Sprite
     rttr::registration::class_<Sprite>("Sprite")
       .property("texture", &Sprite::texture_)
       .property("layer", &Sprite::layer_)
     ;
-
-    // Component Arrays.
 
     // Destructible Arrays.
     rttr::registration::class_<Destructible>("Destructible");

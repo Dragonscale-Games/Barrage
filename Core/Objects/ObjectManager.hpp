@@ -81,10 +81,10 @@ namespace Barrage
     
     private:
       template <typename T>
-      void RegisterComponentArray(const std::string_view& componentName);
-
+      void RegisterComponent(const std::string_view& componentName);
+      
       template <typename T>
-      void RegisterSharedComponent(const std::string_view& componentName);
+      void RegisterComponentArray(const std::string_view& componentName);
 
       template <typename T>
       void RegisterSystem(const std::string_view& systemName);

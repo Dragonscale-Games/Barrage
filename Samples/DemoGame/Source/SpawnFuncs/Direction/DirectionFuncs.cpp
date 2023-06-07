@@ -23,7 +23,7 @@ namespace Demo
     {
       UNREFERENCED(sourceIndices);
       
-      Barrage::Random& rng = initPool.GetSharedComponent<RNG>("RNG")->Data().rng_;
+      Barrage::Random& rng = initPool.GetComponent<RNG>("RNG")->Data().rng_;
       VelocityArray& dest_velocities = *destPool.GetComponentArray<Velocity>("Velocity");
 
       for (unsigned i = 0; i < numNewObjects; ++i)

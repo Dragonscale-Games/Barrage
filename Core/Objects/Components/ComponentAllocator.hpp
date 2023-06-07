@@ -25,17 +25,33 @@ namespace Barrage
 {
   class ComponentAllocator;
   
+  typedef Component* (*ComponentAllocFunc)(Component*);
   typedef ComponentArray* (*ComponentArrayAllocFunc)(unsigned);
-  typedef SharedComponent* (*SharedComponentAllocFunc)(SharedComponent*);
 
+  typedef std::unordered_map<std::string_view, ComponentAllocFunc> ComponentAllocMap;
   typedef std::unordered_map<std::string_view, ComponentArrayAllocFunc> ComponentArrayAllocMap;
-  typedef std::unordered_map<std::string_view, SharedComponentAllocFunc> SharedComponentAllocMap;
 
   //! Responsible for allocating new components
   class ComponentAllocator
 	{
     public:   
       ComponentAllocator() = delete;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Tells the allocator how to allocate a component for
+          a given type.
+
+        \tparam T
+          The type of data the component will wrap.
+
+        \param componentName
+          The name of the component's C++ class.
+      */
+      /**************************************************************/
+      template <typename T>
+      static void RegisterComponent(const std::string_view& componentName);
 
       /**************************************************************/
       /*!
@@ -56,33 +72,36 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Tells the allocator how to allocate a shared component for 
-          a given type. 
+          Tells the allocator that a given tag exists in the engine.
 
-        \tparam T
-          The type of component data the shared component will wrap.
-
-        \param componentName
-          The name of the component's C++ class.
+        \param tag
+          The tag to register.
       */
       /**************************************************************/
-      template <typename T>
-      static void RegisterSharedComponent(const std::string_view& componentName);
+      static void RegisterTag(const std::string_view& tag);
 
       /**************************************************************/
       /*!
         \brief
-          Tells the allocator how to allocate a shared component for
-          a given type.
+          Creates a shared component whose type matches the given
+          name. If no component with that name has been registered,
+          returns nullptr.
 
-        \tparam T
-          The type of component data the shared component will wrap.
+        \param name
+          The name of the shared component to allocate.
 
-        \param componentName
-          The name of the component's C++ class.
+        \param initializer
+          Optional. If this argument is provided, the new component
+          will be a clone of the initializer. If not, the new
+          component will be default-constructed.
+
+        \return
+          Returns a pointer to the newly allocated component if the
+          component type has been registered, otherwise returns
+          nullptr.
       */
       /**************************************************************/
-      static void RegisterTag(const std::string_view& tag);
+      static Component* AllocateComponent(const std::string_view& name, Component* initializer = nullptr);
 
       /**************************************************************/
       /*!
@@ -109,25 +128,19 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Creates a shared component whose type matches the given 
-          name. If no component with that name has been registered, 
-          returns nullptr.
+          Gets the string literal name of a component (wrapped
+          in a string_view) if it has been registered.
 
-        \param name
-          The name of the shared component to allocate.
-
-        \param initializer
-          Optional. If this argument is provided, the new component 
-          will be a clone of the initializer. If not, the new 
-          component will be default-constructed.
+        \param component
+          The component to get the name of.
 
         \return
-          Returns a pointer to the newly allocated component if the
-          component type has been registered, otherwise returns
-          nullptr.
+          Returns the string literal name of a component
+          (wrapped in a string_view) if it has been registered,
+          returns an empty string_view otherwise.
       */
       /**************************************************************/
-      static SharedComponent* AllocateSharedComponent(const std::string_view& name, SharedComponent* initializer = nullptr);
+      static std::string_view GetComponentLiteral(const std::string_view& component);
 
       /**************************************************************/
       /*!
@@ -149,23 +162,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the string literal name of a shared component (wrapped
-          in a string_view) if it has been registered.
-
-        \param sharedComponent
-          The shared component to get the name of.
-
-        \return
-          Returns the string literal name of a shared component
-          (wrapped in a string_view) if it has been registered,
-          returns an empty string_view otherwise.
-      */
-      /**************************************************************/
-      static std::string_view GetSharedComponentLiteral(const std::string_view& sharedComponent);
-
-      /**************************************************************/
-      /*!
-        \brief
           Gets the string literal name of a tag (wrapped in a
           string_view) if it has been registered.
 
@@ -183,6 +179,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the list of all registered components.
+
+        \return
+          Returns the list of all registered components.
+      */
+      /**************************************************************/
+      static const std::vector<std::string_view>& GetComponentNames();
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the list of all registered component arrays.
 
         \return
@@ -190,30 +197,39 @@ namespace Barrage
       */
       /**************************************************************/
       static const std::vector<std::string_view>& GetComponentArrayNames();
-      
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the list of all registered shared components.
-
-        \return
-          Returns the list of all registered shared components.
-      */
-      /**************************************************************/
-      static const std::vector<std::string_view>& GetSharedComponentNames();
 
       /**************************************************************/
       /*!
         \brief
-          Gets the list of all registered shared components.
+          Gets the list of all registered tags.
 
         \return
-          Returns the list of all registered shared components.
+          Returns the list of all registered tags.
       */
       /**************************************************************/
       static const std::vector<std::string_view>& GetTagNames();
 
     private:
+      /**************************************************************/
+      /*!
+        \brief
+          Creates a component of the input type.
+
+        \tparam T
+          The type of component to allocate.
+
+        \param initializer
+          If this argument is non-null, the new component will be a
+          clone of the initializer. Otherwise, the component will be
+          default-constructed.
+
+        \return
+          Returns a pointer to the newly allocated component.
+      */
+      /**************************************************************/
+      template <typename T>
+      static Component* AllocateComponent(Component* initializer);
+      
       /**************************************************************/
       /*!
         \brief
@@ -233,37 +249,17 @@ namespace Barrage
       template <typename T>
       static ComponentArray* AllocateComponentArray(unsigned capacity);
 
-      /**************************************************************/
-      /*!
-        \brief
-          Creates a shared component of the input type.
-
-        \tparam T
-          The type of component to allocate.
-
-        \param initializer
-          If this argument is non-null, the new component will be a 
-          clone of the initializer. Otherwise, the component will be
-          default-constructed.
-
-        \return
-          Returns a pointer to the newly allocated component.
-      */
-      /**************************************************************/
-      template <typename T>
-      static SharedComponent* AllocateSharedComponent(SharedComponent* initializer);
-
     private:
-      static ComponentArrayAllocMap componentArrayAllocMap_;   //!< Maps names of component arrays to their allocation functions
-      static SharedComponentAllocMap sharedComponentAllocMap_; //!< Maps names of shared components to their allocation functions
-      static TagSet tagSet_;                                   //!< Set of all tags registered with the engine
+      static ComponentAllocMap componentAllocMap_;           //!< Maps names of shared components to their allocation functions
+      static ComponentArrayAllocMap componentArrayAllocMap_; //!< Maps names of component arrays to their allocation functions
+      static TagSet tagSet_;                                 //!< Set of all tags registered with the engine
 
+      static std::vector<std::string_view> componentNames_;   //!< The names of all registered shared components
       static std::vector<std::string_view> componentArrayNames_;    //!< The names of all registered component arrays
-      static std::vector<std::string_view> sharedComponentNames_;   //!< The names of all registered shared components
       static std::vector<std::string_view> tagNames_;
 
+      static bool componentNamesSorted_; 
       static bool componentArrayNamesSorted_;
-      static bool sharedComponentNamesSorted_; 
       static bool tagNamesSorted_;
 	};
 }
