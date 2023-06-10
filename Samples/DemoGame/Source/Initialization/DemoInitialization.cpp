@@ -176,13 +176,13 @@ namespace Demo
 
     pool_archetype->AddTag("Spawner");
 
-    SpawnInfo bullet_spawn_type;
-    bullet_spawn_type.archetypeName_ = "Bullet Object";
-    bullet_spawn_type.spawnFunctions_.push_back("MatchPosition");
-    bullet_spawn_type.spawnFunctions_.push_back("RandomDirection");
+    SpawnInfo bullet_spawn_info;
+    bullet_spawn_info.archetypeName_ = "Bullet Object";
+    bullet_spawn_info.spawnFunctions_.push_back("RandomDirection");
+    bullet_spawn_info.spawnFunctions_.push_back("MatchPosition");
 
     SpawnerComponent* spawner = new SpawnerComponent;
-    spawner->Data().spawnTypes_[0] = bullet_spawn_type;
+    spawner->data_.spawnTypes_[0] = bullet_spawn_info;
     pool_archetype->AddComponent("Spawner", spawner);
 
     RNGComponent* rng = new RNGComponent;

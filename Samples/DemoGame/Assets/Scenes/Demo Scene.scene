@@ -88,32 +88,7 @@
                 "Bullet",
                 "Bullet Pool"
             ],
-            "Starting Objects": [
-                {
-                    "Name": "Spawned Bullet Object",
-                    "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 880.0
-                        },
-                        "Velocity": {},
-                        "TextureSpace": {
-                            "u": 0.0,
-                            "v": 0.0,
-                            "uSize": 1.0,
-                            "vSize": 1.0
-                        },
-                        "Rotation": {
-                            "angle": 0.0
-                        },
-                        "Scale": {
-                            "w": 32.0,
-                            "h": 32.0
-                        },
-                        "Destructible": {}
-                    }
-                }
-            ],
+            "Starting Objects": [],
             "Spawn Archetypes": [
                 {
                     "Name": "Bullet Object",
@@ -146,7 +121,18 @@
             "Capacity": 1,
             "Components": {
                 "Spawner": {
-                    "spawnTypes": []
+                    "spawnTypes": [
+                        {
+                            "Key": 0,
+                            "Value": {
+                                "archetypeName": "Bullet Object",
+                                "spawnFunctions": [
+                                    "MatchPosition",
+                                    "RandomDirection"
+                                ]
+                            }
+                        }
+                    ]
                 },
                 "RNG": {}
             },

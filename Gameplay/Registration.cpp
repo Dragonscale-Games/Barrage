@@ -56,6 +56,15 @@ namespace Barrage
       .property("spawnTypes", &Spawner::spawnTypes_)
       ;
 
+    rttr::registration::class_<SpawnInfo>("SpawnInfo")
+      .property("archetypeName", &SpawnInfo::archetypeName_)
+      .property("spawnFunctions", &SpawnInfo::spawnFunctions_)
+      .constructor<>()
+        (
+          rttr::policy::ctor::as_object
+        );
+      ;
+
     rttr::registration::class_<Position>("Position")
       .property("x", &Position::x_)
       .property("y", &Position::y_)
