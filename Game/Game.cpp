@@ -60,6 +60,13 @@ namespace Barrage
 
     engine_.Drawing().SetCameraTransform(position, zoom, angle);
 
+    const char* instancedShaderPaths[] = {
+      "Assets/Shaders/Instanced.vs",
+      "Assets/Shaders/Instanced.fs",
+    };
+    engine_.GfxRegistry().RegisterShader(instancedShaderPaths, "Instanced");
+    drawing.ApplyShader("Instanced");
+
     ParseEntryFile();
     
     std::vector<std::string> spaceNames = engine_.Spaces().GetSpaceNames();
@@ -133,14 +140,44 @@ namespace Barrage
       return;
     }
 
+    if (document.HasMember("Textures") && document["Textures"].IsArray())
+    {
+      for (auto it = document["Textures"].Begin(); it != document["Textures"].End(); ++it)
+      {
+        if (it->IsString())
+        {
+          std::string texture_name = it->GetString();
+          std::string texture_path = "Assets/Textures/" + texture_name + ".png";
+          engine_.GfxRegistry().RegisterTexture(texture_path.c_str(), texture_name.c_str());
+        }
+      }
+    }
+
     if (document.HasMember("Spaces") && document["Spaces"].IsArray())
     {
       for (auto it = document["Spaces"].Begin(); it != document["Spaces"].End(); ++it)
       {
-        if (it->IsString())
+        const rapidjson::Value& space_object = *it;
+        
+        if (space_object.IsObject() && space_object.HasMember("Name") && space_object["Name"].IsString())
         {
           Space* new_space = new Space;
-          engine_.Spaces().AddSpace(it->GetString(), new_space);
+
+          if (space_object.HasMember("Scene") && space_object["Scene"].IsString())
+          {
+            std::string scene_name = space_object["Scene"].GetString();
+            std::string path = "./Assets/Scenes/" + scene_name + ".scene";
+
+            Scene* new_scene = Scene::LoadFromFile(path);
+
+            if (new_scene)
+            {
+              engine_.Scenes().AddScene(new_scene);
+              new_space->SetScene(scene_name);
+            }
+          }
+
+          engine_.Spaces().AddSpace(space_object["Name"].GetString(), new_space);
         }
       }
     }

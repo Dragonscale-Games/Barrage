@@ -1,0 +1,173 @@
+{
+    "Name": "Demo Scene",
+    "Pools": [
+        {
+            "Name": "Player Pool",
+            "Capacity": 1,
+            "Components": {
+                "Player": {
+                    "speedFast": 7.0,
+                    "speedSlow": 3.5
+                },
+                "BoundaryBox": {
+                    "xMin": 32.0,
+                    "xMax": 1888.0,
+                    "yMin": 32.0,
+                    "yMax": 1048.0
+                },
+                "CircleCollider": {
+                    "radius": 16.0
+                },
+                "Sprite": {
+                    "texture": "TestShip",
+                    "layer": 0
+                }
+            },
+            "Component Arrays": [
+                "Position",
+                "Rotation",
+                "Scale",
+                "Velocity",
+                "TextureSpace"
+            ],
+            "Tags": [],
+            "Starting Objects": [
+                {
+                    "Name": "Player Object",
+                    "Components": {
+                        "Position": {
+                            "x": 960.0,
+                            "y": 540.0
+                        },
+                        "Velocity": {},
+                        "TextureSpace": {
+                            "u": 0.0,
+                            "v": 0.0,
+                            "uSize": 1.0,
+                            "vSize": 1.0
+                        },
+                        "Rotation": {
+                            "angle": 0.0
+                        },
+                        "Scale": {
+                            "w": 64.0,
+                            "h": 64.0
+                        }
+                    }
+                }
+            ],
+            "Spawn Archetypes": []
+        },
+        {
+            "Name": "Bullet Pool",
+            "Capacity": 100000,
+            "Components": {
+                "CircleCollider": {
+                    "radius": 16.0
+                },
+                "Sprite": {
+                    "texture": "TestBullet",
+                    "layer": 1
+                },
+                "BoundaryBox": {
+                    "xMin": -16.0,
+                    "xMax": 1936.0,
+                    "yMin": -16.0,
+                    "yMax": 1096.0
+                }
+            },
+            "Component Arrays": [
+                "Position",
+                "Rotation",
+                "Scale",
+                "Velocity",
+                "TextureSpace",
+                "Destructible"
+            ],
+            "Tags": [
+                "Bullet",
+                "Bullet Pool"
+            ],
+            "Starting Objects": [
+                {
+                    "Name": "Spawned Bullet Object",
+                    "Components": {
+                        "Position": {
+                            "x": 960.0,
+                            "y": 880.0
+                        },
+                        "Velocity": {},
+                        "TextureSpace": {
+                            "u": 0.0,
+                            "v": 0.0,
+                            "uSize": 1.0,
+                            "vSize": 1.0
+                        },
+                        "Rotation": {
+                            "angle": 0.0
+                        },
+                        "Scale": {
+                            "w": 32.0,
+                            "h": 32.0
+                        },
+                        "Destructible": {}
+                    }
+                }
+            ],
+            "Spawn Archetypes": [
+                {
+                    "Name": "Bullet Object",
+                    "Components": {
+                        "Position": {
+                            "x": 960.0,
+                            "y": 880.0
+                        },
+                        "Velocity": {},
+                        "TextureSpace": {
+                            "u": 0.0,
+                            "v": 0.0,
+                            "uSize": 1.0,
+                            "vSize": 1.0
+                        },
+                        "Rotation": {
+                            "angle": 0.0
+                        },
+                        "Scale": {
+                            "w": 32.0,
+                            "h": 32.0
+                        },
+                        "Destructible": {}
+                    }
+                }
+            ]
+        },
+        {
+            "Name": "Spawner Pool",
+            "Capacity": 1,
+            "Components": {
+                "Spawner": {
+                    "spawnTypes": []
+                },
+                "RNG": {}
+            },
+            "Component Arrays": [
+                "Position"
+            ],
+            "Tags": [
+                "Spawner"
+            ],
+            "Starting Objects": [
+                {
+                    "Name": "Spawner Object",
+                    "Components": {
+                        "Position": {
+                            "x": 960.0,
+                            "y": 880.0
+                        }
+                    }
+                }
+            ],
+            "Spawn Archetypes": []
+        }
+    ]
+}

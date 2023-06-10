@@ -95,7 +95,7 @@ add_library(BarrageCore STATIC
   
   "Scenes/Scene.cpp" "Scenes/Scene.hpp"
 
-  "Serialization/ComponentRefl.hpp" "Serialization/ComponentRefl.cpp"
+  "Serialization/ComponentRefl.hpp" 
   "Serialization/Serializer.hpp" "Serialization/Serializer.cpp"
 
   "Spaces/Space.cpp" "Spaces/Space.hpp"

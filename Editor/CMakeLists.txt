@@ -30,18 +30,10 @@
 # Date:         5/5/2022
 # =====================================================================================================================
 
-set(BARRAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
-
 add_executable(Editor "main.cpp" 
 "GUI/GUI.cpp" 
 "Editor.cpp"
-"${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Registration.cpp"
-"../Samples/DemoGame/Source/Systems/Collision/CollisionSystem.cpp"
-"../Samples/DemoGame/Source/Systems/Movement/MovementSystem.cpp"
-"../Samples/DemoGame/Source/Systems/Spawn/SpawnSystem.cpp"
-"${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization/DemoInitialization.cpp" 
-"../Samples/DemoGame/Source/SpawnFuncs/Direction/DirectionFuncs.cpp"
-"../Samples/DemoGame/Source/SpawnFuncs/Position/PositionFuncs.cpp"
+
  "Widgets/Windows/Hierarchy/HierarchyWidget.cpp"
  "Widgets/Windows/Inspector/InspectorWidget.cpp"
 
@@ -73,14 +65,13 @@ add_executable(Editor "main.cpp"
  "Commands/Edit/ComponentArray/EditComponentArray.cpp" 
  "Commands/Edit/Component/EditComponent.cpp")
 
-target_link_libraries(Editor PUBLIC BarrageCore imgui)
+target_link_libraries(Editor PUBLIC BarrageCore Gameplay imgui)
 add_dependencies(Editor Game)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(Editor PUBLIC "${BARRAGE_SOURCE_DIR}/Core")
-target_include_directories(Editor PUBLIC "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization")
-target_include_directories(Editor PUBLIC "${BARRAGE_SOURCE_DIR}/Samples/DemoGame")
+
 add_custom_command(TARGET Editor POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:Game>" "Runtime.exe"
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:Game>" "executable"
 )
 add_custom_command(TARGET Editor POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Assets" "Assets"

@@ -30,11 +30,15 @@
 # Date:         6/7/23
 # =====================================================================================================================
 
-add_executable(Game
-"main.cpp"
-"Game.cpp"
+add_library(Gameplay STATIC
+"Registration.cpp"
+"SpawnFunctions/Direction/DirectionFuncs.cpp"
+"SpawnFunctions/Position/PositionFuncs.cpp"
+"Systems/Collision/CollisionSystem.cpp"
+"Systems/Movement/MovementSystem.cpp"
+"Systems/Spawn/SpawnSystem.cpp"
 )
-target_link_libraries(Game PUBLIC BarrageCore Gameplay)
 
+target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(Gameplay PUBLIC "${BARRAGE_SOURCE_DIR}/Core")

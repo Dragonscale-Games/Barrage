@@ -12,6 +12,15 @@
 
 #include "Game.hpp"
 
+#include <rttr/registration.h>
+#include <Serialization/ComponentRefl.hpp>
+
+RTTR_REGISTRATION
+{
+  // Reflect all the core Barrage objects.
+  Barrage::ReflectBarrageCore();
+}
+
 int main()
 {
   Barrage::Game* game = new Barrage::Game();

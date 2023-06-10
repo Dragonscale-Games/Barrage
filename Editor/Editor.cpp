@@ -14,7 +14,6 @@
 #include "stdafx.h"
 
 #include "Editor.hpp"
-#include <DemoInitialization.hpp>
 #include <Engine/Engine.hpp>
 
 #include "Widgets/Windows/Hierarchy/HierarchyWidget.hpp"
@@ -97,10 +96,13 @@ namespace Barrage
 
     gui_.Initialize(windowing.GetInternalHandle());
 
-    Space* demo_space = Demo::CreateDemoSpace();
-    engine_.Spaces().AddSpace("Demo Space", demo_space);
+    Space* main_space = new Space;
+    Scene* demo_scene = new Scene("Demo Scene");
+    engine_.Scenes().AddScene(demo_scene);
+    main_space->SetScene("Demo Scene");
+    engine_.Spaces().AddSpace("Main Space", main_space);
     data_.selectedScene_ = "Demo Scene";
-    data_.selectedSpace_ = "Demo Space";
+    data_.selectedSpace_ = "Main Space";
     engine_.Frames().SetVsync(true);
   }
 
