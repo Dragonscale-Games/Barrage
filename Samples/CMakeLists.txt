@@ -31,7 +31,4 @@
 # =====================================================================================================================
 
 # Add the subdirectories for compiling a variety of sample projects.
-add_subdirectory(Graphics)
-add_subdirectory(Debugging)
 add_subdirectory(DemoGame)
-add_subdirectory(FileManagement)

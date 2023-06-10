@@ -40,6 +40,8 @@ namespace Barrage
 
       void SetSpacePaused(const std::string& name, bool isPaused);
 
+      std::vector<std::string> GetSpaceNames();
+
     private:
       SpaceMap spaces_;
       std::list<std::string> updateOrder_;

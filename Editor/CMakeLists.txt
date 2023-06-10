@@ -74,8 +74,14 @@ add_executable(Editor "main.cpp"
  "Commands/Edit/Component/EditComponent.cpp")
 
 target_link_libraries(Editor PUBLIC BarrageCore imgui)
+add_dependencies(Editor Game)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(Editor PUBLIC "${BARRAGE_SOURCE_DIR}/Core")
 target_include_directories(Editor PUBLIC "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Source/Initialization")
 target_include_directories(Editor PUBLIC "${BARRAGE_SOURCE_DIR}/Samples/DemoGame")
-file(COPY "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Assets" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+add_custom_command(TARGET Editor POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:Game>" "Runtime.exe"
+)
+add_custom_command(TARGET Editor POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${BARRAGE_SOURCE_DIR}/Samples/DemoGame/Assets" "Assets"
+)

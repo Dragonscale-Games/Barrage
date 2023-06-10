@@ -518,10 +518,15 @@ namespace Barrage
     
       if (component)
       {
-        rttr::variant value = component->GetRTTRValue();
         rttr::type type = rttr::type::get_by_name(name);
-        Barrage::Deserialize(value, it->value, type);
-        component->SetRTTRValue(value);
+
+        if (type.is_valid())
+        {
+          rttr::variant value = component->GetRTTRValue();
+          Barrage::Deserialize(value, it->value, type);
+          component->SetRTTRValue(value);
+        }
+        
         AddComponent(name, component);
       }
     }

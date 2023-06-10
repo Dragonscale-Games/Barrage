@@ -14,7 +14,6 @@
 #include "SpawnSystem.hpp"
 #include <Objects/Systems/SystemManager.hpp>
 #include <Objects/Systems/Creation/CreationSystem.hpp>
-#include "../../SpawnTypes.hpp"
 
 namespace Demo
 {
@@ -41,7 +40,7 @@ namespace Demo
   void SpawnSystem::SpawnBullets(Barrage::Pool* spawnerPool, Barrage::Pool* bulletPool)
   {
     Spawner& spawner = spawnerPool->GetComponent<Spawner>("Spawner")->Data();
-    spawner.spawnTypes_[BULLET_SPAWN_TYPE].sourceIndices_.resize(100, 0);
-    bulletPool->QueueSpawns(spawnerPool, spawner.spawnTypes_[BULLET_SPAWN_TYPE]);
+    spawner.spawnTypes_[0].sourceIndices_.resize(100, 0);
+    bulletPool->QueueSpawns(spawnerPool, spawner.spawnTypes_[0]);
   }
 }

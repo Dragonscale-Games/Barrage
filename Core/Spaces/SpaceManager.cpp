@@ -78,4 +78,16 @@ namespace Barrage
       spaces_[name]->SetPaused(isPaused);
     }
   }
+
+  std::vector<std::string> SpaceManager::GetSpaceNames()
+  {
+    std::vector<std::string> spaceNames;
+
+    for (auto it = spaces_.begin(); it != spaces_.end(); ++it)
+    {
+      spaceNames.push_back(it->first);
+    }
+
+    return spaceNames;
+  }
 }
