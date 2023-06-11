@@ -11,14 +11,18 @@
 /* ======================================================================== */
 
 #include "stdafx.h"
-#include "DrawSystem.hpp"
+#include "Objects/Systems/DrawSystem.hpp"
 
 #include <Engine/Engine.hpp>
 
+#include "Components/Sprite.hpp"
+#include "ComponentArrays/PositionArray.hpp"
+#include "ComponentArrays/RotationArray.hpp"
+#include "ComponentArrays/ScaleArray.hpp"
+#include "ComponentArrays/TextureSpaceArray.hpp"
+
 namespace Barrage
 {
-  static const unsigned BASIC_2D_SPRITE_POOLS = 0;
-  
   DrawSystem::DrawSystem() :
     System(),
     drawPools_()

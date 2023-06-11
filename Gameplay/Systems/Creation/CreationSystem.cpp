@@ -13,6 +13,8 @@
 
 #include "stdafx.h"
 #include "CreationSystem.hpp"
+#include "ComponentArrays/DirectoryIndexArray.hpp"
+#include "Components/ObjectDirectory.hpp"
 
 namespace Barrage
 {

@@ -15,7 +15,9 @@
 #define ComponentAllocator_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "EngineComponents.hpp"
+#include "Objects/Components/BaseClasses/Component.hpp"
+#include "Objects/Components/BaseClasses/ComponentArray.hpp"
+#include "Objects/Pools/Pool.hpp"
 
 #include <vector>
 #include <unordered_map>

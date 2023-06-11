@@ -1,36 +1,38 @@
 /* ======================================================================== */
 /*!
- * \file            DestructibleArray.hpp
+ * \file            Sprite.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Destructible component keeps track of whether an object is marked
-   for destruction.
+   <put description here> 
+
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef DestructibleArray_BARRAGE_H
-#define DestructibleArray_BARRAGE_H
+#ifndef Sprite_BARRAGE_H
+#define Sprite_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/ComponentArray.hpp"
+#include "Objects/Components/BaseClasses/Component.hpp"
 
 namespace Barrage
 {
-  //!< Keeps track of whether an object is marked for destruction
-  struct Destructible
+  //! Holds all information needed to draw the objects in a pool
+  class Sprite
   {
-    bool destroyed_; //!< true if marked for destruction
+    public:
+      std::string texture_; //!< Name of the texture to draw with
+      unsigned layer_;      //!< Layer of the drawn object (lower layers are drawn beneath higher ones)
 
-    inline Destructible() : destroyed_(false) {}
+      inline Sprite() : texture_(), layer_(0) {}
   };
 
-  typedef ComponentArrayT<Destructible> DestructibleArray;
+  typedef ComponentT<Sprite> SpriteComponent;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // DestructibleArray_BARRAGE_H
+#endif // Sprite_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

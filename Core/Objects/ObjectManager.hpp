@@ -93,14 +93,6 @@ namespace Barrage
 
       void SetSystemUpdateOrder(const std::vector<std::string_view>& updateOrderList);
 
-      void RegisterEngineComponents();
-
-      void RegisterEngineSystems();
-
-      void RegisterEngineSpawnFunctions();
-
-      void SetDefaultSystemUpdateOrder();
-
       void RegisterCustomComponents();
 
       void RegisterCustomSystems();

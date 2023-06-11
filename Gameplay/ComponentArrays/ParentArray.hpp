@@ -15,7 +15,7 @@
 #define ParentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/ComponentArray.hpp"
+#include "Objects/Components/BaseClasses/ComponentArray.hpp"
 #include "../Components/ObjectDirectory.hpp"
 
 namespace Barrage

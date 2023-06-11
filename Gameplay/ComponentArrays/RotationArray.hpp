@@ -16,7 +16,7 @@
 #define RotationArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/ComponentArray.hpp"
+#include "Objects/Components/BaseClasses/ComponentArray.hpp"
 #include "Utilities/Utilities.hpp"
 
 namespace Barrage

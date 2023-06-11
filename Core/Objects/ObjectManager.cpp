@@ -12,10 +12,9 @@
 
 #include "stdafx.h"
 #include "ObjectManager.hpp"
-
-#include "Components/EngineComponents.hpp"
-#include "Systems/EngineSystems.hpp"
 #include "Spaces/Space.hpp"
+
+#include "Objects/Systems/DrawSystem.hpp"
 
 namespace Barrage
 {
@@ -23,10 +22,7 @@ namespace Barrage
     poolManager_(space),
     systemManager_()
   {
-    RegisterEngineComponents();
-    RegisterEngineSystems();
-    RegisterEngineSpawnFunctions();
-    SetDefaultSystemUpdateOrder();
+    RegisterSystem<DrawSystem>("DrawSystem");
 
     RegisterCustomComponents();
     RegisterCustomSystems();
@@ -48,19 +44,6 @@ namespace Barrage
       draw_system->Draw();
     }
   }
-
-  /*void ObjectManager::CreateObject(const std::string& poolName, const std::string& archetypeName)
-  {
-    Pool* pool = poolManager_.GetPool(poolName);
-    ObjectArchetype* archetype = archetypeManager_.GetObjectArchetype(archetypeName);
-
-    CreationSystem* creation_system = dynamic_cast<CreationSystem*>(systemManager_.systems_["CreationSystem"]);
-
-    if (pool && archetype && creation_system)
-    {
-      creation_system->CreateObject(*archetype, pool);
-    }
-  }*/
 
   std::vector<std::string_view> ObjectManager::GetRegisteredSystemNames()
   {
@@ -120,42 +103,5 @@ namespace Barrage
   void ObjectManager::RegisterSpawnFunction(const std::string_view& name, SpawnFunction spawnFunction)
   {
     SpawnFunctionManager::RegisterSpawnFunction(name, spawnFunction);
-  }
-
-  void ObjectManager::RegisterEngineComponents()
-  {
-    RegisterComponentArray<Destructible>("Destructible");
-    RegisterComponentArray<DirectoryIndex>("DirectoryIndex");
-    RegisterComponentArray<Parent>("Parent");
-    RegisterComponentArray<Position>("Position");
-    RegisterComponentArray<Rotation>("Rotation");
-    RegisterComponentArray<Scale>("Scale");
-    RegisterComponentArray<TextureSpace>("TextureSpace");
-
-    RegisterComponent<ObjectDirectory>("ObjectDirectory");
-    RegisterComponent<Spawner>("Spawner");
-    RegisterComponent<Sprite>("Sprite");
-  }
-
-  void ObjectManager::RegisterEngineSystems()
-  {
-    RegisterSystem<CreationSystem>("CreationSystem");
-    RegisterSystem<DestructionSystem>("DestructionSystem");
-    RegisterSystem<DrawSystem>("DrawSystem");
-  }
-
-  void ObjectManager::RegisterEngineSpawnFunctions()
-  {
-
-  }
-
-  void ObjectManager::SetDefaultSystemUpdateOrder()
-  {
-    std::vector<std::string_view> update_order;
-
-    update_order.push_back("CreationSystem");
-    update_order.push_back("DestructionSystem");
-
-    SetSystemUpdateOrder(update_order);
   }
 }

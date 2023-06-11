@@ -110,6 +110,39 @@ namespace Barrage
       ImGui::EndMenu();
     }
 
+    bool gamePlaying = Editor::Instance->Data().gamePlaying_;
+
+    if (gamePlaying)
+    {
+      ImGui::EndDisabled();
+    }
+
+    if (ImGui::BeginMenu("Game"))
+    {
+      if (gamePlaying)
+      {
+        if (ImGui::MenuItem("Stop"))
+        {
+          Editor::Instance->Data().gamePlaying_ = false;
+          Editor::Instance->Data().sceneIsDirty_ = true;
+        }
+      }
+      else
+      {
+        if (ImGui::MenuItem("Play"))
+        {
+          Editor::Instance->Data().gamePlaying_ = true;
+        }
+      }
+
+      ImGui::EndMenu();
+    }
+
+    if (gamePlaying)
+    {
+      ImGui::BeginDisabled();
+    }
+
     ImGui::EndMainMenuBar();
   }
 

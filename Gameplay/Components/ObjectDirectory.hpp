@@ -18,9 +18,8 @@
 #define ObjectDirectory_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/Component.hpp"
+#include "Objects/Components/BaseClasses/Component.hpp"
 #include "../ComponentArrays/DirectoryIndexArray.hpp"
-#include "../../Pools/Pool.hpp"
 
 #include <vector>
 

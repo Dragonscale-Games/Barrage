@@ -14,6 +14,9 @@
 
 #include "stdafx.h"
 #include "DestructionSystem.hpp"
+#include "ComponentArrays/DestructibleArray.hpp"
+#include "ComponentArrays/DirectoryIndexArray.hpp"
+#include "Components/ObjectDirectory.hpp"
 
 namespace Barrage
 {

@@ -40,35 +40,28 @@ endif()
 # Add the sources for the core library.
 add_library(BarrageCore STATIC 
   "template.cxx"
-  "stdafx.h"
 
   "Actions/ActionManager.cpp" "Scenes/SceneManager.cpp"
 
-  "Debug/SymbolManager.hpp" "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
-  "Debug/MemoryDebugger.hpp" "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
-  "Debug/MemoryOverrides.hpp"
+  "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
+  "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
 
-  "Engine/Engine.cpp" "Engine/Engine.hpp"
+  "Engine/Engine.cpp" 
   
-  "File/FileManager.hpp" "File/FileManager.cpp" "File/${OS_IMPL_FOLDER}/FileManager.cpp"
+  "File/FileManager.cpp" "File/${OS_IMPL_FOLDER}/FileManager.cpp"
   "File/FileManager.tpp"
-  "File/Graphics/ImageSource.hpp" "File/Graphics/ImageSource.cpp"
-  "File/Objects/ObjectSource.hpp" "File/Objects/ObjectSource.cpp"
+  "File/Graphics/ImageSource.cpp"
+  "File/Objects/ObjectSource.cpp"
   
-  "FramerateController/FramerateController.cpp" "FramerateController/FramerateController.hpp"
+  "FramerateController/FramerateController.cpp" 
   
-  "Input/InputManager.cpp" "Input/InputManager.hpp" 
-  "Input/KeyMap.hpp" 
+  "Input/InputManager.cpp"
  
-  "Objects/Components/ComponentArrays/PositionArray.hpp" 
-  "Objects/ObjectManager.cpp" "Objects/ObjectManager.hpp" 
-  "Objects/Pools/Pool.cpp"    "Objects/Pools/Pool.hpp"  
+  "Objects/ObjectManager.cpp"
+  "Objects/Pools/Pool.cpp"    
   
-  "Objects/Systems/BaseSystem.cpp"                    
-  "Objects/Systems/Destruction/DestructionSystem.cpp" 
-  "Objects/Systems/Creation/CreationSystem.cpp"       
-  "Objects/Systems/Draw/DrawSystem.cpp"              
-  
+  "Objects/Systems/BaseSystem.cpp"                             
+
   "Objects/Spawning/SpawnFunctionManager.cpp"  
          
   "Objects/Pools/PoolManager.cpp"                        
@@ -77,11 +70,9 @@ add_library(BarrageCore STATIC
   "Objects/Archetypes/ObjectArchetype/ObjectArchetype.cpp" 
   "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
   "Objects/Pools/PoolType.cpp"  
-   
+  "Math/Curves.tpp"
 
-  "Math/Curves.hpp" "Math/Curves.tpp"
-
-  "Random/Random.cpp" "Random/Random.hpp"
+  "Random/Random.cpp"
 
   "Rendering/WindowManager.hpp" "Rendering/WindowManager.cpp"
   "Rendering/GfxManager2D.hpp" "Rendering/GfxManager2D.cpp"

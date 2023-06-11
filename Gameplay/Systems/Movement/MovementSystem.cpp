@@ -18,11 +18,11 @@
 #include "ComponentArrays/VelocityArray.hpp"
 #include "Components/BoundaryBox.hpp"
 #include "ComponentArrays/AngularSpeedArray.hpp"
+#include "ComponentArrays/PositionArray.hpp"
+#include "ComponentArrays/RotationArray.hpp"
 
 namespace Barrage
 {
-  using namespace Barrage;
-  
   MovementSystem::MovementSystem() :
     System()
   {

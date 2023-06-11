@@ -14,12 +14,23 @@
 
 #include "ComponentArrays/AngularSpeedArray.hpp"
 #include "ComponentArrays/VelocityArray.hpp"
+#include "ComponentArrays/DestructibleArray.hpp"
+#include "ComponentArrays/DirectoryIndexArray.hpp"
+#include "ComponentArrays/ParentArray.hpp"
+#include "ComponentArrays/PositionArray.hpp"
+#include "ComponentArrays/RotationArray.hpp"
+#include "ComponentArrays/ScaleArray.hpp"
+#include "ComponentArrays/TextureSpaceArray.hpp"
 
 #include "Components/BoundaryBox.hpp"
 #include "Components/CircleCollider.hpp"
 #include "Components/Player.hpp"
 #include "Components/RNG.hpp"
+#include "Components/Spawner.hpp"
+#include "Components/Sprite.hpp"
 
+#include "Systems/Creation/CreationSystem.hpp"
+#include "Systems/Destruction/DestructionSystem.hpp"
 #include "Systems/Collision/CollisionSystem.hpp"
 #include "Systems/Movement/MovementSystem.hpp"
 #include "Systems/Spawn/SpawnSystem.hpp"
@@ -95,7 +106,17 @@ namespace Barrage
   {
     RegisterComponentArray<AngularSpeed>("AngularSpeed");
     RegisterComponentArray<Velocity>("Velocity");
+    RegisterComponentArray<Destructible>("Destructible");
+    RegisterComponentArray<DirectoryIndex>("DirectoryIndex");
+    RegisterComponentArray<Parent>("Parent");
+    RegisterComponentArray<Position>("Position");
+    RegisterComponentArray<Rotation>("Rotation");
+    RegisterComponentArray<Scale>("Scale");
+    RegisterComponentArray<TextureSpace>("TextureSpace");
 
+    RegisterComponent<ObjectDirectory>("ObjectDirectory");
+    RegisterComponent<Spawner>("Spawner");
+    RegisterComponent<Sprite>("Sprite");
     RegisterComponent<BoundaryBox>("BoundaryBox");
     RegisterComponent<CircleCollider>("CircleCollider");
     RegisterComponent<Player>("Player");
@@ -108,6 +129,8 @@ namespace Barrage
 
   void ObjectManager::RegisterCustomSystems()
   {
+    RegisterSystem<CreationSystem>("CreationSystem");
+    RegisterSystem<DestructionSystem>("DestructionSystem");
     RegisterSystem<CollisionSystem>("CollisionSystem");
     RegisterSystem<MovementSystem>("MovementSystem");
     RegisterSystem<SpawnSystem>("SpawnSystem");

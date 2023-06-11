@@ -1,32 +1,28 @@
 /* ======================================================================== */
 /*!
- * \file            CreationSystem.hpp
+ * \file            DestructionSystem.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Handles object creation both directly (through an object creation function)
-   and indirectly (through updating object spawners).
+   Handles destruction for all destructible objects. All destroyed objects
+   are lazy deleted, then all remaining active objects are sorted to the
+   front of the pool and the active object count is updated.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef CreationSystem_BARRAGE_H
-#define CreationSystem_BARRAGE_H
+#ifndef DestructionSystem_BARRAGE_H
+#define DestructionSystem_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Systems/BaseSystem.hpp"
-#include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
-#include "Objects/Spawning/SpawnFunctionManager.hpp"
-#include "Objects/Pools/PoolManager.hpp"
-#include "Objects/Components/Components/Spawner.hpp"
-#include "Objects/Spawning/SpawnInfo.hpp"
 
 namespace Barrage
 {
-  //! Handles object creation
-  class CreationSystem : public System
+  //! Handles destruction for all destructible objects
+  class DestructionSystem : public System
 	{
     public:   
       /**************************************************************/
@@ -35,12 +31,12 @@ namespace Barrage
           Initializes system.
       */
       /**************************************************************/
-      CreationSystem();
-
+      DestructionSystem();
+      
       /**************************************************************/
       /*!
         \brief
-          Spawns all objects queued for spawning.
+          Destroys all objects marked for destruction.
       */
       /**************************************************************/
       void Update() override;
@@ -49,27 +45,41 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Spawns all objects waiting to be spawned in a given pool.
+          Frees the handles of dead objects.
 
         \param pool
           The pool to update.
       */
       /**************************************************************/
-      static void SpawnObjects(Pool* pool);
+      static void UpdateDeadHandles(Pool* pool);
 
       /**************************************************************/
       /*!
         \brief
-          Creates a handle for each object that needs one.
+          Updates the handles of alive objects to reflect their
+          new locations.
 
         \param pool
           The pool to update.
       */
       /**************************************************************/
-      static void AssignHandles(Pool* pool);
+      static void UpdateAliveHandles(Pool* pool);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Destroys all objects marked for destruction in a pool, 
+          retaining the relative order between alive objects. Indices 
+          for alive objects may be changed.
+
+        \param pool
+          The pool to update.
+      */
+      /**************************************************************/
+      static void DestroyObjects(Pool* pool);
 	};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // CreationSystem_BARRAGE_H
+#endif // DestructionSystem_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

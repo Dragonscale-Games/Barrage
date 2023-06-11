@@ -16,7 +16,7 @@
 #define TextureSpaceArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/ComponentArray.hpp"
+#include "Objects/Components/BaseClasses/ComponentArray.hpp"
 
 namespace Barrage
 {

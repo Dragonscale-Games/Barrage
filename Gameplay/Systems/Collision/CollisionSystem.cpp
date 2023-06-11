@@ -13,6 +13,9 @@
 #include "stdafx.h"
 #include "CollisionSystem.hpp"
 
+#include "ComponentArrays/PositionArray.hpp"
+#include "ComponentArrays/DestructibleArray.hpp"
+
 #include "Components/BoundaryBox.hpp"
 #include "Components/CircleCollider.hpp"
 

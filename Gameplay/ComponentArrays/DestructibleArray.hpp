@@ -1,36 +1,36 @@
 /* ======================================================================== */
 /*!
- * \file            PositionArray.hpp
+ * \file            DestructibleArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Position component keeps track of an object's world position.
+   The Destructible component keeps track of whether an object is marked
+   for destruction.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef PositionArray_BARRAGE_H
-#define PositionArray_BARRAGE_H
+#ifndef DestructibleArray_BARRAGE_H
+#define DestructibleArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/ComponentArray.hpp"
+#include "Objects/Components/BaseClasses/ComponentArray.hpp"
 
 namespace Barrage
 {
-  //!< World position of an object
-  struct Position
+  //!< Keeps track of whether an object is marked for destruction
+  struct Destructible
   {
-    float x_; //!< x coord in world units
-    float y_; //!< y coord in world units
+    bool destroyed_; //!< true if marked for destruction
 
-    inline Position() : x_(960.0f), y_(540.0f) {}
+    inline Destructible() : destroyed_(false) {}
   };
 
-  typedef ComponentArrayT<Position> PositionArray;
+  typedef ComponentArrayT<Destructible> DestructibleArray;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // PositionArray_BARRAGE_H
+#endif // DestructibleArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

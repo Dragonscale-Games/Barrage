@@ -12,6 +12,7 @@
 
 #include "PositionFuncs.hpp"
 #include <Engine/Engine.hpp>
+#include "ComponentArrays/PositionArray.hpp"
 
 using namespace Barrage;
 

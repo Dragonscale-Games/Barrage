@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            Sprite.hpp
+ * \file            Spawner.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -12,27 +12,33 @@
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef Sprite_BARRAGE_H
-#define Sprite_BARRAGE_H
+#ifndef Spawner_BARRAGE_H
+#define Spawner_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/Component.hpp"
+#include "Objects/Components/BaseClasses/Component.hpp"
+#include "Objects/Spawning/SpawnInfo.hpp"
+
+#include <unordered_map>
+#include <string>
 
 namespace Barrage
-{
-  //! Holds all information needed to draw the objects in a pool
-  class Sprite
+{ 
+  typedef unsigned SpawnTypeId;
+  typedef std::unordered_map<SpawnTypeId, SpawnInfo> SpawnTypeMap;
+
+  //! Component that allows objects to spawn other objects
+  class Spawner
   {
     public:
-      std::string texture_; //!< Name of the texture to draw with
-      unsigned layer_;      //!< Layer of the drawn object (lower layers are drawn beneath higher ones)
+      SpawnTypeMap spawnTypes_; //!< List of the object types that will be spawned
 
-      inline Sprite() : texture_(), layer_(0) {}
+      inline Spawner() : spawnTypes_() {}
   };
 
-  typedef ComponentT<Sprite> SpriteComponent;
+  typedef ComponentT<Spawner> SpawnerComponent;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // Sprite_BARRAGE_H
+#endif // Spawner_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

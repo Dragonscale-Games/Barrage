@@ -1,44 +1,36 @@
 /* ======================================================================== */
 /*!
- * \file            Spawner.hpp
+ * \file            ScaleArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
-
+   The Scale component keeps track of the world dimensions of a game object.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef Spawner_BARRAGE_H
-#define Spawner_BARRAGE_H
+#ifndef ScaleArray_BARRAGE_H
+#define ScaleArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "../BaseClasses/Component.hpp"
-#include "Objects/Spawning/SpawnInfo.hpp"
-
-#include <unordered_map>
-#include <string>
+#include "Objects/Components/BaseClasses/ComponentArray.hpp"
 
 namespace Barrage
-{ 
-  typedef unsigned SpawnTypeId;
-  typedef std::unordered_map<SpawnTypeId, SpawnInfo> SpawnTypeMap;
-
-  //! Component that allows objects to spawn other objects
-  class Spawner
+{
+  //!< World dimensions of an object
+  struct Scale
   {
-    public:
-      SpawnTypeMap spawnTypes_; //!< List of the object types that will be spawned
+    float w_; //!< width in world units
+    float h_; //!< height in world units
 
-      inline Spawner() : spawnTypes_() {}
+    inline Scale() : w_(100.0f), h_(100.0f) {}
   };
 
-  typedef ComponentT<Spawner> SpawnerComponent;
+  typedef ComponentArrayT<Scale> ScaleArray;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // Spawner_BARRAGE_H
+#endif // ScaleArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -15,6 +15,8 @@
 #include "imgui/imgui_internal.h"
 #include "imgui/imgui_stdlib.h"
 #include <Editor.hpp>
+#include "ComponentArrays/RotationArray.hpp"
+#include "Components/Sprite.hpp"
 
 namespace Barrage
 {

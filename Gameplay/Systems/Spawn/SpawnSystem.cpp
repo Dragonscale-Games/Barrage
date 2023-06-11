@@ -13,7 +13,7 @@
 #include "stdafx.h"
 #include "SpawnSystem.hpp"
 #include <Objects/Systems/SystemManager.hpp>
-#include <Objects/Systems/Creation/CreationSystem.hpp>
+#include "Components/Spawner.hpp"
 
 namespace Barrage
 {

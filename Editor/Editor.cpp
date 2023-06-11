@@ -184,6 +184,13 @@ namespace Barrage
 
   void Editor::UseWidgets()
   {
+    bool gamePlaying = data_.gamePlaying_;
+    
+    if (gamePlaying)
+    {
+      ImGui::BeginDisabled();
+    }
+    
     MainMenuWidget::Use();
     HierarchyWidget::Use();
     InspectorWidget::Use();
@@ -204,6 +211,11 @@ namespace Barrage
 
     ComponentModal::Use("Add shared component");
     ComponentArrayModal::Use("Add component array");
+
+    if (gamePlaying)
+    {
+      ImGui::EndDisabled();
+    }
   }
 
   void Editor::HandleKeyboard()

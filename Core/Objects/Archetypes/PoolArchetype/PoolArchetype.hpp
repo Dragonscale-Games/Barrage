@@ -17,7 +17,7 @@
 #define PoolArchetype_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Components/EngineComponents.hpp"
+#include "Objects/Components/BaseClasses/Component.hpp"
 #include "Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp"
 #include "Serialization/Serializer.hpp"
 

@@ -31,12 +31,17 @@
 # =====================================================================================================================
 
 add_library(Gameplay STATIC
-"Registration.cpp"
-"SpawnFunctions/Direction/DirectionFuncs.cpp"
-"SpawnFunctions/Position/PositionFuncs.cpp"
-"Systems/Collision/CollisionSystem.cpp"
-"Systems/Movement/MovementSystem.cpp"
-"Systems/Spawn/SpawnSystem.cpp"
+	"Registration.cpp"
+	
+	"SpawnFunctions/Direction/DirectionFuncs.cpp"
+	"SpawnFunctions/Position/PositionFuncs.cpp"
+	
+	"Systems/Collision/CollisionSystem.cpp"
+	"Systems/Creation/CreationSystem.cpp"
+	"Systems/Destruction/DestructionSystem.cpp"
+	"Systems/Draw/DrawSystem.cpp"
+	"Systems/Movement/MovementSystem.cpp"
+	"Systems/Spawn/SpawnSystem.cpp"
 )
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
