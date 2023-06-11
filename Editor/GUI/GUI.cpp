@@ -27,7 +27,6 @@ namespace Barrage
 
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
     if (!ImGui_ImplGlfw_InitForOpenGL(window, true))
       return;
