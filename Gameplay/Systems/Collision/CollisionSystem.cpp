@@ -21,8 +21,6 @@
 
 namespace Barrage
 {
-  using namespace Barrage;
-  
   CollisionSystem::CollisionSystem() :
     System()
   {

@@ -26,6 +26,7 @@
 #include <unordered_set>
 #include <chrono>
 #include <iostream>
+#include <filesystem>
 
 namespace Barrage
 {
@@ -82,14 +83,20 @@ namespace Barrage
 
     // Register the assets necessary.
     const char* instancedShaderPaths[] = {
-      "Assets/Shaders/Default/Instanced.vs",
-      "Assets/Shaders/Default/Instanced.fs",
+      "Assets/Shaders/Instanced.vs",
+      "Assets/Shaders/Instanced.fs",
     };
     registry.RegisterShader(instancedShaderPaths, "Instanced");
-    registry.RegisterTexture("Assets/Textures/TestBullet.png", "TestBullet");
-    registry.RegisterTexture("Assets/Textures/TestShip.png", "TestShip");
-    // Set any default resources on the draw system.
     drawing.ApplyShader("Instanced");
+
+    for (auto const& texture_file : std::filesystem::directory_iterator{ "Assets/Textures" })
+    {
+      if (texture_file.is_regular_file() && texture_file.path().extension() == ".png")
+      {
+        registry.RegisterTexture(texture_file.path().string().c_str(), texture_file.path().stem().string().c_str());
+      }
+    }
+    
     // Set the viewport of our game
     const Barrage::WindowManager::WindowData& settings = windowing.GetSettings();
     drawing.SetViewportSpace(glm::ivec2(settings.width_, settings.height_));

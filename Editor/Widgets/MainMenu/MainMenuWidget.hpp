@@ -35,6 +35,8 @@ namespace Barrage
       static void SaveScene();
 
       static void LoadScene();
+
+      static void BuildGame();
   };
 }
 

@@ -14,6 +14,8 @@
 #include <Editor.hpp>
 #include "Commands/Create/Pool/CreatePool.hpp"
 #include "Commands/Create/Object/CreateObject.hpp"
+#include "nfd.h"
+#include <filesystem>
 
 namespace Barrage
 {
@@ -35,6 +37,13 @@ namespace Barrage
 
       ImGui::Separator();
 
+      if (ImGui::MenuItem("Build game"))
+      {
+        BuildGame();
+      }
+      
+      ImGui::Separator();
+      
       if (ImGui::MenuItem("Exit"))
       {
         Editor::Instance->Data().isRunning_ = false;
@@ -148,51 +157,127 @@ namespace Barrage
 
   void MainMenuWidget::SaveScene()
   {
-    EditorData& editorData = Editor::Instance->Data();
-
-    if (editorData.selectedScene_.empty())
+    nfdchar_t* raw_path = NULL;
+    nfdresult_t result = NFD_SaveDialog(NULL, NULL, &raw_path);
+    
+    if (result != NFD_OKAY)
     {
+      LogWidget::AddEntry("Could not save scene.");
       return;
     }
-
+    
+    std::string path(raw_path);
+    free(raw_path);
+    
+    EditorData& editorData = Editor::Instance->Data();
     Scene* scene = Engine::Instance->Scenes().GetScene(editorData.selectedScene_);
 
     if (scene == nullptr)
     {
+      LogWidget::AddEntry("Could not save scene.");
       return;
     }
 
-    std::string path = editorData.selectedScene_ + ".scene";
     if (Scene::SaveToFile(scene, path))
     {
-      LogWidget::AddEntry("Saved scene \"" + editorData.selectedScene_ + "\" to \"" + path + "\".");
+      LogWidget::AddEntry("Saved scene to \"" + path + "\".");
     }
     else
     {
-      LogWidget::AddEntry("Could not save scene \"" + editorData.selectedScene_ + "\".");
+      LogWidget::AddEntry("Could not save scene.");
     }
   }
 
   void MainMenuWidget::LoadScene()
   {
-    EditorData& editorData = Editor::Instance->Data();
+    nfdchar_t* raw_path = NULL;
+    nfdresult_t result = NFD_OpenDialog(NULL, NULL, &raw_path);
 
-    if (editorData.selectedScene_.empty())
+    if (result != NFD_OKAY)
     {
+      LogWidget::AddEntry("Could not load scene.");
       return;
     }
 
-    std::string path = editorData.selectedScene_ + ".scene";
-
+    std::string path(raw_path);
+    free(raw_path);
+    
+    EditorData& editorData = Editor::Instance->Data();
     Scene* scene = Scene::LoadFromFile(path);
     
     if (scene == nullptr)
     {
-      LogWidget::AddEntry("Could not load scene \"" + editorData.selectedScene_ + "\".");
+      LogWidget::AddEntry("Could not load scene.");
+    }
+    else
+    {
+      LogWidget::AddEntry("Loaded scene from \"" + path + "\".");
+      editorData.nextScene_ = scene;
+    }
+  }
+
+  void MainMenuWidget::BuildGame()
+  {
+    nfdchar_t* raw_path = NULL;
+    nfdresult_t result = NFD_PickFolder(NULL, &raw_path);
+
+    if (result != NFD_OKAY)
+    {
+      LogWidget::AddEntry("Could not build game. (Problem selecting output folder.)");
       return;
     }
-    
-    LogWidget::AddEntry("Loaded scene \"" + editorData.selectedScene_ + "\" from \"" + path + "\".");
-    editorData.nextScene_ = scene;
+
+    std::string output_path(raw_path);
+    free(raw_path);
+
+    std::string build_folder_name = "build";
+    output_path += "/" + build_folder_name + "/";
+
+    LogWidget::AddEntry("Chose output path %s", output_path.c_str());
+
+    if (std::filesystem::exists(output_path))
+    {
+      LogWidget::AddEntry("Could not build game. (Output directory already contains \"build\" folder.)");
+      return;
+    }
+
+    if (!std::filesystem::exists("executable"))
+    {
+      LogWidget::AddEntry("Could not build game. (Could not locate executable to copy.)");
+      return;
+    }
+
+    std::vector<std::string> texture_names = Engine::Instance->GfxRegistry().GetTextureNames();
+
+    for (const auto& texture_name : texture_names)
+    {
+      std::string texture_path = "Assets/Textures/" + texture_name + ".png";
+      
+      if (!std::filesystem::exists(texture_path))
+      {
+        LogWidget::AddEntry("Could not build game. (Texture does not exist at %s.)", texture_path.c_str());
+        return;
+      }
+    }
+
+    std::filesystem::create_directory(output_path);
+
+    if (!std::filesystem::exists(output_path))
+    {
+      LogWidget::AddEntry("Could not build game. (Could not create build directory.)");
+      return;
+    }
+
+    std::filesystem::copy_file("executable", output_path + "Game.exe");
+
+    for (auto const& dll_file : std::filesystem::directory_iterator{ "." })
+    {
+      if (dll_file.is_regular_file() && dll_file.path().extension() == ".dll")
+      {
+        std::filesystem::copy_file(dll_file, output_path + dll_file.path().filename().string());
+      }
+    }
+
+    std::filesystem::copy("Assets", output_path + "Assets", std::filesystem::copy_options::recursive);
   }
 }
