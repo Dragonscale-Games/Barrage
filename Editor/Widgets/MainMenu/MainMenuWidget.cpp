@@ -16,6 +16,7 @@
 #include "Commands/Create/Object/CreateObject.hpp"
 #include "nfd.h"
 #include <filesystem>
+#include <Windows.h>
 
 namespace Barrage
 {
@@ -37,11 +38,16 @@ namespace Barrage
 
       ImGui::Separator();
 
-      if (ImGui::MenuItem("Build game"))
+      if (ImGui::MenuItem("Build"))
       {
         BuildGame();
       }
       
+      if (ImGui::MenuItem("Build and run"))
+      {
+        BuildGame(true);
+      }
+
       ImGui::Separator();
       
       if (ImGui::MenuItem("Exit"))
@@ -216,7 +222,7 @@ namespace Barrage
     }
   }
 
-  void MainMenuWidget::BuildGame()
+  void MainMenuWidget::BuildGame(bool runExecutable)
   {
     nfdchar_t* raw_path = NULL;
     nfdresult_t result = NFD_PickFolder(NULL, &raw_path);
@@ -268,7 +274,8 @@ namespace Barrage
       return;
     }
 
-    std::filesystem::copy_file("executable", output_path + "Game.exe");
+    std::string executable_path = output_path + "Game.exe";
+    std::filesystem::copy_file("executable", executable_path);
 
     for (auto const& dll_file : std::filesystem::directory_iterator{ "." })
     {
@@ -279,5 +286,35 @@ namespace Barrage
     }
 
     std::filesystem::copy("Assets", output_path + "Assets", std::filesystem::copy_options::recursive);
+
+    if (runExecutable && std::filesystem::exists(executable_path))
+    {
+      STARTUPINFO si;
+      PROCESS_INFORMATION pi;
+
+      ZeroMemory(&si, sizeof(si));
+      si.cb = sizeof(si);
+      ZeroMemory(&pi, sizeof(pi));
+
+      // Start the child process. 
+      if (!CreateProcess(executable_path.c_str(), // Module name
+        NULL,           // Command line
+        NULL,           // Process handle not inheritable
+        NULL,           // Thread handle not inheritable
+        FALSE,          // Set handle inheritance to FALSE
+        0,              // No creation flags
+        NULL,           // Use parent's environment block
+        NULL,           // Use parent's starting directory 
+        &si,            // Pointer to STARTUPINFO structure
+        &pi)            // Pointer to PROCESS_INFORMATION structure
+        )
+      {
+        return;
+      }
+
+      // Close process and thread handles. 
+      CloseHandle(pi.hProcess);
+      CloseHandle(pi.hThread);
+    }
   }
 }
