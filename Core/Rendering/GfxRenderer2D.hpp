@@ -134,9 +134,11 @@ namespace Barrage
       \param dimensions
         The width and height in pixels the renderer
         has available to render.
+      \param origin
+        The lower left corner of the rendering surface.
     */
     /*************************************************************************/
-    void SetViewportSpace(const glm::ivec2& dimensions);
+    void SetViewportSpace(const glm::ivec2& dimensions, const glm::ivec2& origin = glm::ivec2(0,0));
     /*************************************************************************/
     /*!
       \brief

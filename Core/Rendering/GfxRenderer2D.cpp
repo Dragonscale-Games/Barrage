@@ -70,7 +70,7 @@ namespace Barrage
     clearColor_ = color;
   }
 
-  void GfxRenderer2D::SetViewportSpace(const glm::ivec2& dimensions)
+  void GfxRenderer2D::SetViewportSpace(const glm::ivec2& dimensions, const glm::ivec2& origin)
   {
     /*
     constants_.projection_ =
@@ -83,7 +83,7 @@ namespace Barrage
     //constants_.projection_ = glm::ortho<float>(0, dimensions.x, 0, dimensions.y);
     //constants_.projection_ = glm::ortho<float>(0.0f, 1920.0f, 0.0f, 1080.0f);
     constants_.projection_ = glm::ortho<float>(-1920.0f / 2, +1920.0f / 2, -1080.0f / 2, 1080.0f / 2);
-    CHECK_GL( glViewport(0, 0, dimensions.x, dimensions.y) );
+    CHECK_GL( glViewport(origin.x, origin.y, origin.x + dimensions.x, origin.y + dimensions.y) );
   }
 
   void GfxRenderer2D::SetCameraTransform(const glm::vec2& position, float zoom, RADIAN rotation)
