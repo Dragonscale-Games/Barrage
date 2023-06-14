@@ -80,9 +80,11 @@ namespace Barrage
         The visible viewport space to render all objects with.
       \param dimensions
         The pixel dimensions to render everything in.
+      \param origin
+        The lower left corner of the rendering surface.
     */
     /*************************************************************************/
-    void SetViewportSpace(const glm::ivec2& dimensions);
+    void SetViewportSpace(const glm::ivec2& dimensions, const glm::ivec2& origin = glm::ivec2(0, 0));
     /*************************************************************************/
     /*!
       \brief

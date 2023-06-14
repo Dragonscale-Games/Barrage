@@ -20,6 +20,8 @@
 
 namespace Barrage
 {
+  ImVec2 MainMenuWidget::size_ = ImVec2(0.0f, 0.0f);
+  
   void MainMenuWidget::Use()
   {
     ImGui::BeginMainMenuBar();
@@ -57,6 +59,8 @@ namespace Barrage
 
       ImGui::EndMenu();
     }
+
+    size_ = ImGui::GetItemRectSize();
 
     if (ImGui::BeginMenu("Edit"))
     {
@@ -159,6 +163,11 @@ namespace Barrage
     }
 
     ImGui::EndMainMenuBar();
+  }
+
+  ImVec2 MainMenuWidget::GetSize()
+  {
+    return size_;
   }
 
   void MainMenuWidget::SaveScene()

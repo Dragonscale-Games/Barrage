@@ -61,10 +61,10 @@ namespace Barrage
     manager_ = nullptr;
   }
 
-  void GfxDraw2D::SetViewportSpace(const glm::ivec2& dimensions)
+  void GfxDraw2D::SetViewportSpace(const glm::ivec2& dimensions, const glm::ivec2& origin)
   {
     assert(renderer_);
-    renderer_->SetViewportSpace(dimensions);
+    renderer_->SetViewportSpace(dimensions, origin);
   }
 
   void GfxDraw2D::SetCameraTransform(const glm::vec2& position, float zoom, RADIAN rotation)

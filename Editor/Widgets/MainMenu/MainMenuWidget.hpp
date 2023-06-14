@@ -31,12 +31,16 @@ namespace Barrage
       /**************************************************************/
       static void Use();
 
+      static ImVec2 GetSize();
+
     private:
       static void SaveScene();
 
       static void LoadScene();
 
       static void BuildGame(bool runExecutable = false);
+
+      static ImVec2 size_;
   };
 }
 

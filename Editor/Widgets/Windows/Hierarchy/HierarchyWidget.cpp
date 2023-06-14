@@ -19,9 +19,13 @@
 
 namespace Barrage
 {
+  ImVec2 HierarchyWidget::size_ = ImVec2(0.0f, 0.0f);
+  
   void HierarchyWidget::Use()
   {
-    ImGui::Begin("Hierarchy");
+    ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_NoMove);
+
+    size_ = ImGui::GetWindowSize();
 
     if (!Editor::Instance->Data().selectedScene_.empty())
     {
@@ -29,6 +33,11 @@ namespace Barrage
     }
 
     ImGui::End();
+  }
+
+  ImVec2 HierarchyWidget::GetSize()
+  {
+    return size_;
   }
 
   void HierarchyWidget::SceneGUI()

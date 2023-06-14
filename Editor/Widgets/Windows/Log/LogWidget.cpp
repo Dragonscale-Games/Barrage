@@ -19,10 +19,13 @@ namespace Barrage
   ImGuiTextFilter LogWidget::filter_ = ImGuiTextFilter();
   ImVector<int> LogWidget::lineOffsets_ = ImVector<int>();
   bool LogWidget::scrollToBottom_ = bool();
+  ImVec2 LogWidget::size_ = ImVec2(0.0f, 0.0f);
 
   void LogWidget::Use()
   {
-    ImGui::Begin("Output Log");
+    ImGui::Begin("Output Log", nullptr, ImGuiWindowFlags_NoMove);
+    size_ = ImGui::GetWindowSize();
+
     if (ImGui::Button("Clear")) Clear();
     ImGui::SameLine();
     bool copy = ImGui::Button("Copy");
@@ -53,6 +56,11 @@ namespace Barrage
     ImGui::End();
   }
   
+  ImVec2 LogWidget::GetSize()
+  {
+    return size_;
+  }
+
   void LogWidget::Clear()
   {
     buffer_.clear();

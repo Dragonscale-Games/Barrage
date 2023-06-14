@@ -19,9 +19,13 @@
 
 namespace Barrage
 {
+  ImVec2 InspectorWidget::size_ = ImVec2(0.0f, 0.0f);
+  
   void InspectorWidget::Use()
   {
-    ImGui::Begin("Inspector");
+    ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_NoMove);
+
+    size_ = ImGui::GetWindowSize();
 
     if (Editor::Instance->Data().selectedScene_.empty() || Editor::Instance->Data().selectedPool_.empty())
     {
@@ -100,5 +104,10 @@ namespace Barrage
     }
 
     ImGui::End();
+  }
+
+  ImVec2 InspectorWidget::GetSize()
+  {
+    return size_;
   }
 }

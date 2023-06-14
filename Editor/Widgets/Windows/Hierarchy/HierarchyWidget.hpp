@@ -35,6 +35,8 @@ namespace Barrage
       /**************************************************************/
       static void Use();
 
+      static ImVec2 GetSize();
+
     private:
       static void SceneGUI();
 
@@ -49,6 +51,8 @@ namespace Barrage
       */
       /**************************************************************/
       static void DeselectAll();
+
+      static ImVec2 size_;
   };
 }
 

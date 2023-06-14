@@ -111,6 +111,12 @@ namespace Barrage
     data_.selectedScene_ = "Demo Scene";
     data_.selectedSpace_ = "Main Space";
     engine_.Frames().SetVsync(true);
+
+    float zoom = 1.0f;
+    float angle = 0.0f;
+    glm::vec2 position(0.0f);
+
+    engine_.Drawing().SetCameraTransform(position, zoom, angle);
   }
 
   void Editor::Update()
@@ -223,6 +229,36 @@ namespace Barrage
     {
       ImGui::EndDisabled();
     }
+
+    Barrage::GfxDraw2D& drawing = engine_.Drawing();
+    Barrage::WindowManager& windowing = engine_.Windowing();
+
+    WindowManager::WindowData window_settings = windowing.GetSettings();
+    glm::ivec2 dimensions(0, 0);
+    glm::ivec2 origin(0, 0);
+
+    float x = window_settings.width_ - HierarchyWidget::GetSize().x - InspectorWidget::GetSize().x;
+    float y = window_settings.height_ - LogWidget::GetSize().y - MainMenuWidget::GetSize().y;
+
+    float adjusted_x = x;
+    float adjusted_y = y;
+
+    if (y != 0.0f && x / y > 16.0f / 9.0f)
+    {
+      adjusted_x = y * 16.0f / 9.0f;
+    }
+    else if (x != 0.0f && y / x > 9.0f / 16.0f)
+    {
+      adjusted_y = x * 9.0f / 16.0f;
+    }
+
+    dimensions.x = static_cast<int>(adjusted_x);
+    dimensions.y = static_cast<int>(adjusted_y);
+
+    origin.x = static_cast<int>(HierarchyWidget::GetSize().x + (x - adjusted_x) / 2.0f);
+    origin.y = static_cast<int>(LogWidget::GetSize().y + (y - adjusted_y) / 2.0f);
+
+    drawing.SetViewportSpace(dimensions, origin);
   }
 
   void Editor::HandleKeyboard()
@@ -264,52 +300,6 @@ namespace Barrage
         repeatTimer_ -= engine_.Frames().DT();
       }
     }
-
-    // Very very temp.
-    // This code is not important, feel free to take it out whenever.
-    static float zoom = 1.0f;
-    static float angle = 0.0f;
-    static glm::vec2 position(0.0f);
-
-    constexpr float zoomFactor = 1e-6f;
-    constexpr float velocity = 1e-3f;
-
-    if(engine_.Input().KeyIsDown(KEY_Z))
-    {
-      zoom += zoomFactor * engine_.Frames().DT();
-    }
-    if (engine_.Input().KeyIsDown(KEY_C))
-    {
-      zoom -= zoomFactor * engine_.Frames().DT();
-    }
-
-    if (engine_.Input().KeyIsDown(KEY_Q))
-    {
-      angle += zoomFactor * engine_.Frames().DT();
-    }
-    if (engine_.Input().KeyIsDown(KEY_E))
-    {
-      angle -= zoomFactor * engine_.Frames().DT();
-    }
-
-    if (engine_.Input().KeyIsDown(KEY_D))
-    {
-      position.x += velocity * engine_.Frames().DT();
-    }
-    if (engine_.Input().KeyIsDown(KEY_A))
-    {
-      position.x -= velocity * engine_.Frames().DT();
-    }
-    if (engine_.Input().KeyIsDown(KEY_W))
-    {
-      position.y += velocity * engine_.Frames().DT();
-    }
-    if (engine_.Input().KeyIsDown(KEY_S))
-    {
-      position.y -= velocity * engine_.Frames().DT();
-    }
-
-    engine_.Drawing().SetCameraTransform(position, zoom, angle);
   }
 
   void Editor::ChangeScene()
