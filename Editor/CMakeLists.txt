@@ -63,7 +63,7 @@ add_executable(Editor "main.cpp"
  "Widgets/Components/ComponentArray/ComponentArrayWidget.cpp" 
  "Widgets/Components/Component/ComponentWidget.cpp"  
  "Commands/Edit/ComponentArray/EditComponentArray.cpp" 
- "Commands/Edit/Component/EditComponent.cpp")
+ "Commands/Edit/Component/EditComponent.cpp" "Project/Project.cpp")
 
 target_link_libraries(Editor PUBLIC BarrageCore Gameplay imgui nativefiledialog)
 add_dependencies(Editor Game)
