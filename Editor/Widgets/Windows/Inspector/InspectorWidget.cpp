@@ -17,6 +17,8 @@
 #include <string>
 #include "Widgets/Data/DataWidget.hpp"
 #include "Commands/Delete/Tag/DeleteTag.hpp"
+#include "Commands/Edit/Capacity/EditCapacity.hpp"
+#include "Widgets/Windows/Log/LogWidget.hpp"
 
 namespace Barrage
 {
@@ -57,6 +59,41 @@ namespace Barrage
     //DataWidget::Use(poolArchetype->capacity_, "capacity");
 
     //ImGui::Spacing();
+
+    unsigned old_capacity_value = poolArchetype->GetCapacity();
+    rttr::variant capacity_value = old_capacity_value;
+    DataWidget::DataObject capacity_object("Capacity", capacity_value);
+
+    ImGui::Spacing();
+    DataWidget::Use(capacity_object);
+    ImGui::Spacing();
+
+    if (capacity_object.ValueWasSet())
+    {
+      unsigned new_value = capacity_object.GetValue<unsigned>();
+
+      if (new_value < 1)
+      {
+        new_value = 1;
+        LogWidget::AddEntry("Capacity cannot go lower than 1.");
+      }
+      else if (new_value < poolArchetype->GetStartingObjects().size())
+      {
+        new_value = poolArchetype->GetStartingObjects().size();
+        LogWidget::AddEntry("Capacity cannot go lower than number of objects in pool.");
+      }
+      
+      if (new_value != old_capacity_value)
+      {
+        EditorData& editorData = Editor::Instance->Data();
+        EditCapacity* capacity_command = new EditCapacity(
+          editorData.selectedScene_,
+          editorData.selectedPool_,
+          new_value,
+          capacity_object.ChainUndoEnabled());
+        Editor::Instance->Command().Send(capacity_command);
+      }
+    }
 
     if (ImGui::CollapsingHeader("Tags"))
     {

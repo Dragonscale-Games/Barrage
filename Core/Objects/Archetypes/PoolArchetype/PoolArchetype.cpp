@@ -219,6 +219,16 @@ namespace Barrage
     return spawnArchetypes_;
   }
   
+  void PoolArchetype::SetCapacity(unsigned capacity)
+  {
+    capacity_ = capacity;
+
+    if (capacity_ < 1)
+    {
+      capacity_ = 1;
+    }
+  }
+
   void PoolArchetype::AddComponent(const std::string_view& name, Component* sharedComponent)
   {
     std::string_view key = ComponentAllocator::GetComponentLiteral(name);

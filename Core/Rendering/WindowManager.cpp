@@ -147,6 +147,12 @@ namespace Barrage
     glfwSetWindowSize(window_, width, height);
   }
 
+  void WindowManager::Maximize()
+  {
+    assert(window_);
+    glfwMaximizeWindow(window_);
+  }
+
   void WindowManager::ChangeDecoration(bool decorated)
   {
     assert(window_);

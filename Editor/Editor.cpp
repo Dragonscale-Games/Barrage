@@ -81,6 +81,7 @@ namespace Barrage
     Barrage::GfxDraw2D& drawing = engine_.Drawing();
 
     windowing.ChangeTitle("Barrage Editor");
+    windowing.Maximize();
 
     // Register the assets necessary.
     const char* instancedShaderPaths[] = {

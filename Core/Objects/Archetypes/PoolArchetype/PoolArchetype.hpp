@@ -255,6 +255,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Sets the capacity of the pool archetype.
+
+        \param capacity
+          The new capacity of the pool.
+      */
+      /**************************************************************/
+      void SetCapacity(unsigned capacity);
+
+      /**************************************************************/
+      /*!
+        \brief
           Adds a component to the pool archetype. Has no effect
           if a component with the given name already exists.
 

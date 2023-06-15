@@ -44,7 +44,7 @@ namespace Barrage
     {
       if (spawner.spawnTypes_.count(0))
       {
-        spawner.spawnTypes_[0].sourceIndices_.resize(100, 0);
+        spawner.spawnTypes_[0].sourceIndices_.resize(100, i);
         bulletPool->QueueSpawns(spawnerPool, spawner.spawnTypes_[0]);
       }
     }

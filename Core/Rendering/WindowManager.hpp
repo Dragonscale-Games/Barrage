@@ -147,6 +147,13 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
+        Maximizes the window.
+    */
+    /*************************************************************************/
+    void Maximize();
+    /*************************************************************************/
+    /*!
+      \brief
         Sets whether the window is decorated or not.
       \param decorated
         True if the window is set to be decorated (the titlebar is visible
