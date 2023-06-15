@@ -15,7 +15,6 @@
 #include <stdafx.h>
 
 #include "ComponentArrays/VelocityArray.hpp"
-#include "Components/RNG.hpp"
 
 namespace Barrage
 {
@@ -25,7 +24,7 @@ namespace Barrage
     {
       UNREFERENCED(sourceIndices);
       
-      Barrage::Random& rng = initPool.GetComponent<RNG>("RNG")->Data().rng_;
+      Barrage::Random& rng = initPool.GetSpace().GetRNG();
       VelocityArray& dest_velocities = *destPool.GetComponentArray<Velocity>("Velocity");
 
       for (unsigned i = 0; i < numNewObjects; ++i)

@@ -1,27 +1,27 @@
 /* ======================================================================== */
 /*!
- * \file            ComponentModal.hpp
+ * \file            TagModal.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   A selection window that pops up when the user tries to add a component 
-   to a pool.
+   A selection window that pops up when the user tries to add a tag to a
+   pool.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef ComponentModal_BARRAGE_H
-#define ComponentModal_BARRAGE_H
+#ifndef TagModal_BARRAGE_H
+#define TagModal_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
 
 namespace Barrage
 {
-  //! Component selection modal
-  class ComponentModal
+  //! Tag selection modal
+  class TagModal
   {
     public:
       /**************************************************************/
@@ -39,5 +39,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ComponentModal_BARRAGE_H
+#endif // TagModal_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

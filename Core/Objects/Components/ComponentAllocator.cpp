@@ -30,8 +30,12 @@ namespace Barrage
 
   void ComponentAllocator::RegisterTag(const std::string_view& tag)
   {
-    tagSet_.insert(tag);
-    tagNamesSorted_ = false;
+    if (tagSet_.count(tag) == 0)
+    {
+      tagSet_.insert(tag);
+      tagNames_.push_back(tag);
+      tagNamesSorted_ = false;
+    }
   }
 
   Component* ComponentAllocator::AllocateComponent(const std::string_view& name, Component* initializer)

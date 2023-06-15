@@ -30,6 +30,7 @@ namespace Barrage
     bool sceneIsDirty_;                       //!< Flag for when user changes something in current scene
     bool openComponentModal_;                 //!< Flag for when user opens the "add component" modal
     bool openComponentArrayModal_;            //!< Flag for when user opens the "add component array" modal
+    bool openTagModal_;                       //!< Flag for when user opens the "add tag" modal
     Scene* nextScene_;                        //!< On a scene change, the new scene is temporarily held here
     std::string selectedSpace_;               //!< The currently selected space
     std::string selectedScene_;               //!< The currently selected scene
@@ -37,6 +38,7 @@ namespace Barrage
     std::string selectedObject_;              //!< The currently selected object
     std::string_view selectedComponent_;      //!< The currently selected component
     std::string_view selectedComponentArray_; //!< The currently selected component array
+    std::string_view selectedTag_;            //!< The currently selected tag
   };
 }
 

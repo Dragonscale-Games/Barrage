@@ -22,6 +22,7 @@
 
 #include <Widgets/Modals/Component/ComponentModal.hpp>
 #include <Widgets/Modals/ComponentArray/ComponentArrayModal.hpp>
+#include <Widgets/Modals/Tag/TagModal.hpp>
 
 #include <unordered_set>
 #include <chrono>
@@ -222,8 +223,15 @@ namespace Barrage
       data_.openComponentArrayModal_ = false;
     }
 
+    if (data_.openTagModal_)
+    {
+      ImGui::OpenPopup("Add tag");
+      data_.openTagModal_ = false;
+    }
+
     ComponentModal::Use("Add shared component");
     ComponentArrayModal::Use("Add component array");
+    TagModal::Use("Add tag");
 
     if (gamePlaying)
     {

@@ -25,7 +25,6 @@
 #include "Components/BoundaryBox.hpp"
 #include "Components/CircleCollider.hpp"
 #include "Components/Player.hpp"
-#include "Components/RNG.hpp"
 #include "Components/Spawner.hpp"
 #include "Components/Sprite.hpp"
 
@@ -120,7 +119,6 @@ namespace Barrage
     RegisterComponent<BoundaryBox>("BoundaryBox");
     RegisterComponent<CircleCollider>("CircleCollider");
     RegisterComponent<Player>("Player");
-    RegisterComponent<RNG>("RNG");
 
     ComponentAllocator::RegisterTag("Bullet");
     ComponentAllocator::RegisterTag("Bullet Pool");

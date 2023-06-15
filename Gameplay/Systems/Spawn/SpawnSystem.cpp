@@ -38,11 +38,15 @@ namespace Barrage
   void SpawnSystem::SpawnBullets(Barrage::Pool* spawnerPool, Barrage::Pool* bulletPool)
   {
     Spawner& spawner = spawnerPool->GetComponent<Spawner>("Spawner")->Data();
-    
-    if (spawner.spawnTypes_.count(0))
+    unsigned active_spawners = spawnerPool->GetActiveObjectCount();
+
+    for (unsigned i = 0; i < active_spawners; ++i)
     {
-      spawner.spawnTypes_[0].sourceIndices_.resize(100, 0);
-      bulletPool->QueueSpawns(spawnerPool, spawner.spawnTypes_[0]);
+      if (spawner.spawnTypes_.count(0))
+      {
+        spawner.spawnTypes_[0].sourceIndices_.resize(100, 0);
+        bulletPool->QueueSpawns(spawnerPool, spawner.spawnTypes_[0]);
+      }
     }
   }
 }

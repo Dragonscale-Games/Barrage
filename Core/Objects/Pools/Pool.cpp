@@ -165,6 +165,11 @@ namespace Barrage
     return spawnArchetypes_.at(name);
   }
 
+  Space& Pool::GetSpace()
+  {
+    return space_;
+  }
+
   void Pool::ShiftQueuedObjects(unsigned numberOfPlaces)
   {
     unsigned firstQueuedObjectIndex = numActiveObjects_;

@@ -16,6 +16,7 @@
 #include "Editor.hpp"
 #include <string>
 #include "Widgets/Data/DataWidget.hpp"
+#include "Commands/Delete/Tag/DeleteTag.hpp"
 
 namespace Barrage
 {
@@ -62,7 +63,24 @@ namespace Barrage
       const std::vector<std::string_view> tags = poolArchetype->GetTags();
       for (const std::string_view& tag : tags)
       {
+        ImGui::PushID(tag.data());
+        if (ImGui::Button("X"))
+        {
+          EditorData& editorData = Editor::Instance->Data();
+          DeleteTag* command = new DeleteTag(
+            editorData.selectedScene_,
+            editorData.selectedPool_,
+            tag);
+          Editor::Instance->Command().Send(command);
+        }
+        ImGui::SameLine();
         ImGui::Text(tag.data());
+        ImGui::PopID();
+      }
+
+      if (ImGui::Button("Add tag"))
+      {
+        Editor::Instance->Data().openTagModal_ = true;
       }
     }
 

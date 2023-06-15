@@ -1,13 +1,13 @@
 /* ======================================================================== */
 /*!
- * \file            SharedComponentModal.cpp
+ * \file            ComponentModal.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   A selection window that pops up when the user tries to add a shared
-   component to a pool.
+   A selection window that pops up when the user tries to add a component 
+   to a pool.
  */
  /* ======================================================================== */
 

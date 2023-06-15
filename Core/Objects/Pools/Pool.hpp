@@ -283,6 +283,17 @@ namespace Barrage
       /**************************************************************/
       const ObjectArchetype& GetSpawnArchetype(const std::string& name) const;
 
+      /**************************************************************/
+      /*!
+        \brief
+          Gets a reference to the space the pool lives in.
+
+        \return
+          Returns a reference to the space the pool lives in.
+      */
+      /**************************************************************/
+      Space& GetSpace();
+
     private:
       /**************************************************************/
       /*!
