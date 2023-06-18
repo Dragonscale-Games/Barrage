@@ -332,5 +332,6 @@ namespace Barrage
     data_.selectedScene_ = scene->GetName();
     data_.nextScene_ = nullptr;
     data_.sceneIsDirty_ = true;
+    commandQueue_.Clear();
   }
 }

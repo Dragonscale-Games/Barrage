@@ -71,6 +71,11 @@ namespace Barrage
       ImGui::Text("Error: Unregistered type");
       return;
     }
+    else if (objectType.is_wrapper())
+    {
+      objectType = objectType.get_wrapped_type();
+      object.value_ = object.value_.extract_wrapped_value();
+    }
 
     std::string typeName = objectType.get_name().data();
 
@@ -84,6 +89,8 @@ namespace Barrage
       object.name_ = typeName;
     }
 
+    ImGui::PushID(object.name_.c_str());
+
     if (widgetFunctions_.find(typeName) != widgetFunctions_.end())
     {
       DataWidgetFunction function = widgetFunctions_.at(typeName);
@@ -91,18 +98,90 @@ namespace Barrage
     }
     else if (!treeNode || ImGui::TreeNode(object.name_.c_str()))
     {
-      for (auto& prop : objectType.get_properties())
+      if (objectType.is_sequential_container())
       {
-        rttr::variant property = prop.get_value(object.value_);
-        DataObject propObject(prop.get_name().data(), property);
-        
-        Use(propObject, true);
-        
-        if (propObject.ValueWasSet())
+        rttr::variant_sequential_view& arrayView = object.value_.create_sequential_view();
+
+        size_t arraySize = arrayView.get_size();
+
+        for (size_t i = 0; i < arraySize; ++i)
         {
-          prop.set_value(object.value_, propObject.value_);
-          object.valueWasSet_ = true;
-          object.chainUndoEnabled_ = propObject.chainUndoEnabled_;
+          ImGui::PushID(i);
+
+          rttr::variant elementVariant = arrayView.get_value(i);
+
+          DataObject elementObject(" ", elementVariant);
+
+          Use(elementObject);
+
+          ImGui::PopID();
+
+          if (elementObject.ValueWasSet())
+          {
+            arrayView.set_value(i, elementObject.value_);
+            object.valueWasSet_ = true;
+            object.chainUndoEnabled_ = elementObject.chainUndoEnabled_;
+          }
+        }
+      }
+      else if (objectType.is_associative_container())
+      {
+        rttr::variant_associative_view& mapView = object.value_.create_associative_view();
+        
+        unsigned id = 0;
+
+        for (auto& element : mapView)
+        {
+          ImGui::PushID(id);
+          
+          rttr::variant key = element.first.extract_wrapped_value();
+          rttr::variant val = element.second.extract_wrapped_value();
+          
+          DataObject objectKey("Key", key);
+          DataObject objectValue("Value", val);
+
+          Use(objectKey, true);
+          Use(objectValue, true);
+
+          ImGui::PopID();
+
+          if (objectKey.ValueWasSet() || objectValue.ValueWasSet())
+          {
+            size_t number = mapView.erase(element.first.extract_wrapped_value());
+            bool success = mapView.insert(objectKey.value_, objectValue.value_).second;
+            
+            object.valueWasSet_ = true;
+
+            if (objectKey.ValueWasSet())
+            {
+              object.chainUndoEnabled_ = objectKey.chainUndoEnabled_;
+            }
+            else if (object.chainUndoEnabled_ = objectValue.chainUndoEnabled_)
+            {
+              object.chainUndoEnabled_ = objectValue.chainUndoEnabled_;
+            }
+
+            break;
+          }
+
+          id++;
+        }
+      }
+      else
+      {
+        for (auto& prop : objectType.get_properties())
+        {
+          rttr::variant property = prop.get_value(object.value_);
+          DataObject propObject(prop.get_name().data(), property);
+          
+          Use(propObject, true);
+          
+          if (propObject.ValueWasSet())
+          {
+            prop.set_value(object.value_, propObject.value_);
+            object.valueWasSet_ = true;
+            object.chainUndoEnabled_ = propObject.chainUndoEnabled_;
+          }
         }
       }
 
@@ -111,6 +190,8 @@ namespace Barrage
         ImGui::TreePop();
       }
     }
+
+    ImGui::PopID();
   }
 
   void DataWidget::Initialize()

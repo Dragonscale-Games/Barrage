@@ -26,9 +26,7 @@ namespace Barrage
 
   CommandQueue::~CommandQueue()
   {
-    delete currentCommand_;
-    ClearUndoStack();
-    ClearRedoStack();
+    Clear();
   }
 
   void CommandQueue::Send(Command* command)
@@ -171,6 +169,13 @@ namespace Barrage
   bool CommandQueue::RedoAvailable()
   {
     return !redoStack_.empty();
+  }
+
+  void CommandQueue::Clear()
+  {
+    delete currentCommand_;
+    ClearUndoStack();
+    ClearRedoStack();
   }
 
   void CommandQueue::ClearUndoStack()

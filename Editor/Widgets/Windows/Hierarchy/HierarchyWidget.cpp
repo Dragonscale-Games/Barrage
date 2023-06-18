@@ -140,6 +140,12 @@ namespace Barrage
         itemClicked |= ObjectGUI(poolName, *it);
       }
 
+      const std::vector<ObjectArchetype*> spawnArchetypes = poolArchetype->GetSpawnArchetypes();
+      for (auto it = spawnArchetypes.begin(); it != spawnArchetypes.end(); ++it)
+      {
+        itemClicked |= ObjectGUI(poolName, *it, true);
+      }
+
       ObjectPopupWidget::Use("Object Popup");
 
       ImGui::TreePop();
@@ -151,7 +157,7 @@ namespace Barrage
     return itemClicked;
   }
 
-  bool HierarchyWidget::ObjectGUI(const std::string poolName, ObjectArchetype* objectArchetype)
+  bool HierarchyWidget::ObjectGUI(const std::string poolName, ObjectArchetype* objectArchetype, bool isSpawnArchetype)
   {
     bool itemClicked = false;
 
@@ -164,7 +170,16 @@ namespace Barrage
       object_tree_flags |= ImGuiTreeNodeFlags_Selected;
     }
 
-    ImGui::TreeNodeEx(objectName.c_str(), object_tree_flags);
+    std::string label;
+
+    if (isSpawnArchetype)
+    {
+      label += "[S] ";
+    }
+
+    label += objectName;
+
+    ImGui::TreeNodeEx(label.c_str(), object_tree_flags);
 
     if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
     {

@@ -42,7 +42,7 @@ namespace Barrage
 
       static bool PoolGUI(PoolArchetype* poolArchetype);
 
-      static bool ObjectGUI(const std::string poolName, ObjectArchetype* objectArchetype);
+      static bool ObjectGUI(const std::string poolName, ObjectArchetype* objectArchetype, bool isSpawnArchetype = false);
       
       /**************************************************************/
       /*!
