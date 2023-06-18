@@ -83,16 +83,13 @@ namespace Barrage
         LogWidget::AddEntry("Capacity cannot go lower than number of objects in pool.");
       }
       
-      if (new_value != old_capacity_value)
-      {
-        EditorData& editorData = Editor::Instance->Data();
-        EditCapacity* capacity_command = new EditCapacity(
-          editorData.selectedScene_,
-          editorData.selectedPool_,
-          new_value,
-          capacity_object.ChainUndoEnabled());
-        Editor::Instance->Command().Send(capacity_command);
-      }
+      EditorData& editorData = Editor::Instance->Data();
+      EditCapacity* capacity_command = new EditCapacity(
+        editorData.selectedScene_,
+        editorData.selectedPool_,
+        new_value,
+        capacity_object.ChainUndoEnabled());
+      Editor::Instance->Command().Send(capacity_command);
     }
 
     if (ImGui::CollapsingHeader("Tags"))
