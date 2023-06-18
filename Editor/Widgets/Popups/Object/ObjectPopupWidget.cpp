@@ -14,6 +14,7 @@
 
 #include <Commands/Delete/Object/DeleteObject.hpp>
 #include <Editor.hpp>
+#include <Commands/Rename/Object/RenameObject.hpp>
 
 namespace Barrage
 {
@@ -23,10 +24,25 @@ namespace Barrage
     {
       return;
     }
+    
+    EditorData& editorData = Editor::Instance->Data();
 
-    if (ImGui::Selectable("Delete object"))
+    if (ImGui::Selectable("Rename"))
     {
-      EditorData& editorData = Editor::Instance->Data();
+      editorData.openRenameModal_ = true;
+      editorData.renameCallback_ = [](const std::string& newName)
+      {
+        EditorData& editorData = Editor::Instance->Data();
+        Editor::Instance->Command().Send(new RenameObject(editorData.selectedScene_, editorData.selectedPool_, editorData.selectedObject_, newName));
+      };
+    }
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+
+    if (ImGui::Selectable("Delete"))
+    {
       Editor::Instance->Command().Send(new DeleteObject(editorData.selectedScene_, editorData.selectedPool_, editorData.selectedObject_));
     }
 

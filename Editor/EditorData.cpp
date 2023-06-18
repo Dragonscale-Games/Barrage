@@ -21,6 +21,8 @@ namespace Barrage
     openComponentModal_(false),
     openComponentArrayModal_(false),
     openTagModal_(false),
+    openRenameModal_(false),
+    renameCallback_(nullptr),
     nextScene_(nullptr),
     selectedSpace_(),
     selectedScene_(),

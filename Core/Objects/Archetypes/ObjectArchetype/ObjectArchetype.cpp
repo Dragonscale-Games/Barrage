@@ -73,6 +73,11 @@ namespace Barrage
     DeleteComponentArrayMap();
   }
 
+  void ObjectArchetype::SetName(const std::string& newName)
+  {
+    name_ = newName;
+  }
+
   bool ObjectArchetype::HasComponentArray(const std::string_view& name) const
   {
     return componentArrays_.count(name) > 0;

@@ -16,6 +16,7 @@
 #include <Commands/Create/ComponentArray/CreateComponentArray.hpp>
 #include <Commands/Create/Component/CreateComponent.hpp>
 #include <Commands/Delete/Pool/DeletePool.hpp>
+#include <Commands/Rename/Pool/RenamePool.hpp>
 
 #include <Editor.hpp>
 
@@ -57,7 +58,21 @@ namespace Barrage
     ImGui::Separator();
     ImGui::Spacing();
 
-    if (ImGui::Selectable("Delete pool"))
+    if (ImGui::Selectable("Rename"))
+    {
+      editorData.openRenameModal_ = true;
+      editorData.renameCallback_ = [](const std::string& newName)
+      {
+        EditorData& editorData = Editor::Instance->Data();
+        Editor::Instance->Command().Send(new RenamePool(editorData.selectedScene_, editorData.selectedPool_, newName));
+      };
+    }
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+
+    if (ImGui::Selectable("Delete"))
     {
       Editor::Instance->Command().Send(new DeletePool(editorData.selectedScene_, editorData.selectedPool_));
     }

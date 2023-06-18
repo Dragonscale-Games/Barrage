@@ -111,6 +111,11 @@ namespace Barrage
     DeleteComponentMap();
   }
 
+  void PoolArchetype::SetName(const std::string& newName)
+  {
+    name_ = newName;
+  }
+
   bool PoolArchetype::HasObjectArchetype(const std::string& name)
   {
     return GetObjectArchetype(name) != nullptr;

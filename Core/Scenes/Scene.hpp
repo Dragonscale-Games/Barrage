@@ -39,6 +39,8 @@ namespace Barrage
 
       bool HasPool(const std::string& name);
 
+      void SetName(const std::string& name);
+
       const std::string& GetName();
 
       PoolArchetype* GetPoolArchetype(const std::string& name);

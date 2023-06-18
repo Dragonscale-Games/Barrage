@@ -67,7 +67,12 @@ add_executable(Editor "main.cpp"
  "Project/Project.cpp" 
  "Commands/Create/Tag/CreateTag.cpp" 
  "Commands/Delete/Tag/DeleteTag.cpp" 
- "Widgets/Modals/Tag/TagModal.cpp" "Commands/Edit/Capacity/EditCapacity.cpp")
+ "Widgets/Modals/Tag/TagModal.cpp" 
+ "Commands/Edit/Capacity/EditCapacity.cpp" 
+ "Commands/Rename/Object/RenameObject.cpp" 
+ "Commands/Rename/Pool/RenamePool.cpp" 
+ "Widgets/Modals/Rename/RenameModal.cpp" 
+ "Commands/Rename/Scene/RenameScene.cpp")
 
 target_link_libraries(Editor PUBLIC BarrageCore Gameplay imgui nativefiledialog)
 add_dependencies(Editor Game)

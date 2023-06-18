@@ -54,7 +54,7 @@ namespace Barrage
     scenes_[sceneName] = scene;
   }
 
-  Scene* SceneManager::GetScene(const std::string name)
+  Scene* SceneManager::GetScene(const std::string& name)
   {
     if (scenes_.find(name) == scenes_.end())
     {
@@ -76,5 +76,22 @@ namespace Barrage
     }
 
     return scene_names;
+  }
+
+  bool SceneManager::RenameScene(const std::string& sceneName, const std::string& newName)
+  {
+    if (scenes_.count(sceneName) == 0 || scenes_.count(newName))
+    {
+      return false;
+    }
+
+    Scene* scene = scenes_.at(sceneName);
+
+    scene->SetName(newName);
+
+    scenes_.erase(sceneName);
+    scenes_[newName] = scene;
+
+    return true;
   }
 }

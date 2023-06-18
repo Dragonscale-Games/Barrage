@@ -82,6 +82,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Sets the name of the pool archetype.
+
+        \param newName
+          The new name of the pool archetype.
+      */
+      /**************************************************************/
+      void SetName(const std::string& newName);
+
+      /**************************************************************/
+      /*!
+        \brief
           Tells whether an object archetype with the given name 
           exists in the pool archetype's starting objects or spawn 
           archetypes.

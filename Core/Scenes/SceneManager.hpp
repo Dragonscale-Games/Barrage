@@ -33,13 +33,11 @@ namespace Barrage
 
       void AddScene(Scene* scene);
 
-      Scene* GetScene(const std::string name);
+      Scene* GetScene(const std::string& name);
 
       std::vector<std::string> GetSceneNames();
 
-      void LoadScene(const std::string name);
-
-      void SaveScene(const std::string name);
+      bool RenameScene(const std::string& sceneName, const std::string& newName);
 
     private:
       SceneMap scenes_;

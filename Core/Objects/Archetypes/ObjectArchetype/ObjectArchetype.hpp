@@ -76,6 +76,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Sets the name of the object archetype.
+
+        \param newName
+          The new name of the object archetype.
+      */
+      /**************************************************************/
+      void SetName(const std::string& newName);
+
+      /**************************************************************/
+      /*!
+        \brief
           Checks if the archetype contains a component array.
 
         \param name

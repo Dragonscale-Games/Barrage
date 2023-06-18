@@ -17,6 +17,7 @@
 
 #include <string_view>
 #include <Scenes/Scene.hpp>
+#include "Widgets/Modals/Rename/RenameModal.hpp"
 
 namespace Barrage
 {
@@ -31,6 +32,8 @@ namespace Barrage
     bool openComponentModal_;                 //!< Flag for when user opens the "add component" modal
     bool openComponentArrayModal_;            //!< Flag for when user opens the "add component array" modal
     bool openTagModal_;                       //!< Flag for when user opens the "add tag" modal
+    bool openRenameModal_;                    //!< Flag for when user opens the "rename" modal
+    RenameCallback renameCallback_;           //!< Contains function to call when user renames something
     Scene* nextScene_;                        //!< On a scene change, the new scene is temporarily held here
     std::string selectedSpace_;               //!< The currently selected space
     std::string selectedScene_;               //!< The currently selected scene

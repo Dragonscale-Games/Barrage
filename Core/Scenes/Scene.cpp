@@ -69,6 +69,11 @@ namespace Barrage
     return GetPoolArchetype(name) != nullptr;
   }
 
+  void Scene::SetName(const std::string& name)
+  {
+    name_ = name;
+  }
+
   const std::string& Scene::GetName()
   {
     return name_;

@@ -23,6 +23,7 @@
 #include <Widgets/Modals/Component/ComponentModal.hpp>
 #include <Widgets/Modals/ComponentArray/ComponentArrayModal.hpp>
 #include <Widgets/Modals/Tag/TagModal.hpp>
+#include <Widgets/Modals/Rename/RenameModal.hpp>
 
 #include <unordered_set>
 #include <chrono>
@@ -230,9 +231,16 @@ namespace Barrage
       data_.openTagModal_ = false;
     }
 
+    if (data_.openRenameModal_)
+    {
+      ImGui::OpenPopup("Rename");
+      data_.openRenameModal_ = false;
+    }
+
     ComponentModal::Use("Add shared component");
     ComponentArrayModal::Use("Add component array");
     TagModal::Use("Add tag");
+    RenameModal::Use("Rename", data_.renameCallback_);
 
     if (gamePlaying)
     {
