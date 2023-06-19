@@ -16,11 +16,15 @@
 
 namespace Barrage
 {
-  CreateObject::CreateObject(const std::string& sceneName, const std::string& poolName) :
-    Command("New object created in " + poolName + "."),
+  CreateObject::CreateObject(
+    const std::string& sceneName, 
+    const std::string& poolName, 
+    bool isStartingObject) :
+    Command("New " + (isStartingObject ? std::string("object") : std::string("spawn archetype")) + " created in " + poolName + "."),
     sceneName_(sceneName),
     poolName_(poolName),
     objectName_(),
+    isStartingObject_(isStartingObject),
     redoArchetype_(nullptr)
   {
   }
@@ -46,7 +50,7 @@ namespace Barrage
       return false;
     }
 
-    if (poolArchetype->GetStartingObjects().size() >= poolArchetype->GetCapacity())
+    if (isStartingObject_ && poolArchetype->GetStartingObjects().size() >= poolArchetype->GetCapacity())
     {
       LogWidget::AddEntry("Error: Could not create object (" + poolName_ + " is full).");
       return false;
@@ -70,8 +74,15 @@ namespace Barrage
       } while (poolArchetype->HasObjectArchetype(objectName_));
     }
 
-    poolArchetype->AddStartingObject(new ObjectArchetype(objectName_, poolArchetype->GetComponentArrayNames()));
-
+    if (isStartingObject_)
+    {
+      poolArchetype->AddStartingObject(new ObjectArchetype(objectName_, poolArchetype->GetComponentArrayNames()));
+    }
+    else
+    {
+      poolArchetype->AddSpawnArchetype(new ObjectArchetype(objectName_, poolArchetype->GetComponentArrayNames()));
+    }
+    
     return true;
   }
 
@@ -80,7 +91,14 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    redoArchetype_ = poolArchetype->ExtractStartingObject(objectName_);
+    if (isStartingObject_)
+    {
+      redoArchetype_ = poolArchetype->ExtractStartingObject(objectName_);
+    }
+    else
+    {
+      redoArchetype_ = poolArchetype->ExtractSpawnArchetype(objectName_);
+    }
 
     if (Editor::Instance->Data().selectedObject_ == objectName_)
     {
@@ -93,7 +111,15 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    poolArchetype->AddStartingObject(redoArchetype_);
+    if (isStartingObject_)
+    {
+      poolArchetype->AddStartingObject(redoArchetype_);
+    }
+    else
+    {
+      poolArchetype->AddSpawnArchetype(redoArchetype_);
+    }
+    
     redoArchetype_ = nullptr;
   }
 }

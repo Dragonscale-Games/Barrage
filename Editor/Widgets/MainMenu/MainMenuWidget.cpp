@@ -118,7 +118,14 @@ namespace Barrage
       {
         std::string& scene = Editor::Instance->Data().selectedScene_;
         std::string& pool = Editor::Instance->Data().selectedPool_;
-        Editor::Instance->Command().Send(new CreateObject(scene, pool));
+        Editor::Instance->Command().Send(new CreateObject(scene, pool, true));
+      }
+
+      if (ImGui::MenuItem("Spawn archetype"))
+      {
+        std::string& scene = Editor::Instance->Data().selectedScene_;
+        std::string& pool = Editor::Instance->Data().selectedPool_;
+        Editor::Instance->Command().Send(new CreateObject(scene, pool, false));
       }
 
       if (Editor::Instance->Data().selectedPool_.empty())

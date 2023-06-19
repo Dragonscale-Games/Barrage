@@ -33,7 +33,14 @@ namespace Barrage
 
     if (ImGui::Selectable("Create object"))
     {
-      Editor::Instance->Command().Send(new CreateObject(editorData.selectedScene_, editorData.selectedPool_));
+      Editor::Instance->Command().Send(new CreateObject(editorData.selectedScene_, editorData.selectedPool_, true));
+    }
+
+    ImGui::Spacing();
+
+    if (ImGui::Selectable("Create spawn archetype"))
+    {
+      Editor::Instance->Command().Send(new CreateObject(editorData.selectedScene_, editorData.selectedPool_, false));
     }
 
     ImGui::Spacing();

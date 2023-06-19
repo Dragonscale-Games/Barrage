@@ -36,9 +36,13 @@ namespace Barrage
 
         \param poolName
           The name of the pool to create the object in.
+
+        \param isStartingObject
+          True if the object being created is a starting object,
+          false if it's a spawn archetype.
       */
       /**************************************************************/
-      CreateObject(const std::string& sceneName, const std::string& poolName);
+      CreateObject(const std::string& sceneName, const std::string& poolName, bool isStartingObject);
 
       /**************************************************************/
       /*!
@@ -84,6 +88,7 @@ namespace Barrage
       std::string sceneName_;
       std::string poolName_;
       std::string objectName_;
+      bool isStartingObject_;
 
       ObjectArchetype* redoArchetype_;
   };

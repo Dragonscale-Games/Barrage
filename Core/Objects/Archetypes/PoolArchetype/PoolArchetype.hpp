@@ -401,6 +401,23 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Removes and gets a spawn archetype from the pool
+          archetype.
+
+        \param name
+          The name of the spawn archetype to extract.
+
+        \param index
+          The index of the spawn archetype in the underlying vector
+          will be written to this variable if the archetype was removed.
+          Otherwise, this variable will be unchanged.
+      */
+      /**************************************************************/
+      ObjectArchetype* ExtractSpawnArchetype(const std::string& name, unsigned* index = nullptr);
+
+      /**************************************************************/
+      /*!
+        \brief
           Removes and returns a component from the pool archetype if 
           it exists.
 
@@ -426,6 +443,26 @@ namespace Barrage
       rapidjson::Value Serialize(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
 
     private:
+      /**************************************************************/
+      /*!
+        \brief
+          Removes and gets the object with the given name from the
+          given object vector.
+
+        \param objectVector
+          The vector to extract the object from.
+
+        \param name
+          The name of the object to extract.
+
+        \param index
+          The index of the object in the underlying vector
+          will be written to this variable if the object was removed.
+          Otherwise, this variable will be unchanged.
+      */
+      /**************************************************************/
+      ObjectArchetype* ExtractObject(std::vector<ObjectArchetype*>& objectVector, const std::string& name, unsigned* index = nullptr);
+      
       /**************************************************************/
       /*!
         \brief

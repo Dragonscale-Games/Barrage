@@ -24,6 +24,7 @@ namespace Barrage
     sceneName_(sceneName),
     poolName_(poolName),
     objectName_(objectName),
+    isStartingObject_(true),
     undoIndex_(0),
     undoArchetype_(nullptr)
   {
@@ -54,6 +55,12 @@ namespace Barrage
 
     if (undoArchetype_ == nullptr)
     {
+      undoArchetype_ = poolArchetype->ExtractSpawnArchetype(objectName_, &undoIndex_);
+      isStartingObject_ = false;
+    }
+
+    if (undoArchetype_ == nullptr)
+    {
       return false;
     }
 
@@ -70,7 +77,15 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    poolArchetype->AddStartingObject(undoArchetype_, &undoIndex_);
+    if (isStartingObject_)
+    {
+      poolArchetype->AddStartingObject(undoArchetype_, &undoIndex_);
+    }
+    else
+    {
+      poolArchetype->AddSpawnArchetype(undoArchetype_, &undoIndex_);
+    }
+    
     undoArchetype_ = nullptr;
   }
 
@@ -79,7 +94,14 @@ namespace Barrage
     Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
     PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
 
-    undoArchetype_ = poolArchetype->ExtractStartingObject(objectName_, &undoIndex_);
+    if (isStartingObject_)
+    {
+      undoArchetype_ = poolArchetype->ExtractStartingObject(objectName_, &undoIndex_);
+    }
+    else
+    {
+      undoArchetype_ = poolArchetype->ExtractSpawnArchetype(objectName_, &undoIndex_);
+    }
 
     if (Editor::Instance->Data().selectedObject_ == objectName_)
     {

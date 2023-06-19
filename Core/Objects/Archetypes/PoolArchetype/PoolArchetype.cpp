@@ -357,18 +357,28 @@ namespace Barrage
 
   ObjectArchetype* PoolArchetype::ExtractStartingObject(const std::string& name, unsigned* index)
   {
-    for (auto it = startingObjects_.begin(); it != startingObjects_.end(); ++it)
+    return ExtractObject(startingObjects_, name, index);
+  }
+
+  ObjectArchetype* PoolArchetype::ExtractSpawnArchetype(const std::string& name, unsigned* index)
+  {
+    return ExtractObject(spawnArchetypes_, name, index);
+  }
+
+  ObjectArchetype* PoolArchetype::ExtractObject(std::vector<ObjectArchetype*>& objectVector, const std::string& name, unsigned* index)
+  {
+    for (auto it = objectVector.begin(); it != objectVector.end(); ++it)
     {
       ObjectArchetype* archetype = *it;
-      
+
       if (archetype->GetName() == name)
       {
         if (index)
         {
-          *index = static_cast<unsigned>(it - startingObjects_.begin());
+          *index = static_cast<unsigned>(it - objectVector.begin());
         }
 
-        startingObjects_.erase(it);
+        objectVector.erase(it);
 
         return archetype;
       }

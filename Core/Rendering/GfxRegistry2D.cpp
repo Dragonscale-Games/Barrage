@@ -20,10 +20,15 @@
 
 #include <cassert>
 #include <algorithm>
+#include <filesystem>
 
 namespace Barrage
 {
-  GfxRegistry2D::GfxRegistry2D() : factory_(nullptr)
+  GfxRegistry2D::GfxRegistry2D() : 
+    factory_(nullptr),
+    textureBook_(),
+    texturePaths_(),
+    shaderBook_()
   {
   }
 
@@ -39,11 +44,6 @@ namespace Barrage
     factory_ = nullptr;
   }
 
-  void GfxRegistry2D::RegisterTexture(const GfxManager2D::TextureID& texture, const char* keyname)
-  {
-    Register(texture, keyname, textureBook_);
-  }
-
   void GfxRegistry2D::RegisterTexture(const char* path, const char* keyname)
   {
     assert(factory_);
@@ -52,14 +52,16 @@ namespace Barrage
     {
       keyname = path;
     }
+    
+    if (!std::filesystem::exists(path))
+    {
+      return;
+    }
+
     // Create the texture using the factory and register it.
     GfxManager2D::TextureID texture = factory_->CreateTexture(path);
-    RegisterTexture(texture, keyname);
-  }
-
-  void GfxRegistry2D::RegisterShader(const GfxManager2D::ShaderID& shader, const char* keyname)
-  {
-    Register(shader, keyname, shaderBook_);
+    Register(texture, keyname, textureBook_);
+    texturePaths_.insert(std::make_pair(std::string(keyname), std::string(path)));
   }
 
   void GfxRegistry2D::RegisterShader(const char* const paths[ShaderStage::NUM_SHADERS_POSSIBLE], const char* keyname)
@@ -70,9 +72,18 @@ namespace Barrage
     {
       keyname = paths[0];
     }
+
+    for (unsigned i = 0; i < ShaderStage::NUM_SHADERS_POSSIBLE; ++i)
+    {
+      if (!std::filesystem::exists(paths[i]))
+      {
+        return;
+      }
+    }
+
     // Create the shader using the factory and register it to this system.
     GfxManager2D::ShaderID shader = factory_->CreateShader(paths);
-    RegisterShader(shader, keyname);
+    Register(shader, keyname, shaderBook_);
   }
 
   GfxManager2D::TextureID GfxRegistry2D::FindTexture(const char* keyname)
@@ -97,6 +108,18 @@ namespace Barrage
     std::sort(textureNames.begin(), textureNames.end());
     
     return textureNames;
+  }
+
+  std::string GfxRegistry2D::GetTexturePath(const std::string& textureName)
+  {
+    if (texturePaths_.count(textureName))
+    {
+      return texturePaths_.at(textureName);
+    }
+    else
+    {
+      return std::string();
+    }
   }
 
   void GfxRegistry2D::Register(

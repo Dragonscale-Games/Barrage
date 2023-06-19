@@ -89,6 +89,7 @@ namespace Barrage
       std::string poolName_;
       std::string objectName_;
 
+      bool isStartingObject_;
       unsigned undoIndex_;
       ObjectArchetype* undoArchetype_;
   };

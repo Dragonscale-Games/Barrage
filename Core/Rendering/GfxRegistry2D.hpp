@@ -32,6 +32,7 @@ namespace Barrage
 
     //! Define the data structure to hold our resources.
     using ResourceBook = std::map<std::string, GfxManager2D::ResourceID>;
+    using PathBook = std::map<std::string, std::string>;
 
     /*************************************************************************/
     /*!
@@ -60,17 +61,6 @@ namespace Barrage
     /*************************************************************************/
     /*!
       \brief
-        Registers a texture with a given keyname.
-      \param texture
-        The texture resource to register.
-      \param keyname
-        The name to register the texture with.
-    */
-    /*************************************************************************/
-    void RegisterTexture(const GfxManager2D::TextureID& texture, const char* keyname);
-    /*************************************************************************/
-    /*!
-      \brief
         Loads a texture with the given path and registers it with the
         same path.
       \param path
@@ -78,17 +68,7 @@ namespace Barrage
     */
     /*************************************************************************/
     void RegisterTexture(const char* path, const char* keyname = nullptr);
-    /*************************************************************************/
-    /*!
-      \brief
-        Registers a texture with a given keyname.
-      \param texture
-        The texture resource to register.
-      \param keyname
-        The name to register the texture with.
-    */
-    /*************************************************************************/
-    void RegisterShader(const GfxManager2D::TextureID& texture, const char* keyname);
+
     /*************************************************************************/
     /*!
       \brief
@@ -138,12 +118,29 @@ namespace Barrage
     /*************************************************************************/
     std::vector<std::string> GetTextureNames();
 
+    /*************************************************************************/
+    /*!
+      \brief
+        Gets the path to a texture.
+
+      \param textureName
+        The name of the texture to get the path for.
+
+      \return
+        Returns the path of the texture if it exists, otherwise returns an
+        empty string.
+    */
+    /*************************************************************************/
+    std::string GetTexturePath(const std::string& textureName);
+
   private:
     
     //! The pointer to a factory.
     GfxFactory2D* factory_;
     //! The resource book for textures.
     ResourceBook textureBook_;
+    //! Holds the paths to the textures
+    PathBook texturePaths_;
     //! The resource book for shaders.
     ResourceBook shaderBook_;
 
