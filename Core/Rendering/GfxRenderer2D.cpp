@@ -146,6 +146,12 @@ namespace Barrage
       // If the previous shader is not the same ID as the current one
       // Reset the current shader and bind the new one.
       const InternalState& resource = renderState.resources_;
+
+      if (resource.textureIndex_ == invalidIndex)
+      {
+        continue;
+      }
+
       if (current_.shaderIndex_ != resource.shaderIndex_)
       {
         current_.shaderIndex_ = resource.shaderIndex_;
