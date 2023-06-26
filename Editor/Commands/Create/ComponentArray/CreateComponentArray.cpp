@@ -66,6 +66,20 @@ namespace Barrage
       objectArchetype->AddComponentArray(componentArrayName_, componentArray);
     }
 
+    const std::vector<ObjectArchetype*>& spawnArchetypes = poolArchetype->GetSpawnArchetypes();
+    for (auto it = spawnArchetypes.begin(); it != spawnArchetypes.end(); ++it)
+    {
+      ObjectArchetype* objectArchetype = *it;
+      ComponentArray* componentArray = ComponentAllocator::AllocateComponentArray(componentArrayName_, 1);
+
+      if (componentArray == nullptr || objectArchetype->HasComponentArray(componentArrayName_))
+      {
+        return false;
+      }
+
+      objectArchetype->AddComponentArray(componentArrayName_, componentArray);
+    }
+
     poolArchetype->AddComponentArrayName(componentArrayName_);
 
     return true;
