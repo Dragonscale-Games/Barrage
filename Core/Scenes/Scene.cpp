@@ -155,6 +155,11 @@ namespace Barrage
 
   bool Scene::SaveToFile(Scene* scene, const std::string& path)
   {
+    if (scene == nullptr)
+    {
+      return false;
+    }
+    
     FILE* outFile = nullptr;
     fopen_s(&outFile, path.c_str(), "wb");
 

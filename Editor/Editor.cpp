@@ -24,6 +24,7 @@
 #include <Widgets/Modals/ComponentArray/ComponentArrayModal.hpp>
 #include <Widgets/Modals/Tag/TagModal.hpp>
 #include <Widgets/Modals/Rename/RenameModal.hpp>
+#include <Widgets/Modals/Project/ProjectModal.hpp>
 
 #include <unordered_set>
 #include <chrono>
@@ -120,6 +121,8 @@ namespace Barrage
     glm::vec2 position(0.0f);
 
     engine_.Drawing().SetCameraTransform(position, zoom, angle);
+
+    data_.openProjectModal_ = true;
   }
 
   void Editor::Update()
@@ -237,10 +240,17 @@ namespace Barrage
       data_.openRenameModal_ = false;
     }
 
+    if (data_.openProjectModal_)
+    {
+      ImGui::OpenPopup("Project");
+      data_.openProjectModal_ = false;
+    }
+
     ComponentModal::Use("Add shared component");
     ComponentArrayModal::Use("Add component array");
     TagModal::Use("Add tag");
     RenameModal::Use("Rename", data_.renameCallback_);
+    ProjectModal::Use("Project");
 
     if (gamePlaying)
     {
