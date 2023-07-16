@@ -49,7 +49,10 @@ namespace Barrage
     transformUniform_(-1),
     viewUniform_(-1),
     projectionUniform_(-1),
-    textureUniform_(-1)
+    textureUniform_(-1),
+
+    fbo_(-1),
+    fboTex_(-1)
   {
   }
 
@@ -60,6 +63,8 @@ namespace Barrage
     CreateGLFWWindow();
 
     LoadGLFunctions();
+
+    CreateFramebuffer();
 
     viewMat_ = glm::translate(glm::identity<glm::mat4>(), glm::vec3(0.0f, 0.0f, -3.0f));
     projMat_ = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, 0.1f, 100.0f);
@@ -82,7 +87,7 @@ namespace Barrage
     glDeleteBuffers(1, &scaleBuffer_);
     glDeleteBuffers(1, &rotationBuffer_);
 
-    textureManager_.UnloadTexture("All");
+    textureManager_.UnloadTextures();
     shaderManager_.UnloadShaders();
 
     glfwDestroyWindow(window_);
@@ -98,6 +103,17 @@ namespace Barrage
   void Renderer::EndFrame()
   {
     glfwSwapBuffers(window_);
+  }
+
+  void Renderer::StartFramebufferRendering()
+  {
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
+    SetBackgroundColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+  }
+
+  void Renderer::EndFramebufferRendering()
+  {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 
   bool Renderer::WindowClosed()
@@ -147,12 +163,41 @@ namespace Barrage
     glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, instances);
   }
 
+  void Renderer::DrawFSQ()
+  {
+    glm::mat4 scale_mat = glm::scale(glm::identity<glm::mat4>(), glm::vec3(1920.0f, 1080.0f, 1.0f));
+
+    glm::mat4 rotation_mat = glm::rotate(glm::identity <glm::mat4>(), 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    glm::mat4 translation_mat = glm::translate(glm::identity<glm::mat4>(), glm::vec3(960.0f, 540.0f, 0.0f));
+
+    glm::mat4 transform = translation_mat * rotation_mat * scale_mat;
+
+    BindShader("Default");
+    glBindTexture(GL_TEXTURE_2D, fboTex_);
+
+    glUniformMatrix4fv(transformUniform_, 1, false, &transform[0][0]);
+
+    glBindVertexArray(vao_);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    if (boundTexture_)
+    {
+      glBindTexture(GL_TEXTURE_2D, boundTexture_->GetID());
+    }
+  }
+
+  GLuint Renderer::GetFramebufferID()
+  {
+    return fbo_;
+  }
+
   void Renderer::CreateGLFWWindow()
   {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
     window_ = glfwCreateWindow(1280, 720, "Barrage", NULL, NULL);
     if (window_ == NULL)
@@ -183,6 +228,29 @@ namespace Barrage
     {
       throw std::runtime_error("OpenGL functions could not be loaded.");
     }
+  }
+
+  void Renderer::CreateFramebuffer()
+  {
+    glGenFramebuffers(1, &fbo_);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
+
+    glGenTextures(1, &fboTex_);
+    glBindTexture(GL_TEXTURE_2D, fboTex_);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1920, 1080, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboTex_, 0);
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+      std::cout << "Framebuffer not complete!" << std::endl;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 
   void Renderer::GetUniformLocations()
@@ -269,45 +337,20 @@ namespace Barrage
 
   void Renderer::BindTexture(const std::string& textureName)
   {
-    const Texture* texture;
+    const Texture* texture = textureManager_.GetTexture(textureName);
 
-    if (textureName.empty())
-    {
-      texture = textureManager_.GetTexture("Default");
-    }
-    else
-    {
-      texture = textureManager_.GetTexture(textureName);
-    }
+    glBindTexture(GL_TEXTURE_2D, texture->GetID());
 
-    if (texture != boundTexture_)
-    {
-      glBindTexture(GL_TEXTURE_2D, texture->GetID());
-
-      boundTexture_ = texture;
-    }
+    boundTexture_ = texture;
   }
 
   void Renderer::BindShader(const std::string& shaderName)
   {
-    const Shader* shader;
+    const Shader* shader = shaderManager_.GetShader(shaderName);
+    glUseProgram(shader->GetID());
 
-    if (shaderName.empty())
-    {
-      shader = shaderManager_.GetShader("Default");
-    }
-    else
-    {
-      shader = shaderManager_.GetShader(shaderName);
-    }
+    boundShader_ = shader;
 
-    if (shader != boundShader_)
-    {
-      glUseProgram(shader->GetID());
-
-      boundShader_ = shader;
-
-      SetUniforms();
-    }
+    SetUniforms();
   }
 }

@@ -42,6 +42,10 @@ namespace Barrage
 
     void EndFrame();
 
+    void StartFramebufferRendering();
+
+    void EndFramebufferRendering();
+
     bool WindowClosed();
 
     GLFWwindow* GetWindowHandle();
@@ -51,6 +55,10 @@ namespace Barrage
     void Draw(const glm::mat4& transform, const std::string& texture = default_texture);
 
     void DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture = default_texture);
+
+    void DrawFSQ();
+
+    GLuint GetFramebufferID();
 
   private:
     GLFWwindow* window_;
@@ -76,11 +84,16 @@ namespace Barrage
     int projectionUniform_;
     int textureUniform_;
 
+    GLuint fbo_;
+    GLuint fboTex_;
+
     void CreateGLFWWindow();
 
-    void SetBackgroundColor(const glm::vec4& color);
-
     void LoadGLFunctions();
+
+    void CreateFramebuffer();
+
+    void SetBackgroundColor(const glm::vec4& color);
 
     void GetUniformLocations();
 

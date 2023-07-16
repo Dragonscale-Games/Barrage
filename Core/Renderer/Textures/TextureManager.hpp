@@ -22,7 +22,7 @@
 
 namespace Barrage
 {
-  typedef std::unordered_map<std::string, Texture*> TextureLibrary;
+  typedef std::unordered_map<std::string, Texture*> TextureMap;
 
   //! Texture manager for simple renderer
   class TextureManager
@@ -38,8 +38,10 @@ namespace Barrage
 
     void UnloadTexture(const std::string& name);
 
+    void UnloadTextures();
+
   private:
-    TextureLibrary library_;
+    TextureMap textures_;
 
     Texture* CreateTexture(const std::string& name);
   };

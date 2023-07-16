@@ -51,14 +51,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Clears all stored textures, spaces, etc.
-      */
-      /**************************************************************/
-      void Reset();
-
-      /**************************************************************/
-      /*!
-        \brief
           Gets the engine's frame rate controller.
 
         \return

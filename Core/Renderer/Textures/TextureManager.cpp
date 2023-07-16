@@ -14,20 +14,19 @@
 
 #include <stb_image/stb_image.h>
 #include <glad/gl.h>
-//#include <glad/glad.h>
 #include <stdexcept>
 
 namespace Barrage
 {
   TextureManager::TextureManager() :
-    library_()
+    textures_()
   {
     stbi_set_flip_vertically_on_load(true);
   }
 
   TextureManager::~TextureManager()
   {
-    for (const auto& i : library_)
+    for (const auto& i : textures_)
     {
       delete i.second;
     }
@@ -35,9 +34,9 @@ namespace Barrage
 
   const Texture* TextureManager::GetTexture(const std::string& name)
   {
-    auto texture = library_.find(name);
+    auto texture = textures_.find(name);
 
-    if (texture == library_.end())
+    if (texture == textures_.end())
     {
       return CreateTexture(name);
     }
@@ -47,9 +46,9 @@ namespace Barrage
 
   void TextureManager::LoadTexture(const std::string& name)
   {
-    auto texture = library_.find(name);
+    auto texture = textures_.find(name);
 
-    if (texture == library_.end())
+    if (texture == textures_.end())
     {
       CreateTexture(name);
     }
@@ -57,25 +56,23 @@ namespace Barrage
 
   void TextureManager::UnloadTexture(const std::string& name)
   {
-    if (name == "All")
-    {
-      for (auto texture : library_)
-      {
-        delete texture.second;
-      }
+    auto texture = textures_.find(name);
 
-      library_.clear();
-    }
-    else
+    if (texture != textures_.end())
     {
-      auto texture = library_.find(name);
-
-      if (texture != library_.end())
-      {
-        delete texture->second;
-        library_.erase(texture);
-      }
+      delete texture->second;
+      textures_.erase(texture);
     }
+  }
+
+  void TextureManager::UnloadTextures()
+  {
+    for (auto texture : textures_)
+    {
+      delete texture.second;
+    }
+
+    textures_.clear();
   }
 
   Texture* TextureManager::CreateTexture(const std::string& name)
@@ -107,7 +104,7 @@ namespace Barrage
 
     Texture* new_texture = new Texture(texture_id);
 
-    library_[name] = new_texture;
+    textures_[name] = new_texture;
 
     return new_texture;
   }

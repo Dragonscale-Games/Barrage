@@ -24,7 +24,7 @@ namespace Barrage
 
   void LogWidget::Use()
   {
-    ImGui::Begin("Output Log", nullptr);
+    ImGui::Begin("Output Log", nullptr, ImGuiWindowFlags_NoMove);
     size_ = ImGui::GetWindowSize();
 
     if (ImGui::Button("Clear")) Clear();

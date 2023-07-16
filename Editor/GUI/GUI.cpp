@@ -105,35 +105,28 @@ namespace Barrage
         | ImGuiDockNodeFlags_PassthruCentralNode;
       ImGui::DockSpace(dockingID, ImVec2(0.0f, 0.0f), flags);
 
-      //if (firstRun_)
-      //{
-      //  ImGuiDockNode* node = ImGui::DockBuilderGetNode(dockingID);
-      //  
-      //  if (node)
-      //  {
-      //    if (node->ChildNodes[0])
-      //    {
-      //      true;
-      //    }
+      if (firstRun_)
+      {
+        ImGui::DockBuilderRemoveNode(dockingID);
+        ImGui::DockBuilderAddNode(dockingID, ImGuiDockNodeFlags_DockSpace);
+        ImGui::DockBuilderSetNodeSize(dockingID, ImGui::GetIO().DisplaySize);
 
-      //    if (node->ChildNodes[1])
-      //    {
-      //      true;
-      //    }
-      //  }
+        ImGuiID dock_main_id = dockingID;
 
-      //  //ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 1.0f, NULL, &dockspace_id);
-      //  ///*ImGuiID dock_id_bottom = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 1.0f, NULL, &dockspace_id);
-      //  //ImGuiID dock_id_left = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 1.0f, NULL, &dockspace_id);*/
+        ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.25f, NULL, &dock_main_id);
+        ImGuiID dock_id_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.25f, NULL, &dock_main_id);
+        ImGuiID dock_id_left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.25f, NULL, &dock_main_id);
+        ImGuiID dock_id_center = dock_main_id;
 
-      //  ///*ImGui::DockBuilderDockWindow("Hierarchy", dock_id_left);
-      //  //ImGui::DockBuilderDockWindow("Output Log", dock_id_bottom);*/
-      //  //ImGui::DockBuilderDockWindow("Inspector", dock_id_right);
+        ImGui::DockBuilderDockWindow("Hierarchy", dock_id_left);
+        ImGui::DockBuilderDockWindow("Output Log", dock_id_bottom);
+        ImGui::DockBuilderDockWindow("Inspector", dock_id_right);
+        ImGui::DockBuilderDockWindow("Game", dock_id_center);
 
-      //  //ImGui::DockBuilderFinish(dockingID);
+        ImGui::DockBuilderFinish(dockingID);
 
-      //  firstRun_ = false;
-      //}
+        firstRun_ = false;
+      }
     }
   }
 

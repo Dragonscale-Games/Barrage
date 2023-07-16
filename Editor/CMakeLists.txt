@@ -73,7 +73,8 @@ add_executable(Editor "main.cpp"
  "Commands/Rename/Pool/RenamePool.cpp" 
  "Widgets/Modals/Rename/RenameModal.cpp" 
  "Commands/Rename/Scene/RenameScene.cpp" 
- "Widgets/Modals/Project/ProjectModal.cpp")
+ "Widgets/Modals/Project/ProjectModal.cpp" 
+ "Widgets/Windows/Game/GameWidget.cpp")
 
 target_link_libraries(Editor PUBLIC BarrageCore Gameplay imgui nativefiledialog)
 add_dependencies(Editor Game)

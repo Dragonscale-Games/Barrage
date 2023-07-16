@@ -19,6 +19,7 @@
 #include "Widgets/Windows/Hierarchy/HierarchyWidget.hpp"
 #include "Widgets/Windows/Inspector/InspectorWidget.hpp"
 #include "Widgets/MainMenu/MainMenuWidget.hpp"
+#include "Widgets/Windows/Game/GameWidget.hpp"
 
 #include <Widgets/Modals/Component/ComponentModal.hpp>
 #include <Widgets/Modals/ComponentArray/ComponentArrayModal.hpp>
@@ -153,7 +154,9 @@ namespace Barrage
     HandleKeyboard();
 
     engine_.Graphics().StartFrame();
+    engine_.Graphics().StartFramebufferRendering();
     engine_.Spaces().Draw();
+    engine_.Graphics().EndFramebufferRendering();
     gui_.DrawWidgets();
     engine_.Graphics().EndFrame();
 
@@ -175,13 +178,15 @@ namespace Barrage
 
   void Editor::UseWidgets()
   {
+    GameWidget::Use();
+    
     bool gamePlaying = data_.gamePlaying_;
     
     if (gamePlaying)
     {
       ImGui::BeginDisabled();
     }
-    
+  
     MainMenuWidget::Use();
     HierarchyWidget::Use();
     InspectorWidget::Use();

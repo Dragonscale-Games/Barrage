@@ -75,7 +75,10 @@ namespace Barrage
     }
 
     engine_.Graphics().StartFrame();
+    engine_.Graphics().StartFramebufferRendering();
     engine_.Spaces().Draw();
+    engine_.Graphics().EndFramebufferRendering();
+    engine_.Graphics().DrawFSQ();
     engine_.Graphics().EndFrame();
 
     if (engine_.Graphics().WindowClosed())

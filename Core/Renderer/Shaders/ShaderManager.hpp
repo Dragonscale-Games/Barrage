@@ -23,7 +23,7 @@
 
 namespace Barrage
 {
-  typedef std::unordered_map<std::string, Shader*> ShaderLibrary;
+  typedef std::unordered_map<std::string, Shader*> ShaderMap;
 
   //! Temporary shader manager to make it convenient to test game systems.
   class ShaderManager
@@ -38,7 +38,7 @@ namespace Barrage
     void UnloadShaders();
 
   private:
-    ShaderLibrary library_;
+    ShaderMap shaders_;
 
     Shader* CreateShader(const std::string& name);
 

@@ -23,7 +23,7 @@ namespace Barrage
   
   void HierarchyWidget::Use()
   {
-    ImGui::Begin("Hierarchy", nullptr);
+    ImGui::Begin("Hierarchy", nullptr, ImGuiWindowFlags_NoMove);
 
     size_ = ImGui::GetWindowSize();
 

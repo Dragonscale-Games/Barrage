@@ -26,7 +26,7 @@ namespace Barrage
   
   void InspectorWidget::Use()
   {
-    ImGui::Begin("Inspector", nullptr);
+    ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_NoMove);
 
     size_ = ImGui::GetWindowSize();
 

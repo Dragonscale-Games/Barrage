@@ -18,13 +18,13 @@
 namespace Barrage
 {
   ShaderManager::ShaderManager() :
-    library_()
+    shaders_()
   {
   }
 
   ShaderManager::~ShaderManager()
   {
-    for (const auto& i : library_)
+    for (const auto& i : shaders_)
     {
       delete i.second;
     }
@@ -32,9 +32,9 @@ namespace Barrage
 
   const Shader* ShaderManager::GetShader(const std::string& name)
   {
-    auto shader = library_.find(name);
+    auto shader = shaders_.find(name);
 
-    if (shader == library_.end())
+    if (shader == shaders_.end())
     {
       return CreateShader(name);
     }
@@ -44,12 +44,12 @@ namespace Barrage
 
   void ShaderManager::UnloadShaders()
   {
-    for (auto shader : library_)
+    for (auto shader : shaders_)
     {
       delete shader.second;
     }
 
-    library_.clear();
+    shaders_.clear();
   }
 
   Shader* ShaderManager::CreateShader(const std::string& name)
@@ -58,7 +58,7 @@ namespace Barrage
 
     Shader* new_shader = new Shader(program_id);
 
-    library_[name] = new_shader;
+    shaders_[name] = new_shader;
 
     return new_shader;
   }
