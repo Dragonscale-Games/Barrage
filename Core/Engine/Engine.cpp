@@ -18,55 +18,19 @@ namespace Barrage
 {
   Engine* Engine::Instance = nullptr;
 
-  Engine::Engine() :
-    framerateController_(),
-    inputManager_(),
-    sceneManager_(),
-    spaceManager_(),
-    gfxManager_(),
-    gfxRenderer_(),
-    gfxFactory_(),
-    gfxRegistry_(),
-    gfxDrawSystem_(),
-    windowManager_()
-  {
-  }
-
   void Engine::Initialize()
   {
     Instance = this;
     
-    // Initialize the window.
-    WindowManager::WindowData data = {};
-    data.decorated_ = true;
-    data.width_ = 1280;
-    data.height_ = 720;
-    data.title_ = u8"Barrage Engine";
-    windowManager_.Initialize(data);
-    
-    // Initialize the graphics modules.
-    gfxManager_.Initialize(windowManager_);
-    gfxRenderer_.Initialize(gfxManager_);
-    gfxFactory_.Initialize(gfxManager_);
-    gfxRegistry_.Initialize(gfxFactory_);
-    gfxDrawSystem_.Initialize(gfxManager_, gfxRenderer_, gfxRegistry_);
-
-    inputManager_.Initialize(windowManager_.GetInternalHandle());
-    framerateController_.Initialize(windowManager_.GetInternalHandle(), FramerateController::FpsCap::FPS_120, true);
-
-    logger_.AddFileLogger("logs/trace.txt");
+    renderer_.Initialize();
+    inputManager_.Initialize(renderer_.GetWindowHandle());
+    framerateController_.Initialize(renderer_.GetWindowHandle(), FramerateController::FpsCap::FPS_120, true);
   }
 
   void Engine::Shutdown()
   {
     inputManager_.Shutdown();
-
-    gfxDrawSystem_.Shutdown();
-    gfxRegistry_.Shutdown();
-    gfxFactory_.Shutdown();
-    gfxRenderer_.Shutdown();
-    gfxManager_.Shutdown();
-    windowManager_.Shutdown();
+    renderer_.Shutdown();
 
     Instance = nullptr;
   }
@@ -81,19 +45,14 @@ namespace Barrage
     return framerateController_;
   }
 
-  GfxDraw2D& Engine::Drawing()
-  {
-    return gfxDrawSystem_;
-  }
-
-  GfxRegistry2D& Engine::GfxRegistry()
-  {
-    return gfxRegistry_;
-  }
-
   InputManager& Engine::Input()
   {
     return inputManager_;
+  }
+
+  Renderer& Engine::Graphics()
+  {
+    return renderer_;
   }
 
   SceneManager& Engine::Scenes()
@@ -106,8 +65,4 @@ namespace Barrage
     return spaceManager_;
   }
 
-  WindowManager& Engine::Windowing()
-  {
-    return windowManager_;
-  }
 }

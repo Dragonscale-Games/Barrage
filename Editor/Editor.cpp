@@ -83,34 +83,7 @@ namespace Barrage
     Instance = this;
     engine_.Initialize();
 
-    Barrage::WindowManager& windowing = engine_.Windowing();
-    Barrage::GfxRegistry2D& registry = engine_.GfxRegistry();
-    Barrage::GfxDraw2D& drawing = engine_.Drawing();
-
-    windowing.ChangeTitle("Barrage Editor");
-    windowing.Maximize();
-
-    // Register the assets necessary.
-    const char* instancedShaderPaths[] = {
-      "Assets/Shaders/Instanced.vs",
-      "Assets/Shaders/Instanced.fs",
-    };
-    registry.RegisterShader(instancedShaderPaths, "Instanced");
-    drawing.ApplyShader("Instanced");
-
-    for (auto const& texture_file : std::filesystem::directory_iterator{ "Assets/Textures" })
-    {
-      if (texture_file.is_regular_file() && texture_file.path().extension() == ".png")
-      {
-        registry.RegisterTexture(texture_file.path().string().c_str(), texture_file.path().stem().string().c_str());
-      }
-    }
-    
-    // Set the viewport of our game
-    const Barrage::WindowManager::WindowData& settings = windowing.GetSettings();
-    drawing.SetViewportSpace(glm::ivec2(settings.width_, settings.height_));
-
-    gui_.Initialize(windowing.GetInternalHandle());
+    gui_.Initialize(engine_.Graphics().GetWindowHandle());
 
     Space* main_space = new Space;
     Scene* demo_scene = new Scene("Demo Scene");
@@ -124,8 +97,6 @@ namespace Barrage
     float zoom = 1.0f;
     float angle = 0.0f;
     glm::vec2 position(0.0f);
-
-    engine_.Drawing().SetCameraTransform(position, zoom, angle);
 
     //data_.openProjectModal_ = true;
   }
@@ -181,16 +152,12 @@ namespace Barrage
 
     HandleKeyboard();
 
-    Barrage::WindowManager& windowing = engine_.Windowing();
-    Barrage::GfxDraw2D& drawing = engine_.Drawing();
-
-    drawing.StartFrame();
+    engine_.Graphics().StartFrame();
     engine_.Spaces().Draw();
-    drawing.RenderRequests();
     gui_.DrawWidgets();
-    drawing.EndFrame();
+    engine_.Graphics().EndFrame();
 
-    if (!windowing.IsOpen())
+    if (engine_.Graphics().WindowClosed())
     {
       data_.isRunning_ = false;
     }
@@ -262,7 +229,7 @@ namespace Barrage
       ImGui::EndDisabled();
     }
 
-    Barrage::GfxDraw2D& drawing = engine_.Drawing();
+    /*Barrage::GfxDraw2D& drawing = engine_.Drawing();
     Barrage::WindowManager& windowing = engine_.Windowing();
 
     WindowManager::WindowData window_settings = windowing.GetSettings();
@@ -300,7 +267,7 @@ namespace Barrage
     origin.x = static_cast<int>(HierarchyWidget::GetSize().x + (x - adjusted_x) / 2.0f);
     origin.y = static_cast<int>(LogWidget::GetSize().y + (y - adjusted_y) / 2.0f);
 
-    drawing.SetViewportSpace(dimensions, origin);
+    drawing.SetViewportSpace(dimensions, origin);*/
   }
 
   void Editor::HandleKeyboard()

@@ -50,7 +50,7 @@ add_library(BarrageCore STATIC
   
   "File/FileManager.cpp" "File/${OS_IMPL_FOLDER}/FileManager.cpp"
   "File/FileManager.tpp"
-  "File/Graphics/ImageSource.cpp"
+  
   "File/Objects/ObjectSource.cpp"
   
   "FramerateController/FramerateController.cpp" 
@@ -74,31 +74,26 @@ add_library(BarrageCore STATIC
 
   "Random/Random.cpp"
 
-  "Rendering/WindowManager.hpp" "Rendering/WindowManager.cpp"
-  "Rendering/GfxManager2D.hpp" "Rendering/GfxManager2D.cpp"
-  "Rendering/GfxRenderer2D.hpp" "Rendering/GfxRenderer2D.cpp"
-  "Rendering/GfxTypes.hpp" "Rendering/GfxTypes.cpp"
-  "Rendering/GfxPrimitives.hpp" "Rendering/GfxPrimitives.cpp"
-  "Rendering/GfxDraw2D.hpp" "Rendering/GfxDraw2D.cpp"
-  "Rendering/GfxFactory2D.hpp" "Rendering/GfxFactory2D.cpp"
-  "Rendering/GfxRegistry2D.hpp" "Rendering/GfxRegistry2D.cpp"
-  "Rendering/GLError.hpp"
+  "Renderer/Renderer.cpp" 
+  "Renderer/Textures/Texture.cpp" 
+  "Renderer/Textures/TextureManager.cpp" 
+  "Renderer/Shaders/Shader.cpp" 
+  "Renderer/Shaders/ShaderManager.cpp"
   
-  "Scenes/Scene.cpp" "Scenes/Scene.hpp"
+  "Scenes/Scene.cpp"
 
-  "Serialization/ComponentRefl.hpp" 
-  "Serialization/Serializer.hpp" "Serialization/Serializer.cpp"
+  "Serialization/Serializer.cpp"
 
-  "Spaces/Space.cpp" "Spaces/Space.hpp"
-  "Spaces/SpaceManager.cpp" "Spaces/SpaceManager.hpp"
+  "Spaces/Space.cpp"
+  "Spaces/SpaceManager.cpp" 
 
-  "Utilities/Utilities.hpp" 
-  "Utilities/Mallocator.hpp"
-  "Utilities/RuntimeError.hpp" "Utilities/RuntimeError.cpp"
-  "Utilities/RecursionTable.hpp" "Utilities/RecursionTable.tpp"
-  "Utilities/Logger.hpp" "Utilities/Logger.cpp"
+  "Utilities/RuntimeError.cpp"
+  "Utilities/RecursionTable.tpp"
+  "Utilities/Logger.cpp"
 
-  "Objects/Spawning/SpawnInfo.cpp"  "Entry/Entry.cpp")
+  "Objects/Spawning/SpawnInfo.cpp"  
+
+  "Entry/Entry.cpp" )
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

@@ -47,26 +47,6 @@ namespace Barrage
   {
     engine_.Initialize();
 
-    Barrage::WindowManager& windowing = engine_.Windowing();
-    Barrage::GfxDraw2D& drawing = engine_.Drawing();
-
-    // Set the viewport of our game.
-    const Barrage::WindowManager::WindowData& settings = windowing.GetSettings();
-    drawing.SetViewportSpace(glm::ivec2(settings.width_, settings.height_));
-
-    float zoom = 1.0f;
-    float angle = 0.0f;
-    glm::vec2 position(0.0f);
-
-    engine_.Drawing().SetCameraTransform(position, zoom, angle);
-
-    const char* instancedShaderPaths[] = {
-      "Assets/Shaders/Instanced.vs",
-      "Assets/Shaders/Instanced.fs",
-    };
-    engine_.GfxRegistry().RegisterShader(instancedShaderPaths, "Instanced");
-    drawing.ApplyShader("Instanced");
-
     ParseEntryFile();
     
     std::vector<std::string> spaceNames = engine_.Spaces().GetSpaceNames();
@@ -94,11 +74,11 @@ namespace Barrage
       engine_.Spaces().Update();
     }
 
-    engine_.Drawing().StartFrame();
+    engine_.Graphics().StartFrame();
     engine_.Spaces().Draw();
-    engine_.Drawing().EndFrame();
+    engine_.Graphics().EndFrame();
 
-    if (!engine_.Windowing().IsOpen())
+    if (engine_.Graphics().WindowClosed())
     {
       isRunning_ = false;
     }
@@ -140,7 +120,7 @@ namespace Barrage
       return;
     }
 
-    if (document.HasMember("Textures") && document["Textures"].IsArray())
+    /*if (document.HasMember("Textures") && document["Textures"].IsArray())
     {
       for (auto it = document["Textures"].Begin(); it != document["Textures"].End(); ++it)
       {
@@ -151,7 +131,7 @@ namespace Barrage
           engine_.GfxRegistry().RegisterTexture(texture_path.c_str(), texture_name.c_str());
         }
       }
-    }
+    }*/
 
     if (document.HasMember("Spaces") && document["Spaces"].IsArray())
     {

@@ -269,7 +269,7 @@ namespace Barrage
       return;
     }
 
-    std::vector<std::string> texture_names = Engine::Instance->GfxRegistry().GetTextureNames();
+    /*std::vector<std::string> texture_names = Engine::Instance->GfxRegistry().GetTextureNames();
 
     for (const auto& texture_name : texture_names)
     {
@@ -280,7 +280,7 @@ namespace Barrage
         LogWidget::AddEntry("Could not build game. (Texture does not exist at %s.)", texture_path.c_str());
         return;
       }
-    }
+    }*/
 
     std::filesystem::create_directory(output_path);
 

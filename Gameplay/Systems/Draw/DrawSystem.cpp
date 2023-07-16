@@ -68,7 +68,7 @@ namespace Barrage
 
   void DrawSystem::Draw()
   {
-    GfxDraw2D& drawing = Engine::Instance->Drawing();
+    Renderer& renderer = Engine::Instance->Graphics();
 
     for (auto it = drawPools_.begin(); it != drawPools_.end(); ++it)
     {
@@ -81,19 +81,14 @@ namespace Barrage
         PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
         ScaleArray& scale_array = *pool->GetComponentArray<Scale>("Scale");
         RotationArray& rotation_array = *pool->GetComponentArray<Rotation>("Rotation");
-        TextureSpaceArray& tex_space_array = *pool->GetComponentArray<TextureSpace>("TextureSpace");
 
         glm::vec2* positions = reinterpret_cast<glm::vec2*>(position_array.data_);
         glm::vec2* scales = reinterpret_cast<glm::vec2*>(scale_array.data_);
-        glm::vec4* tex_coords = reinterpret_cast<glm::vec4*>(tex_space_array.data_);
         float* rotations = reinterpret_cast<float*>(rotation_array.data_);
 
         Sprite& pool_sprite = pool->GetComponent<Sprite>("Sprite")->Data();
 
-        drawing.DrawInstancedQuad(
-          pool->GetActiveObjectCount(),
-          positions, scales, 
-          rotations, tex_coords, pool_sprite.texture_.c_str());
+        renderer.DrawInstanced(positions, rotations, scales, pool->GetActiveObjectCount(), pool_sprite.texture_);
       }
     }
   }

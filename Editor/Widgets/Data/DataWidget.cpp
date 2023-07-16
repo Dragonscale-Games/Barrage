@@ -372,7 +372,7 @@ namespace Barrage
 
     bool fieldChanged = false;
 
-    std::vector<std::string> textureNames = Engine::Instance->GfxRegistry().GetTextureNames();
+    /*std::vector<std::string> textureNames = Engine::Instance->GfxRegistry().GetTextureNames();
 
     if (ImGui::BeginCombo("texture", sprite.texture_.c_str()))
     { 
@@ -385,7 +385,7 @@ namespace Barrage
         }
       }
       ImGui::EndCombo();
-    }
+    }*/
 
     const ImU32 one_step = 1;
 

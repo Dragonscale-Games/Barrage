@@ -18,11 +18,9 @@
 
 #include "FramerateController/FramerateController.hpp"
 #include "Input/InputManager.hpp"
+#include "Renderer/Renderer.hpp"
 #include "Spaces/SpaceManager.hpp"
 #include "Scenes/SceneManager.hpp"
-
-#include "Rendering/GfxDraw2D.hpp"
-#include "Rendering/WindowManager.hpp"
 
 #include "Utilities/Logger.hpp"
 
@@ -33,14 +31,6 @@ namespace Barrage
 	{
     public:   
       static Engine* Instance;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Default constructor.
-      */
-      /**************************************************************/
-      Engine();
 
       /**************************************************************/
       /*!
@@ -80,21 +70,13 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the engine's drawing module.
-        \returns
-          Returns a reference to the engine's drawing module.
+          Gets the engine's renderer.
+
+        \return
+          Returns a reference to the engine's renderer.
       */
       /**************************************************************/
-      GfxDraw2D& Drawing();
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the engine's graphics registry module.
-        \returns
-          Returns a reference to the engine's registry module.
-      */
-      /**************************************************************/
-      GfxRegistry2D& GfxRegistry();
+      Renderer& Graphics();
 
       /**************************************************************/
       /*!
@@ -129,28 +111,12 @@ namespace Barrage
       /**************************************************************/
       SpaceManager& Spaces();
 
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the engine's windowing module.
-        \returns
-          Returns a reference to the engine's windowing module.
-      */
-      /**************************************************************/
-      WindowManager& Windowing();
-
     private:
-      FramerateController framerateController_; //!< Framerate controller
-      InputManager inputManager_;               //!< Input manager
-      SceneManager sceneManager_;               //!< Scene manager
-      SpaceManager spaceManager_;               //!< Space manager
-      GfxManager2D gfxManager_;
-      GfxRenderer2D gfxRenderer_;
-      GfxFactory2D gfxFactory_;
-      GfxRegistry2D gfxRegistry_;
-      GfxDraw2D gfxDrawSystem_;                 //!< The drawing system.
-      WindowManager windowManager_;             //!< The windowing manager.
-      Logger logger_;
+      FramerateController framerateController_; 
+      InputManager inputManager_; 
+      Renderer renderer_;
+      SceneManager sceneManager_; 
+      SpaceManager spaceManager_; 
 	};
 }
 
