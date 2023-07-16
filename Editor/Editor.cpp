@@ -63,6 +63,11 @@ namespace Barrage
     }
   }
 
+  GUI& Editor::Gui()
+  {
+    return gui_;
+  }
+
   EditorData& Editor::Data()
   {
     return data_;
@@ -122,7 +127,7 @@ namespace Barrage
 
     engine_.Drawing().SetCameraTransform(position, zoom, angle);
 
-    data_.openProjectModal_ = true;
+    //data_.openProjectModal_ = true;
   }
 
   void Editor::Update()
@@ -281,6 +286,16 @@ namespace Barrage
 
     dimensions.x = static_cast<int>(adjusted_x);
     dimensions.y = static_cast<int>(adjusted_y);
+
+    if (dimensions.x <= 0)
+    {
+      dimensions.x = 1;
+    }
+
+    if (dimensions.y <= 0)
+    {
+      dimensions.y = 1;
+    }
 
     origin.x = static_cast<int>(HierarchyWidget::GetSize().x + (x - adjusted_x) / 2.0f);
     origin.y = static_cast<int>(LogWidget::GetSize().y + (y - adjusted_y) / 2.0f);

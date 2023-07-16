@@ -12,6 +12,8 @@
 
 #include <Objects/ObjectManager.hpp>
 
+#include <Entry/Entry.hpp>
+
 #include "ComponentArrays/AngularSpeedArray.hpp"
 #include "ComponentArrays/VelocityArray.hpp"
 #include "ComponentArrays/DestructibleArray.hpp"
@@ -41,6 +43,16 @@ namespace Barrage
 {
   void ReflectBarrageCore()
   {
+    rttr::registration::class_<Entry::SpaceEntry>("SpaceEntry")
+      .property("Name", &Entry::SpaceEntry::name_)
+      .property("Scene", &Entry::SpaceEntry::scene_)
+      ;
+    
+    rttr::registration::class_<Entry>("Entry")
+      .property("Spaces", &Entry::spaces_)
+      .property("Textures", &Entry::textures_)
+      ;
+    
     rttr::registration::class_<BoundaryBox>("BoundaryBox")
       .property("xMin", &BoundaryBox::xMin_)
       .property("xMax", &BoundaryBox::xMax_)

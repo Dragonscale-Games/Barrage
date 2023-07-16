@@ -25,13 +25,12 @@ namespace Barrage
   class GUI
 	{
     public:   
-      /**************************************************************/
-      /*!
-        \brief
-          Default constructor.
-      */
-      /**************************************************************/
-      GUI();
+      enum class DockPosition
+      {
+        LEFT,
+        BOTTOM,
+        RIGHT
+      };
 
       /**************************************************************/
       /*!
@@ -97,6 +96,9 @@ namespace Barrage
       */
       /**************************************************************/
       void EndDockingSpace();
+
+    private:
+      bool firstRun_ = false;
 	};
 }
 

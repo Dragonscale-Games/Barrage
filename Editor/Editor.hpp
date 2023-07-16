@@ -51,6 +51,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the editor's GUI manager.
+
+        \return
+          Returns a reference to the editor's GUI manager.
+      */
+      /**************************************************************/
+      GUI& Gui();
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the public editor data that widgets can modify.
 
         \return

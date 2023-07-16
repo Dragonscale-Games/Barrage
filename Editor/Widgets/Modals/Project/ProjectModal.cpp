@@ -18,6 +18,8 @@
 #include <filesystem>
 #include <fstream>
 
+#include <Entry/Entry.hpp>
+
 namespace Barrage
 {
   void ProjectModal::Use(const char* strId)
@@ -113,23 +115,11 @@ namespace Barrage
       return false;
     }
 
-    std::ofstream entry_file(project_folder_path + "/Assets/entry.json");
+    Entry entryFile;
 
-    if (entry_file.is_open())
-    {
-      entry_file << "{" << std::endl;
-      entry_file << "    \"Textures\": []," << std::endl;
-      entry_file << "    \"Spaces\": [" << std::endl;
-      entry_file << "        {" << std::endl;
-      entry_file << "            \"Name\": \"Untitled\"," << std::endl;
-      entry_file << "            \"Scene\": \"Untitled\"" << std::endl;
-      entry_file << "        }" << std::endl;
-      entry_file << "    ]" << std::endl;
-      entry_file << "}" << std::endl;
+    entryFile.AddSpace(Entry::SpaceEntry("Untitled", "Untitled"));
 
-      entry_file.close();
-    }
-    else
+    if (!Entry::SaveToFile(entryFile, project_folder_path + "/Assets/entry.json"))
     {
       LogWidget::AddEntry("Could not create new project. (Could not create entry file.)");
       std::filesystem::remove_all(project_folder_path);
@@ -145,12 +135,12 @@ namespace Barrage
       return false;
     }
 
-    if (!OpenProjectInternal(project_folder_path))
+    /*if (!OpenProjectInternal(project_folder_path))
     {
       LogWidget::AddEntry("Could not create new project. (Could not open project after creation.)");
       std::filesystem::remove_all(project_folder_path);
       return false;
-    }
+    }*/
 
     LogWidget::AddEntry(std::string("\"" + project_name + "\" project created in \"" + project_folder_path + "\"."));
 

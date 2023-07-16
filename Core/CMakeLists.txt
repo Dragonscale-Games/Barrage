@@ -98,7 +98,7 @@ add_library(BarrageCore STATIC
   "Utilities/RecursionTable.hpp" "Utilities/RecursionTable.tpp"
   "Utilities/Logger.hpp" "Utilities/Logger.cpp"
 
-  "Objects/Spawning/SpawnInfo.cpp" )
+  "Objects/Spawning/SpawnInfo.cpp"  "Entry/Entry.cpp")
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

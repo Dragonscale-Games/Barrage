@@ -12,6 +12,7 @@
 
 #include "LogWidget.hpp"
 #include <string>
+#include <Editor.hpp>
 
 namespace Barrage
 {
@@ -23,7 +24,7 @@ namespace Barrage
 
   void LogWidget::Use()
   {
-    ImGui::Begin("Output Log", nullptr, ImGuiWindowFlags_NoMove);
+    ImGui::Begin("Output Log", nullptr);
     size_ = ImGui::GetWindowSize();
 
     if (ImGui::Button("Clear")) Clear();

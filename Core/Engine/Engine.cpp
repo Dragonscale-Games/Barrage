@@ -71,6 +71,11 @@ namespace Barrage
     Instance = nullptr;
   }
 
+  void Engine::Reset()
+  {
+    
+  }
+
   FramerateController& Engine::Frames()
   {
     return framerateController_;

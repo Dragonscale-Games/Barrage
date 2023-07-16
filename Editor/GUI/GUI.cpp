@@ -12,13 +12,10 @@
 
 #include "GUI.hpp"
 #include <GLFW/glfw3.h>
+#include <imgui/imgui_internal.h>
 
 namespace Barrage
 {
-  GUI::GUI()
-  {
-  }
-
   void GUI::Initialize(GLFWwindow* window)
   {
     IMGUI_CHECKVERSION();
@@ -33,6 +30,8 @@ namespace Barrage
 
     if (!ImGui_ImplOpenGL3_Init("#version 330"))
       return;
+
+    firstRun_ = true;
   }
 
   void GUI::StartWidgets()
@@ -66,6 +65,8 @@ namespace Barrage
 
   void GUI::Shutdown()
   {
+    firstRun_ = false;
+    
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
 
@@ -103,6 +104,36 @@ namespace Barrage
       ImGuiDockNodeFlags flags = ImGuiDockNodeFlags_NoDockingInCentralNode
         | ImGuiDockNodeFlags_PassthruCentralNode;
       ImGui::DockSpace(dockingID, ImVec2(0.0f, 0.0f), flags);
+
+      //if (firstRun_)
+      //{
+      //  ImGuiDockNode* node = ImGui::DockBuilderGetNode(dockingID);
+      //  
+      //  if (node)
+      //  {
+      //    if (node->ChildNodes[0])
+      //    {
+      //      true;
+      //    }
+
+      //    if (node->ChildNodes[1])
+      //    {
+      //      true;
+      //    }
+      //  }
+
+      //  //ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 1.0f, NULL, &dockspace_id);
+      //  ///*ImGuiID dock_id_bottom = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 1.0f, NULL, &dockspace_id);
+      //  //ImGuiID dock_id_left = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 1.0f, NULL, &dockspace_id);*/
+
+      //  ///*ImGui::DockBuilderDockWindow("Hierarchy", dock_id_left);
+      //  //ImGui::DockBuilderDockWindow("Output Log", dock_id_bottom);*/
+      //  //ImGui::DockBuilderDockWindow("Inspector", dock_id_right);
+
+      //  //ImGui::DockBuilderFinish(dockingID);
+
+      //  firstRun_ = false;
+      //}
     }
   }
 

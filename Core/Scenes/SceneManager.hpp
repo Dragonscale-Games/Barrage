@@ -39,6 +39,8 @@ namespace Barrage
 
       bool RenameScene(const std::string& sceneName, const std::string& newName);
 
+      void Clear();
+
     private:
       SceneMap scenes_;
   };
