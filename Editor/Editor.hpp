@@ -20,9 +20,10 @@
 #include "GUI/GUI.hpp"
 #include "Commands/CommandQueue.hpp"
 
-#include "Widgets/Windows/Log/LogWidget.hpp"
-
+#include <string>
 #include <string_view>
+
+#include "Widgets/Windows/Log/LogWidget.hpp"
 
 namespace Barrage
 {
@@ -44,9 +45,13 @@ namespace Barrage
       /*!
         \brief
           Calling this runs the editor.
+
+        \param projectPath
+          The path of the project to open on startup. If empty,
+          editor GUI will prompt user to open a project.
       */
       /**************************************************************/
-      void Run();
+      void Run(const std::string& projectPath = std::string());
 
       /**************************************************************/
       /*!

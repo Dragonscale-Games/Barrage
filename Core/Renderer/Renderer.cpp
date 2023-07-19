@@ -200,6 +200,11 @@ namespace Barrage
     }
   }
 
+  std::vector<std::string> Renderer::GetTextureNames()
+  {
+    return textureManager_.GetTextureNames();
+  }
+
   GLuint Renderer::GetFramebufferID()
   {
     return fbo_;

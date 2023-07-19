@@ -19,6 +19,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <vector>
 
 namespace Barrage
 {
@@ -39,6 +40,8 @@ namespace Barrage
     void UnloadTexture(const std::string& name);
 
     void UnloadTextures();
+
+    std::vector<std::string> GetTextureNames();
 
   private:
     TextureMap textures_;

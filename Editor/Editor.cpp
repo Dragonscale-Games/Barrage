@@ -45,12 +45,14 @@ namespace Barrage
   {
   }
 
-  void Editor::Run()
+  void Editor::Run(const std::string& projectPath)
   {
+    UNREFERENCED(projectPath);
+    
     if (!data_.isRunning_)
     {
       data_.isRunning_ = true;
-      
+
       Initialize();
 
       while (data_.isRunning_)
@@ -94,10 +96,6 @@ namespace Barrage
     data_.selectedScene_ = "Demo Scene";
     data_.selectedSpace_ = "Main Space";
     engine_.Frames().SetVsync(true);
-
-    float zoom = 1.0f;
-    float angle = 0.0f;
-    glm::vec2 position(0.0f);
 
     //data_.openProjectModal_ = true;
   }

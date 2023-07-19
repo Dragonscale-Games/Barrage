@@ -47,7 +47,8 @@ namespace Barrage
   {
     engine_.Initialize();
 
-    ParseEntryFile();
+    Entry entry = Entry::LoadFromFile("./Assets/entry.json");
+    engine_.SetUpGame(entry);
     
     std::vector<std::string> spaceNames = engine_.Spaces().GetSpaceNames();
 
@@ -92,77 +93,5 @@ namespace Barrage
   void Game::Shutdown()
   {
     engine_.Shutdown();
-  }
-
-  void Game::ParseEntryFile()
-  {
-    FILE* inFile = nullptr;
-    fopen_s(&inFile, "./Assets/entry.json", "rb");
-    
-    if (inFile == nullptr)
-    {
-      return;
-    }
-    
-    char* readBuffer = new char[65536];
-    rapidjson::FileReadStream inStream(inFile, readBuffer, sizeof(readBuffer));
-    
-    rapidjson::Document document;
-    rapidjson::ParseResult success = document.ParseStream(inStream);
-    
-    delete[] readBuffer;
-    fclose(inFile);
-    
-    if (!success)
-    {
-      return;
-    }
-
-    if (!document.IsObject())
-    {
-      return;
-    }
-
-    /*if (document.HasMember("Textures") && document["Textures"].IsArray())
-    {
-      for (auto it = document["Textures"].Begin(); it != document["Textures"].End(); ++it)
-      {
-        if (it->IsString())
-        {
-          std::string texture_name = it->GetString();
-          std::string texture_path = "Assets/Textures/" + texture_name + ".png";
-          engine_.GfxRegistry().RegisterTexture(texture_path.c_str(), texture_name.c_str());
-        }
-      }
-    }*/
-
-    if (document.HasMember("Spaces") && document["Spaces"].IsArray())
-    {
-      for (auto it = document["Spaces"].Begin(); it != document["Spaces"].End(); ++it)
-      {
-        const rapidjson::Value& space_object = *it;
-        
-        if (space_object.IsObject() && space_object.HasMember("Name") && space_object["Name"].IsString())
-        {
-          Space* new_space = new Space;
-
-          if (space_object.HasMember("Scene") && space_object["Scene"].IsString())
-          {
-            std::string scene_name = space_object["Scene"].GetString();
-            std::string path = "./Assets/Scenes/" + scene_name + ".scene";
-
-            Scene* new_scene = Scene::LoadFromFile(path);
-
-            if (new_scene)
-            {
-              engine_.Scenes().AddScene(new_scene);
-              new_space->SetScene(scene_name);
-            }
-          }
-
-          engine_.Spaces().AddSpace(space_object["Name"].GetString(), new_space);
-        }
-      }
-    }
   }
 }

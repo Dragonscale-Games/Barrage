@@ -75,6 +75,18 @@ namespace Barrage
     textures_.clear();
   }
 
+  std::vector<std::string> TextureManager::GetTextureNames()
+  {
+    std::vector<std::string> result;
+    
+    for (auto it = textures_.begin(); it != textures_.end(); ++it)
+    {
+      result.push_back(it->first);
+    }
+
+    return result;
+  }
+
   Texture* TextureManager::CreateTexture(const std::string& name)
   {
     int width, height, channels;

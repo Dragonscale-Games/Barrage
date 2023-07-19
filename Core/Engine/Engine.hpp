@@ -22,6 +22,8 @@
 #include "Spaces/SpaceManager.hpp"
 #include "Scenes/SceneManager.hpp"
 
+#include "Entry/Entry.hpp"
+
 #include "Utilities/Logger.hpp"
 
 namespace Barrage
@@ -39,6 +41,15 @@ namespace Barrage
       */
       /**************************************************************/
       void Initialize();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the initial conditions of a game (spaces, scenes, 
+          loaded assets, etc).
+      */
+      /**************************************************************/
+      void SetUpGame(Entry& entry);
 
       /**************************************************************/
       /*!

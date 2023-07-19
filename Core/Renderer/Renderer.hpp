@@ -17,6 +17,7 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include <vector>
 
 #include "Shaders/ShaderManager.hpp"
 #include "Textures/TextureManager.hpp"
@@ -59,6 +60,8 @@ namespace Barrage
       void DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture = default_texture);
 
       void DrawFSQ();
+
+      std::vector<std::string> GetTextureNames();
 
       GLuint GetFramebufferID();
 
