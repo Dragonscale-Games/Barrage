@@ -21,10 +21,17 @@
 
 namespace Barrage
 {
-  static void WindowResizeCallback(GLFWwindow* window, int width, int height)
+  Renderer* Renderer::Instance = nullptr;
+  
+  void Renderer::WindowResizeCallback(GLFWwindow* window, int width, int height)
   {
     window;
     glViewport(0, 0, width, height);
+
+    if (Instance)
+    {
+      Instance->ResizeFramebuffer(width, height);
+    }
   }
 
   Renderer::Renderer() :
@@ -51,8 +58,8 @@ namespace Barrage
     projectionUniform_(-1),
     textureUniform_(-1),
 
-    fbo_(-1),
-    fboTex_(-1)
+    fbo_(0),
+    fboTex_(0)
   {
   }
 
@@ -64,7 +71,11 @@ namespace Barrage
 
     LoadGLFunctions();
 
+    Instance = this;
+
     CreateFramebuffer();
+
+    glfwMaximizeWindow(window_);
 
     viewMat_ = glm::translate(glm::identity<glm::mat4>(), glm::vec3(0.0f, 0.0f, -3.0f));
     projMat_ = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, 0.1f, 100.0f);
@@ -89,6 +100,8 @@ namespace Barrage
 
     textureManager_.UnloadTextures();
     shaderManager_.UnloadShaders();
+
+    Instance = nullptr;
 
     glfwDestroyWindow(window_);
 
@@ -192,21 +205,26 @@ namespace Barrage
     return fbo_;
   }
 
+  void Renderer::ResizeFramebuffer(int width, int height)
+  {
+    glBindTexture(GL_TEXTURE_2D, fboTex_);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glBindTexture(GL_TEXTURE_2D, 0);
+  }
+
   void Renderer::CreateGLFWWindow()
   {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-    window_ = glfwCreateWindow(1280, 720, "Barrage", NULL, NULL);
+    window_ = glfwCreateWindow(START_WIDTH, START_HEIGHT, "Barrage", NULL, NULL);
     if (window_ == NULL)
     {
       throw std::runtime_error("Window could not be created.");
     }
 
     glfwMakeContextCurrent(window_);
-    glfwSetFramebufferSizeCallback(window_, WindowResizeCallback);
   }
 
   GLFWwindow* Renderer::GetWindowHandle()
@@ -243,7 +261,7 @@ namespace Barrage
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1920, 1080, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, START_WIDTH, START_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboTex_, 0);
 
@@ -251,6 +269,8 @@ namespace Barrage
       std::cout << "Framebuffer not complete!" << std::endl;
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glfwSetFramebufferSizeCallback(window_, WindowResizeCallback);
   }
 
   void Renderer::GetUniformLocations()

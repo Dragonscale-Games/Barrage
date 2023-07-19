@@ -190,7 +190,6 @@ namespace Barrage
     MainMenuWidget::Use();
     HierarchyWidget::Use();
     InspectorWidget::Use();
-    ImGui::ShowDemoWindow();
     LogWidget::Use();
 
     if (data_.openComponentModal_)

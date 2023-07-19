@@ -31,81 +31,90 @@ namespace Barrage
   //! Simple renderer for debugging/demos
   class Renderer
   {
-  public:
-    Renderer();
+    public:
+      static Renderer* Instance;
+      
+      Renderer();
 
-    void Initialize();
+      void Initialize();
 
-    void Shutdown();
+      void Shutdown();
 
-    void StartFrame();
+      void StartFrame();
 
-    void EndFrame();
+      void EndFrame();
 
-    void StartFramebufferRendering();
+      void StartFramebufferRendering();
 
-    void EndFramebufferRendering();
+      void EndFramebufferRendering();
 
-    bool WindowClosed();
+      bool WindowClosed();
 
-    GLFWwindow* GetWindowHandle();
+      GLFWwindow* GetWindowHandle();
 
-    void Draw(const glm::vec2& position, float rotation, const glm::vec2& scale, const std::string& texture = default_texture);
+      void Draw(const glm::vec2& position, float rotation, const glm::vec2& scale, const std::string& texture = default_texture);
 
-    void Draw(const glm::mat4& transform, const std::string& texture = default_texture);
+      void Draw(const glm::mat4& transform, const std::string& texture = default_texture);
 
-    void DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture = default_texture);
+      void DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture = default_texture);
 
-    void DrawFSQ();
+      void DrawFSQ();
 
-    GLuint GetFramebufferID();
+      GLuint GetFramebufferID();
 
-  private:
-    GLFWwindow* window_;
+      void ResizeFramebuffer(int width, int height);
 
-    ShaderManager shaderManager_;
-    TextureManager textureManager_;
+      static void WindowResizeCallback(GLFWwindow* window, int width, int height);
 
-    const Texture* boundTexture_;
-    const Shader* boundShader_;
+    private:
+      static const int START_WIDTH = 1280;
+      static const int START_HEIGHT = 720;
+      
+      GLFWwindow* window_;
 
-    glm::mat4 viewMat_;
-    glm::mat4 projMat_;
+      ShaderManager shaderManager_;
+      TextureManager textureManager_;
 
-    unsigned vao_;
-    unsigned vertexBuffer_;
-    unsigned faceBuffer_;
-    unsigned translationBuffer_;
-    unsigned scaleBuffer_;
-    unsigned rotationBuffer_;
+      const Texture* boundTexture_;
+      const Shader* boundShader_;
 
-    int transformUniform_;
-    int viewUniform_;
-    int projectionUniform_;
-    int textureUniform_;
+      glm::mat4 viewMat_;
+      glm::mat4 projMat_;
 
-    GLuint fbo_;
-    GLuint fboTex_;
+      unsigned vao_;
+      unsigned vertexBuffer_;
+      unsigned faceBuffer_;
+      unsigned translationBuffer_;
+      unsigned scaleBuffer_;
+      unsigned rotationBuffer_;
 
-    void CreateGLFWWindow();
+      int transformUniform_;
+      int viewUniform_;
+      int projectionUniform_;
+      int textureUniform_;
 
-    void LoadGLFunctions();
+      GLuint fbo_;
+      GLuint fboTex_;
 
-    void CreateFramebuffer();
+      void CreateGLFWWindow();
 
-    void SetBackgroundColor(const glm::vec4& color);
+      void LoadGLFunctions();
 
-    void GetUniformLocations();
+      void CreateFramebuffer();
 
-    void SetUniforms();
+      void SetBackgroundColor(const glm::vec4& color);
 
-    void CreateQuadMesh();
+      void GetUniformLocations();
 
-    void EnableBlending();
+      void SetUniforms();
 
-    void BindTexture(const std::string& textureName);
+      void CreateQuadMesh();
 
-    void BindShader(const std::string& shader_name);
+      void EnableBlending();
+
+      void BindTexture(const std::string& textureName);
+
+      void BindShader(const std::string& shader_name);
   };
 }
 
