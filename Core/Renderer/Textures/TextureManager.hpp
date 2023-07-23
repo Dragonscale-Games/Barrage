@@ -6,7 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Texture manager for simple renderer.
+   Texture manager for renderer.
  */
  /* ======================================================================== */
 
@@ -20,33 +20,37 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace Barrage
 {
-  typedef std::unordered_map<std::string, Texture*> TextureMap;
+  typedef std::unordered_map<std::string, std::shared_ptr<Texture>> TextureMap;
 
-  //! Texture manager for simple renderer
+  //! Texture manager for renderer
   class TextureManager
   {
-  public:
-    TextureManager();
+    public:
+      TextureManager();
 
-    ~TextureManager();
+      void Initialize();
 
-    const Texture* GetTexture(const std::string& name);
+      void Shutdown();
 
-    void LoadTexture(const std::string& name);
+      void BindTexture(const std::string& name);
 
-    void UnloadTexture(const std::string& name);
+      void LoadTexture(const std::string& name);
 
-    void UnloadTextures();
+      void UnloadTexture(const std::string& name);
 
-    std::vector<std::string> GetTextureNames();
+      void Clear();
 
-  private:
-    TextureMap textures_;
+      std::vector<std::string> GetTextureNames();
 
-    Texture* CreateTexture(const std::string& name);
+    private:
+      std::shared_ptr<Texture> defaultTexture_;
+      TextureMap textures_;
+
+      void CreateDefaultTexture();
   };
 }
 

@@ -75,14 +75,14 @@ namespace Barrage
       engine_.Spaces().Update();
     }
 
-    engine_.Graphics().StartFrame();
-    engine_.Graphics().StartFramebufferRendering();
+    engine_.Graphics().GetFramebuffer().BindFramebuffer();
+    engine_.Graphics().ClearBackground();
     engine_.Spaces().Draw();
-    engine_.Graphics().EndFramebufferRendering();
-    engine_.Graphics().DrawFSQ();
-    engine_.Graphics().EndFrame();
+    engine_.Graphics().GetFramebuffer().UnbindFramebuffer();
+    engine_.Graphics().DrawFsq();
+    engine_.Window().SwapBuffers();
 
-    if (engine_.Graphics().WindowClosed())
+    if (engine_.Window().IsClosed())
     {
       isRunning_ = false;
     }

@@ -6,7 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Handles graphics.
+   Handles drawing/graphics.
  */
  /* ======================================================================== */
 
@@ -18,106 +18,75 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>
+#include <memory>
 
-#include "Shaders/ShaderManager.hpp"
+#include "Framebuffers/Framebuffer.hpp"
+#include "Shaders/Shader.hpp"
 #include "Textures/TextureManager.hpp"
-
-struct GLFWwindow;
 
 namespace Barrage
 {
-  const std::string default_texture = std::string();
-  const std::string default_shader = std::string();
-
-  //! Simple renderer for debugging/demos
+  //! Handles drawing/graphics
   class Renderer
   {
-    public:
-      static Renderer* Instance;
-      
+    public:  
       Renderer();
 
-      void Initialize();
+      void Initialize(GLsizei framebufferWidth, GLsizei framebufferHeight);
 
       void Shutdown();
 
-      void StartFrame();
+      void Draw(const glm::vec2& position, float rotation, const glm::vec2& scale, const std::string& texture);
 
-      void EndFrame();
+      void DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture);
 
-      void StartFramebufferRendering();
+      void DrawFsq();
 
-      void EndFramebufferRendering();
+      void ClearBackground();
 
-      bool WindowClosed();
+      void SetMaxInstances(unsigned maxInstances);
 
-      GLFWwindow* GetWindowHandle();
+      void SetViewport(int width, int height, int x = 0, int y = 0);
 
-      void Draw(const glm::vec2& position, float rotation, const glm::vec2& scale, const std::string& texture = default_texture);
+      Framebuffer& GetFramebuffer();
 
-      void Draw(const glm::mat4& transform, const std::string& texture = default_texture);
-
-      void DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture = default_texture);
-
-      void DrawFSQ();
-
-      std::vector<std::string> GetTextureNames();
-
-      GLuint GetFramebufferID();
-
-      void ResizeFramebuffer(int width, int height);
-
-      static void WindowResizeCallback(GLFWwindow* window, int width, int height);
+      TextureManager& Textures();
 
     private:
-      static const int START_WIDTH = 1280;
-      static const int START_HEIGHT = 720;
-      
-      GLFWwindow* window_;
-
-      ShaderManager shaderManager_;
+      std::unique_ptr<Framebuffer> framebuffer_;
+      std::unique_ptr<Shader> defaultShader_;
+      std::unique_ptr<Shader> fsqShader_;
       TextureManager textureManager_;
 
-      const Texture* boundTexture_;
-      const Shader* boundShader_;
+      unsigned maxInstances_;
 
-      glm::mat4 viewMat_;
-      glm::mat4 projMat_;
-
-      unsigned vao_;
-      unsigned vertexBuffer_;
-      unsigned faceBuffer_;
-      unsigned translationBuffer_;
-      unsigned scaleBuffer_;
-      unsigned rotationBuffer_;
-
-      int transformUniform_;
-      int viewUniform_;
-      int projectionUniform_;
-      int textureUniform_;
-
-      GLuint fbo_;
-      GLuint fboTex_;
-
-      void CreateGLFWWindow();
+      GLuint vao_;
+      GLuint vertexBuffer_;
+      GLuint faceBuffer_;
+      GLuint translationBuffer_;
+      GLuint scaleBuffer_;
+      GLuint rotationBuffer_;
+      GLuint uniformBuffer_;
 
       void LoadGLFunctions();
 
-      void CreateFramebuffer();
+      void EnableBlending();
 
-      void SetBackgroundColor(const glm::vec4& color);
+      void CreateDefaultShader();
 
-      void GetUniformLocations();
+      void CreateFsqShader();
 
-      void SetUniforms();
+      void SetUpUniforms();
+
+      void DeleteUniforms();
+
+      void SetUpVertexAttributes();
 
       void CreateQuadMesh();
 
-      void EnableBlending();
+      void SetUpTransforms();
 
-      void BindTexture(const std::string& textureName);
-
-      void BindShader(const std::string& shader_name);
+      void DeleteVertexAttributes();
   };
 }
 

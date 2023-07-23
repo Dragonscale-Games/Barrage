@@ -85,8 +85,8 @@ namespace Barrage
   {
     Instance = this;
     engine_.Initialize();
-
-    gui_.Initialize(engine_.Graphics().GetWindowHandle());
+    gui_.Initialize(engine_.Window().GetWindowHandle());
+    engine_.Window().Maximize();
 
     Space* main_space = new Space;
     Scene* demo_scene = new Scene("Demo Scene");
@@ -151,14 +151,14 @@ namespace Barrage
 
     HandleKeyboard();
 
-    engine_.Graphics().StartFrame();
-    engine_.Graphics().StartFramebufferRendering();
+    engine_.Graphics().GetFramebuffer().BindFramebuffer();
+    engine_.Graphics().ClearBackground();
     engine_.Spaces().Draw();
-    engine_.Graphics().EndFramebufferRendering();
+    engine_.Graphics().GetFramebuffer().UnbindFramebuffer();
     gui_.DrawWidgets();
-    engine_.Graphics().EndFrame();
-
-    if (engine_.Graphics().WindowClosed())
+    engine_.Window().SwapBuffers();
+    
+    if (engine_.Window().IsClosed())
     {
       data_.isRunning_ = false;
     }

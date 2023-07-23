@@ -14,6 +14,7 @@
 #include "stdafx.h"
 #include "Engine.hpp"
 #include "Spaces/Space.hpp"
+#include <GLFW/glfw3.h>
 
 namespace Barrage
 {
@@ -23,9 +24,11 @@ namespace Barrage
   {
     Instance = this;
     
-    renderer_.Initialize();
-    inputManager_.Initialize(renderer_.GetWindowHandle());
-    framerateController_.Initialize(renderer_.GetWindowHandle(), FramerateController::FpsCap::FPS_120, true);
+    windowManager_.Initialize();
+    renderer_.Initialize(WindowManager::DEFAULT_WIDTH, WindowManager::DEFAULT_HEIGHT);
+    windowManager_.SetFramebufferSizeCallback(FramebufferSizeCallback);
+    inputManager_.Initialize(windowManager_.GetWindowHandle());
+    framerateController_.Initialize(windowManager_.GetWindowHandle(), FramerateController::FpsCap::FPS_120, true);
   }
 
   void Engine::SetUpGame(Entry& entry)
@@ -53,6 +56,7 @@ namespace Barrage
   {
     inputManager_.Shutdown();
     renderer_.Shutdown();
+    windowManager_.Shutdown();
 
     Instance = nullptr;
   }
@@ -82,4 +86,19 @@ namespace Barrage
     return spaceManager_;
   }
 
+  WindowManager& Engine::Window()
+  {
+    return windowManager_;
+  }
+
+  void Engine::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
+  {
+    UNREFERENCED(window);
+    
+    if (Instance)
+    {
+      Instance->Graphics().SetViewport(width, height);
+      Instance->Graphics().GetFramebuffer().Resize(width, height);
+    }
+  }
 }

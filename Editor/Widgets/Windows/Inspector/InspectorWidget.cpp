@@ -79,7 +79,7 @@ namespace Barrage
       }
       else if (new_value < poolArchetype->GetStartingObjects().size())
       {
-        new_value = poolArchetype->GetStartingObjects().size();
+        new_value = static_cast<unsigned>(poolArchetype->GetStartingObjects().size());
         LogWidget::AddEntry("Capacity cannot go lower than number of objects in pool.");
       }
       

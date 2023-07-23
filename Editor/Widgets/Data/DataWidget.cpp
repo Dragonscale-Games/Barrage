@@ -100,13 +100,13 @@ namespace Barrage
     {
       if (objectType.is_sequential_container())
       {
-        rttr::variant_sequential_view& arrayView = object.value_.create_sequential_view();
+        rttr::variant_sequential_view arrayView = object.value_.create_sequential_view();
 
         size_t arraySize = arrayView.get_size();
 
         for (size_t i = 0; i < arraySize; ++i)
         {
-          ImGui::PushID(i);
+          ImGui::PushID(static_cast<int>(i));
 
           rttr::variant elementVariant = arrayView.get_value(i);
 
@@ -126,7 +126,7 @@ namespace Barrage
       }
       else if (objectType.is_associative_container())
       {
-        rttr::variant_associative_view& mapView = object.value_.create_associative_view();
+        rttr::variant_associative_view mapView = object.value_.create_associative_view();
         
         unsigned id = 0;
 
@@ -147,16 +147,13 @@ namespace Barrage
 
           if (objectKey.ValueWasSet() || objectValue.ValueWasSet())
           {
-            size_t number = mapView.erase(element.first.extract_wrapped_value());
-            bool success = mapView.insert(objectKey.value_, objectValue.value_).second;
-            
             object.valueWasSet_ = true;
 
             if (objectKey.ValueWasSet())
             {
               object.chainUndoEnabled_ = objectKey.chainUndoEnabled_;
             }
-            else if (object.chainUndoEnabled_ = objectValue.chainUndoEnabled_)
+            else if (object.chainUndoEnabled_ == objectValue.chainUndoEnabled_)
             {
               object.chainUndoEnabled_ = objectValue.chainUndoEnabled_;
             }

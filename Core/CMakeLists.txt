@@ -78,7 +78,7 @@ add_library(BarrageCore STATIC
   "Renderer/Textures/Texture.cpp" 
   "Renderer/Textures/TextureManager.cpp" 
   "Renderer/Shaders/Shader.cpp" 
-  "Renderer/Shaders/ShaderManager.cpp"
+  
   
   "Scenes/Scene.cpp"
 
@@ -93,7 +93,7 @@ add_library(BarrageCore STATIC
 
   "Objects/Spawning/SpawnInfo.cpp"  
 
-  "Entry/Entry.cpp" )
+  "Entry/Entry.cpp"  "Window/WindowManager.cpp" "Renderer/Framebuffers/Framebuffer.cpp"  )
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

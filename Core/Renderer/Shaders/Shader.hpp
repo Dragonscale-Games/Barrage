@@ -6,7 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Shader class for simple renderer.
+   Represents a shader on the GPU.
  */
  /* ======================================================================== */
 
@@ -15,20 +15,38 @@
 #define Shader_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <glad/gl.h>
+#include <string>
+
 namespace Barrage
 {
-  //! Shader class for simple renderer
+  //! Represents a shader on the GPU
   class Shader
   {
-  public:
-    Shader(unsigned programID);
+    public:
+      Shader(const std::string& vertexSource, const std::string& fragmentSource);
 
-    ~Shader();
+      ~Shader();
+      
+      void Bind();
 
-    unsigned GetID() const;
+      static void Unbind();
 
-  private:
-    unsigned programID_;
+      GLuint GetID();
+
+    private:
+      GLuint id_;
+
+      static GLuint CompileShaderProgram(const std::string& vertexSource, const std::string& fragmentSource);
+
+      static GLuint CompileShader(const std::string& source, GLenum shaderType);
+
+      static GLuint LinkShaderProgram(GLuint vertexID, GLuint fragmentID);
+
+      Shader(const Shader& other) = delete;
+      Shader(Shader&& other) = delete;
+      Shader& operator=(const Shader& other) = delete;
+      Shader& operator=(Shader&& other) = delete;
   };
 }
 

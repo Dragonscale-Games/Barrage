@@ -23,7 +23,7 @@ namespace Barrage
     float imageWidth = contentRegionAvailable.x;
     float imageHeight = contentRegionAvailable.y;
 
-    ImGui::Image((void*)(intptr_t)Engine::Instance->Graphics().GetFramebufferID(), ImVec2(imageWidth, imageHeight), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image((void*)(intptr_t)Engine::Instance->Graphics().GetFramebuffer().GetFramebufferID(), ImVec2(imageWidth, imageHeight), ImVec2(0, 1), ImVec2(1, 0));
 
     ImGui::End();
   }

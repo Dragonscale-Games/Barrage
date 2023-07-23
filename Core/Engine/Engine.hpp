@@ -21,9 +21,9 @@
 #include "Renderer/Renderer.hpp"
 #include "Spaces/SpaceManager.hpp"
 #include "Scenes/SceneManager.hpp"
+#include "Window/WindowManager.hpp"
 
 #include "Entry/Entry.hpp"
-
 #include "Utilities/Logger.hpp"
 
 namespace Barrage
@@ -62,10 +62,10 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the engine's frame rate controller.
+          Gets the engine's framerate controller.
 
         \return
-          Returns a reference to the engine's frame rate controller.
+          Returns a reference to the engine's framerate controller.
       */
       /**************************************************************/
       FramerateController& Frames();
@@ -114,12 +114,26 @@ namespace Barrage
       /**************************************************************/
       SpaceManager& Spaces();
 
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's window manager.
+
+        \return
+          Returns a reference to the engine's window manager.
+      */
+      /**************************************************************/
+      WindowManager& Window();
+
     private:
       FramerateController framerateController_; 
       InputManager inputManager_; 
       Renderer renderer_;
       SceneManager sceneManager_; 
-      SpaceManager spaceManager_; 
+      SpaceManager spaceManager_;
+      WindowManager windowManager_;
+
+      static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 	};
 }
 

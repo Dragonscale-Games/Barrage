@@ -19,59 +19,53 @@
 namespace Barrage
 {
   TextureManager::TextureManager() :
+    defaultTexture_(),
     textures_()
   {
     stbi_set_flip_vertically_on_load(true);
   }
 
-  TextureManager::~TextureManager()
+  void TextureManager::Initialize()
   {
-    for (const auto& i : textures_)
-    {
-      delete i.second;
-    }
+    CreateDefaultTexture();
   }
 
-  const Texture* TextureManager::GetTexture(const std::string& name)
+  void TextureManager::Shutdown()
   {
-    auto texture = textures_.find(name);
+    Clear();
+  }
 
-    if (texture == textures_.end())
+  void TextureManager::BindTexture(const std::string& name)
+  {
+    if (textures_.count(name) == 0)
     {
-      return CreateTexture(name);
+      LoadTexture(name);
     }
 
-    return texture->second;
+    textures_.at(name)->Bind();
   }
 
   void TextureManager::LoadTexture(const std::string& name)
   {
-    auto texture = textures_.find(name);
-
-    if (texture == textures_.end())
+    std::string texture_path = "Assets/Textures/" + name + ".png";
+    
+    auto new_texture = std::make_shared<Texture>(texture_path);
+    
+    if (!new_texture->IsValid())
     {
-      CreateTexture(name);
+      new_texture = defaultTexture_;
     }
+    
+    textures_[name] = new_texture;
   }
 
   void TextureManager::UnloadTexture(const std::string& name)
   {
-    auto texture = textures_.find(name);
-
-    if (texture != textures_.end())
-    {
-      delete texture->second;
-      textures_.erase(texture);
-    }
+    textures_.erase(name);
   }
 
-  void TextureManager::UnloadTextures()
+  void TextureManager::Clear()
   {
-    for (auto texture : textures_)
-    {
-      delete texture.second;
-    }
-
     textures_.clear();
   }
 
@@ -87,37 +81,15 @@ namespace Barrage
     return result;
   }
 
-  Texture* TextureManager::CreateTexture(const std::string& name)
+  void TextureManager::CreateDefaultTexture()
   {
-    int width, height, channels;
+    const GLubyte imageData[] = {
+      128,   0, 128, 255, // Purple (Top-left)
+        0, 128,   0, 255, // Green (Top-right)
+        0, 128,   0, 255, // Green (Bottom-left)
+      128,   0, 128, 255  // Purple (Bottom-right)
+    };
 
-    std::string texture_path = "Assets/Textures/" + name + ".png";
-
-    unsigned char* data = stbi_load(texture_path.c_str(), &width, &height, &channels, 0);
-
-    if (!data)
-    {
-      throw std::runtime_error("Could not load texture.");
-    }
-
-    unsigned texture_id;
-    glGenTextures(1, &texture_id);
-    glBindTexture(GL_TEXTURE_2D, texture_id);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    stbi_image_free(data);
-
-    Texture* new_texture = new Texture(texture_id);
-
-    textures_[name] = new_texture;
-
-    return new_texture;
+    defaultTexture_ = std::make_shared<Texture>(2, 2, imageData);
   }
 }

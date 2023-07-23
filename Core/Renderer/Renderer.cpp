@@ -15,36 +15,21 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <stb_image/stb_image.h>
 
 #include <iostream>
 #include <stdexcept>
+#include <cassert>
 
 namespace Barrage
 {
-  Renderer* Renderer::Instance = nullptr;
-  
-  void Renderer::WindowResizeCallback(GLFWwindow* window, int width, int height)
-  {
-    window;
-    glViewport(0, 0, width, height);
-
-    if (Instance)
-    {
-      Instance->ResizeFramebuffer(width, height);
-    }
-  }
-
-  Renderer::Renderer() :
-    window_(nullptr),
-
-    shaderManager_(),
+  Renderer::Renderer() : 
+    framebuffer_(),
+    defaultShader_(),
+    fsqShader_(),
     textureManager_(),
 
-    boundShader_(nullptr),
-    boundTexture_(nullptr),
-
-    viewMat_(),
-    projMat_(),
+    maxInstances_(1),
 
     vao_(0),
     vertexBuffer_(0),
@@ -52,195 +37,117 @@ namespace Barrage
     translationBuffer_(0),
     scaleBuffer_(0),
     rotationBuffer_(0),
-
-    transformUniform_(-1),
-    viewUniform_(-1),
-    projectionUniform_(-1),
-    textureUniform_(-1),
-
-    fbo_(0),
-    fboTex_(0)
+    uniformBuffer_(0)
   {
   }
 
-  void Renderer::Initialize()
+  void Renderer::Initialize(GLsizei framebufferWidth, GLsizei framebufferHeight)
   {
-    glfwInit();
-
-    CreateGLFWWindow();
-
     LoadGLFunctions();
 
-    Instance = this;
-
-    CreateFramebuffer();
-
-    glfwMaximizeWindow(window_);
-
-    viewMat_ = glm::translate(glm::identity<glm::mat4>(), glm::vec3(0.0f, 0.0f, -3.0f));
-    projMat_ = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, 0.1f, 100.0f);
-
-    BindShader("Default");
-
-    CreateQuadMesh();
-
+    glActiveTexture(GL_TEXTURE0);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     EnableBlending();
 
-    glActiveTexture(GL_TEXTURE0);
+    framebuffer_ = std::make_unique<Framebuffer>(framebufferWidth, framebufferHeight);
+    CreateDefaultShader();
+    CreateFsqShader();
+    textureManager_.Initialize();
+
+    SetUpUniforms();
+    SetUpVertexAttributes();
   }
 
   void Renderer::Shutdown()
   {
-    glDeleteVertexArrays(1, &vao_);
-    glDeleteBuffers(1, &vertexBuffer_);
-    glDeleteBuffers(1, &faceBuffer_);
-    glDeleteBuffers(1, &translationBuffer_);
-    glDeleteBuffers(1, &scaleBuffer_);
-    glDeleteBuffers(1, &rotationBuffer_);
-
-    textureManager_.UnloadTextures();
-    shaderManager_.UnloadShaders();
-
-    Instance = nullptr;
-
-    glfwDestroyWindow(window_);
-
-    glfwTerminate();
-  }
-
-  void Renderer::StartFrame()
-  {
-    SetBackgroundColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-  }
-
-  void Renderer::EndFrame()
-  {
-    glfwSwapBuffers(window_);
-  }
-
-  void Renderer::StartFramebufferRendering()
-  {
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
-    SetBackgroundColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-  }
-
-  void Renderer::EndFramebufferRendering()
-  {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  }
-
-  bool Renderer::WindowClosed()
-  {
-    return glfwWindowShouldClose(window_);
+    DeleteVertexAttributes();
+    DeleteUniforms();
+    
+    textureManager_.Shutdown();
+    fsqShader_.reset();
+    defaultShader_.reset();
+    framebuffer_.reset();
   }
 
   void Renderer::Draw(const glm::vec2& position, float rotation, const glm::vec2& scale, const std::string& texture)
   {
-    glm::mat4 scale_mat = glm::scale(glm::identity<glm::mat4>(), glm::vec3(scale, 1.0f));
+    defaultShader_->Bind();
+    textureManager_.BindTexture(texture);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, translationBuffer_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2), &position);
 
-    glm::mat4 rotation_mat = glm::rotate(glm::identity <glm::mat4>(), rotation, glm::vec3(0.0f, 0.0f, 1.0f));
+    glBindBuffer(GL_ARRAY_BUFFER, rotationBuffer_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float), &rotation);
 
-    glm::mat4 translation_mat = glm::translate(glm::identity<glm::mat4>(), glm::vec3(position, 0.0f));
-
-    glm::mat4 transform = translation_mat * rotation_mat * scale_mat;
-
-    Draw(transform, texture);
-  }
-
-  void Renderer::Draw(const glm::mat4& transform, const std::string& texture)
-  {
-    BindShader("Default");
-    BindTexture(texture);
-
-    glUniformMatrix4fv(transformUniform_, 1, false, &transform[0][0]);
-
-    glBindVertexArray(vao_);
+    glBindBuffer(GL_ARRAY_BUFFER, scaleBuffer_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2), &scale);
+    
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   }
 
   void Renderer::DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture)
   {
-    BindShader("Instanced");
-    BindTexture(texture);
+    if (instances > maxInstances_)
+    {
+      SetMaxInstances(instances);
+    }
+
+    defaultShader_->Bind();
+    textureManager_.BindTexture(texture);
 
     glBindBuffer(GL_ARRAY_BUFFER, translationBuffer_);
-    glBufferData(GL_ARRAY_BUFFER, instances * sizeof(glm::vec2), &positionArray[0], GL_STREAM_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, scaleBuffer_);
-    glBufferData(GL_ARRAY_BUFFER, instances * sizeof(glm::vec2), &scaleArray[0], GL_STREAM_DRAW);
-
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(glm::vec2), positionArray);
+    
     glBindBuffer(GL_ARRAY_BUFFER, rotationBuffer_);
-    glBufferData(GL_ARRAY_BUFFER, instances * sizeof(float), &rotationArray[0], GL_STREAM_DRAW);
-
-    glBindVertexArray(vao_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(float), rotationArray);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, scaleBuffer_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(glm::vec2), scaleArray);
+    
     glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, instances);
   }
 
-  void Renderer::DrawFSQ()
+  void Renderer::DrawFsq()
   {
-    glm::mat4 scale_mat = glm::scale(glm::identity<glm::mat4>(), glm::vec3(1920.0f, 1080.0f, 1.0f));
+    fsqShader_->Bind();
+    framebuffer_->BindTexture();
 
-    glm::mat4 rotation_mat = glm::rotate(glm::identity <glm::mat4>(), 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-
-    glm::mat4 translation_mat = glm::translate(glm::identity<glm::mat4>(), glm::vec3(960.0f, 540.0f, 0.0f));
-
-    glm::mat4 transform = translation_mat * rotation_mat * scale_mat;
-
-    BindShader("Default");
-    glBindTexture(GL_TEXTURE_2D, fboTex_);
-
-    glUniformMatrix4fv(transformUniform_, 1, false, &transform[0][0]);
-
-    glBindVertexArray(vao_);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-    if (boundTexture_)
-    {
-      glBindTexture(GL_TEXTURE_2D, boundTexture_->GetID());
-    }
   }
 
-  std::vector<std::string> Renderer::GetTextureNames()
+  void Renderer::ClearBackground()
   {
-    return textureManager_.GetTextureNames();
-  }
-
-  GLuint Renderer::GetFramebufferID()
-  {
-    return fbo_;
-  }
-
-  void Renderer::ResizeFramebuffer(int width, int height)
-  {
-    glBindTexture(GL_TEXTURE_2D, fboTex_);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-    glBindTexture(GL_TEXTURE_2D, 0);
-  }
-
-  void Renderer::CreateGLFWWindow()
-  {
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    window_ = glfwCreateWindow(START_WIDTH, START_HEIGHT, "Barrage", NULL, NULL);
-    if (window_ == NULL)
-    {
-      throw std::runtime_error("Window could not be created.");
-    }
-
-    glfwMakeContextCurrent(window_);
-  }
-
-  GLFWwindow* Renderer::GetWindowHandle()
-  {
-    return window_;
-  }
-
-  void Renderer::SetBackgroundColor(const glm::vec4& color)
-  {
-    glClearColor(color.x, color.y, color.z, color.w);
     glClear(GL_COLOR_BUFFER_BIT);
+  }
+
+  void Renderer::SetMaxInstances(unsigned maxInstances)
+  {
+    maxInstances_ = maxInstances;
+
+    glBindBuffer(GL_ARRAY_BUFFER, translationBuffer_);
+    glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(glm::vec2), nullptr , GL_STREAM_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, scaleBuffer_);
+    glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(glm::vec2), nullptr, GL_STREAM_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, rotationBuffer_);
+    glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(float), nullptr, GL_STREAM_DRAW);
+  }
+
+  void Renderer::SetViewport(int width, int height, int x, int y)
+  {
+    glViewport(x, y, width, height);
+  }
+
+  Framebuffer& Renderer::GetFramebuffer()
+  {
+    return *framebuffer_;
+  }
+
+  TextureManager& Renderer::Textures()
+  {
+    return textureManager_;
   }
 
   void Renderer::LoadGLFunctions()
@@ -253,55 +160,150 @@ namespace Barrage
     }
   }
 
-  void Renderer::CreateFramebuffer()
+  void Renderer::EnableBlending()
   {
-    glGenFramebuffers(1, &fbo_);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
-
-    glGenTextures(1, &fboTex_);
-    glBindTexture(GL_TEXTURE_2D, fboTex_);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, START_WIDTH, START_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboTex_, 0);
-
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-      std::cout << "Framebuffer not complete!" << std::endl;
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    glfwSetFramebufferSizeCallback(window_, WindowResizeCallback);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
 
-  void Renderer::GetUniformLocations()
+  void Renderer::CreateDefaultShader()
   {
-    transformUniform_ = glGetUniformLocation(boundShader_->GetID(), "transform_matrix");
-    viewUniform_ = glGetUniformLocation(boundShader_->GetID(), "view_matrix");
-    projectionUniform_ = glGetUniformLocation(boundShader_->GetID(), "proj_matrix");
-    textureUniform_ = glGetUniformLocation(boundShader_->GetID(), "tex_sampler");
+    const std::string vertexSource = R"(
+      #version 330 core
+      
+      layout (location = 0) in vec2 a_position;
+      layout (location = 1) in vec2 a_tex_coord;
+      
+      layout (location = 2) in vec2 a_translation;
+      layout (location = 3) in vec2 a_scale;
+      layout (location = 4) in float a_rotation;
+      
+      layout(std140) uniform Matrices 
+      {
+        mat4 proj_matrix;
+        mat4 view_matrix;
+      };
+      
+      out vec2 tex_coord;
+      
+      void main()
+      {
+        float cos_result = cos(a_rotation);
+        float sin_result = sin(a_rotation);
+        
+        mat4 transform_matrix = mat4( a_scale[0] * cos_result * 0.5, a_scale[0] * sin_result * 0.5, 0.0, 0.0,
+                                     a_scale[1] * -sin_result * 0.5, a_scale[1] * cos_result * 0.5, 0.0, 0.0,
+                                                          0.0,                     0.0, 1.0, 0.0,
+                                             a_translation[0],        a_translation[1], 0.0, 1.0);
+      
+        gl_Position = proj_matrix * view_matrix * transform_matrix * vec4(a_position, 0.0, 1.0);
+        
+        tex_coord = a_tex_coord;
+      }
+    )";
+
+    const std::string fragmentSource = R"(
+      #version 330 core
+      
+      out vec4 color;
+      
+      in vec2 tex_coord;
+      
+      uniform sampler2D tex_sampler;
+      
+      void main()
+      {
+        color = texture(tex_sampler, tex_coord);
+      }
+    )";
+
+    defaultShader_ = std::make_unique<Shader>(vertexSource, fragmentSource);
   }
 
-  void Renderer::SetUniforms()
+  void Renderer::CreateFsqShader()
   {
-    GetUniformLocations();
+    const std::string vertexSource = R"(
+      #version 330 core
+      
+      layout (location = 0) in vec2 a_position;
+      layout (location = 1) in vec2 a_tex_coord;
+      
+      out vec2 tex_coord;
+      
+      void main()
+      {
+        gl_Position =  vec4(a_position, 0.0f, 1.0);
+        
+        tex_coord = a_tex_coord;
+      }
+    )";
 
-    glUniformMatrix4fv(viewUniform_, 1, false, &viewMat_[0][0]);
-    glUniformMatrix4fv(projectionUniform_, 1, false, &projMat_[0][0]);
+    const std::string fragmentSource = R"(
+      #version 330 core
+      
+      in vec2 tex_coord;
+
+      out vec4 frag_color;
+
+      uniform sampler2D tex_sampler;
+      
+      void main()
+      {
+        frag_color = texture(tex_sampler, tex_coord);
+      }
+    )";
+
+    fsqShader_ = std::make_unique<Shader>(vertexSource, fragmentSource);
+  }
+
+
+  void Renderer::SetUpUniforms()
+  {
+    GLuint shaderProgram = defaultShader_->GetID();
+    GLuint uniformBlockIndex = glGetUniformBlockIndex(shaderProgram, "Matrices");
+
+    GLuint bindingPoint = 0;
+
+    glUniformBlockBinding(shaderProgram, uniformBlockIndex, bindingPoint);
+
+    struct Matrices {
+      glm::mat4 projection;
+      glm::mat4 view;
+    };
+
+    Matrices matrices;
+    matrices.projection = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, 0.1f, 100.0f);
+    matrices.view = glm::translate(glm::identity<glm::mat4>(), glm::vec3(0.0f, 0.0f, -3.0f));
+
+    glGenBuffers(1, &uniformBuffer_);
+    glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer_);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(Matrices), &matrices, GL_DYNAMIC_DRAW);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, uniformBuffer_);
+  }
+
+  void Renderer::DeleteUniforms()
+  {
+    glDeleteBuffers(1, &uniformBuffer_);
+  }
+
+  void Renderer::SetUpVertexAttributes()
+  {
+    glGenVertexArrays(1, &vao_);
+    glBindVertexArray(vao_);
+    
+    CreateQuadMesh();
+    SetUpTransforms();
   }
 
   void Renderer::CreateQuadMesh()
   {
     float vertices[] =
     {
-      -0.5f, -0.5f, 0.0f,      0.0f, 0.0f,
-       0.5f, -0.5f, 0.0f,      1.0f, 0.0f,
-       0.5f,  0.5f, 0.0f,      1.0f, 1.0f,
-      -0.5f,  0.5f, 0.0f,      0.0f, 1.0f
+      -1.0f, -1.0f,      0.0f, 0.0f,
+       1.0f, -1.0f,      1.0f, 0.0f,
+       1.0f,  1.0f,      1.0f, 1.0f,
+      -1.0f,  1.0f,      0.0f, 1.0f
     };
 
     unsigned faces[] =
@@ -310,72 +312,59 @@ namespace Barrage
       0, 2, 3
     };
 
-    glGenVertexArrays(1, &vao_);
-    glBindVertexArray(vao_);
-
+    // vertices
     glGenBuffers(1, &vertexBuffer_);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer_);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+    // faces
     glGenBuffers(1, &faceBuffer_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceBuffer_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(faces), faces, GL_STATIC_DRAW);
+  }
 
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-
+  void Renderer::SetUpTransforms()
+  {
+    // translations
     glGenBuffers(1, &translationBuffer_);
     glBindBuffer(GL_ARRAY_BUFFER, translationBuffer_);
 
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
-
     glVertexAttribDivisor(2, 1);
 
+    // scales
     glGenBuffers(1, &scaleBuffer_);
     glBindBuffer(GL_ARRAY_BUFFER, scaleBuffer_);
 
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
-
     glVertexAttribDivisor(3, 1);
 
+    // rotations
     glGenBuffers(1, &rotationBuffer_);
     glBindBuffer(GL_ARRAY_BUFFER, rotationBuffer_);
 
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
-
     glVertexAttribDivisor(4, 1);
 
-    glBindVertexArray(0);
+    SetMaxInstances(1);
   }
 
-  void Renderer::EnableBlending()
+  void Renderer::DeleteVertexAttributes()
   {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  }
-
-  void Renderer::BindTexture(const std::string& textureName)
-  {
-    const Texture* texture = textureManager_.GetTexture(textureName);
-
-    glBindTexture(GL_TEXTURE_2D, texture->GetID());
-
-    boundTexture_ = texture;
-  }
-
-  void Renderer::BindShader(const std::string& shaderName)
-  {
-    const Shader* shader = shaderManager_.GetShader(shaderName);
-    glUseProgram(shader->GetID());
-
-    boundShader_ = shader;
-
-    SetUniforms();
+    glDeleteVertexArrays(1, &vao_);
+    glDeleteBuffers(1, &vertexBuffer_);
+    glDeleteBuffers(1, &faceBuffer_);
+    glDeleteBuffers(1, &translationBuffer_);
+    glDeleteBuffers(1, &scaleBuffer_);
+    glDeleteBuffers(1, &rotationBuffer_);
   }
 }

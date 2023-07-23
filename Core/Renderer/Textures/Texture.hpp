@@ -6,7 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Texture class for simple renderer.
+   Represents a texture on the GPU.
  */
  /* ======================================================================== */
 
@@ -15,20 +15,42 @@
 #define Texture_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <glad/gl.h>
+#include <string>
+
 namespace Barrage
 {
   //! Texture class for simple renderer
   class Texture
   {
-  public:
-    Texture(unsigned textureID);
+    public:
+      Texture();
+      
+      Texture(const std::string& path);
+      
+      Texture(int width, int height, const GLubyte* imageData);
 
-    ~Texture();
+      ~Texture();
 
-    unsigned GetID() const;
+      void Bind();
 
-  private:
-    unsigned textureID_;
+      static void Unbind();
+
+      GLuint GetID();
+
+      bool IsValid();
+
+    private:
+      unsigned id_;
+
+      static GLuint CreateTexture(const std::string& path);
+
+      static GLuint CreateTexture(int width, int height, const GLubyte* imageData);
+
+      Texture(const Texture& other) = delete;
+      Texture(Texture&& other) = delete;
+      Texture& operator=(const Texture& other) = delete;
+      Texture& operator=(Texture&& other) = delete;
   };
 }
 
