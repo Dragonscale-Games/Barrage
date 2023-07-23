@@ -31,10 +31,7 @@ namespace Barrage
 
   SceneManager::~SceneManager()
   {
-    for (auto it = scenes_.begin(); it != scenes_.end(); ++it)
-    {
-      delete it->second;
-    }
+    Clear();
   }
 
   void SceneManager::AddScene(Scene* scene)
@@ -93,5 +90,15 @@ namespace Barrage
     scenes_[newName] = scene;
 
     return true;
+  }
+
+  void SceneManager::Clear()
+  {
+    for (auto it = scenes_.begin(); it != scenes_.end(); ++it)
+    {
+      delete it->second;
+    }
+
+    scenes_.clear();
   }
 }

@@ -86,14 +86,27 @@ namespace Barrage
       /**************************************************************/
       CommandQueue& Command();
 
+      bool CreateProject(const std::string& name);
+
+      bool OpenProject();
+
+      bool SaveProject(const std::string& directory);
+
     private:
+      Engine engine_;             //!< Barrage game engine
+      GUI gui_;                   //!< Contains all widgets/user controls
+      EditorData data_;           //!< Public settings and data for the editor
+      CommandQueue commandQueue_; //!< Allows commands to be sent and processed
+
+      long long repeatTimer_;
+
       /**************************************************************/
       /*!
         \brief
           Initializes Barrage engine and editor systems.
       */
       /**************************************************************/
-      void Initialize();
+      void Initialize(const std::string& projectPath = std::string());
 
       /**************************************************************/
       /*!
@@ -135,13 +148,7 @@ namespace Barrage
       /**************************************************************/
       void ChangeScene();
 
-    private:
-      Engine engine_;             //!< Barrage game engine
-      GUI gui_;                   //!< Contains all widgets/user controls
-      EditorData data_;           //!< Public settings and data for the editor
-      CommandQueue commandQueue_; //!< Allows commands to be sent and processed
-
-      long long repeatTimer_;
+      bool OpenProjectInternal(const std::string& path);
 	};
 }
 

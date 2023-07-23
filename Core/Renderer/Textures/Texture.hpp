@@ -26,9 +26,9 @@ namespace Barrage
     public:
       Texture();
       
-      Texture(const std::string& path);
+      Texture(const std::string& path, GLint filter = GL_LINEAR);
       
-      Texture(int width, int height, const GLubyte* imageData);
+      Texture(int width, int height, const GLubyte* imageData, GLint filter = GL_LINEAR);
 
       ~Texture();
 
@@ -43,9 +43,9 @@ namespace Barrage
     private:
       unsigned id_;
 
-      static GLuint CreateTexture(const std::string& path);
+      static GLuint CreateTexture(const std::string& path, GLint filter = GL_LINEAR);
 
-      static GLuint CreateTexture(int width, int height, const GLubyte* imageData);
+      static GLuint CreateTexture(int width, int height, const GLubyte* imageData, GLint filter = GL_LINEAR);
 
       Texture(const Texture& other) = delete;
       Texture(Texture&& other) = delete;

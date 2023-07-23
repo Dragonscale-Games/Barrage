@@ -38,15 +38,18 @@ namespace Barrage
 
       void BindTexture(const std::string& name);
 
-      void LoadTexture(const std::string& name);
+      bool LoadTexture(const std::string& name);
 
       void UnloadTexture(const std::string& name);
 
       void Clear();
 
+      void SetTextureDirectory(const std::string& textureDirectory);
+
       std::vector<std::string> GetTextureNames();
 
     private:
+      std::string textureDirectory_;
       std::shared_ptr<Texture> defaultTexture_;
       TextureMap textures_;
 

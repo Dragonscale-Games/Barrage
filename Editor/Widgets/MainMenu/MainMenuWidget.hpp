@@ -34,10 +34,8 @@ namespace Barrage
       static ImVec2 GetSize();
 
     private:
-      static void SaveScene();
-
-      static void LoadScene();
-
+      static void ImportTexture();
+      
       static void BuildGame(bool runExecutable = false);
 
       static ImVec2 size_;

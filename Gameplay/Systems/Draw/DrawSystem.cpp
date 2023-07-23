@@ -32,7 +32,6 @@ namespace Barrage
     basic_sprite_type.AddComponentArray("Scale");
     basic_sprite_type.AddComponentArray("Rotation");
     basic_sprite_type.AddComponent("Sprite");
-    basic_sprite_type.AddComponentArray("TextureSpace");
     poolTypes_["Basic 2D Sprite Pools"] = basic_sprite_type;
   }
   

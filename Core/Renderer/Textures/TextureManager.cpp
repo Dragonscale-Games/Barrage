@@ -19,6 +19,7 @@
 namespace Barrage
 {
   TextureManager::TextureManager() :
+    textureDirectory_("Assets/Textures/"),
     defaultTexture_(),
     textures_()
   {
@@ -36,7 +37,7 @@ namespace Barrage
   }
 
   void TextureManager::BindTexture(const std::string& name)
-  {
+  { 
     if (textures_.count(name) == 0)
     {
       LoadTexture(name);
@@ -45,18 +46,22 @@ namespace Barrage
     textures_.at(name)->Bind();
   }
 
-  void TextureManager::LoadTexture(const std::string& name)
-  {
-    std::string texture_path = "Assets/Textures/" + name + ".png";
+  bool TextureManager::LoadTexture(const std::string& name)
+  { 
+    std::string texture_path = textureDirectory_ + name + ".png";
     
     auto new_texture = std::make_shared<Texture>(texture_path);
     
-    if (!new_texture->IsValid())
+    bool success = new_texture->IsValid();
+
+    if (!success)
     {
       new_texture = defaultTexture_;
     }
     
     textures_[name] = new_texture;
+
+    return success;
   }
 
   void TextureManager::UnloadTexture(const std::string& name)
@@ -67,6 +72,16 @@ namespace Barrage
   void TextureManager::Clear()
   {
     textures_.clear();
+  }
+
+  void TextureManager::SetTextureDirectory(const std::string& textureDirectory)
+  {
+    textureDirectory_ = textureDirectory;
+
+    if (textureDirectory_.back() != '\\' && textureDirectory_.back() != '/')
+    {
+      textureDirectory_.push_back('/');
+    }
   }
 
   std::vector<std::string> TextureManager::GetTextureNames()
@@ -90,6 +105,6 @@ namespace Barrage
       128,   0, 128, 255  // Purple (Bottom-right)
     };
 
-    defaultTexture_ = std::make_shared<Texture>(2, 2, imageData);
+    defaultTexture_ = std::make_shared<Texture>(2, 2, imageData, GL_NEAREST);
   }
 }

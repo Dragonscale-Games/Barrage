@@ -36,7 +36,8 @@ namespace Barrage
     bool openProjectModal_;                   //!< Flag for when user opens the "project" modal
     RenameCallback renameCallback_;           //!< Contains function to call when user renames something
     Scene* nextScene_;                        //!< On a scene change, the new scene is temporarily held here
-    std::string projectDirectory_;            //!< The working directory of the user's game project
+    std::string projectName_;                 //!< The name of the game project
+    std::string projectDirectory_;            //!< The directory of the game project
     std::string selectedSpace_;               //!< The currently selected space
     std::string selectedScene_;               //!< The currently selected scene
     std::string selectedPool_;                //!< The currently selected pool

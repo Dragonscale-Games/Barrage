@@ -27,7 +27,7 @@ namespace Barrage
       std::string texture_; //!< Name of the texture to draw with
       unsigned layer_;      //!< Layer of the drawn object (lower layers are drawn beneath higher ones)
 
-      inline Sprite() : texture_(), layer_(0) {}
+      inline Sprite() : texture_("<default>"), layer_(0) {}
   };
 
   typedef ComponentT<Sprite> SpriteComponent;

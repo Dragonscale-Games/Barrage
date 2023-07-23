@@ -30,7 +30,9 @@
 #include <unordered_set>
 #include <chrono>
 #include <iostream>
+#include <fstream>
 #include <filesystem>
+#include "nfd.h"
 
 namespace Barrage
 {
@@ -47,13 +49,11 @@ namespace Barrage
 
   void Editor::Run(const std::string& projectPath)
   {
-    UNREFERENCED(projectPath);
-    
     if (!data_.isRunning_)
     {
       data_.isRunning_ = true;
 
-      Initialize();
+      Initialize(projectPath);
 
       while (data_.isRunning_)
       {
@@ -81,23 +81,150 @@ namespace Barrage
     return commandQueue_;
   }
 
-  void Editor::Initialize()
+  bool Editor::CreateProject(const std::string& name)
+  {
+    nfdchar_t* raw_path = NULL;
+    nfdresult_t result = NFD_PickFolder(NULL, &raw_path);
+
+    if (result != NFD_OKAY)
+    {
+      LogWidget::AddEntry("Could not create new project. (Problem selecting output folder.)");
+      return false;
+    }
+
+    std::string directory(raw_path);
+    free(raw_path);
+    
+    std::string project_folder_path = directory + "/" + name;
+
+    if (std::filesystem::exists(project_folder_path))
+    {
+      LogWidget::AddEntry("Could not create new project. (Project folder already exists.)");
+      return false;
+    }
+
+    std::filesystem::create_directory(project_folder_path);
+
+    std::string project_file_path = project_folder_path + "/" + name + ".barrage";
+    std::ofstream project_file(project_file_path);
+
+    if (project_file.is_open())
+    {
+      project_file.close();
+    }
+    else
+    {
+      LogWidget::AddEntry("Could not create new project. (Problem creating project file.)");
+      std::filesystem::remove_all(project_folder_path);
+      return false;
+    }
+
+    if (!std::filesystem::create_directory(project_folder_path + "/Assets"))
+    {
+      LogWidget::AddEntry("Could not create new project. (Could not create Assets folder.)");
+      std::filesystem::remove_all(project_folder_path);
+      return false;
+    }
+
+    if (!std::filesystem::create_directory(project_folder_path + "/Assets/Scenes"))
+    {
+      LogWidget::AddEntry("Could not create new project. (Could not create Scenes folder.)");
+      std::filesystem::remove_all(project_folder_path);
+      return false;
+    }
+
+    if (!std::filesystem::create_directory(project_folder_path + "/Assets/Textures"))
+    {
+      LogWidget::AddEntry("Could not create new project. (Could not create Textures folder.)");
+      std::filesystem::remove_all(project_folder_path);
+      return false;
+    }
+
+    Entry entryFile;
+
+    entryFile.AddSpace(Entry::SpaceEntry("Untitled", "Scene"));
+
+    if (!Entry::SaveToFile(entryFile, project_folder_path + "/Assets/entry.json"))
+    {
+      LogWidget::AddEntry("Could not create new project. (Could not create entry file.)");
+      std::filesystem::remove_all(project_folder_path);
+      return false;
+    }
+
+    Scene untitled_scene("Scene");
+
+    if (!Scene::SaveToFile(&untitled_scene, project_folder_path + "/Assets/Scenes/Scene.scene"))
+    {
+      LogWidget::AddEntry("Could not create new project. (Could not create first scene.)");
+      std::filesystem::remove_all(project_folder_path);
+      return false;
+    }
+
+    if (!OpenProjectInternal(project_file_path))
+    {
+      LogWidget::AddEntry("Could not create new project. (Could not open project after creation.)");
+      std::filesystem::remove_all(project_folder_path);
+      return false;
+    }
+
+    LogWidget::AddEntry(std::string("\"" + name + "\" project created in \"" + directory + "\"."));
+
+    return true;
+  }
+
+  bool Editor::OpenProject()
+  {
+    nfdchar_t* raw_path = NULL;
+    nfdresult_t result = NFD_OpenDialog("barrage", NULL, &raw_path);
+
+    if (result != NFD_OKAY)
+    {
+      LogWidget::AddEntry("Could not open project. (Problem selecting project file.)");
+      return false;
+    }
+
+    std::string file_path(raw_path);
+    free(raw_path);
+
+    return Editor::Instance->OpenProjectInternal(file_path);
+  }
+
+  bool Editor::SaveProject(const std::string& directory)
+  {
+    std::string scenePath = directory + "/Assets/Scenes/Scene.scene";
+    
+    if (!std::filesystem::exists(scenePath))
+    {
+      LogWidget::AddEntry("Could not save project. (No scene file.)");
+      return false;
+    }
+
+    if (!Scene::SaveToFile(engine_.Scenes().GetScene("Scene"), scenePath))
+    {
+      LogWidget::AddEntry("Could not save project. (Could not save scene.)");
+      return false;
+    }
+
+    return true;
+  }
+
+  void Editor::Initialize(const std::string& projectPath)
   {
     Instance = this;
     engine_.Initialize();
     gui_.Initialize(engine_.Window().GetWindowHandle());
     engine_.Window().Maximize();
-
-    Space* main_space = new Space;
-    Scene* demo_scene = new Scene("Demo Scene");
-    engine_.Scenes().AddScene(demo_scene);
-    main_space->SetScene("Demo Scene");
-    engine_.Spaces().AddSpace("Main Space", main_space);
-    data_.selectedScene_ = "Demo Scene";
-    data_.selectedSpace_ = "Main Space";
     engine_.Frames().SetVsync(true);
-
-    //data_.openProjectModal_ = true;
+    
+    Space* editor_space = new Space;
+    engine_.Spaces().AddSpace("Editor Space", editor_space);
+    data_.selectedSpace_ = "Editor Space";
+    
+    if (!OpenProjectInternal(projectPath))
+    {
+      LogWidget::Clear();
+      data_.openProjectModal_ = true;
+    }
   }
 
   void Editor::Update()
@@ -327,5 +454,58 @@ namespace Barrage
     data_.nextScene_ = nullptr;
     data_.sceneIsDirty_ = true;
     commandQueue_.Clear();
+  }
+
+  bool Editor::OpenProjectInternal(const std::string& path)
+  {
+    if (!std::filesystem::exists(path))
+    {
+      LogWidget::AddEntry("Could not open project. (Invalid path.)");
+      return false;
+    }
+
+    std::filesystem::path filePath(path);
+
+    if (filePath.extension() != ".barrage")
+    {
+      LogWidget::AddEntry("Could not open project. (Invalid project file type.)");
+      return false;
+    }
+
+    std::string projectName(filePath.stem().string());
+    std::string projectDirectory(filePath.parent_path().string());
+
+    Scene* scene = Scene::LoadFromFile(projectDirectory + "/Assets/Scenes/Scene.scene");
+
+    if (scene == nullptr)
+    {
+      LogWidget::AddEntry("Could not open project. (No scene file.)");
+      return false;
+    }
+
+    std::filesystem::path textureDirectory(projectDirectory + "/Assets/Textures");
+
+    engine_.Graphics().Textures().SetTextureDirectory(textureDirectory.string());
+    engine_.Graphics().Textures().Clear();
+    engine_.Scenes().Clear();
+    engine_.Scenes().AddScene(scene);
+    data_.selectedScene_ = scene->GetName();
+    engine_.Spaces().GetSpace(data_.selectedSpace_)->SetScene(scene->GetName());
+
+    if (std::filesystem::exists(textureDirectory))
+    {
+      for (const auto& entry : std::filesystem::directory_iterator(textureDirectory))
+      {
+        if (entry.path().extension() == ".png")
+        {
+          engine_.Graphics().Textures().LoadTexture(entry.path().stem().string());
+        }
+      }
+    }
+
+    data_.projectDirectory_ = projectDirectory;
+    data_.projectName_ = projectName;
+
+    return true;
   }
 }

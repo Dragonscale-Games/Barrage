@@ -32,7 +32,7 @@ namespace Barrage
       Editor::Instance->Command().Send(new CreatePool(editorData.selectedScene_));
     }
 
-    ImGui::Spacing();
+    /*ImGui::Spacing();
     ImGui::Separator();
     ImGui::Spacing();
 
@@ -44,7 +44,7 @@ namespace Barrage
         EditorData& editorData = Editor::Instance->Data();
         Editor::Instance->Command().Send(new RenameScene(editorData.selectedScene_, newName));
       };
-    }
+    }*/
 
     ImGui::EndPopup();
   }

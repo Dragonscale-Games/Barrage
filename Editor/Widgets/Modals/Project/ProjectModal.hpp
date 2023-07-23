@@ -42,7 +42,7 @@ namespace Barrage
       static bool OpenProject();
 
     private:
-      static bool OpenProjectInternal(std::string projectDirectory);
+      bool OpenProjectInternal(std::string projectDirectory);
   };
 }
 

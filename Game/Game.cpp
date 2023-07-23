@@ -46,6 +46,7 @@ namespace Barrage
   void Game::Initialize()
   {
     engine_.Initialize();
+    engine_.Window().Maximize();
 
     Entry entry = Entry::LoadFromFile("./Assets/entry.json");
     engine_.SetUpGame(entry);
