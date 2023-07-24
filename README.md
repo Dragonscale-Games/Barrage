@@ -18,8 +18,8 @@ git submodule update
 ```
 3. Open the root folder of the project in Visual Studio.
 4. Wait for CMake generation to finish.
-5. Select "Release" as the build configuration and "DemoGame.exe" as the startup item.
-6. Press F5 to build and run the demo.
+5. Select "Release" as the build configuration and "Game.exe" or "Editor.exe" as the startup item.
+6. Press F5 to build and run the executable.
 
 ## Linux
 (coming soon!)
