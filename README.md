@@ -22,4 +22,4 @@ git submodule update
 6. Press F5 to build and run the executable.
 
 ## Linux
-(coming soon!)
+(todo)
