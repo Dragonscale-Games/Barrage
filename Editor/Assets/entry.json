@@ -1,9 +1,0 @@
-{
-    "Textures": ["TestShip", "TestBullet"],
-    "Spaces": [
-        {
-            "Name": "Main Space",
-            "Scene": "Demo Scene"
-        }
-    ]
-}

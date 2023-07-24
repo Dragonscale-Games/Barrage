@@ -105,7 +105,7 @@ namespace Barrage
 
     std::filesystem::create_directory(project_folder_path);
 
-    std::string project_file_path = project_folder_path + "/" + name + ".barrage";
+    std::string project_file_path = project_folder_path + "/" + name + ".barproj";
     std::ofstream project_file(project_file_path);
 
     if (project_file.is_open())
@@ -175,7 +175,7 @@ namespace Barrage
   bool Editor::OpenProject()
   {
     nfdchar_t* raw_path = NULL;
-    nfdresult_t result = NFD_OpenDialog("barrage", NULL, &raw_path);
+    nfdresult_t result = NFD_OpenDialog("barproj", NULL, &raw_path);
 
     if (result != NFD_OKAY)
     {
@@ -205,6 +205,7 @@ namespace Barrage
       return false;
     }
 
+    LogWidget::AddEntry("Saved project successfully.");
     return true;
   }
 
@@ -466,7 +467,7 @@ namespace Barrage
 
     std::filesystem::path filePath(path);
 
-    if (filePath.extension() != ".barrage")
+    if (filePath.extension() != ".barproj")
     {
       LogWidget::AddEntry("Could not open project. (Invalid project file type.)");
       return false;
@@ -505,6 +506,8 @@ namespace Barrage
 
     data_.projectDirectory_ = projectDirectory;
     data_.projectName_ = projectName;
+
+    LogWidget::AddEntry("Opened project \"" + filePath.filename().string() + "\".");
 
     return true;
   }

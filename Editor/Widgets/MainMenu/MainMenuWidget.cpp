@@ -65,7 +65,6 @@ namespace Barrage
         if (Editor::Instance->SaveProject(Editor::Instance->Data().projectDirectory_))
         {
           BuildGame();
-          
         }
         else
         {
@@ -306,7 +305,7 @@ namespace Barrage
 
     std::filesystem::copy(project_directory + "/Assets", output_path + "/Assets", std::filesystem::copy_options::recursive);
 
-    LogWidget::AddEntry("Successfully built game.");
+    LogWidget::AddEntry("Build succeeded.");
 
     if (runExecutable && std::filesystem::exists(executable_path))
     {

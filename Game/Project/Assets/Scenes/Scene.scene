@@ -1,5 +1,5 @@
 {
-    "Name": "Demo Scene",
+    "Name": "Scene",
     "Pools": [
         {
             "Name": "Player Pool",
@@ -27,8 +27,7 @@
                 "Position",
                 "Rotation",
                 "Scale",
-                "Velocity",
-                "TextureSpace"
+                "Velocity"
             ],
             "Tags": [],
             "Starting Objects": [
@@ -37,17 +36,11 @@
                     "Components": {
                         "Position": {
                             "x": 960.0,
-                            "y": 540.0
+                            "y": 300.0
                         },
                         "Velocity": {},
-                        "TextureSpace": {
-                            "u": 0.0,
-                            "v": 0.0,
-                            "uSize": 1.0,
-                            "vSize": 1.0
-                        },
                         "Rotation": {
-                            "angle": 0.0
+                            "angle": -0.0
                         },
                         "Scale": {
                             "w": 64.0,
@@ -81,7 +74,6 @@
                 "Rotation",
                 "Scale",
                 "Velocity",
-                "TextureSpace",
                 "Destructible"
             ],
             "Tags": [
@@ -98,12 +90,6 @@
                             "y": 880.0
                         },
                         "Velocity": {},
-                        "TextureSpace": {
-                            "u": 0.0,
-                            "v": 0.0,
-                            "uSize": 1.0,
-                            "vSize": 1.0
-                        },
                         "Rotation": {
                             "angle": 0.0
                         },
@@ -133,8 +119,7 @@
                             }
                         }
                     ]
-                },
-                "RNG": {}
+                }
             },
             "Component Arrays": [
                 "Position"
