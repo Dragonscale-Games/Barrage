@@ -9,7 +9,7 @@ Required:
 
 Steps:
 1. Open Visual Studio Installer and verify that the "Desktop development with C++" workload is installed.
-2. Clone the repo and initialize submodules with the following commands:
+2. Clone the repository and initialize submodules with the following git commands:
 ```
 git clone https://github.com/Dragonscale-Games/Barrage.git
 cd Barrage
