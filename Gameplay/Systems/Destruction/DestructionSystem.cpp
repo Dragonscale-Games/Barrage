@@ -15,8 +15,6 @@
 #include "stdafx.h"
 #include "DestructionSystem.hpp"
 #include "ComponentArrays/DestructibleArray.hpp"
-#include "ComponentArrays/DirectoryIndexArray.hpp"
-#include "Components/ObjectDirectory.hpp"
 
 namespace Barrage
 {
@@ -29,54 +27,11 @@ namespace Barrage
     PoolType destructible_type;
     destructible_type.AddComponentArray("Destructible");
     poolTypes_["Basic Destructible Pools"] = destructible_type;
-
-    /*PoolType directory_type;
-    directory_type.AddComponentArray("Destructible");
-    directory_type.AddSharedComponent("ObjectDirectory");
-    directory_type.AddComponentArray("DirectoryIndex");
-    poolTypes_["Directory Pools"] = directory_type;*/
   }
   
   void DestructionSystem::Update()
   {
-    //UpdatePoolGroup("Directory Pools", UpdateDeadHandles);
     UpdatePoolGroup("Basic Destructible Pools", DestroyObjects);
-    //UpdatePoolGroup("Directory Pools", UpdateAliveHandles);
-  }
-
-  void DestructionSystem::UpdateDeadHandles(Pool* pool)
-  {
-    DestructibleArray& destructible_array = *pool->GetComponentArray<Destructible>("Destructible");
-    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
-    ObjectDirectory& object_directory = pool->GetComponent<ObjectDirectory>("ObjectDirectory")->Data();
-
-    unsigned num_objects = pool->numActiveObjects_;
-
-    for (unsigned i = 0; i < num_objects; ++i)
-    {
-      if (destructible_array.Data(i).destroyed_)
-      {
-        unsigned directory_index = directory_index_array.Data(i).index_;
-
-        object_directory.FreeHandle(directory_index);
-      }
-    }
-  }
-
-  void DestructionSystem::UpdateAliveHandles(Pool* pool)
-  {
-    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
-    ObjectDirectory& object_directory = pool->GetComponent<ObjectDirectory>("ObjectDirectory")->Data();
-
-    unsigned num_objects = pool->numActiveObjects_;
-
-    for (unsigned i = 0; i < num_objects; ++i)
-    {
-      unsigned directory_index = directory_index_array.Data(i).index_;
-      ObjectHandle& handle = object_directory.GetHandle(directory_index);
-
-      handle.poolIndex_ = i;
-    }
   }
 
   void DestructionSystem::DestroyObjects(Pool* pool)

@@ -13,8 +13,6 @@
 
 #include "stdafx.h"
 #include "CreationSystem.hpp"
-#include "ComponentArrays/DirectoryIndexArray.hpp"
-#include "Components/ObjectDirectory.hpp"
 
 namespace Barrage
 {
@@ -24,16 +22,10 @@ namespace Barrage
     // this pool type has no required tags or components because all pools will be subscribed to the creation system
     PoolType all_pool_type;
     poolTypes_["All Pools"] = all_pool_type;
-
-    /*PoolType handle_pool_type;
-    handle_pool_type.AddSharedComponent("ObjectDirectory");
-    handle_pool_type.AddComponentArray("DirectoryIndex");
-    poolTypes_["Handle Pools"] = handle_pool_type;*/
   }
 
   void CreationSystem::Update()
   {
-    //UpdatePoolGroup("Handle Pools", AssignHandles);
     UpdatePoolGroup("All Pools", SpawnObjects);
   }
 
@@ -41,23 +33,5 @@ namespace Barrage
   {
     pool->numActiveObjects_ += pool->numQueuedObjects_;
     pool->numQueuedObjects_ = 0;
-  }
-
-  void CreationSystem::AssignHandles(Pool* pool)
-  {
-    ObjectDirectory& object_directory = pool->GetComponent<ObjectDirectory>("ObjectDirectory")->Data();
-    DirectoryIndexArray& directory_index_array = *pool->GetComponentArray<DirectoryIndex>("DirectoryIndex");
-
-    unsigned start_index = pool->numActiveObjects_;
-    unsigned num_queued_objects = pool->numQueuedObjects_;
-
-    for (unsigned i = 0; i < num_queued_objects; ++i)
-    {
-      unsigned object_index = start_index + i;
-      
-      DirectoryIndex& directory_index = directory_index_array.Data(object_index);
-
-      directory_index.index_ = object_directory.CreateHandle(object_index);
-    }
   }
 }

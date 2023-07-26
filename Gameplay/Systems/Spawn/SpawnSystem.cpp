@@ -21,7 +21,6 @@ namespace Barrage
     System()
   {
     PoolType bullet_spawner_type;
-    bullet_spawner_type.AddTag("Spawner");
     bullet_spawner_type.AddComponent("Spawner");
     poolTypes_["Bullet Spawner Pools"] = bullet_spawner_type;
 

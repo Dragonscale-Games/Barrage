@@ -51,17 +51,6 @@ namespace Barrage
       */
       /**************************************************************/
       static void SpawnObjects(Pool* pool);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Creates a handle for each object that needs one.
-
-        \param pool
-          The pool to update.
-      */
-      /**************************************************************/
-      static void AssignHandles(Pool* pool);
 	};
 }
 
