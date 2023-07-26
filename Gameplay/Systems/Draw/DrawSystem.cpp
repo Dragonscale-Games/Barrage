@@ -19,7 +19,6 @@
 #include "ComponentArrays/PositionArray.hpp"
 #include "ComponentArrays/RotationArray.hpp"
 #include "ComponentArrays/ScaleArray.hpp"
-#include "ComponentArrays/TextureSpaceArray.hpp"
 
 namespace Barrage
 {

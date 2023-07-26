@@ -45,29 +45,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Frees the handles of dead objects.
-
-        \param pool
-          The pool to update.
-      */
-      /**************************************************************/
-      static void UpdateDeadHandles(Pool* pool);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Updates the handles of alive objects to reflect their
-          new locations.
-
-        \param pool
-          The pool to update.
-      */
-      /**************************************************************/
-      static void UpdateAliveHandles(Pool* pool);
-
-      /**************************************************************/
-      /*!
-        \brief
           Destroys all objects marked for destruction in a pool, 
           retaining the relative order between alive objects. Indices 
           for alive objects may be changed.

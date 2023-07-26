@@ -17,12 +17,9 @@
 #include "ComponentArrays/AngularSpeedArray.hpp"
 #include "ComponentArrays/VelocityArray.hpp"
 #include "ComponentArrays/DestructibleArray.hpp"
-#include "ComponentArrays/DirectoryIndexArray.hpp"
-#include "ComponentArrays/ParentArray.hpp"
 #include "ComponentArrays/PositionArray.hpp"
 #include "ComponentArrays/RotationArray.hpp"
 #include "ComponentArrays/ScaleArray.hpp"
-#include "ComponentArrays/TextureSpaceArray.hpp"
 
 #include "Components/BoundaryBox.hpp"
 #include "Components/CircleCollider.hpp"
@@ -101,15 +98,13 @@ namespace Barrage
       .property("h", &Scale::h_)
       ;
 
-    rttr::registration::class_<TextureSpace>("TextureSpace")
-      .property("u", &TextureSpace::u_)
-      .property("v", &TextureSpace::v_)
-      .property("uSize", &TextureSpace::uSize_)
-      .property("vSize", &TextureSpace::vSize_)
-      ;
-
     rttr::registration::class_<AngularSpeed>("AngularSpeed")
       .property("w", &AngularSpeed::w_)
+      ;
+
+    rttr::registration::class_<Velocity>("Velocity")
+      .property("vx", &Velocity::vx_)
+      .property("vy", &Velocity::vy_)
       ;
   }
   
@@ -118,14 +113,10 @@ namespace Barrage
     RegisterComponentArray<AngularSpeed>("AngularSpeed");
     RegisterComponentArray<Velocity>("Velocity");
     RegisterComponentArray<Destructible>("Destructible");
-    RegisterComponentArray<DirectoryIndex>("DirectoryIndex");
-    RegisterComponentArray<Parent>("Parent");
     RegisterComponentArray<Position>("Position");
     RegisterComponentArray<Rotation>("Rotation");
     RegisterComponentArray<Scale>("Scale");
-    RegisterComponentArray<TextureSpace>("TextureSpace");
 
-    RegisterComponent<ObjectDirectory>("ObjectDirectory");
     RegisterComponent<Spawner>("Spawner");
     RegisterComponent<Sprite>("Sprite");
     RegisterComponent<BoundaryBox>("BoundaryBox");
