@@ -19,9 +19,12 @@
 #include <string>
 #include <rttr/variant.h>
 #include <unordered_map>
+#include <imgui/imgui.h>
 
 namespace Barrage
 {
+  typedef std::unordered_map<ImGuiID, rttr::variant> IdVariantMap;
+  
   //! Allows user to edit the values of an RTTR-registered object
   class DataWidget
   {
@@ -158,6 +161,7 @@ namespace Barrage
 
     private:
       static DataWidgetFunctionMap widgetFunctions_;
+      static IdVariantMap keyEditorMap_;
       static bool initialized_;
   };
 }

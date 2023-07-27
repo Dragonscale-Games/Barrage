@@ -47,7 +47,7 @@ namespace Barrage
     ImGui::Separator();
     ImGui::Spacing();
 
-    if (ImGui::Selectable("Add shared component"))
+    if (ImGui::Selectable("Add component to pool"))
     {
       editorData.selectedComponent_ = std::string_view();
       editorData.openComponentModal_ = true;
@@ -55,7 +55,7 @@ namespace Barrage
 
     ImGui::Spacing();
 
-    if (ImGui::Selectable("Add component array"))
+    if (ImGui::Selectable("Add component to objects"))
     {
       editorData.selectedComponentArray_ = std::string_view();
       editorData.openComponentArrayModal_ = true;

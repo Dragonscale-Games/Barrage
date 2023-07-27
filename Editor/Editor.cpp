@@ -317,6 +317,7 @@ namespace Barrage
     HierarchyWidget::Use();
     InspectorWidget::Use();
     LogWidget::Use();
+    //ImGui::ShowDemoWindow();
 
     if (data_.openComponentModal_)
     {

@@ -54,6 +54,7 @@ namespace Barrage
   }
   
   DataWidget::DataWidgetFunctionMap DataWidget::widgetFunctions_ = DataWidget::DataWidgetFunctionMap();
+  IdVariantMap DataWidget::keyEditorMap_ = IdVariantMap();
   bool DataWidget::initialized_ = false;
   
   void DataWidget::Use(DataObject& object, bool treeNode)
@@ -79,11 +80,6 @@ namespace Barrage
 
     std::string typeName = objectType.get_name().data();
 
-    if (typeName.back() == '*')
-    {
-      typeName.pop_back();
-    }
-
     if (object.name_.empty())
     {
       object.name_ = typeName;
@@ -96,7 +92,7 @@ namespace Barrage
       DataWidgetFunction function = widgetFunctions_.at(typeName);
       function(object);
     }
-    else if (!treeNode || ImGui::TreeNode(object.name_.c_str()))
+    else if (!treeNode || ImGui::TreeNodeEx(object.name_.c_str(), ImGuiTreeNodeFlags_SpanAvailWidth))
     {
       if (objectType.is_sequential_container())
       {
@@ -104,65 +100,228 @@ namespace Barrage
 
         size_t arraySize = arrayView.get_size();
 
+        ImGui::Spacing();
+
         for (size_t i = 0; i < arraySize; ++i)
         {
-          ImGui::PushID(static_cast<int>(i));
-
           rttr::variant elementVariant = arrayView.get_value(i);
 
-          DataObject elementObject(" ", elementVariant);
+          DataObject elementObject("##ElementObject", elementVariant);
 
-          Use(elementObject);
-
-          ImGui::PopID();
-
-          if (elementObject.ValueWasSet())
+          ImGui::PushID(static_cast<int>(i));
+          
+          DataWidget::Use(elementObject);
+          ImGui::SameLine();
+          if (ImGui::Button("X"))
+          {
+            arrayView.erase(arrayView.begin() + i);
+            object.valueWasSet_ = true;
+            ImGui::PopID();
+            break;
+          }
+          else if (elementObject.ValueWasSet())
           {
             arrayView.set_value(i, elementObject.value_);
             object.valueWasSet_ = true;
             object.chainUndoEnabled_ = elementObject.chainUndoEnabled_;
           }
+
+          ImGui::PopID();
         }
+
+        ImGui::Spacing();
+
+        if (ImGui::Button("Add new") && !object.valueWasSet_)
+        {
+          size_t arraySize = arrayView.get_size();
+          if (arrayView.set_size(arraySize + 1))
+          {
+            object.valueWasSet_ = true;
+          }
+        }
+
+        ImGui::Spacing();
       }
       else if (objectType.is_associative_container())
       {
         rttr::variant_associative_view mapView = object.value_.create_associative_view();
-        
-        unsigned id = 0;
+        rttr::type mapKeyType = mapView.get_key_type();
 
+        ImGuiID currentId = ImGui::GetID("Map");
+
+        unsigned id = 0;
+          
         for (auto& element : mapView)
         {
-          ImGui::PushID(id);
-          
           rttr::variant key = element.first.extract_wrapped_value();
           rttr::variant val = element.second.extract_wrapped_value();
-          
-          DataObject objectKey("Key", key);
-          DataObject objectValue("Value", val);
+          DataObject objectKey("##Key", key);
+          DataObject objectValue("##Value", val);
 
-          Use(objectKey, true);
-          Use(objectValue, true);
+          ImGui::Spacing();
+          ImGui::Spacing();
 
+          ImGui::PushID(id);
+          ImGui::BeginGroup();
+          ImGui::Text("Key:");
+          ImGui::SameLine();
+          float textWidth = ImGui::CalcTextSize("Key:").x;
+          float buttonWidth = ImGui::CalcTextSize("X").x + ImGui::GetStyle().FramePadding.x * 2.0f;
+          float dummyWidth = ImGui::GetContentRegionAvail().x - textWidth - buttonWidth;
+          ImGui::Dummy(ImVec2(dummyWidth, 0));
+          ImGui::SameLine();
+          bool elementRemoved = ImGui::Button("X");
+          DataWidget::Use(objectKey);
+          ImGui::Spacing();
+          ImGui::Text("Value:");
+          ImGui::Spacing();
+          DataWidget::Use(objectValue);
+          ImGui::EndGroup();
           ImGui::PopID();
 
-          if (objectKey.ValueWasSet() || objectValue.ValueWasSet())
-          {
-            object.valueWasSet_ = true;
+          ImVec2 itemRectMin = ImGui::GetItemRectMin();
+          ImVec2 itemRectMax = ImGui::GetItemRectMax();
 
-            if (objectKey.ValueWasSet())
-            {
-              object.chainUndoEnabled_ = objectKey.chainUndoEnabled_;
-            }
-            else if (object.chainUndoEnabled_ == objectValue.chainUndoEnabled_)
-            {
-              object.chainUndoEnabled_ = objectValue.chainUndoEnabled_;
-            }
+          float padding = 6.0f;
+
+          itemRectMin.x -= padding;
+          itemRectMin.y -= padding;
+          itemRectMax.x += padding;
+          itemRectMax.y += padding;
+
+          ImDrawList* drawList = ImGui::GetWindowDrawList();
+          drawList->AddRect(itemRectMin, itemRectMax, IM_COL32(150, 150, 150, 100));
+
+          ImGui::Spacing();
+          ImGui::Spacing();
+
+          if (elementRemoved)
+          {
+            mapView.erase(key);
+            object.valueWasSet_ = true;
+            break;
+          }
+          else if (objectKey.ValueWasSet() && mapView.find(key) == mapView.end())
+          {
+            rttr::variant oldKey = element.first.extract_wrapped_value();
+            rttr::variant storedValue = element.second.extract_wrapped_value();
+            
+            mapView.erase(oldKey);
+            mapView.insert(key, storedValue);
+            
+            object.valueWasSet_ = true;
+            object.chainUndoEnabled_ = objectKey.chainUndoEnabled_;
+            
+            break;
+          }
+          else if (objectValue.ValueWasSet())
+          {
+            mapView.erase(key);
+            mapView.insert(key, val);
+
+            object.valueWasSet_ = true;
+            object.chainUndoEnabled_ = objectValue.chainUndoEnabled_;
 
             break;
           }
 
           id++;
         }
+
+        ImGui::Spacing();
+
+        if (keyEditorMap_.count(currentId))
+        {
+          rttr::variant& keyVariant = keyEditorMap_.at(currentId);
+          rttr::type keyVariantType = keyVariant.get_type();
+          DataObject newKey("(" + std::string(keyVariantType.get_name().data()) + ")", keyVariant);
+          DataWidget::Use(newKey);
+
+          bool keyExists = (mapView.find(keyVariant) != mapView.end());
+
+          if (keyExists)
+          {
+            ImGui::Text("Key already exists.");
+          }
+          else
+          {
+            ImGui::Text("Enter new key value.");
+          }
+
+          if (ImGui::Button("Confirm") && !keyExists && keyVariant.get_type() == mapKeyType && !object.valueWasSet_)
+          {
+            if (mapView.get_value_type().is_valid() && mapView.get_value_type().get_constructor().is_valid())
+            {
+              if (mapView.insert(keyVariant, mapView.get_value_type().create()).second)
+              {
+                object.valueWasSet_ = true;
+                keyEditorMap_.erase(currentId);
+              }
+            }
+          }
+          ImGui::SameLine();
+          if (ImGui::Button("Cancel") && !object.valueWasSet_)
+          {
+            keyEditorMap_.erase(currentId);
+          }
+        }
+        else
+        {
+          if (ImGui::Button("Add new") && !object.valueWasSet_)
+          {
+            if (mapKeyType == rttr::type::get<int>())
+            {
+              int defaultValue = 0;
+              keyEditorMap_[currentId] = defaultValue;
+            }
+            else if (mapKeyType == rttr::type::get<unsigned>())
+            {
+              unsigned defaultValue = 0;
+              keyEditorMap_[currentId] = defaultValue;
+            }
+            else if (mapKeyType == rttr::type::get<char>())
+            {
+              char defaultValue = 0;
+              keyEditorMap_[currentId] = defaultValue;
+            }
+            else if (mapKeyType == rttr::type::get<unsigned char>())
+            {
+              unsigned char defaultValue = 0;
+              keyEditorMap_[currentId] = defaultValue;
+            }
+            else if (mapKeyType == rttr::type::get<short>())
+            {
+              short defaultValue = 0;
+              keyEditorMap_[currentId] = defaultValue;
+            }
+            else if (mapKeyType == rttr::type::get<unsigned short>())
+            {
+              unsigned short defaultValue = 0;
+              keyEditorMap_[currentId] = defaultValue;
+            }
+            else if (mapKeyType == rttr::type::get<long long>())
+            {
+              long long defaultValue = 0;
+              keyEditorMap_[currentId] = defaultValue;
+            }
+            else if (mapKeyType == rttr::type::get<unsigned long long>())
+            {
+              unsigned long long defaultValue = 0;
+              keyEditorMap_[currentId] = defaultValue;
+            }
+            else if (mapKeyType == rttr::type::get<std::string>())
+            {
+              std::string defaultValue;
+              keyEditorMap_[currentId] = defaultValue;
+            }
+          }
+        }
+
+        ImGui::Spacing();
+      }
+      else if (typeName.back() == '*')
+      {
+        ImGui::Text("Can't edit pointer type.");
       }
       else
       {
@@ -171,7 +330,7 @@ namespace Barrage
           rttr::variant property = prop.get_value(object.value_);
           DataObject propObject(prop.get_name().data(), property);
           
-          Use(propObject, true);
+          DataWidget::Use(propObject, true);
           
           if (propObject.ValueWasSet())
           {

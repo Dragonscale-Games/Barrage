@@ -41,16 +41,19 @@ namespace Barrage
   void ReflectBarrageCore()
   {
     rttr::registration::class_<Entry::SpaceEntry>("SpaceEntry")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("Name", &Entry::SpaceEntry::name_)
       .property("Scene", &Entry::SpaceEntry::scene_)
       ;
     
     rttr::registration::class_<Entry>("Entry")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("Spaces", &Entry::spaces_)
       .property("Textures", &Entry::textures_)
       ;
     
     rttr::registration::class_<BoundaryBox>("BoundaryBox")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("xMin", &BoundaryBox::xMin_)
       .property("xMax", &BoundaryBox::xMax_)
       .property("yMin", &BoundaryBox::yMin_)
@@ -58,51 +61,58 @@ namespace Barrage
       ;
 
     rttr::registration::class_<CircleCollider>("CircleCollider")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("radius", &CircleCollider::radius_)
       ;
 
     rttr::registration::class_<Player>("Player")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("speedFast", &Player::speedFast_)
       .property("speedSlow", &Player::speedSlow_)
       ;
 
     rttr::registration::class_<Sprite>("Sprite")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("texture", &Sprite::texture_)
       .property("layer", &Sprite::layer_)
       ;
 
     rttr::registration::class_<Spawner>("Spawner")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("spawnTypes", &Spawner::spawnTypes_)
+      .property("testMap", &Spawner::testMap_)
       ;
 
     rttr::registration::class_<SpawnInfo>("SpawnInfo")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("archetypeName", &SpawnInfo::archetypeName_)
       .property("spawnFunctions", &SpawnInfo::spawnFunctions_)
-      .constructor<>()
-        (
-          rttr::policy::ctor::as_object
-        );
       ;
 
     rttr::registration::class_<Position>("Position")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("x", &Position::x_)
       .property("y", &Position::y_)
       ;
 
     rttr::registration::class_<Rotation>("Rotation")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("angle", &Rotation::angle_)
       ;
 
     rttr::registration::class_<Scale>("Scale")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("w", &Scale::w_)
       .property("h", &Scale::h_)
       ;
 
     rttr::registration::class_<AngularSpeed>("AngularSpeed")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("w", &AngularSpeed::w_)
       ;
 
     rttr::registration::class_<Velocity>("Velocity")
+      .constructor<>() (rttr::policy::ctor::as_object)
       .property("vx", &Velocity::vx_)
       .property("vy", &Velocity::vy_)
       ;

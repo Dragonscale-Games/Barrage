@@ -27,6 +27,16 @@ namespace Barrage
     
     EditorData& editorData = Editor::Instance->Data();
 
+    if (ImGui::Selectable("Add component"))
+    {
+      editorData.selectedComponentArray_ = std::string_view();
+      editorData.openComponentArrayModal_ = true;
+    }
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+
     if (ImGui::Selectable("Rename"))
     {
       editorData.openRenameModal_ = true;
