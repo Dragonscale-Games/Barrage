@@ -109,7 +109,7 @@
                 "Spawner": {
                     "spawnTypes": [
                         {
-                            "Key": 0,
+                            "Key": "Bullet Spawn",
                             "Value": {
                                 "archetypeName": "Bullet Object",
                                 "spawnFunctions": [

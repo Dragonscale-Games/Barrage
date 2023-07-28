@@ -74,6 +74,8 @@ namespace Barrage
       objectManager_.CreatePool(**it);
     }
 
+    objectManager_.SubscribePools();
+
     rng_.SetSeed();
   }
 

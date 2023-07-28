@@ -65,6 +65,8 @@ namespace Barrage
 
       std::vector<std::string_view> GetSystemUpdateOrder();
 
+      void SubscribePools();
+
       // ===================================================================
       // Pools
       // ===================================================================

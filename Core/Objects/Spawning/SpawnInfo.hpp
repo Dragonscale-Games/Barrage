@@ -20,11 +20,18 @@
 
 namespace Barrage
 {
+  class Pool;
+  class ObjectArchetype;
+  
   //!< Holds all information needed to spawn an object
   struct SpawnInfo
   {
-    std::string archetypeName_;                //!< Name of object archetype that will be spawned
+    std::string destinationPoolName_;          //!< Name of the pool to spawn the object in
+    std::string spawnArchetypeName_;           //!< Name of spawn archetype to use
     std::vector<std::string> spawnFunctions_;  //!< List of spawn functions to apply
+
+    Pool* destinationPool_;                    //!< destination pool pointer (should not be set manually)
+    ObjectArchetype* spawnArchetype_;          //!< spawn archetype pointer (should not be set manually)
     std::vector<unsigned> sourceIndices_;      //!< Indices of spawner objects (cleared after spawn)
   };
 }

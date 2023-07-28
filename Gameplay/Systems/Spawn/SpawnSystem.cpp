@@ -14,38 +14,70 @@
 #include "SpawnSystem.hpp"
 #include <Objects/Systems/SystemManager.hpp>
 #include "Components/Spawner.hpp"
+#include "Spaces/Space.hpp"
 
 namespace Barrage
 {
+  static const std::string_view SPAWNER_POOLS("Spawner Pools");
+  
   SpawnSystem::SpawnSystem() :
     System()
   {
-    PoolType bullet_spawner_type;
-    bullet_spawner_type.AddComponent("Spawner");
-    poolTypes_["Bullet Spawner Pools"] = bullet_spawner_type;
+    PoolType spawner_type;
+    spawner_type.AddComponent("Spawner");
+    poolTypes_[SPAWNER_POOLS] = spawner_type;
+  }
 
-    PoolType bullet_pool_type;
-    bullet_pool_type.AddTag("Bullet Pool");
-    poolTypes_["Bullet Pools"] = bullet_pool_type;
+  void SpawnSystem::Subscribe(Pool* pool)
+  {
+    for (auto it = poolTypes_.begin(); it != poolTypes_.end(); ++it)
+    {
+      PoolType& pool_type = it->second;
+
+      if (pool_type.MatchesPool(pool))
+      {
+        if (it->first == SPAWNER_POOLS)
+        {
+          LinkAndValidateSpawns(pool);
+        }
+        
+        poolGroups_[it->first].push_back(pool);
+      }
+    }
   }
 
   void SpawnSystem::Update()
   {
-    UpdateInteraction("Bullet Spawner Pools", "Bullet Pools", SpawnSystem::SpawnBullets);
+    
   }
 
-  void SpawnSystem::SpawnBullets(Barrage::Pool* spawnerPool, Barrage::Pool* bulletPool)
+  void SpawnSystem::LinkAndValidateSpawns(Pool* pool)
   {
-    Spawner& spawner = spawnerPool->GetComponent<Spawner>("Spawner")->Data();
-    unsigned active_spawners = spawnerPool->GetActiveObjectCount();
+    ObjectManager& objectManager = pool->GetSpace().GetObjectManager();
+    Spawner& spawner = pool->GetComponent<Spawner>("Spawner")->Data();
+    SpawnTypeMap& spawnTypes = spawner.spawnTypes_;
 
-    for (unsigned i = 0; i < active_spawners; ++i)
+    for (auto it = spawnTypes.begin(); it != spawnTypes.end(); /* iterator updated in body */)
     {
-      if (spawner.spawnTypes_.count(0))
+      SpawnInfo& spawnType = it->second;
+
+      spawnType.destinationPool_ = objectManager.GetPool(spawnType.destinationPoolName_);
+      
+      if (spawnType.destinationPool_ == nullptr)
       {
-        spawner.spawnTypes_[0].sourceIndices_.resize(100, i);
-        bulletPool->QueueSpawns(spawnerPool, spawner.spawnTypes_[0]);
+        it = spawnTypes.erase(it);
+        continue;
       }
+
+      spawnType.spawnArchetype_ = spawnType.destinationPool_->GetSpawnArchetype(spawnType.spawnArchetypeName_);
+
+      if (spawnType.spawnArchetype_ == nullptr)
+      {
+        it = spawnTypes.erase(it);
+        continue;
+      }
+
+      ++it;
     }
   }
 }

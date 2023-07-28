@@ -76,17 +76,38 @@ namespace Barrage
       .property("texture", &Sprite::texture_)
       .property("layer", &Sprite::layer_)
       ;
-
-    rttr::registration::class_<Spawner>("Spawner")
+    
+    rttr::registration::class_<SpawnTypeList>("SpawnTypeList")
       .constructor<>() (rttr::policy::ctor::as_object)
-      .property("spawnTypes", &Spawner::spawnTypes_)
-      .property("testMap", &Spawner::testMap_)
+      .property("spawnTypes", &SpawnTypeList::spawnTypes_)
+      ;
+
+    rttr::registration::class_<AutomaticSpawn>("AutomaticSpawn")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("spawnType", &AutomaticSpawn::spawnType_)
+      .property("ticksPerSpawn", &AutomaticSpawn::ticksPerSpawn_)
+      .property("numberPerBurst", &AutomaticSpawn::numberPerBurst_)
+      .property("delay", &AutomaticSpawn::delay_)
+      ;
+
+    rttr::registration::class_<SpawnPattern>("SpawnPattern")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("spawnSequence", &SpawnPattern::spawnSequence_)
+      .property("automaticSpawns", &SpawnPattern::automaticSpawns_)
       ;
 
     rttr::registration::class_<SpawnInfo>("SpawnInfo")
       .constructor<>() (rttr::policy::ctor::as_object)
-      .property("archetypeName", &SpawnInfo::archetypeName_)
+      .property("destinationPool", &SpawnInfo::destinationPoolName_)
+      .property("spawnArchetype", &SpawnInfo::spawnArchetypeName_)
       .property("spawnFunctions", &SpawnInfo::spawnFunctions_)
+      ;
+
+    rttr::registration::class_<Spawner>("Spawner")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("currentPattern", &Spawner::currentPattern_)
+      .property("patterns", &Spawner::patterns_)
+      .property("spawnTypes", &Spawner::spawnTypes_)
       ;
 
     rttr::registration::class_<Position>("Position")

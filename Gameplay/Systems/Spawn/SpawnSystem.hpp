@@ -34,13 +34,22 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Subscribes pools to the spawn system and verifies spawns
+          are legal.
+      */
+      /**************************************************************/
+      void Subscribe(Pool* pool) override;
+
+      /**************************************************************/
+      /*!
+        \brief
           Queues objects for spawn.
       */
       /**************************************************************/
       void Update() override;
 
     private:
-      static void SpawnBullets(Barrage::Pool* spawnerPool, Barrage::Pool* bulletPool);
+      void LinkAndValidateSpawns(Pool* pool);
 	};
 }
 

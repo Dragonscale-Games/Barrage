@@ -48,7 +48,6 @@ namespace Barrage
   void CollisionSystem::Update()
   {
     UpdatePoolGroup("Bounded Bullet Pools", UpdateBoundedBullets);
-    
     UpdateInteraction("Circle Player Pools", "Circle Bullet Pools", UpdatePlayerBulletCollisions);
   }
 

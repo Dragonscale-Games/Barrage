@@ -19,7 +19,6 @@ namespace Barrage
   CreationSystem::CreationSystem() :
     System()
   {
-    // this pool type has no required tags or components because all pools will be subscribed to the creation system
     PoolType all_pool_type;
     poolTypes_["All Pools"] = all_pool_type;
   }
@@ -31,7 +30,6 @@ namespace Barrage
 
   void CreationSystem::SpawnObjects(Pool* pool)
   {
-    pool->numActiveObjects_ += pool->numQueuedObjects_;
-    pool->numQueuedObjects_ = 0;
+    pool->SpawnObjects();
   }
 }

@@ -117,10 +117,11 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          NOTE: QueueSpawns() should be preferred over this function
+          during gameplay. 
+          
           Creates a given number of active objects in the pool from
-          an object archetype. This should generally only be used
-          on scene creation; QueueSpawns() should be used while the
-          scene is running.
+          an object archetype.
 
         \param archetype
           The archetype used to construct the objects.
@@ -135,8 +136,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Queues a number of objects for spawning on the next creation 
-          system update.
+          Queues objects to be spawned when SpawnObjects() is called.
 
         \param sourcePool
           The pool spawning the objects.
@@ -150,7 +150,15 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Determines if a pool has a given tag.
+          Spawns all objects queued for spawn.
+      */
+      /**************************************************************/
+      void SpawnObjects();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Determines if the pool has a given tag.
 
         \param tag
           The tag to check for.
@@ -165,7 +173,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Determines if a pool has a given  component.
+          Determines if the pool has a given  component.
 
         \param componentName
           The name of the component to check for.
@@ -180,7 +188,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Determines if a pool has a given component array.
+          Determines if the pool has a given component array.
 
         \param componentArrayName
           The name of the component array to check for.
@@ -191,6 +199,21 @@ namespace Barrage
       */
       /**************************************************************/
       bool HasComponentArray(const std::string_view& componentArrayName);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Determines if the pool has a given spawn archetype.
+
+        \param name
+          The name of the spawn archetype to check for.
+
+        \return
+          Returns true if the pool has the spawn archetype, returns
+          false otherwise.
+      */
+      /**************************************************************/
+      bool HasSpawnArchetype(const std::string& name);
 
       /**************************************************************/
       /*!
@@ -281,7 +304,7 @@ namespace Barrage
           name.
       */
       /**************************************************************/
-      const ObjectArchetype& GetSpawnArchetype(const std::string& name) const;
+      ObjectArchetype* GetSpawnArchetype(const std::string& name);
 
       /**************************************************************/
       /*!
@@ -356,7 +379,6 @@ namespace Barrage
       std::string name_;                  //!< Name of the pool
       Space& space_;                      //!< The space the pool lives in
 
-      friend class CreationSystem;
       friend class DestructionSystem;
   };
 }

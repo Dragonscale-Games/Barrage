@@ -55,13 +55,21 @@ namespace Barrage
     return systemManager_.GetSystemUpdateOrder();
   }
 
+  void ObjectManager::SubscribePools()
+  {
+    std::vector<std::string> poolNames = poolManager_.GetPoolNames();
+    
+    for (auto it = poolNames.begin(); it != poolNames.end(); ++it)
+    {
+      Pool* pool = poolManager_.GetPool(*it);
+      systemManager_.Subscribe(pool);
+    }
+    
+  }
+
   void ObjectManager::CreatePool(const PoolArchetype& archetype)
   {
-    if (archetype.GetCapacity() == 0)
-      return;
-    
-    Pool* new_pool = poolManager_.CreatePool(archetype);
-    systemManager_.Subscribe(new_pool);
+    poolManager_.CreatePool(archetype);
   }
 
   Pool* ObjectManager::GetPool(const std::string& name) const

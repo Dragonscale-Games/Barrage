@@ -100,8 +100,6 @@ namespace Barrage
 
         size_t arraySize = arrayView.get_size();
 
-        ImGui::Spacing();
-
         for (size_t i = 0; i < arraySize; ++i)
         {
           rttr::variant elementVariant = arrayView.get_value(i);
@@ -109,13 +107,21 @@ namespace Barrage
           DataObject elementObject("##ElementObject", elementVariant);
 
           ImGui::PushID(static_cast<int>(i));
-          
+          ImGui::Spacing();
+          ImGui::Spacing();
+          ImGui::BeginGroup();
+          float buttonWidth = ImGui::CalcTextSize("X").x + ImGui::GetStyle().FramePadding.x * 2.0f;
+          ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - buttonWidth - 150.0f);
+          ImGui::BeginGroup();
           DataWidget::Use(elementObject);
+          ImGui::EndGroup();
+          ImGui::PopItemWidth();
           ImGui::SameLine();
           if (ImGui::Button("X"))
           {
             arrayView.erase(arrayView.begin() + i);
             object.valueWasSet_ = true;
+            ImGui::EndGroup();
             ImGui::PopID();
             break;
           }
@@ -125,6 +131,22 @@ namespace Barrage
             object.valueWasSet_ = true;
             object.chainUndoEnabled_ = elementObject.chainUndoEnabled_;
           }
+          ImGui::EndGroup();
+
+          ImVec2 itemRectMin = ImGui::GetItemRectMin();
+          ImVec2 itemRectMax = ImGui::GetItemRectMax();
+
+          float padding = 6.0f;
+
+          itemRectMin.x -= padding;
+          itemRectMin.y -= padding;
+          itemRectMax.x += padding;
+          itemRectMax.y += padding;
+
+          ImDrawList* drawList = ImGui::GetWindowDrawList();
+          drawList->AddRect(itemRectMin, itemRectMax, IM_COL32(150, 150, 150, 100));
+
+          ImGui::Spacing();
 
           ImGui::PopID();
         }
@@ -158,24 +180,24 @@ namespace Barrage
           DataObject objectKey("##Key", key);
           DataObject objectValue("##Value", val);
 
-          ImGui::Spacing();
-          ImGui::Spacing();
-
           ImGui::PushID(id);
+          ImGui::Spacing();
+          ImGui::Spacing();
+          ImGui::BeginGroup();
+          float buttonWidth = ImGui::CalcTextSize("X").x + ImGui::GetStyle().FramePadding.x * 2.0f;
+          ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - buttonWidth - 150.0f);
           ImGui::BeginGroup();
           ImGui::Text("Key:");
-          ImGui::SameLine();
-          float textWidth = ImGui::CalcTextSize("Key:").x;
-          float buttonWidth = ImGui::CalcTextSize("X").x + ImGui::GetStyle().FramePadding.x * 2.0f;
-          float dummyWidth = ImGui::GetContentRegionAvail().x - textWidth - buttonWidth;
-          ImGui::Dummy(ImVec2(dummyWidth, 0));
-          ImGui::SameLine();
-          bool elementRemoved = ImGui::Button("X");
+          ImGui::Spacing();
           DataWidget::Use(objectKey);
           ImGui::Spacing();
           ImGui::Text("Value:");
           ImGui::Spacing();
           DataWidget::Use(objectValue);
+          ImGui::EndGroup();
+          ImGui::PopItemWidth();
+          ImGui::SameLine();
+          bool elementRemoved = ImGui::Button("X");
           ImGui::EndGroup();
           ImGui::PopID();
 
@@ -192,7 +214,6 @@ namespace Barrage
           ImDrawList* drawList = ImGui::GetWindowDrawList();
           drawList->AddRect(itemRectMin, itemRectMax, IM_COL32(150, 150, 150, 100));
 
-          ImGui::Spacing();
           ImGui::Spacing();
 
           if (elementRemoved)
@@ -239,14 +260,16 @@ namespace Barrage
 
           bool keyExists = (mapView.find(keyVariant) != mapView.end());
 
+          ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.6f, 1.0f));
           if (keyExists)
           {
-            ImGui::Text("Key already exists.");
+            ImGui::Text("Enter new key value. (Key already exists.)");
           }
           else
           {
             ImGui::Text("Enter new key value.");
           }
+          ImGui::PopStyleColor();
 
           if (ImGui::Button("Confirm") && !keyExists && keyVariant.get_type() == mapKeyType && !object.valueWasSet_)
           {
@@ -316,7 +339,7 @@ namespace Barrage
             }
           }
         }
-
+        
         ImGui::Spacing();
       }
       else if (typeName.back() == '*')

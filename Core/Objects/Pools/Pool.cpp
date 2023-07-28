@@ -119,15 +119,20 @@ namespace Barrage
     if (numObjects != 0)
     {
       unsigned startIndex = numActiveObjects_ + numQueuedObjects_;
-      ObjectArchetype& archetype = spawnArchetypes_.at(spawnInfo.archetypeName_);
 
-      CreateObjectsInternal(archetype, startIndex, numObjects);
+      CreateObjectsInternal(*spawnInfo.spawnArchetype_, startIndex, numObjects);
       ApplySpawnFunctions(sourcePool, spawnInfo, startIndex, numObjects);
 
       numQueuedObjects_ += numObjects;
     }
 
     spawnInfo.sourceIndices_.clear();
+  }
+  
+  void Pool::SpawnObjects()
+  {
+    numActiveObjects_ += numQueuedObjects_;
+    numQueuedObjects_ = 0;
   }
 
   bool Pool::HasTag(const std::string_view& tag) const
@@ -145,6 +150,11 @@ namespace Barrage
     return componentArrays_.count(componentArrayName);
   }
 
+  bool Pool::HasSpawnArchetype(const std::string& name)
+  {
+    return spawnArchetypes_.count(name);
+  }
+
   unsigned Pool::GetAvailableSlots() const
   {
     return capacity_ - numActiveObjects_ - numQueuedObjects_;
@@ -160,9 +170,16 @@ namespace Barrage
     return numQueuedObjects_;
   }
 
-  const ObjectArchetype& Pool::GetSpawnArchetype(const std::string& name) const
+  ObjectArchetype* Pool::GetSpawnArchetype(const std::string& name)
   {
-    return spawnArchetypes_.at(name);
+    if (spawnArchetypes_.count(name))
+    {
+      return &spawnArchetypes_.at(name);
+    }
+    else
+    {
+      return nullptr;
+    }
   }
 
   Space& Pool::GetSpace()

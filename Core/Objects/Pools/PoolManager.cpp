@@ -34,6 +34,11 @@ namespace Barrage
 
   Pool* PoolManager::CreatePool(const PoolArchetype& archetype)
   {
+    if (archetype.GetCapacity() == 0)
+    {
+      return nullptr;
+    }
+    
     const std::string& archetypeName = archetype.GetName();
     
     if (pools_.find(archetypeName) == pools_.end())
