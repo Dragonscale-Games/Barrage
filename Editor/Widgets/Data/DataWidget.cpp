@@ -119,7 +119,7 @@ namespace Barrage
           ImGui::SameLine();
           if (ImGui::Button("X"))
           {
-            arrayView.erase(arrayView.begin() + i);
+            arrayView.erase(arrayView.begin() + static_cast<int>(i));
             object.valueWasSet_ = true;
             ImGui::EndGroup();
             ImGui::PopID();
@@ -155,7 +155,6 @@ namespace Barrage
 
         if (ImGui::Button("Add new") && !object.valueWasSet_)
         {
-          size_t arraySize = arrayView.get_size();
           if (arrayView.set_size(arraySize + 1))
           {
             object.valueWasSet_ = true;

@@ -77,6 +77,8 @@ namespace Barrage
         continue;
       }
 
+      spawnType.sourceIndices_.reserve(spawnType.destinationPool_->GetCapacity());
+
       ++it;
     }
   }

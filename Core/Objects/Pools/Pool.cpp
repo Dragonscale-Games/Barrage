@@ -170,6 +170,11 @@ namespace Barrage
     return numQueuedObjects_;
   }
 
+  unsigned Pool::GetCapacity() const
+  {
+    return capacity_;
+  }
+
   ObjectArchetype* Pool::GetSpawnArchetype(const std::string& name)
   {
     if (spawnArchetypes_.count(name))

@@ -251,6 +251,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the number of objects the pool can hold.
+
+        \return
+          Returns the number of objects the pool can hold.
+      */
+      /**************************************************************/
+      unsigned GetCapacity() const;
+
+      /**************************************************************/
+      /*!
+        \brief
           Get a reference to a given component. Throws an
           out_of_range exception if no component matches the
           input name.
