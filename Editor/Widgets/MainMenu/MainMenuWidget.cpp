@@ -182,11 +182,6 @@ namespace Barrage
 
     bool gamePlaying = Editor::Instance->Data().gamePlaying_;
 
-    if (gamePlaying)
-    {
-      ImGui::EndDisabled();
-    }
-
     if (ImGui::BeginMenu("Game"))
     {
       if (gamePlaying)
@@ -206,11 +201,6 @@ namespace Barrage
       }
 
       ImGui::EndMenu();
-    }
-
-    if (gamePlaying)
-    {
-      ImGui::BeginDisabled();
     }
 
     ImGui::EndMainMenuBar();

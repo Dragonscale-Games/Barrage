@@ -251,11 +251,6 @@ namespace Barrage
 
     commandQueue_.Process();
 
-    if (data_.nextScene_)
-    {
-      ChangeScene();
-    }
-
     if (data_.sceneIsDirty_)
     {
       //beginT = std::chrono::high_resolution_clock::now();
@@ -277,7 +272,10 @@ namespace Barrage
     UseWidgets();
     gui_.EndWidgets();
 
-    HandleKeyboard();
+    if (!data_.gamePlaying_)
+    {
+      HandleKeyboard();
+    }
 
     engine_.Graphics().GetFramebuffer().BindFramebuffer();
     engine_.Graphics().ClearBackground();
@@ -307,17 +305,11 @@ namespace Barrage
     GameWidget::Use();
     
     bool gamePlaying = data_.gamePlaying_;
-    
-    if (gamePlaying)
-    {
-      ImGui::BeginDisabled();
-    }
   
     MainMenuWidget::Use();
     HierarchyWidget::Use();
     InspectorWidget::Use();
     LogWidget::Use();
-    //ImGui::ShowDemoWindow();
 
     if (data_.openComponentModal_)
     {
@@ -354,11 +346,6 @@ namespace Barrage
     TagModal::Use("Add tag");
     RenameModal::Use("Rename", data_.renameCallback_);
     ProjectModal::Use("Project");
-
-    if (gamePlaying)
-    {
-      ImGui::EndDisabled();
-    }
 
     /*Barrage::GfxDraw2D& drawing = engine_.Drawing();
     Barrage::WindowManager& windowing = engine_.Windowing();
@@ -440,22 +427,6 @@ namespace Barrage
         repeatTimer_ -= engine_.Frames().DT();
       }
     }
-  }
-
-  void Editor::ChangeScene()
-  {
-    Scene* scene = data_.nextScene_;
-    
-    if (scene == nullptr)
-    {
-      return;
-    }
-
-    engine_.Scenes().AddScene(scene);
-    data_.selectedScene_ = scene->GetName();
-    data_.nextScene_ = nullptr;
-    data_.sceneIsDirty_ = true;
-    commandQueue_.Clear();
   }
 
   bool Editor::OpenProjectInternal(const std::string& path)

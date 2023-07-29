@@ -24,7 +24,6 @@ namespace Barrage
     openRenameModal_(false),
     openProjectModal_(false),
     renameCallback_(nullptr),
-    nextScene_(nullptr),
     projectName_(),
     projectDirectory_(),
     selectedSpace_(),

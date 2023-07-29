@@ -140,14 +140,6 @@ namespace Barrage
       /**************************************************************/
       void HandleKeyboard();
 
-      /**************************************************************/
-      /*!
-        \brief
-          Changes the scene being worked on.
-      */
-      /**************************************************************/
-      void ChangeScene();
-
       bool OpenProjectInternal(const std::string& path);
 	};
 }

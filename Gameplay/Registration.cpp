@@ -15,11 +15,12 @@
 #include <Entry/Entry.hpp>
 
 #include "ComponentArrays/AngularSpeedArray.hpp"
-#include "ComponentArrays/VelocityArray.hpp"
 #include "ComponentArrays/DestructibleArray.hpp"
 #include "ComponentArrays/PositionArray.hpp"
 #include "ComponentArrays/RotationArray.hpp"
 #include "ComponentArrays/ScaleArray.hpp"
+#include "ComponentArrays/SpawnTimerArray.hpp"
+#include "ComponentArrays/VelocityArray.hpp"
 
 #include "Components/BoundaryBox.hpp"
 #include "Components/CircleCollider.hpp"
@@ -127,9 +128,10 @@ namespace Barrage
       .property("h", &Scale::h_)
       ;
 
-    rttr::registration::class_<AngularSpeed>("AngularSpeed")
+    rttr::registration::class_<Scale>("Scale")
       .constructor<>() (rttr::policy::ctor::as_object)
-      .property("w", &AngularSpeed::w_)
+      .property("w", &Scale::w_)
+      .property("h", &Scale::h_)
       ;
 
     rttr::registration::class_<Velocity>("Velocity")
@@ -142,28 +144,28 @@ namespace Barrage
   void ObjectManager::RegisterCustomComponents()
   {
     RegisterComponentArray<AngularSpeed>("AngularSpeed");
-    RegisterComponentArray<Velocity>("Velocity");
     RegisterComponentArray<Destructible>("Destructible");
     RegisterComponentArray<Position>("Position");
     RegisterComponentArray<Rotation>("Rotation");
     RegisterComponentArray<Scale>("Scale");
+    RegisterComponentArray<SpawnTimer>("SpawnTimer");
+    RegisterComponentArray<Velocity>("Velocity");
 
-    RegisterComponent<Spawner>("Spawner");
-    RegisterComponent<Sprite>("Sprite");
     RegisterComponent<BoundaryBox>("BoundaryBox");
     RegisterComponent<CircleCollider>("CircleCollider");
     RegisterComponent<Player>("Player");
+    RegisterComponent<Spawner>("Spawner");
+    RegisterComponent<Sprite>("Sprite");
 
     ComponentAllocator::RegisterTag("Bullet");
-    ComponentAllocator::RegisterTag("Bullet Pool");
-    ComponentAllocator::RegisterTag("Spawner");
   }
 
   void ObjectManager::RegisterCustomSystems()
   {
+    RegisterSystem<CollisionSystem>("CollisionSystem");
     RegisterSystem<CreationSystem>("CreationSystem");
     RegisterSystem<DestructionSystem>("DestructionSystem");
-    RegisterSystem<CollisionSystem>("CollisionSystem");
+    // Draw system is registered by engine
     RegisterSystem<MovementSystem>("MovementSystem");
     RegisterSystem<SpawnSystem>("SpawnSystem");
   }

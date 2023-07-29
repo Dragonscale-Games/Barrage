@@ -38,7 +38,10 @@
                             "x": 960.0,
                             "y": 300.0
                         },
-                        "Velocity": {},
+                        "Velocity": {
+                            "vx": 0.0,
+                            "vy": 0.0
+                        },
                         "Rotation": {
                             "angle": -0.0
                         },
@@ -77,8 +80,7 @@
                 "Destructible"
             ],
             "Tags": [
-                "Bullet",
-                "Bullet Pool"
+                "Bullet"
             ],
             "Starting Objects": [],
             "Spawn Archetypes": [
@@ -89,7 +91,10 @@
                             "x": 960.0,
                             "y": 880.0
                         },
-                        "Velocity": {},
+                        "Velocity": {
+                            "vx": 0.0,
+                            "vy": 0.0
+                        },
                         "Rotation": {
                             "angle": 0.0
                         },
@@ -104,14 +109,32 @@
         },
         {
             "Name": "Spawner Pool",
-            "Capacity": 1,
+            "Capacity": 3,
             "Components": {
                 "Spawner": {
+                    "currentPattern": "TestPattern",
+                    "patterns": [
+                        {
+                            "Key": "TestPattern",
+                            "Value": {
+                                "spawnSequence": [],
+                                "automaticSpawns": [
+                                    {
+                                        "spawnType": "Bullet Spawn",
+                                        "ticksPerSpawn": 240,
+                                        "numberPerBurst": 100,
+                                        "delay": 35
+                                    }
+                                ]
+                            }
+                        }
+                    ],
                     "spawnTypes": [
                         {
                             "Key": "Bullet Spawn",
                             "Value": {
-                                "archetypeName": "Bullet Object",
+                                "destinationPool": "Bullet Pool",
+                                "spawnArchetype": "Bullet Object",
                                 "spawnFunctions": [
                                     "MatchPosition",
                                     "RandomDirection"
@@ -122,11 +145,10 @@
                 }
             },
             "Component Arrays": [
-                "Position"
+                "Position",
+                "SpawnTimer"
             ],
-            "Tags": [
-                "Spawner"
-            ],
+            "Tags": [],
             "Starting Objects": [
                 {
                     "Name": "Spawner Object",
@@ -134,7 +156,28 @@
                         "Position": {
                             "x": 960.0,
                             "y": 880.0
-                        }
+                        },
+                        "SpawnTimer": {}
+                    }
+                },
+                {
+                    "Name": "Object",
+                    "Components": {
+                        "Position": {
+                            "x": 1236.0,
+                            "y": 618.0
+                        },
+                        "SpawnTimer": {}
+                    }
+                },
+                {
+                    "Name": "Object 1",
+                    "Components": {
+                        "Position": {
+                            "x": 792.0,
+                            "y": 540.0
+                        },
+                        "SpawnTimer": {}
                     }
                 }
             ],
