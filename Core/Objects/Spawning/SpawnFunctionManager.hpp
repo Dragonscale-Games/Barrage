@@ -27,7 +27,7 @@ namespace Barrage
   class Pool;
   
   // Arguments: spawner pool, pool to spawn into, index of first new object, number of new objects, indices of spawner objects
-  typedef void (*SpawnFunction)(Pool&, Pool&, unsigned, unsigned, const std::vector<unsigned>&);
+  typedef void (*SpawnFunction)(Pool&, Pool&, unsigned, unsigned, std::vector<unsigned>&);
   
   //! Associates spawn functions with their names
   typedef std::unordered_map<std::string_view, SpawnFunction> SpawnFunctionMap;

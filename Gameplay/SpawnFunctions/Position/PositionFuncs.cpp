@@ -20,7 +20,7 @@ namespace Barrage
 {
   namespace Spawn
   {
-    void MatchPosition(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, const std::vector<unsigned>& sourceIndices)
+    void MatchPosition(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
     {
       PositionArray& source_positions = *initPool.GetComponentArray<Position>("Position");
       PositionArray& dest_positions = *destPool.GetComponentArray<Position>("Position");

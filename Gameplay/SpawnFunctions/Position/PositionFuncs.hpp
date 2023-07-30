@@ -21,7 +21,7 @@ namespace Barrage
 {
   namespace Spawn
   {
-    void MatchPosition(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, const std::vector<unsigned>& sourceIndices);
+    void MatchPosition(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices);
   }
 }
 

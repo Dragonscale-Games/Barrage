@@ -117,25 +117,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          NOTE: QueueSpawns() should be preferred over this function
-          during gameplay. 
-          
-          Creates a given number of active objects in the pool from
-          an object archetype.
-
-        \param archetype
-          The archetype used to construct the objects.
-
-        \param numObjects
-          The number of objects to create. If this would overfill the
-          pool, the excess objects are not created.
-      */
-      /**************************************************************/
-      void CreateObject(const ObjectArchetype& archetype);
-
-      /**************************************************************/
-      /*!
-        \brief
           Queues objects to be spawned when SpawnObjects() is called.
 
         \param sourcePool
@@ -154,6 +135,52 @@ namespace Barrage
       */
       /**************************************************************/
       void SpawnObjects();
+
+      /**************************************************************/
+      /*!
+        \brief
+          NOTE: QueueSpawns() should be preferred over this function
+          during gameplay.
+
+          Creates a given number of active objects in the pool from
+          an object archetype.
+
+        \param archetype
+          The archetype used to construct the objects.
+
+        \param numObjects
+          The number of objects to create. If this would overfill the
+          pool, the excess objects are not created.
+      */
+      /**************************************************************/
+      void CreateObject(const ObjectArchetype& archetype);
+
+      /**************************************************************/
+      /*!
+        \brief
+          NOTE: This function should only be called by spawn rules.
+
+          Duplicates the object at a given array index in this pool.
+
+        \param numDuplicates
+          The number of duplicates to request.
+
+        \param objectIndex
+          The index of the object to duplicate.
+
+        \param sourceIndex
+          The index of the object in the spawner pool that spawned
+          the object to be duplicated.
+
+        \param sourceIndices
+          sourceIndex will be added to the end of this vector once
+          for each duplicate successfully created.
+
+        \return
+          Returns the number of duplicates successfully created.
+      */
+      /**************************************************************/
+      unsigned DuplicateObject(unsigned numDuplicates, unsigned objectIndex, unsigned sourceIndex, std::vector<unsigned>& sourceIndices);
 
       /**************************************************************/
       /*!
@@ -218,17 +245,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the number of available object slots in the pool.
-
-        \return
-          Returns the number of available object slots in the pool.
-      */
-      /**************************************************************/
-      unsigned GetAvailableSlots() const;
-
-      /**************************************************************/
-      /*!
-        \brief
           Gets the number of active objects.
 
         \return
@@ -236,17 +252,6 @@ namespace Barrage
       */
       /**************************************************************/
       unsigned GetActiveObjectCount() const;
-      
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the number of objects queued for spawn.
-
-        \return
-          Returns the number of objects queued for spawn.
-      */
-      /**************************************************************/
-      unsigned GetQueuedObjectCount() const;
 
       /**************************************************************/
       /*!
@@ -332,16 +337,47 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Shifts all queued objects to the right by some number of
-          places. Used to make room for active objects if they are
-          being created directly.
+          Gets the number of available object slots in the pool.
+
+        \return
+          Returns the number of available object slots in the pool.
+      */
+      /**************************************************************/
+      unsigned GetAvailableSlots() const;
+      
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the index of the first available object slot.
+
+        \return
+          Returns the index of the first available object slot.
+      */
+      /**************************************************************/
+      unsigned GetFirstAvailableSlotIndex() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Shifts all queued and initializing objects to the right 
+          by some number of places. Used to make room for new active 
+          objects if they are being created directly.
 
         \param numberOfPlaces
-          The number of places to shift the queued objects to the
+          The number of places to shift the inactive objects to the
           right in the array.
       */
       /**************************************************************/
-      void ShiftQueuedObjects(unsigned numberOfPlaces);
+      void ShiftInactiveObjects(unsigned numberOfPlaces);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Called when objects are finished being initialized and are
+          ready to be queued for spawn.
+      */
+      /**************************************************************/
+      void QueueInitializedObjects();
 
       /**************************************************************/
       /*!
@@ -364,6 +400,23 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Duplicates an object that already exists in the pool.
+
+        \param objectIndex
+          The index of the object to duplicate.
+
+        \param startIndex
+          The index of the first new object.
+
+        \param numDuplicates
+          The number of times to duplicate the object.
+      */
+      /**************************************************************/
+      void DuplicateObjectInternal(unsigned objectIndex, unsigned startIndex, unsigned numDuplicates = 1);
+
+      /**************************************************************/
+      /*!
+        \brief
           Applies spawn functions to newly spawned objects in this
           pool.
 
@@ -372,12 +425,9 @@ namespace Barrage
 
         \param startIndex
           The index of the first object to apply spawn functions to.
-
-        \param numObjects
-          The number of objects to apply spawn functions to.
       */
       /**************************************************************/
-      void ApplySpawnFunctions(Pool* sourcePool, const SpawnInfo& spawnInfo, unsigned startIndex, unsigned numObjects);
+      void ApplySpawnFunctions(Pool* sourcePool, SpawnInfo& spawnInfo, unsigned startIndex);
 
     private:
       ComponentMap components_;           //!< Holds shared components and their names
@@ -385,7 +435,8 @@ namespace Barrage
       SpawnArchetypeMap spawnArchetypes_; //!< Objects that can be spawned in the pool
       TagSet tags_;                       //!< Holds the pool's tags
       unsigned numActiveObjects_;         //!< Number of currently active objects
-      unsigned numQueuedObjects_;         //!< Number of objects waiting to be spawned on the next tick
+      unsigned numQueuedObjects_;         //!< Number of objects ready to be spawned on the next tick
+      unsigned numInitializingObjects_;   //!< Number of objects being worked on and waiting to be queued
       const unsigned capacity_;           //!< Total number of objects the pool can hold
       std::string name_;                  //!< Name of the pool
       Space& space_;                      //!< The space the pool lives in

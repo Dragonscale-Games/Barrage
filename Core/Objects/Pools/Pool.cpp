@@ -24,6 +24,7 @@ namespace Barrage
     tags_(),
     numActiveObjects_(0),
     numQueuedObjects_(0),
+    numInitializingObjects_(0),
     capacity_(capacity),
     name_(name),
     space_(space)
@@ -84,28 +85,6 @@ namespace Barrage
     spawnArchetypes_.insert(std::make_pair(name, spawnArchetype));
   }
 
-  void Pool::CreateObject(const ObjectArchetype& archetype)
-  {
-    unsigned availableSlots = GetAvailableSlots();
-    
-    if (availableSlots == 0)
-    {
-      return;
-    }
-
-    // if objects are queued for spawn, we need to shift them out of the memory the new active objects will occupy
-    if (numQueuedObjects_)
-    {
-      ShiftQueuedObjects(1);
-    }
-
-    unsigned startIndex = numActiveObjects_;
-
-    CreateObjectsInternal(archetype, startIndex, 1);
-
-    numActiveObjects_++;
-  }
-
   void Pool::QueueSpawns(Pool* sourcePool, SpawnInfo& spawnInfo)
   {
     unsigned numObjects = static_cast<unsigned>(spawnInfo.sourceIndices_.size());
@@ -118,13 +97,15 @@ namespace Barrage
 
     if (numObjects != 0)
     {
-      unsigned startIndex = numActiveObjects_ + numQueuedObjects_;
+      unsigned startIndex = GetFirstAvailableSlotIndex();
 
       CreateObjectsInternal(*spawnInfo.spawnArchetype_, startIndex, numObjects);
-      ApplySpawnFunctions(sourcePool, spawnInfo, startIndex, numObjects);
+      numInitializingObjects_ += numObjects;
 
-      numQueuedObjects_ += numObjects;
+      ApplySpawnFunctions(sourcePool, spawnInfo, startIndex);
     }
+
+    QueueInitializedObjects();
 
     spawnInfo.sourceIndices_.clear();
   }
@@ -133,6 +114,40 @@ namespace Barrage
   {
     numActiveObjects_ += numQueuedObjects_;
     numQueuedObjects_ = 0;
+  }
+
+  void Pool::CreateObject(const ObjectArchetype& archetype)
+  {
+    unsigned availableSlots = GetAvailableSlots();
+
+    if (availableSlots == 0)
+    {
+      return;
+    }
+
+    ShiftInactiveObjects(1);
+
+    unsigned startIndex = numActiveObjects_;
+
+    CreateObjectsInternal(archetype, startIndex, 1);
+    numActiveObjects_++;
+  }
+
+  unsigned Pool::DuplicateObject(unsigned numDuplicates, unsigned objectIndex, unsigned sourceIndex, std::vector<unsigned>& sourceIndices)
+  {
+    unsigned availableSlots = GetAvailableSlots();
+
+    if (numDuplicates > availableSlots)
+    {
+      numDuplicates = availableSlots;
+    }
+
+    DuplicateObjectInternal(objectIndex, GetFirstAvailableSlotIndex(), numDuplicates);
+    numInitializingObjects_ += numDuplicates;
+
+    sourceIndices.insert(sourceIndices.end(), numDuplicates, sourceIndex);
+
+    return numDuplicates;
   }
 
   bool Pool::HasTag(const std::string_view& tag) const
@@ -157,17 +172,17 @@ namespace Barrage
 
   unsigned Pool::GetAvailableSlots() const
   {
-    return capacity_ - numActiveObjects_ - numQueuedObjects_;
+    return capacity_ - numActiveObjects_ - numQueuedObjects_ - numInitializingObjects_;
+  }
+
+  unsigned Pool::GetFirstAvailableSlotIndex() const
+  {
+    return numActiveObjects_ + numQueuedObjects_ + numInitializingObjects_;
   }
 
   unsigned Pool::GetActiveObjectCount() const
   {
     return numActiveObjects_;
-  }
-
-  unsigned Pool::GetQueuedObjectCount() const
-  {
-    return numQueuedObjects_;
   }
 
   unsigned Pool::GetCapacity() const
@@ -192,20 +207,31 @@ namespace Barrage
     return space_;
   }
 
-  void Pool::ShiftQueuedObjects(unsigned numberOfPlaces)
+  void Pool::ShiftInactiveObjects(unsigned numberOfPlaces)
   {
-    unsigned firstQueuedObjectIndex = numActiveObjects_;
-    unsigned lastQueuedObjectIndex = numActiveObjects_ + numQueuedObjects_ - 1;
+    if (numQueuedObjects_ == 0 && numInitializingObjects_ == 0)
+    {
+      return;
+    }
+    
+    unsigned firstInactiveObjectIndex = numActiveObjects_;
+    unsigned lastInactiveObjectIndex = GetFirstAvailableSlotIndex() - 1;
 
     for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
     {
       ComponentArray* componentArray = it->second;
 
-      for (unsigned i = lastQueuedObjectIndex; i >= firstQueuedObjectIndex; --i)
+      for (unsigned i = lastInactiveObjectIndex; i >= firstInactiveObjectIndex; --i)
       {
         componentArray->CopyToThis(*componentArray, i, i + numberOfPlaces);
       }
     }
+  }
+
+  void Pool::QueueInitializedObjects()
+  {
+    numQueuedObjects_ += numInitializingObjects_;
+    numInitializingObjects_ = 0;
   }
 
   void Pool::CreateObjectsInternal(const ObjectArchetype& archetype, unsigned startIndex, unsigned numObjects)
@@ -222,7 +248,20 @@ namespace Barrage
     }
   }
 
-  void Pool::ApplySpawnFunctions(Pool* sourcePool, const SpawnInfo& spawnInfo, unsigned startIndex, unsigned numObjects)
+  void Pool::DuplicateObjectInternal(unsigned objectIndex, unsigned startIndex, unsigned numDuplicates)
+  {
+    for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
+    {
+      ComponentArray* componentArray = it->second;
+    
+      for (unsigned i = 0; i < numDuplicates; ++i)
+      {
+        componentArray->CopyToThis(*componentArray, objectIndex, startIndex + i);
+      }
+    }
+  }
+
+  void Pool::ApplySpawnFunctions(Pool* sourcePool, SpawnInfo& spawnInfo, unsigned startIndex)
   {
     const std::vector<std::string>& spawnFunctions = spawnInfo.spawnFunctions_;
     size_t spawnFunctionCount = spawnFunctions.size();
@@ -233,7 +272,7 @@ namespace Barrage
 
       if (spawn_function)
       {
-        spawn_function(*sourcePool, *this, startIndex, numObjects, spawnInfo.sourceIndices_);
+        spawn_function(*sourcePool, *this, startIndex, numInitializingObjects_, spawnInfo.sourceIndices_);
       }
     }
   }
