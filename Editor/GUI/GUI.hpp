@@ -97,6 +97,8 @@ namespace Barrage
       /**************************************************************/
       void EndDockingSpace();
 
+      void SetStyle();
+
     private:
       bool firstRun_ = false;
 	};

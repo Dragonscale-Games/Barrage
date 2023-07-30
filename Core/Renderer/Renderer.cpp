@@ -29,7 +29,7 @@ namespace Barrage
     fsqShader_(),
     textureManager_(),
 
-    maxInstances_(1),
+    maxInstances_(0),
 
     vao_(0),
     vertexBuffer_(0),
@@ -88,11 +88,6 @@ namespace Barrage
 
   void Renderer::DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture)
   {
-    if (instances > maxInstances_)
-    {
-      SetMaxInstances(instances);
-    }
-
     defaultShader_->Bind();
     textureManager_.BindTexture(texture);
 
@@ -121,8 +116,13 @@ namespace Barrage
     glClear(GL_COLOR_BUFFER_BIT);
   }
 
-  void Renderer::SetMaxInstances(unsigned maxInstances)
+  void Renderer::IncreaseMaxInstances(unsigned maxInstances)
   {
+    if (maxInstances <= maxInstances_)
+    {
+      return;
+    }
+    
     maxInstances_ = maxInstances;
 
     glBindBuffer(GL_ARRAY_BUFFER, translationBuffer_);
@@ -355,7 +355,7 @@ namespace Barrage
     glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
     glVertexAttribDivisor(4, 1);
 
-    SetMaxInstances(1);
+    IncreaseMaxInstances(1);
   }
 
   void Renderer::DeleteVertexAttributes()

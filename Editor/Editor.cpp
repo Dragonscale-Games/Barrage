@@ -272,10 +272,7 @@ namespace Barrage
     UseWidgets();
     gui_.EndWidgets();
 
-    if (!data_.gamePlaying_)
-    {
-      HandleKeyboard();
-    }
+    HandleKeyboard();
 
     engine_.Graphics().GetFramebuffer().BindFramebuffer();
     engine_.Graphics().ClearBackground();

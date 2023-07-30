@@ -44,7 +44,7 @@ namespace Barrage
 
       void ClearBackground();
 
-      void SetMaxInstances(unsigned maxInstances);
+      void IncreaseMaxInstances(unsigned maxInstances);
 
       void SetViewport(int width, int height, int x = 0, int y = 0);
 

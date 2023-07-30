@@ -41,6 +41,8 @@ namespace Barrage
       Sprite& pool_sprite = pool->GetComponent<Sprite>("Sprite")->Data();
       
       drawPools_[pool_sprite.layer_].push_back(pool);
+
+      Engine::Instance->Graphics().IncreaseMaxInstances(pool->GetCapacity());
     }
   }
 
