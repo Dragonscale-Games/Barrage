@@ -30,7 +30,7 @@ namespace Barrage
       for (unsigned i = 0; i < numNewObjects; ++i)
       {
         unsigned dest_index = i + firstObjIndex;
-        float angle = 3.141592f * rng.RangeFloat(0, 2.0f);
+        float angle = 3.1415926f * rng.RangeFloat(0, 2.0f);
         
         dest_velocities.Data(dest_index).vx_ = cos(angle);
         dest_velocities.Data(dest_index).vy_ = sin(angle);

@@ -35,6 +35,7 @@
 #include "Systems/Spawn/SpawnSystem.hpp"
 
 #include "SpawnFunctions/Direction/DirectionFuncs.hpp"
+#include "SpawnFunctions/Miscellaneous/MiscellaneousRules.hpp"
 #include "SpawnFunctions/Position/PositionFuncs.hpp"
 
 namespace Barrage
@@ -174,6 +175,7 @@ namespace Barrage
   {
     RegisterSpawnFunction("MatchPosition", Spawn::MatchPosition);
     RegisterSpawnFunction("RandomDirection", Spawn::RandomDirection);
+    RegisterSpawnFunction("SpawnRing", Spawn::SpawnRing);
   }
 
   void ObjectManager::SetSystemUpdateOrder()

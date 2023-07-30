@@ -82,9 +82,9 @@ namespace Barrage
         ScaleArray& scale_array = *pool->GetComponentArray<Scale>("Scale");
         RotationArray& rotation_array = *pool->GetComponentArray<Rotation>("Rotation");
 
-        glm::vec2* positions = reinterpret_cast<glm::vec2*>(position_array.data_);
-        glm::vec2* scales = reinterpret_cast<glm::vec2*>(scale_array.data_);
-        float* rotations = reinterpret_cast<float*>(rotation_array.data_);
+        glm::vec2* positions = reinterpret_cast<glm::vec2*>(&position_array.Data(0));
+        glm::vec2* scales = reinterpret_cast<glm::vec2*>(&scale_array.Data(0));
+        float* rotations = reinterpret_cast<float*>(&rotation_array.Data(0));
 
         Sprite& pool_sprite = pool->GetComponent<Sprite>("Sprite")->Data();
 

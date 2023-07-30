@@ -23,6 +23,7 @@
 
 #include <unordered_set>
 #include <unordered_map>
+#include <utility>
 
 namespace Barrage
 {
@@ -155,6 +156,14 @@ namespace Barrage
       /**************************************************************/
       void CreateObject(const ObjectArchetype& archetype);
 
+      struct DuplicationResult
+      {
+        unsigned firstIndex_;
+        unsigned numDuplicates_;
+
+        inline DuplicationResult(unsigned firstIndex, unsigned numDuplicates) : firstIndex_(firstIndex), numDuplicates_(numDuplicates) {};
+      };
+
       /**************************************************************/
       /*!
         \brief
@@ -177,10 +186,13 @@ namespace Barrage
           for each duplicate successfully created.
 
         \return
-          Returns the number of duplicates successfully created.
+          Returns the following pair:
+          1. Index of first duplicate
+          2. Number of duplicates successfully created
+          
       */
       /**************************************************************/
-      unsigned DuplicateObject(unsigned numDuplicates, unsigned objectIndex, unsigned sourceIndex, std::vector<unsigned>& sourceIndices);
+      DuplicationResult DuplicateObject(unsigned numDuplicates, unsigned objectIndex, unsigned sourceIndex, std::vector<unsigned>& sourceIndices);
 
       /**************************************************************/
       /*!

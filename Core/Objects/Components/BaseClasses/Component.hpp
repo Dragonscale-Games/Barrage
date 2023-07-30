@@ -126,9 +126,10 @@ namespace Barrage
       /**************************************************************/
       void SetRTTRValue(const rttr::variant& value) override;
 
-    public:
+    private:
       T data_;
 
+      // Notify rttr of the component hierarchy.
       RTTR_ENABLE(Component)
   };
 

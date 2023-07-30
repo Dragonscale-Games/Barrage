@@ -133,7 +133,7 @@ namespace Barrage
     numActiveObjects_++;
   }
 
-  unsigned Pool::DuplicateObject(unsigned numDuplicates, unsigned objectIndex, unsigned sourceIndex, std::vector<unsigned>& sourceIndices)
+  Pool::DuplicationResult Pool::DuplicateObject(unsigned numDuplicates, unsigned objectIndex, unsigned sourceIndex, std::vector<unsigned>& sourceIndices)
   {
     unsigned availableSlots = GetAvailableSlots();
 
@@ -142,12 +142,14 @@ namespace Barrage
       numDuplicates = availableSlots;
     }
 
-    DuplicateObjectInternal(objectIndex, GetFirstAvailableSlotIndex(), numDuplicates);
+    unsigned startIndex = GetFirstAvailableSlotIndex();
+
+    DuplicateObjectInternal(objectIndex, startIndex, numDuplicates);
     numInitializingObjects_ += numDuplicates;
 
     sourceIndices.insert(sourceIndices.end(), numDuplicates, sourceIndex);
 
-    return numDuplicates;
+    return DuplicationResult(startIndex, numDuplicates);
   }
 
   bool Pool::HasTag(const std::string_view& tag) const
@@ -172,7 +174,7 @@ namespace Barrage
 
   unsigned Pool::GetAvailableSlots() const
   {
-    return capacity_ - numActiveObjects_ - numQueuedObjects_ - numInitializingObjects_;
+    return capacity_ - GetFirstAvailableSlotIndex();
   }
 
   unsigned Pool::GetFirstAvailableSlotIndex() const

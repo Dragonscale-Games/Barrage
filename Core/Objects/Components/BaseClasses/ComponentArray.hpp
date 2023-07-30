@@ -194,7 +194,7 @@ namespace Barrage
       /**************************************************************/
       void SetRTTRValue(const rttr::variant& value, int index) override;
 
-    public:
+    private:
       T* data_;
       unsigned capacity_;
 

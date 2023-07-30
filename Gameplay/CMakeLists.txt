@@ -35,6 +35,7 @@ add_library(Gameplay STATIC
 	
 	"SpawnFunctions/Direction/DirectionFuncs.cpp"
 	"SpawnFunctions/Position/PositionFuncs.cpp"
+	"SpawnFunctions/Miscellaneous/MiscellaneousRules.cpp"
 	
 	"Systems/Collision/CollisionSystem.cpp"
 	"Systems/Creation/CreationSystem.cpp"

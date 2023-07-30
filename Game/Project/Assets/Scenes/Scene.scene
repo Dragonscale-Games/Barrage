@@ -5,15 +5,15 @@
             "Name": "Player Pool",
             "Capacity": 1,
             "Components": {
-                "Player": {
-                    "speedFast": 7.0,
-                    "speedSlow": 3.5
-                },
                 "BoundaryBox": {
                     "xMin": 32.0,
                     "xMax": 1888.0,
                     "yMin": 32.0,
                     "yMax": 1048.0
+                },
+                "Player": {
+                    "speedFast": 7.0,
+                    "speedSlow": 3.5
                 },
                 "CircleCollider": {
                     "radius": 16.0
@@ -34,13 +34,13 @@
                 {
                     "Name": "Player Object",
                     "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 300.0
-                        },
                         "Velocity": {
                             "vx": 0.0,
                             "vy": 0.0
+                        },
+                        "Position": {
+                            "x": 960.0,
+                            "y": 300.0
                         },
                         "Rotation": {
                             "angle": -0.0
@@ -87,13 +87,13 @@
                 {
                     "Name": "Bullet Object",
                     "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 880.0
-                        },
                         "Velocity": {
                             "vx": 0.0,
                             "vy": 0.0
+                        },
+                        "Position": {
+                            "x": 960.0,
+                            "y": 880.0
                         },
                         "Rotation": {
                             "angle": 0.0
@@ -122,8 +122,8 @@
                                     {
                                         "spawnType": "Bullet Spawn",
                                         "ticksPerSpawn": 240,
-                                        "numberPerBurst": 100,
-                                        "delay": 35
+                                        "numberPerBurst": 1,
+                                        "delay": 0
                                     }
                                 ]
                             }
@@ -137,7 +137,8 @@
                                 "spawnArchetype": "Bullet Object",
                                 "spawnFunctions": [
                                     "MatchPosition",
-                                    "RandomDirection"
+                                    "RandomDirection",
+                                    "SpawnRing"
                                 ]
                             }
                         }
