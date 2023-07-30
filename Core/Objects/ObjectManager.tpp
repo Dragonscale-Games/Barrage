@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Components/ComponentAllocator.hpp"
+#include "Spawning/SpawnRuleAllocator.hpp"
 
 namespace Barrage
 {
@@ -35,6 +36,12 @@ namespace Barrage
   void ObjectManager::RegisterSystem(const std::string_view& systemName)
   {
     systemManager_.RegisterSystem<T>(systemName);
+  }
+
+  template <typename T>
+  void ObjectManager::RegisterSpawnRule(const std::string& spawnRuleName)
+  {
+    SpawnRuleAllocator::RegisterSpawnRule<T>(spawnRuleName);
   }
 }
 

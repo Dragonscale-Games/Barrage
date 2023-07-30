@@ -1,18 +1,18 @@
 /* ======================================================================== */
 /*!
- * \file            MiscellaneousRules.hpp
+ * \file            DirectionRules.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Miscellaneous spawn rules that don't fit clearly anywhere else.
+   Spawn functions that set the initial direction of an object's velocity.
  */
  /* ======================================================================== */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef MiscellaneousRules_BARRAGE_H
-#define MiscellaneousRules_BARRAGE_H
+#ifndef DirectionRules_BARRAGE_H
+#define DirectionRules_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Objects/Spawning/SpawnRule.hpp>
@@ -21,15 +21,7 @@ namespace Barrage
 {
   namespace Spawn
   {
-    struct SpawnRingData
-    {
-      unsigned numObjects_;
-      float radius_;
-
-      inline SpawnRingData() : numObjects_(10), radius_(100.0f) {};
-    };
-    
-    class SpawnRing : public SpawnRuleT<SpawnRingData>
+    class RandomDirection : public SpawnRule
     {
       public:
         void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
@@ -38,5 +30,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // MiscellaneousRules_BARRAGE_H
+#endif // DirectionRules_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

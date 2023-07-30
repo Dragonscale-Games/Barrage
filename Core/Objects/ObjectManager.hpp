@@ -17,7 +17,7 @@
 
 #include "Pools/PoolManager.hpp"
 #include "Systems/SystemManager.hpp"
-#include "Spawning/SpawnFunctionManager.hpp"
+#include "Spawning/SpawnRuleAllocator.hpp"
 #include "Random/Random.hpp"
 
 namespace Barrage
@@ -91,7 +91,8 @@ namespace Barrage
       template <typename T>
       void RegisterSystem(const std::string_view& systemName);
 
-      void RegisterSpawnFunction(const std::string_view& name, SpawnFunction spawnFunction);
+      template <typename T>
+      void RegisterSpawnRule(const std::string& spawnRuleName);
 
       void SetSystemUpdateOrder(const std::vector<std::string_view>& updateOrderList);
 

@@ -62,7 +62,7 @@ add_library(BarrageCore STATIC
   
   "Objects/Systems/BaseSystem.cpp"                             
 
-  "Objects/Spawning/SpawnFunctionManager.cpp"  
+    
          
   "Objects/Pools/PoolManager.cpp"                        
   "Objects/Systems/SystemManager.cpp"                   
@@ -93,7 +93,7 @@ add_library(BarrageCore STATIC
 
   "Objects/Spawning/SpawnInfo.cpp"  
 
-  "Entry/Entry.cpp"  "Window/WindowManager.cpp" "Renderer/Framebuffers/Framebuffer.cpp"  )
+  "Entry/Entry.cpp"  "Window/WindowManager.cpp" "Renderer/Framebuffers/Framebuffer.cpp"  "Objects/Spawning/SpawnRule.cpp"  "Objects/Spawning/SpawnRuleAllocator.cpp")
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.

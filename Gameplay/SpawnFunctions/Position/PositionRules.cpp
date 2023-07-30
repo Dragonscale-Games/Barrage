@@ -1,26 +1,24 @@
 /* ======================================================================== */
 /*!
- * \file            PositionFuncs.cpp
+ * \file            PositionRules.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Spawn functions that set the initial position of an object.
+   Spawn rules that set the initial position of an object.
  */
  /* ======================================================================== */
 
-#include "PositionFuncs.hpp"
+#include "PositionRules.hpp"
 #include <Engine/Engine.hpp>
 #include "ComponentArrays/PositionArray.hpp"
-
-using namespace Barrage;
 
 namespace Barrage
 {
   namespace Spawn
   {
-    void MatchPosition(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
+    void MatchPosition::Execute(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
     {
       PositionArray& source_positions = *initPool.GetComponentArray<Position>("Position");
       PositionArray& dest_positions = *destPool.GetComponentArray<Position>("Position");

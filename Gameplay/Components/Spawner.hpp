@@ -68,7 +68,7 @@ namespace Barrage
     public:
       std::string currentPattern_; //!< The current pattern being used by the spawner
       PatternMap patterns_;        //!< The patterns available to use
-      SpawnTypeMap spawnTypes_;    //!< The object types available for spawning
+      SpawnTypeMap spawnTypes_;    //!< The spawn types available to use
 
       inline Spawner() : spawnTypes_() {}
   };

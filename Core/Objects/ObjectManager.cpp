@@ -107,9 +107,4 @@ namespace Barrage
   {
     systemManager_.SetUpdateOrder(updateOrderList);
   }
-
-  void ObjectManager::RegisterSpawnFunction(const std::string_view& name, SpawnFunction spawnFunction)
-  {
-    SpawnFunctionManager::RegisterSpawnFunction(name, spawnFunction);
-  }
 }

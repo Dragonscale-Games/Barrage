@@ -34,9 +34,9 @@
 #include "Systems/Movement/MovementSystem.hpp"
 #include "Systems/Spawn/SpawnSystem.hpp"
 
-#include "SpawnFunctions/Direction/DirectionFuncs.hpp"
+#include "SpawnFunctions/Direction/DirectionRules.hpp"
 #include "SpawnFunctions/Miscellaneous/MiscellaneousRules.hpp"
-#include "SpawnFunctions/Position/PositionFuncs.hpp"
+#include "SpawnFunctions/Position/PositionRules.hpp"
 
 namespace Barrage
 {
@@ -102,14 +102,14 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("destinationPool", &SpawnInfo::destinationPoolName_)
       .property("spawnArchetype", &SpawnInfo::spawnArchetypeName_)
-      .property("spawnFunctions", &SpawnInfo::spawnFunctions_)
+      .property("spawnRules", &SpawnInfo::spawnRuleNames_)
       ;
 
     rttr::registration::class_<Spawner>("Spawner")
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("currentPattern", &Spawner::currentPattern_)
       .property("patterns", &Spawner::patterns_)
-      .property("spawnTypes", &Spawner::spawnTypes_)
+      .property("spawns", &Spawner::spawnTypes_)
       ;
 
     rttr::registration::class_<Position>("Position")
@@ -173,9 +173,9 @@ namespace Barrage
 
   void ObjectManager::RegisterCustomSpawnFunctions()
   {
-    RegisterSpawnFunction("MatchPosition", Spawn::MatchPosition);
-    RegisterSpawnFunction("RandomDirection", Spawn::RandomDirection);
-    RegisterSpawnFunction("SpawnRing", Spawn::SpawnRing);
+    RegisterSpawnRule<Spawn::MatchPosition>("MatchPosition");
+    RegisterSpawnRule<Spawn::RandomDirection>("RandomDirection");
+    RegisterSpawnRule<Spawn::SpawnRing>("SpawnRing");
   }
 
   void ObjectManager::SetSystemUpdateOrder()

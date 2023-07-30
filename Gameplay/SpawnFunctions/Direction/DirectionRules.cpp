@@ -10,7 +10,7 @@
  */
  /* ======================================================================== */
 
-#include "DirectionFuncs.hpp"
+#include "DirectionRules.hpp"
 #include <Engine/Engine.hpp>
 #include <stdafx.h>
 
@@ -20,10 +20,10 @@ namespace Barrage
 {
   namespace Spawn
   {
-    void RandomDirection(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
+    void RandomDirection::Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
     {
       UNREFERENCED(sourceIndices);
-      
+
       Barrage::Random& rng = initPool.GetSpace().GetRNG();
       VelocityArray& dest_velocities = *destPool.GetComponentArray<Velocity>("Velocity");
 
@@ -31,7 +31,7 @@ namespace Barrage
       {
         unsigned dest_index = i + firstObjIndex;
         float angle = 3.1415926f * rng.RangeFloat(0, 2.0f);
-        
+
         dest_velocities.Data(dest_index).vx_ = cos(angle);
         dest_velocities.Data(dest_index).vy_ = sin(angle);
       }

@@ -429,17 +429,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Applies spawn functions to newly spawned objects in this
+          Applies spawn rules to newly spawned objects in this
           pool.
 
         \param spawnInfo
           Contains the spawn function list and source object indices.
 
         \param startIndex
-          The index of the first object to apply spawn functions to.
+          The index of the first object to apply spawn rules to.
       */
       /**************************************************************/
-      void ApplySpawnFunctions(Pool* sourcePool, SpawnInfo& spawnInfo, unsigned startIndex);
+      void ApplySpawnRules(Pool* sourcePool, SpawnInfo& spawnInfo, unsigned startIndex);
 
     private:
       ComponentMap components_;           //!< Holds shared components and their names

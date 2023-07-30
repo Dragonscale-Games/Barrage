@@ -102,7 +102,7 @@ namespace Barrage
       CreateObjectsInternal(*spawnInfo.spawnArchetype_, startIndex, numObjects);
       numInitializingObjects_ += numObjects;
 
-      ApplySpawnFunctions(sourcePool, spawnInfo, startIndex);
+      ApplySpawnRules(sourcePool, spawnInfo, startIndex);
     }
 
     QueueInitializedObjects();
@@ -263,18 +263,18 @@ namespace Barrage
     }
   }
 
-  void Pool::ApplySpawnFunctions(Pool* sourcePool, SpawnInfo& spawnInfo, unsigned startIndex)
+  void Pool::ApplySpawnRules(Pool* sourcePool, SpawnInfo& spawnInfo, unsigned startIndex)
   {
-    const std::vector<std::string>& spawnFunctions = spawnInfo.spawnFunctions_;
+    const std::vector<std::string>& spawnFunctions = spawnInfo.spawnRuleNames_;
     size_t spawnFunctionCount = spawnFunctions.size();
 
     for (size_t i = 0; i < spawnFunctionCount; ++i)
     {
-      SpawnFunction spawn_function = SpawnFunctionManager::GetSpawnFunction(spawnFunctions[i]);
+      auto spawn_function = SpawnRuleAllocator::CreateSpawnRule(spawnFunctions[i]);
 
       if (spawn_function)
       {
-        spawn_function(*sourcePool, *this, startIndex, numInitializingObjects_, spawnInfo.sourceIndices_);
+        spawn_function->Execute(*sourcePool, *this, startIndex, numInitializingObjects_, spawnInfo.sourceIndices_);
       }
     }
   }

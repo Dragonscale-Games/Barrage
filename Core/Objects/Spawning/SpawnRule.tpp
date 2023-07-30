@@ -1,30 +1,42 @@
 /* ======================================================================== */
 /*!
- * \file            PositionFuncs.hpp
+ * \file            SpawnRule.tpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Spawn functions that set the initial position of an object.
+   A spawn rule modifies the initial values of a newly spawned object.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef PositionFuncs_BARRAGE_H
-#define PositionFuncs_BARRAGE_H
+#ifndef SpawnRule_BARRAGE_T
+#define SpawnRule_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////
-
-#include <Objects/Spawning/SpawnFunctionManager.hpp>
 
 namespace Barrage
 {
-  namespace Spawn
+  template <typename T>
+  rttr::variant SpawnRuleT<T>::GetRTTRValue()
   {
-    void MatchPosition(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices);
+    rttr::variant value = data_;
+
+    return value;
+  }
+
+  template <typename T>
+  void SpawnRuleT<T>::SetRTTRValue(const rttr::variant& value)
+  {
+    if (value.get_type() != rttr::type::get<T>())
+    {
+      return;
+    }
+
+    data_ = value.get_value<T>();
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // PositionFuncs_BARRAGE_H
+#endif // SpawnRule_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////

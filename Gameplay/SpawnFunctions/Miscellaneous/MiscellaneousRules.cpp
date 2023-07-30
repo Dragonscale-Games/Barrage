@@ -22,10 +22,10 @@ namespace Barrage
 {
   namespace Spawn
   {
-    void SpawnRing(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
+    void SpawnRing::Execute(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
     {
-      unsigned numRingObjects = 10;
-      float radius = 50.0f;
+      unsigned numRingObjects = data_.numObjects_;
+      float radius = data_.radius_;
       float angleStep = 2.0f * 3.1415926f / numRingObjects;
 
       PositionArray& destPositions = *destPool.GetComponentArray<Position>("Position");
