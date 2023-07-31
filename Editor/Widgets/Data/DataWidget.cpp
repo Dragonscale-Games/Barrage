@@ -102,7 +102,7 @@ namespace Barrage
 
         for (size_t i = 0; i < arraySize; ++i)
         {
-          rttr::variant elementVariant = arrayView.get_value(i);
+          rttr::variant elementVariant = arrayView.get_value(i).extract_wrapped_value();
 
           DataObject elementObject("##ElementObject", elementVariant);
 
