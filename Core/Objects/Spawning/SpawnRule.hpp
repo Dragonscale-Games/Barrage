@@ -88,6 +88,8 @@ namespace Barrage
       RTTR_ENABLE()
   };
 
+  typedef std::vector<std::shared_ptr<SpawnRule>> SpawnRuleList;
+
   //! Used for spawn rules that store data
   template <typename T>
   class SpawnRuleT : public SpawnRule

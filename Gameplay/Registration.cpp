@@ -109,7 +109,7 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("currentPattern", &Spawner::currentPattern_)
       .property("patterns", &Spawner::patterns_)
-      .property("spawns", &Spawner::spawnTypes_)
+      .property("spawnTypes", &Spawner::spawnTypes_)
       ;
 
     rttr::registration::class_<Position>("Position")

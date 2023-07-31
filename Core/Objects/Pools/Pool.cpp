@@ -265,17 +265,11 @@ namespace Barrage
 
   void Pool::ApplySpawnRules(Pool* sourcePool, SpawnInfo& spawnInfo, unsigned startIndex)
   {
-    const std::vector<std::string>& spawnFunctions = spawnInfo.spawnRuleNames_;
-    size_t spawnFunctionCount = spawnFunctions.size();
-
-    for (size_t i = 0; i < spawnFunctionCount; ++i)
+    for (auto it = spawnInfo.spawnRules_.begin(); it != spawnInfo.spawnRules_.end(); ++it)
     {
-      auto spawn_function = SpawnRuleAllocator::CreateSpawnRule(spawnFunctions[i]);
-
-      if (spawn_function)
-      {
-        spawn_function->Execute(*sourcePool, *this, startIndex, numInitializingObjects_, spawnInfo.sourceIndices_);
-      }
+      std::shared_ptr<SpawnRule>& spawnRule = *it;
+      
+      spawnRule->Execute(*sourcePool, *this, startIndex, numInitializingObjects_, spawnInfo.sourceIndices_);
     }
   }
 }
