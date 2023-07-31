@@ -23,6 +23,7 @@ namespace Barrage
     openTagModal_(false),
     openRenameModal_(false),
     openProjectModal_(false),
+    gameTick_(0),
     renameCallback_(nullptr),
     projectName_(),
     projectDirectory_(),

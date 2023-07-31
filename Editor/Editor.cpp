@@ -20,6 +20,7 @@
 #include "Widgets/Windows/Inspector/InspectorWidget.hpp"
 #include "Widgets/MainMenu/MainMenuWidget.hpp"
 #include "Widgets/Windows/Game/GameWidget.hpp"
+#include "Widgets/Windows/Timeline/TimelineWidget.hpp"
 
 #include <Widgets/Modals/Component/ComponentModal.hpp>
 #include <Widgets/Modals/ComponentArray/ComponentArrayModal.hpp>
@@ -236,8 +237,8 @@ namespace Barrage
 
     unsigned numTicks = engine_.Frames().ConsumeTicks();
 
-    TimePoint beginT;
-    TimePoint endT;
+    /*TimePoint beginT;
+    TimePoint endT;*/
 
     if (data_.gamePlaying_)
     {
@@ -254,7 +255,16 @@ namespace Barrage
     if (data_.sceneIsDirty_)
     {
       //beginT = std::chrono::high_resolution_clock::now();
-      engine_.Spaces().GetSpace(data_.selectedSpace_)->SetScene(data_.selectedScene_);
+      Space* selectedSpace = engine_.Spaces().GetSpace(data_.selectedSpace_);
+      
+      selectedSpace->SetScene(data_.selectedScene_);
+      selectedSpace->GetRNG().SetSeed(0xC0FFEEC0FFEE);
+
+      for (unsigned i = 0; i < data_.gameTick_; ++i)
+      {
+        engine_.Spaces().Update();
+      }
+
       data_.sceneIsDirty_ = false;
       //endT = std::chrono::high_resolution_clock::now();
       //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
@@ -307,6 +317,7 @@ namespace Barrage
     HierarchyWidget::Use();
     InspectorWidget::Use();
     LogWidget::Use();
+    TimelineWidget::Use();
 
     if (data_.openComponentModal_)
     {

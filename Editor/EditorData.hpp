@@ -34,6 +34,7 @@ namespace Barrage
     bool openTagModal_;                       //!< Flag for when user opens the "add tag" modal
     bool openRenameModal_;                    //!< Flag for when user opens the "rename" modal
     bool openProjectModal_;                   //!< Flag for when user opens the "project" modal
+    unsigned gameTick_;                       //!< The tick to show/start on in the preview window
     RenameCallback renameCallback_;           //!< Contains function to call when user renames something
     std::string projectName_;                 //!< The name of the game project
     std::string projectDirectory_;            //!< The directory of the game project

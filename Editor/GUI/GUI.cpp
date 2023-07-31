@@ -122,6 +122,7 @@ namespace Barrage
 
         ImGui::DockBuilderDockWindow("Hierarchy", dock_id_left);
         ImGui::DockBuilderDockWindow("Output Log", dock_id_bottom);
+        ImGui::DockBuilderDockWindow("Timeline", dock_id_bottom);
         ImGui::DockBuilderDockWindow("Inspector", dock_id_right);
         ImGui::DockBuilderDockWindow("Game", dock_id_center);
 

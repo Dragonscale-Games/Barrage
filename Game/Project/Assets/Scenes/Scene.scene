@@ -5,15 +5,15 @@
             "Name": "Player Pool",
             "Capacity": 1,
             "Components": {
-                "Player": {
-                    "speedFast": 7.0,
-                    "speedSlow": 3.5
-                },
                 "BoundaryBox": {
                     "xMin": 32.0,
                     "xMax": 1888.0,
                     "yMin": 32.0,
                     "yMax": 1048.0
+                },
+                "Player": {
+                    "speedFast": 7.0,
+                    "speedSlow": 3.5
                 },
                 "CircleCollider": {
                     "radius": 16.0
@@ -34,13 +34,13 @@
                 {
                     "Name": "Player Object",
                     "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 300.0
-                        },
                         "Velocity": {
                             "vx": 0.0,
                             "vy": 0.0
+                        },
+                        "Position": {
+                            "x": 960.0,
+                            "y": 300.0
                         },
                         "Rotation": {
                             "angle": -0.0
@@ -87,13 +87,13 @@
                 {
                     "Name": "Bullet Object",
                     "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 880.0
-                        },
                         "Velocity": {
                             "vx": 0.0,
                             "vy": 0.0
+                        },
+                        "Position": {
+                            "x": 960.0,
+                            "y": 880.0
                         },
                         "Rotation": {
                             "angle": 0.0
@@ -121,7 +121,7 @@
                                 "automaticSpawns": [
                                     {
                                         "spawnType": "Bullet Spawn",
-                                        "ticksPerSpawn": 240,
+                                        "ticksPerSpawn": 120,
                                         "numberPerBurst": 1,
                                         "delay": 0
                                     }
@@ -145,8 +145,8 @@
                                     {
                                         "Name": "SpawnRing",
                                         "Data": {
-                                            "numObjects": 20,
-                                            "radius": 402.0
+                                            "numObjects": 5,
+                                            "radius": 23.0
                                         }
                                     },
                                     {
@@ -155,8 +155,8 @@
                                     {
                                         "Name": "SpawnRing",
                                         "Data": {
-                                            "numObjects": 10,
-                                            "radius": 83.0
+                                            "numObjects": 5,
+                                            "radius": 115.0
                                         }
                                     }
                                 ]
@@ -177,26 +177,6 @@
                         "Position": {
                             "x": 960.0,
                             "y": 880.0
-                        },
-                        "SpawnTimer": {}
-                    }
-                },
-                {
-                    "Name": "Object",
-                    "Components": {
-                        "Position": {
-                            "x": 1236.0,
-                            "y": 618.0
-                        },
-                        "SpawnTimer": {}
-                    }
-                },
-                {
-                    "Name": "Object 1",
-                    "Components": {
-                        "Position": {
-                            "x": 792.0,
-                            "y": 540.0
                         },
                         "SpawnTimer": {}
                     }
