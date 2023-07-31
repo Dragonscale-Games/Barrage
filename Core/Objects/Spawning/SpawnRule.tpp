@@ -18,6 +18,11 @@
 namespace Barrage
 {
   template <typename T>
+  SpawnRuleT<T>::SpawnRuleT(const std::string& name) : SpawnRule(name), data_()
+  {
+  }
+  
+  template <typename T>
   rttr::variant SpawnRuleT<T>::GetRTTRValue()
   {
     rttr::variant value = data_;

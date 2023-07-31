@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <rttr/rttr_enable.h>
+#include <string>
 
 namespace Barrage
 {
@@ -28,10 +29,29 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Constructs the spawn rule with a given name.
+      */
+      /**************************************************************/
+      SpawnRule(const std::string& name);
+      
+      /**************************************************************/
+      /*!
+        \brief
           Base class requires virtual destructor.
       */
       /**************************************************************/
       virtual ~SpawnRule() = default;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the name of the spawn rule.
+
+        \return
+          Returns the name of the spawn rule.
+      */
+      /**************************************************************/
+      const std::string& GetName() const;
 
       /**************************************************************/
       /*!
@@ -84,8 +104,8 @@ namespace Barrage
       /**************************************************************/
       virtual void SetRTTRValue(const rttr::variant& value);
 
-      // Notify rttr of the component hierarchy.
-      RTTR_ENABLE()
+    private:
+      std::string name_;
   };
 
   typedef std::vector<std::shared_ptr<SpawnRule>> SpawnRuleList;
@@ -95,6 +115,14 @@ namespace Barrage
   class SpawnRuleT : public SpawnRule
   {
     public:
+      /**************************************************************/
+      /*!
+        \brief
+          Constructs the spawn rule with a given name.
+      */
+      /**************************************************************/
+      SpawnRuleT(const std::string& name);
+      
       /**************************************************************/
       /*!
         \brief
@@ -126,8 +154,6 @@ namespace Barrage
     protected:
       T data_;
 
-      // Notify rttr of the component hierarchy.
-      RTTR_ENABLE(SpawnRule)
   };
 }
 

@@ -18,6 +18,8 @@ namespace Barrage
 {
   namespace Spawn
   {
+    MatchPosition::MatchPosition() : SpawnRule("MatchPosition") {}
+    
     void MatchPosition::Execute(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
     {
       PositionArray& source_positions = *initPool.GetComponentArray<Position>("Position");

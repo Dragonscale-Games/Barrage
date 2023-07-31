@@ -24,6 +24,8 @@ namespace Barrage
     class MatchPosition : public SpawnRule
     {
       public:
+        MatchPosition();
+        
         void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
     };
   }

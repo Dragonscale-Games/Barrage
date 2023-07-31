@@ -15,6 +15,15 @@
 
 namespace Barrage
 {
+  SpawnRule::SpawnRule(const std::string& name) : name_(name)
+  {
+  }
+  
+  const std::string& SpawnRule::GetName() const
+  {
+    return name_;
+  }
+  
   rttr::variant SpawnRule::GetRTTRValue()
   {
     return rttr::variant();

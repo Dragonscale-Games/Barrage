@@ -144,6 +144,8 @@ namespace Barrage
       static void UnsignedLongLongWidget(DataObject& object);
              
       static void StringWidget(DataObject& object);
+
+      static void SpawnRuleListWidget(DataObject& object);
              
       static void RotationWidget(DataObject& object);
              

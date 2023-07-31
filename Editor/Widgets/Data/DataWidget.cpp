@@ -17,6 +17,7 @@
 #include <Editor.hpp>
 #include "ComponentArrays/RotationArray.hpp"
 #include "Components/Sprite.hpp"
+#include "Objects/Spawning/SpawnRuleAllocator.hpp"
 
 namespace Barrage
 {
@@ -385,6 +386,7 @@ namespace Barrage
     AddDataWidget<long long>(LongLongWidget);
     AddDataWidget<unsigned long long>(UnsignedLongLongWidget);
     AddDataWidget<std::string>(StringWidget);
+    AddDataWidget<SpawnRuleList>(SpawnRuleListWidget);
     AddDataWidget<Rotation>(RotationWidget);
     AddDataWidget<Sprite>(SpriteWidget);
   }
@@ -515,6 +517,52 @@ namespace Barrage
     if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
     {
       object.SetValue(value);
+    }
+  }
+
+  void DataWidget::SpawnRuleListWidget(DataObject& object)
+  {
+    SpawnRuleList spawnRuleList = object.GetValue<SpawnRuleList>();
+
+    size_t listSize = spawnRuleList.size();
+
+    for (size_t i = 0; i < listSize; ++i)
+    {
+      std::shared_ptr<SpawnRule> spawnRule = spawnRuleList[i];
+
+      ImGui::PushID(static_cast<int>(i));
+      ImGui::Text(spawnRule->GetName().c_str());
+
+      rttr::variant dataVariant = spawnRule->GetRTTRValue();
+
+      if (dataVariant.is_valid())
+      {
+        DataObject dataObject("##DataObject", dataVariant);
+        DataWidget::Use(dataObject);
+
+        if (dataObject.ValueWasSet())
+        {
+          spawnRule->SetRTTRValue(dataVariant);
+          object.SetValue(spawnRuleList);
+        }
+      }
+
+      ImGui::PopID();
+    }
+
+    static std::string textString;
+    ImGui::InputText("Spawn rule text input", &textString);
+
+    if (ImGui::Button("New spawn rule") && !object.ValueWasSet())
+    {
+      std::shared_ptr<SpawnRule> newSpawnRule = SpawnRuleAllocator::CreateSpawnRule(textString);
+
+      if (newSpawnRule)
+      {
+        spawnRuleList.push_back(newSpawnRule);
+        object.SetValue(spawnRuleList);
+        textString.clear();
+      }
     }
   }
 

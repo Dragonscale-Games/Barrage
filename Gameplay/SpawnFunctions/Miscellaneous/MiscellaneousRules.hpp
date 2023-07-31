@@ -32,6 +32,8 @@ namespace Barrage
     class SpawnRing : public SpawnRuleT<SpawnRingData>
     {
       public:
+        SpawnRing();
+        
         void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
     };
   }

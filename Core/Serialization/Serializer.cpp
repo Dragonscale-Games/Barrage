@@ -32,6 +32,8 @@
 
 #include "Utilities/RuntimeError.hpp"
 
+#include "Objects/Spawning/SpawnRuleAllocator.hpp"
+
 namespace
 {
   bool IsRapidJsonPrimitive(const rttr::type& type)
@@ -199,8 +201,33 @@ namespace Barrage
       unwrappedObject = unwrappedObject.extract_wrapped_value();
     }
 
+    if (type == rttr::type::get<SpawnRuleList>())
+    {
+      const SpawnRuleList& spawnRuleList = object.get_value<SpawnRuleList>();
+      
+      value.SetArray();
+
+      for (auto it = spawnRuleList.begin(); it != spawnRuleList.end(); ++it)
+      {
+        std::shared_ptr<SpawnRule> spawnRule = *it;
+        
+        rapidjson::Value spawnRuleValue;
+        spawnRuleValue.SetObject();
+        rapidjson::Value spawnRuleName = Serialize(spawnRule->GetName(), allocator);
+        spawnRuleValue.AddMember("Name", spawnRuleName, allocator);
+        rttr::variant dataVariant = spawnRule->GetRTTRValue();
+
+        if (dataVariant.is_valid())
+        {
+          rapidjson::Value spawnRuleData = Serialize(dataVariant, allocator);
+          spawnRuleValue.AddMember("Data", spawnRuleData, allocator);
+        }
+
+        value.PushBack(spawnRuleValue, allocator);
+      }
+    }
     // Handle array-like types.
-    if (type.is_sequential_container())
+    else if (type.is_sequential_container())
     {
       const rttr::variant_sequential_view& asArray = unwrappedObject.create_sequential_view();
       // Make this value an array.
@@ -279,8 +306,43 @@ namespace Barrage
       unwrappedObject = unwrappedObject.extract_wrapped_value();
     }
 
+    if (type == rttr::type::get<SpawnRuleList>())
+    {
+      SpawnRuleList newSpawnRuleList;
+      
+      const rapidjson::GenericArray<true, rapidjson::Value> dataAsArray = data.GetArray();
+      size_t arraySize = dataAsArray.Size();
+
+      for (uint32_t i = 0; i < arraySize; ++i)
+      {
+        const rapidjson::Value& element = dataAsArray[i];
+
+        if (element.HasMember("Name") && element["Name"].IsString())
+        {
+          std::shared_ptr<SpawnRule> newSpawnRule = SpawnRuleAllocator::CreateSpawnRule(element["Name"].GetString());
+
+          if (newSpawnRule)
+          {
+            if (element.HasMember("Data") && element["Data"].IsObject())
+            {
+              rttr::variant spawnRuleData = newSpawnRule->GetRTTRValue();
+
+              if (spawnRuleData.is_valid())
+              {
+                Deserialize(spawnRuleData, element["Data"]);
+                newSpawnRule->SetRTTRValue(spawnRuleData);
+              }
+            }
+
+            newSpawnRuleList.push_back(newSpawnRule);
+          }
+        }
+      }
+
+      object = newSpawnRuleList;
+    }
     // Handle array-like objects.
-    if (type.is_sequential_container())
+    else if (type.is_sequential_container())
     {
       // The array from the JSON data.
       const rapidjson::GenericArray<true, rapidjson::Value> dataAsArray = data.GetArray();

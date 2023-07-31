@@ -30,13 +30,12 @@ namespace Barrage
   {
     Pool* destinationPool_;           //!< destination pool pointer (should not be set manually)
     ObjectArchetype* spawnArchetype_; //!< spawn archetype pointer (should not be set manually)
-    SpawnRuleList spawnRules_;        //!< Vector of spawn rule pointers (should not be set manually)
-
+    
     std::vector<unsigned> sourceIndices_; //!< Indices of spawner objects (cleared after spawn)
 
-    std::string destinationPoolName_;         //!< Name of the pool to spawn the object in
-    std::string spawnArchetypeName_;          //!< Name of spawn archetype to use
-    std::vector<std::string> spawnRuleNames_; //!< List of spawn rules to apply
+    SpawnRuleList spawnRules_;        //!< List of spawn rules to apply
+    std::string destinationPoolName_; //!< Name of the pool to spawn the object in
+    std::string spawnArchetypeName_;  //!< Name of spawn archetype to use
   };
 }
 

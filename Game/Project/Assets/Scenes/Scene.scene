@@ -136,9 +136,29 @@
                                 "destinationPool": "Bullet Pool",
                                 "spawnArchetype": "Bullet Object",
                                 "spawnRules": [
-                                    "MatchPosition",
-                                    "RandomDirection",
-                                    "SpawnRing"
+                                    {
+                                        "Name": "MatchPosition"
+                                    },
+                                    {
+                                        "Name": "RandomDirection"
+                                    },
+                                    {
+                                        "Name": "SpawnRing",
+                                        "Data": {
+                                            "numObjects": 20,
+                                            "radius": 402.0
+                                        }
+                                    },
+                                    {
+                                        "Name": "RandomDirection"
+                                    },
+                                    {
+                                        "Name": "SpawnRing",
+                                        "Data": {
+                                            "numObjects": 10,
+                                            "radius": 83.0
+                                        }
+                                    }
                                 ]
                             }
                         }

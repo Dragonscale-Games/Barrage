@@ -100,7 +100,7 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("destinationPool", &SpawnInfo::destinationPoolName_)
       .property("spawnArchetype", &SpawnInfo::spawnArchetypeName_)
-      .property("spawnRules", &SpawnInfo::spawnRuleNames_)
+      .property("spawnRules", &SpawnInfo::spawnRules_)
       ;
 
     rttr::registration::class_<Spawner>("Spawner")
@@ -137,6 +137,12 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("vx", &Velocity::vx_)
       .property("vy", &Velocity::vy_)
+      ;
+
+    rttr::registration::class_<Spawn::SpawnRingData>("SpawnRingData")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("numObjects", &Spawn::SpawnRingData::numObjects_)
+      .property("radius", &Spawn::SpawnRingData::radius_)
       ;
   }
 }

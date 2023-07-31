@@ -22,6 +22,8 @@ namespace Barrage
 {
   namespace Spawn
   {
+    SpawnRing::SpawnRing() : SpawnRuleT<SpawnRingData>("SpawnRing") {}
+    
     void SpawnRing::Execute(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
     {
       unsigned numRingObjects = data_.numObjects_;

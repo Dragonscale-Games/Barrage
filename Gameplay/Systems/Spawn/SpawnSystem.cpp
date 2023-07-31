@@ -186,25 +186,25 @@ namespace Barrage
       }
     }
 
-    //
-    // hook up spawn functions
-    //
+    ////
+    //// hook up spawn functions
+    ////
 
-    for (auto it = spawnTypes.begin(); it != spawnTypes.end(); ++it)
-    {
-      SpawnInfo& spawnType = it->second;
-      
-      spawnType.spawnRules_.clear();
+    //for (auto it = spawnTypes.begin(); it != spawnTypes.end(); ++it)
+    //{
+    //  SpawnInfo& spawnType = it->second;
+    //  
+    //  spawnType.spawnRules_.clear();
 
-      for (auto jt = spawnType.spawnRuleNames_.begin(); jt != spawnType.spawnRuleNames_.end(); ++jt)
-      {
-        std::shared_ptr<SpawnRule> spawnRule = SpawnRuleAllocator::CreateSpawnRule(*jt);
+    //  for (auto jt = spawnType.spawnRuleNames_.begin(); jt != spawnType.spawnRuleNames_.end(); ++jt)
+    //  {
+    //    std::shared_ptr<SpawnRule> spawnRule = SpawnRuleAllocator::CreateSpawnRule(*jt);
 
-        if (spawnRule)
-        {
-          spawnType.spawnRules_.push_back(spawnRule);
-        }
-      }
-    }
+    //    if (spawnRule)
+    //    {
+    //      spawnType.spawnRules_.push_back(spawnRule);
+    //    }
+    //  }
+    //}
   }
 }

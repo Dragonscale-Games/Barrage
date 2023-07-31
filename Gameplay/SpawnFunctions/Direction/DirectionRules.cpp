@@ -20,6 +20,8 @@ namespace Barrage
 {
   namespace Spawn
   {
+    RandomDirection::RandomDirection() : SpawnRule("RandomDirection") {}
+    
     void RandomDirection::Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
     {
       UNREFERENCED(sourceIndices);
