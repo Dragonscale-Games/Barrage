@@ -19,9 +19,16 @@ namespace Barrage
   
   void TimelineWidget::Use()
   {
+    unsigned& gameTick = Editor::Instance->Data().gameTick_;
+    
     ImGui::Begin("Timeline");
     
-    ImGui::Text("Timeline");
+    if (ImGui::Button("<|"))
+    {
+      gameTick = 0;
+      Editor::Instance->Data().sceneIsDirty_ = true;
+    }
+
     ImGui::InvisibleButton("##timeline", ImVec2(-1, -1));
 
     // This invisible button will be our timeline
@@ -38,9 +45,8 @@ namespace Barrage
 
       // Calculate the selected value based on the click position
       float t = (pos.x - min.x) / (max.x - min.x); // will be 0..1 depending on position
-      Editor::Instance->Data().gameTick_ = static_cast<unsigned>(t * MAX_TICKS);
+      gameTick = static_cast<unsigned>(t * MAX_TICKS);
       Editor::Instance->Data().sceneIsDirty_ = true;
-      LogWidget::AddEntry("Set tick to " + std::to_string(Editor::Instance->Data().gameTick_) + ".");
     }
 
     // Get the bounds of the timeline again
@@ -51,7 +57,7 @@ namespace Barrage
     ImGui::GetWindowDrawList()->AddRect(min, max, IM_COL32(255, 255, 255, 255));
 
     // Render a vertical line at the selected position
-    float t = Editor::Instance->Data().gameTick_ / static_cast<float>(MAX_TICKS);
+    float t = gameTick / static_cast<float>(MAX_TICKS);
     float x = min.x + t * (max.x - min.x);
     ImVec2 line_start(x, min.y);
     ImVec2 line_end(x, max.y);

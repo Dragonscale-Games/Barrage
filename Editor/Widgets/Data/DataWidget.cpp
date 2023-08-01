@@ -522,6 +522,11 @@ namespace Barrage
 
   void DataWidget::SpawnRuleListWidget(DataObject& object)
   {
+    if (!ImGui::TreeNode("Spawn rules"))
+    {
+      return;
+    }
+    
     SpawnRuleList spawnRuleList = object.GetValue<SpawnRuleList>();
 
     size_t listSize = spawnRuleList.size();
@@ -531,39 +536,112 @@ namespace Barrage
       std::shared_ptr<SpawnRule> spawnRule = spawnRuleList[i];
 
       ImGui::PushID(static_cast<int>(i));
+      
+      ImGui::Spacing();
+      ImGui::Spacing();
+      ImGui::BeginGroup();
+      float buttonWidth = ImGui::CalcTextSize("X").x + ImGui::GetStyle().FramePadding.x * 2.0f;
+      ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - buttonWidth - 150.0f);
+      ImGui::BeginGroup();
       ImGui::Text(spawnRule->GetName().c_str());
-
       rttr::variant dataVariant = spawnRule->GetRTTRValue();
-
+      
       if (dataVariant.is_valid())
       {
         DataObject dataObject("##DataObject", dataVariant);
         DataWidget::Use(dataObject);
-
+      
         if (dataObject.ValueWasSet())
         {
           spawnRule->SetRTTRValue(dataVariant);
           object.SetValue(spawnRuleList);
         }
       }
+      ImGui::EndGroup();
+      ImGui::PopItemWidth();
+      ImGui::SameLine();
+      if (ImGui::Button("X"))
+      {
+        spawnRuleList.erase(spawnRuleList.begin() + i);
+        object.SetValue(spawnRuleList);
+        ImGui::EndGroup();
+        ImGui::PopID();
+        break;
+      }
+
+      ImGui::EndGroup();
+      
+      ImVec2 itemRectMin = ImGui::GetItemRectMin();
+      ImVec2 itemRectMax = ImGui::GetItemRectMax();
+      
+      float padding = 6.0f;
+      
+      itemRectMin.x -= padding;
+      itemRectMin.y -= padding;
+      itemRectMax.x += padding;
+      itemRectMax.y += padding;
+      
+      ImDrawList* drawList = ImGui::GetWindowDrawList();
+      drawList->AddRect(itemRectMin, itemRectMax, IM_COL32(150, 150, 150, 100));
+      
+      ImGui::Spacing();
 
       ImGui::PopID();
     }
 
-    static std::string textString;
-    ImGui::InputText("Spawn rule text input", &textString);
+    ImGui::Spacing();
 
-    if (ImGui::Button("New spawn rule") && !object.ValueWasSet())
+    static bool addingNewSpawnRule = false;
+
+    if (addingNewSpawnRule)
     {
-      std::shared_ptr<SpawnRule> newSpawnRule = SpawnRuleAllocator::CreateSpawnRule(textString);
+      static std::string selectedSpawnRule;
 
-      if (newSpawnRule)
+      std::vector<std::string> spawnRuleNames = SpawnRuleAllocator::GetSpawnRuleNames();
+
+      if (ImGui::BeginCombo("##newSpawnRule", selectedSpawnRule.c_str()))
       {
-        spawnRuleList.push_back(newSpawnRule);
-        object.SetValue(spawnRuleList);
-        textString.clear();
+        for (auto& spawnRuleName : spawnRuleNames)
+        {
+          if (ImGui::Selectable(spawnRuleName.c_str(), spawnRuleName == selectedSpawnRule))
+          {
+            selectedSpawnRule = spawnRuleName;
+          }
+        }
+        ImGui::EndCombo();
+      }
+
+      ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.6f, 1.0f));
+      ImGui::Text("Select spawn rule to add.");
+      ImGui::PopStyleColor();
+      
+      if (ImGui::Button("Confirm") && !object.valueWasSet_)
+      {
+        std::shared_ptr<SpawnRule> newSpawnRule = SpawnRuleAllocator::CreateSpawnRule(selectedSpawnRule);
+
+        if (newSpawnRule)
+        {
+          spawnRuleList.push_back(newSpawnRule);
+          object.SetValue(spawnRuleList);
+          selectedSpawnRule.clear();
+          addingNewSpawnRule = false;
+        }
+      }
+      ImGui::SameLine();
+      if (ImGui::Button("Cancel") && !object.valueWasSet_)
+      {
+        selectedSpawnRule.clear();
+        addingNewSpawnRule = false;
       }
     }
+    else if (ImGui::Button("Add new") && !object.valueWasSet_)
+    {
+      addingNewSpawnRule = true;
+    }
+
+    ImGui::Spacing();
+
+    ImGui::TreePop();
   }
 
   void DataWidget::RotationWidget(DataObject& object)

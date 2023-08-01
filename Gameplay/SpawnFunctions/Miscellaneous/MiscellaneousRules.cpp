@@ -12,9 +12,6 @@
 
 #include "MiscellaneousRules.hpp"
 #include <Engine/Engine.hpp>
-#include "ComponentArrays/PositionArray.hpp"
-#include "ComponentArrays/VelocityArray.hpp"
-#include <glm/glm.hpp>
 
 using namespace Barrage;
 
@@ -38,26 +35,17 @@ namespace Barrage
         unsigned destIndex = firstObjIndex + i;
         unsigned sourceIndex = sourceIndices[i];
 
+        Pool::DuplicationResult duplicationResult = destPool.DuplicateObject(numRingObjects - 1, destIndex, sourceIndex, sourceIndices);
+
         Position& destPosition = destPositions.Data(destIndex);
         Velocity& destVelocity = destVelocities.Data(destIndex);
 
         glm::vec2 direction(destVelocity.vx_, destVelocity.vy_);
         float speed = glm::length(direction);
-        direction = glm::normalize(direction);
-        
         float initialTheta = glm::atan(direction.y, direction.x);
-
         Position origin(destPosition);
 
-        destPosition.x_ += radius * direction.x;
-        destPosition.y_ += radius * direction.y;
-        
-        Pool::DuplicationResult duplicationResult = destPool.DuplicateObject(numRingObjects - 1, destIndex, sourceIndex, sourceIndices);
-
-        if (duplicationResult.numDuplicates_ == 0)
-        {
-          break;
-        }
+        SetPositionAndVelocity(destPosition, destVelocity, origin, initialTheta, speed, radius);
 
         for (unsigned j = 0; j < duplicationResult.numDuplicates_; ++j)
         {
@@ -67,20 +55,35 @@ namespace Barrage
           Velocity& dupVelocity = destVelocities.Data(dupIndex);
 
           float theta = angleStep * (j + 1) + initialTheta;
-          float cosTheta = glm::cos(theta);
-          float sinTheta = glm::sin(theta);
 
-          glm::vec2 positionVector(radius * cosTheta, radius * sinTheta);
-
-          dupPosition.x_ = origin.x_ + positionVector.x;
-          dupPosition.y_ = origin.y_ + positionVector.y;
-
-          glm::vec2 velocityVector = speed * glm::normalize(positionVector);
-
-          dupVelocity.vx_ = velocityVector.x;
-          dupVelocity.vy_ = velocityVector.y;
+          SetPositionAndVelocity(dupPosition, dupVelocity, origin, theta, speed, radius);
         }
       }
+    }
+
+    glm::vec2 SpawnRing::CalculatePositionVector(float radius, float theta)
+    {
+      float cosTheta = glm::cos(theta);
+      float sinTheta = glm::sin(theta);
+
+      return glm::vec2(radius * cosTheta, radius * sinTheta);
+    }
+
+    glm::vec2 SpawnRing::CalculateVelocityVector(float speed, glm::vec2 positionVector)
+    {
+      return speed * glm::normalize(positionVector);
+    }
+
+    void SpawnRing::SetPositionAndVelocity(Position& position, Velocity& velocity, const Position& origin, float theta, float speed, float radius)
+    {
+      glm::vec2 positionVector = CalculatePositionVector(radius, theta);
+      glm::vec2 velocityVector = CalculateVelocityVector(speed, positionVector);
+
+      position.x_ = origin.x_ + positionVector.x;
+      position.y_ = origin.y_ + positionVector.y;
+
+      velocity.vx_ = velocityVector.x;
+      velocity.vy_ = velocityVector.y;
     }
   }
 }

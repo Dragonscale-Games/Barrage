@@ -29,7 +29,7 @@ namespace Barrage
       float speedSlow_;
       float speedFast_;
       
-      inline Player() : speedSlow_(3.5f), speedFast_(7.0f) {}
+      inline Player() : speedSlow_(3.5f), speedFast_(6.0f) {}
   };
 
   typedef Barrage::ComponentT<Player> PlayerComponent;

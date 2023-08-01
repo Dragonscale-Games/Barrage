@@ -16,6 +16,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Objects/Spawning/SpawnRule.hpp>
+#include "ComponentArrays/PositionArray.hpp"
+#include "ComponentArrays/VelocityArray.hpp"
+#include <glm/glm.hpp>
 
 namespace Barrage
 {
@@ -35,6 +38,11 @@ namespace Barrage
         SpawnRing();
         
         void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
+
+      private:
+        glm::vec2 CalculatePositionVector(float radius, float angle);
+        glm::vec2 CalculateVelocityVector(float speed, glm::vec2 positionVector);
+        void SetPositionAndVelocity(Position& position, Velocity& velocity, const Position& origin, float theta, float speed, float radius);
     };
   }
 }

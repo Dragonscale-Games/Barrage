@@ -32,10 +32,12 @@ namespace Barrage
       for (unsigned i = 0; i < numNewObjects; ++i)
       {
         unsigned dest_index = i + firstObjIndex;
+        Velocity& velocity = dest_velocities.Data(dest_index);
+        float speed = glm::length(glm::vec2(velocity.vx_, velocity.vy_));
         float angle = 3.1415926f * rng.RangeFloat(0, 2.0f);
 
-        dest_velocities.Data(dest_index).vx_ = cos(angle);
-        dest_velocities.Data(dest_index).vy_ = sin(angle);
+        velocity.vx_ = speed * glm::cos(angle);
+        velocity.vy_ = speed * glm::sin(angle);
       }
     }
   }
