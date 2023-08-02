@@ -337,6 +337,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the map of all spawn archetypes.
+
+        \return
+          Returns a reference to the map of all spawn archetypes.
+      */
+      /**************************************************************/
+      SpawnArchetypeMap& GetSpawnArchetypes();
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets a reference to the space the pool lives in.
 
         \return

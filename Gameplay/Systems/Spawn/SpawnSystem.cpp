@@ -15,13 +15,16 @@
 #include <Objects/Systems/SystemManager.hpp>
 #include "Components/Spawner.hpp"
 #include "ComponentArrays/SpawnTimerArray.hpp"
+#include "ComponentArrays/VelocityArray.hpp"
 #include "Spaces/Space.hpp"
 #include <algorithm>
+#include <glm/glm.hpp>
 
 namespace Barrage
 {
   static const std::string_view SPAWNER_POOLS("Spawner Pools");
   static const std::string_view SPAWN_TIMER_POOLS("Spawn Timer Pools");
+  static const std::string_view VELOCITY_POOLS("Velocity Pools");
   
   SpawnSystem::SpawnSystem() :
     System()
@@ -34,6 +37,10 @@ namespace Barrage
     PoolType spawn_timer_type;
     spawn_timer_type.AddComponentArray("SpawnTimer");
     poolTypes_[SPAWN_TIMER_POOLS] = spawn_timer_type;
+
+    PoolType velocity_type;
+    velocity_type.AddComponentArray("Velocity");
+    poolTypes_[VELOCITY_POOLS] = velocity_type;
   }
 
   void SpawnSystem::Subscribe(Pool* pool)
@@ -48,7 +55,12 @@ namespace Barrage
         {
           LinkAndValidateSpawns(pool);
         }
-        
+        else if (it->first == VELOCITY_POOLS)
+        {
+          MakeSpawnVelocitiesNonZero(pool);
+          continue; // we don't need to store these pools
+        }
+
         poolGroups_[it->first].push_back(pool);
       }
     }
@@ -185,26 +197,26 @@ namespace Barrage
         }
       }
     }
+  }
 
-    ////
-    //// hook up spawn functions
-    ////
+  void SpawnSystem::MakeSpawnVelocitiesNonZero(Pool* pool)
+  {
+    //
+    // spawn archetypes with a velocity of 0 break some spawn rules, so give them a slight magnitude here
+    //
 
-    //for (auto it = spawnTypes.begin(); it != spawnTypes.end(); ++it)
-    //{
-    //  SpawnInfo& spawnType = it->second;
-    //  
-    //  spawnType.spawnRules_.clear();
+    SpawnArchetypeMap& spawnArchetypes = pool->GetSpawnArchetypes();
 
-    //  for (auto jt = spawnType.spawnRuleNames_.begin(); jt != spawnType.spawnRuleNames_.end(); ++jt)
-    //  {
-    //    std::shared_ptr<SpawnRule> spawnRule = SpawnRuleAllocator::CreateSpawnRule(*jt);
+    for (auto it = spawnArchetypes.begin(); it != spawnArchetypes.end(); ++it)
+    {
+      ObjectArchetype& spawnArchetype = it->second;
+      Velocity& velocity = dynamic_cast<VelocityArray*>(spawnArchetype.GetComponentArray("Velocity"))->Data(0);
 
-    //    if (spawnRule)
-    //    {
-    //      spawnType.spawnRules_.push_back(spawnRule);
-    //    }
-    //  }
-    //}
+      if (glm::length(glm::vec2(velocity.vx_, velocity.vy_)) < MINIMUM_SPEED)
+      {
+        velocity.vx_ = MINIMUM_SPEED;
+        velocity.vy_ = 0.0f;
+      }
+    }
   }
 }

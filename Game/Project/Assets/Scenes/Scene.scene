@@ -5,15 +5,15 @@
             "Name": "Player Pool",
             "Capacity": 1,
             "Components": {
-                "Player": {
-                    "speedFast": 6.0,
-                    "speedSlow": 3.5
-                },
                 "BoundaryBox": {
                     "xMin": 32.0,
                     "xMax": 1888.0,
                     "yMin": 32.0,
                     "yMax": 1048.0
+                },
+                "Player": {
+                    "speedFast": 6.0,
+                    "speedSlow": 3.5
                 },
                 "CircleCollider": {
                     "radius": 0.0
@@ -26,13 +26,18 @@
             "Component Arrays": [
                 "Position",
                 "Rotation",
-                "Scale"
+                "Scale",
+                "Velocity"
             ],
             "Tags": [],
             "Starting Objects": [
                 {
                     "Name": "Player Object",
                     "Components": {
+                        "Velocity": {
+                            "vx": 0.0,
+                            "vy": 0.0
+                        },
                         "Position": {
                             "x": 960.0,
                             "y": 300.0
@@ -82,13 +87,13 @@
                 {
                     "Name": "Bullet Object",
                     "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 880.0
-                        },
                         "Velocity": {
                             "vx": 0.0,
                             "vy": 0.0
+                        },
+                        "Position": {
+                            "x": 960.0,
+                            "y": 880.0
                         },
                         "Rotation": {
                             "angle": 0.0
@@ -140,18 +145,15 @@
                                     {
                                         "Name": "SpawnRing",
                                         "Data": {
-                                            "numObjects": 5,
-                                            "radius": 23.0
+                                            "numObjects": 20,
+                                            "radius": 50.0
                                         }
                                     },
                                     {
-                                        "Name": "RandomDirection"
-                                    },
-                                    {
-                                        "Name": "SpawnRing",
+                                        "Name": "RandomSpeed",
                                         "Data": {
-                                            "numObjects": 5,
-                                            "radius": 115.0
+                                            "minSpeed": 1.0,
+                                            "maxSpeed": 3.0
                                         }
                                     }
                                 ]

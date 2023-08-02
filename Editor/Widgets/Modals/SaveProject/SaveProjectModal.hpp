@@ -1,28 +1,26 @@
 /* ======================================================================== */
 /*!
- * \file            ProjectModal.hpp
+ * \file            SaveProjectModal.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The window that lets the user either create a new project or open an
-   existing one.
+   The "Save project before closing?" popup window.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef ProjectModal_BARRAGE_H
-#define ProjectModal_BARRAGE_H
+#ifndef SaveProjectModal_BARRAGE_H
+#define SaveProjectModal_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
-#include <string>
 
 namespace Barrage
 {
-  //! Project modal
-  class ProjectModal
+  //! "Save project before closing?" popup window
+  class SaveProjectModal
   {
     public:
       /**************************************************************/
@@ -36,13 +34,9 @@ namespace Barrage
       */
       /**************************************************************/
       static void Use(const char* strId);
-
-      static bool CreateNewProject();
-
-      static bool OpenProject();
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ProjectModal_BARRAGE_H
+#endif // SaveProjectModal_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

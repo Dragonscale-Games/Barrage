@@ -70,7 +70,7 @@ namespace Barrage
 
     currentCommand_ = nullptr;
 
-    Editor::Instance->Data().sceneIsDirty_ = true;
+    SetSceneAndProjectDirty();
   }
 
   void CommandQueue::Undo(bool log)
@@ -87,7 +87,7 @@ namespace Barrage
       UndoInternal(false);
     }
 
-    Editor::Instance->Data().sceneIsDirty_ = true;
+    SetSceneAndProjectDirty();
   }
 
   void CommandQueue::UndoInternal(bool log)
@@ -124,7 +124,7 @@ namespace Barrage
 
     while (RedoInternal(log)) {};
 
-    Editor::Instance->Data().sceneIsDirty_ = true;
+    SetSceneAndProjectDirty();
   }
 
   bool CommandQueue::RedoInternal(bool log)
@@ -169,6 +169,12 @@ namespace Barrage
   bool CommandQueue::RedoAvailable()
   {
     return !redoStack_.empty();
+  }
+
+  void CommandQueue::SetSceneAndProjectDirty()
+  {
+    Editor::Instance->Data().sceneIsDirty_ = true;
+    Editor::Instance->Data().projectIsDirty_ = true;
   }
 
   void CommandQueue::Clear()

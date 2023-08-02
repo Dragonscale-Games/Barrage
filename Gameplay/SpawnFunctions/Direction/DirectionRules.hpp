@@ -28,6 +28,25 @@ namespace Barrage
         
         void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
     };
+
+    struct RotateDirectionData
+    {
+      float angle_;
+      float cosineAngle_; // precomputed, should not be edited manually
+      float sinAngle_;    // precomputed, should not be edited manually
+
+      inline RotateDirectionData() : angle_(0.0f), cosineAngle_(0.0f), sinAngle_(0.0f) {};
+    };
+
+    class RotateDirection : public SpawnRuleT<RotateDirectionData>
+    {
+      public:
+        RotateDirection();
+
+        void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
+
+        virtual void SetRTTRValue(const rttr::variant& value) override;
+    };
   }
 }
 

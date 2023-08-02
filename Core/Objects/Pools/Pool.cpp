@@ -204,6 +204,11 @@ namespace Barrage
     }
   }
 
+  SpawnArchetypeMap& Pool::GetSpawnArchetypes()
+  {
+    return spawnArchetypes_;
+  }
+
   Space& Pool::GetSpace()
   {
     return space_;

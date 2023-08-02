@@ -35,6 +35,7 @@
 #include "SpawnFunctions/Direction/DirectionRules.hpp"
 #include "SpawnFunctions/Miscellaneous/MiscellaneousRules.hpp"
 #include "SpawnFunctions/Position/PositionRules.hpp"
+#include "SpawnFunctions/Speed/SpeedRules.hpp"
 
 namespace Barrage
 {
@@ -143,6 +144,17 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("numObjects", &Spawn::SpawnRingData::numObjects_)
       .property("radius", &Spawn::SpawnRingData::radius_)
+      ;
+
+    rttr::registration::class_<Spawn::RandomSpeedData>("RandomSpeedData")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("minSpeed", &Spawn::RandomSpeedData::minSpeed_)
+      .property("maxSpeed", &Spawn::RandomSpeedData::maxSpeed_)
+      ;
+
+    rttr::registration::class_<Spawn::RotateDirectionData>("RotateDirectionData")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("angle", &Spawn::RotateDirectionData::angle_)
       ;
   }
 }

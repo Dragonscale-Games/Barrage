@@ -54,6 +54,8 @@ namespace Barrage
       static void UpdateSpawnTimers(Pool* pool);
 
       void LinkAndValidateSpawns(Pool* pool);
+
+      void MakeSpawnVelocitiesNonZero(Pool* pool);
 	};
 }
 

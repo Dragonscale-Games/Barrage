@@ -37,6 +37,7 @@
 #include "SpawnFunctions/Direction/DirectionRules.hpp"
 #include "SpawnFunctions/Miscellaneous/MiscellaneousRules.hpp"
 #include "SpawnFunctions/Position/PositionRules.hpp"
+#include "SpawnFunctions/Speed/SpeedRules.hpp"
 
 namespace Barrage
 {
@@ -64,16 +65,21 @@ namespace Barrage
     RegisterSystem<CollisionSystem>("CollisionSystem");
     RegisterSystem<CreationSystem>("CreationSystem");
     RegisterSystem<DestructionSystem>("DestructionSystem");
-    // Draw system is registered by engine
+    // Draw system is registered automatically by engine
     RegisterSystem<MovementSystem>("MovementSystem");
     RegisterSystem<SpawnSystem>("SpawnSystem");
   }
 
   void ObjectManager::RegisterCustomSpawnFunctions()
   {
-    RegisterSpawnRule<Spawn::MatchPosition>("MatchPosition");
     RegisterSpawnRule<Spawn::RandomDirection>("RandomDirection");
+    RegisterSpawnRule<Spawn::RotateDirection>("RotateDirection");
+
     RegisterSpawnRule<Spawn::SpawnRing>("SpawnRing");
+
+    RegisterSpawnRule<Spawn::MatchPosition>("MatchPosition");
+
+    RegisterSpawnRule<Spawn::RandomSpeed>("RandomSpeed");
   }
 
   void ObjectManager::SetSystemUpdateOrder()

@@ -37,7 +37,7 @@ namespace Barrage
     poolTypes_["Basic Rotation Pools"] = basic_rotation_type;
 
     PoolType player_type;
-    player_type.AddComponentArray("Position");
+    player_type.AddComponentArray("Velocity");
     player_type.AddComponent("Player");
     poolTypes_["Player Pools"] = player_type;
 
@@ -92,14 +92,13 @@ namespace Barrage
       player_velocity.vy_ = player_velocity.vy_ / 1.4142f;
     }
 
-    PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
+    VelocityArray& velocity_array = *pool->GetComponentArray<Velocity>("Velocity");
 
     unsigned num_objects = pool->GetActiveObjectCount();
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      position_array.Data(i).x_ += player_velocity.vx_;
-      position_array.Data(i).y_ += player_velocity.vy_;
+      velocity_array.Data(i) = player_velocity;
     }
   }
 

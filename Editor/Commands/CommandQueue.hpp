@@ -128,6 +128,15 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Tells editor that scene needs to be updated and project
+          has changed since last save.
+      */
+      /**************************************************************/
+      void SetSceneAndProjectDirty();
+      
+      /**************************************************************/
+      /*!
+        \brief
           Undoes the most recent command.
 
         \param log

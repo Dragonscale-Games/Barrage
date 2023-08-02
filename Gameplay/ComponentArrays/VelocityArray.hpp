@@ -20,6 +20,8 @@
 
 namespace Barrage
 {
+  static const float MINIMUM_SPEED = 0.000001f;
+  
   //!< Speed and direction of a game object
   struct Velocity
   {

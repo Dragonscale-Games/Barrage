@@ -29,11 +29,13 @@ namespace Barrage
     bool isRunning_;                          //!< Keeps track of whether the editor is running
     bool gamePlaying_;                        //!< Keeps track of whether the game is playing
     bool sceneIsDirty_;                       //!< Flag for when user changes something in current scene
+    bool projectIsDirty_;                     //!< Flag for whether project has changed since the last save
     bool openComponentModal_;                 //!< Flag for when user opens the "add component" modal
     bool openComponentArrayModal_;            //!< Flag for when user opens the "add component array" modal
     bool openTagModal_;                       //!< Flag for when user opens the "add tag" modal
     bool openRenameModal_;                    //!< Flag for when user opens the "rename" modal
     bool openProjectModal_;                   //!< Flag for when user opens the "project" modal
+    bool openSaveProjectModal_;
     unsigned gameTick_;                       //!< The tick to show/start on in the preview window
     RenameCallback renameCallback_;           //!< Contains function to call when user renames something
     std::string projectName_;                 //!< The name of the game project

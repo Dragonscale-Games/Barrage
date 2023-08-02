@@ -27,6 +27,7 @@
 #include <Widgets/Modals/Tag/TagModal.hpp>
 #include <Widgets/Modals/Rename/RenameModal.hpp>
 #include <Widgets/Modals/Project/ProjectModal.hpp>
+#include <Widgets/Modals/SaveProject/SaveProjectModal.hpp>
 
 #include <unordered_set>
 #include <chrono>
@@ -207,6 +208,8 @@ namespace Barrage
     }
 
     LogWidget::AddEntry("Saved project successfully.");
+    data_.projectIsDirty_ = false;
+
     return true;
   }
 
@@ -266,6 +269,7 @@ namespace Barrage
       }
 
       data_.sceneIsDirty_ = false;
+      
       //endT = std::chrono::high_resolution_clock::now();
       //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
       //std::cout << "Scene set time: " << duration.count() << " microseconds" << std::endl;
@@ -293,7 +297,14 @@ namespace Barrage
     
     if (engine_.Window().IsClosed())
     {
+      glfwSetWindowShouldClose(engine_.Window().GetWindowHandle(), false);
       data_.isRunning_ = false;
+    }
+
+    if (!data_.isRunning_ && data_.projectIsDirty_)
+    {
+      data_.isRunning_ = true;
+      data_.openSaveProjectModal_ = true;
     }
 
     engine_.Frames().EndFrame();
@@ -349,11 +360,18 @@ namespace Barrage
       data_.openProjectModal_ = false;
     }
 
+    if (data_.openSaveProjectModal_)
+    {
+      ImGui::OpenPopup("Save Project");
+      data_.openSaveProjectModal_ = false;
+    }
+
     ComponentModal::Use("Add shared component");
     ComponentArrayModal::Use("Add component array");
     TagModal::Use("Add tag");
     RenameModal::Use("Rename", data_.renameCallback_);
     ProjectModal::Use("Project");
+    SaveProjectModal::Use("Save Project");
 
     /*Barrage::GfxDraw2D& drawing = engine_.Drawing();
     Barrage::WindowManager& windowing = engine_.Windowing();
@@ -486,7 +504,7 @@ namespace Barrage
 
     data_.projectDirectory_ = projectDirectory;
     data_.projectName_ = projectName;
-
+    data_.projectIsDirty_ = false;
     LogWidget::AddEntry("Opened project \"" + filePath.filename().string() + "\".");
 
     return true;
