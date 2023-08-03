@@ -28,6 +28,22 @@ namespace Barrage
         
         void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
     };
+
+    struct RandomOffsetData
+    {
+      float xVariance_;
+      float yVariance_;
+
+      inline RandomOffsetData() : xVariance_(0.0f), yVariance_(0.0f) {};
+    };
+
+    class RandomOffset : public SpawnRuleT<RandomOffsetData>
+    {
+      public:
+        RandomOffset();
+
+        void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
+    };
   }
 }
 

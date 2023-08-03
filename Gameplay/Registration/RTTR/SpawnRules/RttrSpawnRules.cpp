@@ -43,5 +43,11 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("angle", &Spawn::SetDirectionData::angle_)
       ;
+
+    rttr::registration::class_<Spawn::RandomOffsetData>("RandomOffsetData")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("xVariance", &Spawn::RandomOffsetData::xVariance_)
+      .property("yVariance", &Spawn::RandomOffsetData::yVariance_)
+      ;
   }
 }

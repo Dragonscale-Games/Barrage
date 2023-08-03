@@ -35,7 +35,7 @@ namespace Barrage
       float cosineAngle_; // precomputed, should not be edited manually
       float sinAngle_;    // precomputed, should not be edited manually
 
-      inline RotateDirectionData() : angle_(0.0f), cosineAngle_(0.0f), sinAngle_(0.0f) {};
+      inline RotateDirectionData() : angle_(0.0f), cosineAngle_(1.0f), sinAngle_(0.0f) {};
     };
 
     class RotateDirection : public SpawnRuleT<RotateDirectionData>
@@ -54,7 +54,7 @@ namespace Barrage
       float xDirection_;
       float yDirection_;
 
-      inline SetDirectionData() : angle_(0.0f), xDirection_(0.0f), yDirection_(0.0f) {};
+      inline SetDirectionData() : angle_(0.0f), xDirection_(1.0f), yDirection_(0.0f) {};
     };
 
     class SetDirection : public SpawnRuleT<SetDirectionData>

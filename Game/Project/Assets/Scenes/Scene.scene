@@ -140,6 +140,13 @@
                                         "Name": "MatchPosition"
                                     },
                                     {
+                                        "Name": "RandomOffset",
+                                        "Data": {
+                                            "xVariance": 75.0,
+                                            "yVariance": 75.0
+                                        }
+                                    },
+                                    {
                                         "Name": "RandomDirection"
                                     },
                                     {
@@ -242,13 +249,20 @@
                                         "Name": "MatchPosition"
                                     },
                                     {
+                                        "Name": "RandomOffset",
+                                        "Data": {
+                                            "xVariance": 50.0,
+                                            "yVariance": 50.0
+                                        }
+                                    },
+                                    {
                                         "Name": "RandomDirection"
                                     },
                                     {
                                         "Name": "SpawnRing",
                                         "Data": {
                                             "numObjects": 10,
-                                            "radius": 0.0
+                                            "radius": 100.0
                                         }
                                     }
                                 ]
@@ -317,6 +331,13 @@
                                 "spawnRules": [
                                     {
                                         "Name": "MatchPosition"
+                                    },
+                                    {
+                                        "Name": "RandomOffset",
+                                        "Data": {
+                                            "xVariance": 10.0,
+                                            "yVariance": 50.0
+                                        }
                                     },
                                     {
                                         "Name": "RandomDirection"

@@ -79,6 +79,7 @@ namespace Barrage
     RegisterSpawnRule<Spawn::SpawnRing>("SpawnRing");
 
     RegisterSpawnRule<Spawn::MatchPosition>("MatchPosition");
+    RegisterSpawnRule<Spawn::RandomOffset>("RandomOffset");
 
     RegisterSpawnRule<Spawn::RandomSpeed>("RandomSpeed");
   }

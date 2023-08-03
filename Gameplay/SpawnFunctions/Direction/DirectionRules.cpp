@@ -24,7 +24,7 @@ namespace Barrage
     
     void RandomDirection::Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
     {
-      Barrage::Random& rng = initPool.GetSpace().GetRNG();
+      Barrage::Random& rng = destPool.GetSpace().GetRNG();
       VelocityArray& dest_velocities = *destPool.GetComponentArray<Velocity>("Velocity");
 
       for (unsigned i = 0; i < numNewObjects; ++i)
@@ -76,8 +76,8 @@ namespace Barrage
         Velocity& velocity = dest_velocities.Data(dest_index);
         float speed = glm::length(glm::vec2(velocity.vx_, velocity.vy_));
 
-        velocity.vx_ = data_.xDirection_;
-        velocity.vy_ = data_.yDirection_;
+        velocity.vx_ = speed * data_.xDirection_;
+        velocity.vy_ = speed * data_.yDirection_;
       }
     }
 
