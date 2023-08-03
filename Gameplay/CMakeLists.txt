@@ -31,7 +31,7 @@
 # =====================================================================================================================
 
 add_library(Gameplay STATIC
-	"Registration.cpp"
+	"Registration/Registration.cpp"
 	
 	
 	
@@ -43,7 +43,13 @@ add_library(Gameplay STATIC
 	"Systems/Draw/DrawSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
 	"Systems/Spawn/SpawnSystem.cpp"
- "SpawnFunctions/Direction/DirectionRules.cpp" "SpawnFunctions/Position/PositionRules.cpp" "RttrRegistration.cpp" "SpawnFunctions/Speed/SpeedRules.cpp")
+ "SpawnFunctions/Direction/DirectionRules.cpp" 
+ "SpawnFunctions/Position/PositionRules.cpp" 
+ "Registration/RTTR/RttrRegistration.cpp" 
+ "SpawnFunctions/Speed/SpeedRules.cpp" 
+ "Registration/RTTR/ComponentArrays/RttrComponentArrays.cpp" 
+ "Registration/RTTR/Components/RttrComponents.cpp" 
+ "Registration/RTTR/SpawnRules/RttrSpawnRules.cpp")
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

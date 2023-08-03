@@ -553,8 +553,11 @@ namespace Barrage
       
         if (dataObject.ValueWasSet())
         {
-          spawnRule->SetRTTRValue(dataVariant);
+          std::shared_ptr newSpawnRule = SpawnRuleAllocator::CreateSpawnRule(spawnRule->GetName());
+          newSpawnRule->SetRTTRValue(dataVariant);
+          spawnRuleList[i] = newSpawnRule;
           object.SetValue(spawnRuleList);
+          object.chainUndoEnabled_ = dataObject.chainUndoEnabled_;
         }
       }
       ImGui::EndGroup();

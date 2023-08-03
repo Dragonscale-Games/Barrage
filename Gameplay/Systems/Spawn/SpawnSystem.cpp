@@ -197,6 +197,15 @@ namespace Barrage
         }
       }
     }
+
+    //
+    // if current pattern doesn't exist, create a dummy pattern
+    //
+
+    if (spawner.patterns_.count(spawner.currentPattern_) == 0)
+    {
+      spawner.patterns_[spawner.currentPattern_];
+    }
   }
 
   void SpawnSystem::MakeSpawnVelocitiesNonZero(Pool* pool)

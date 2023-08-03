@@ -36,7 +36,7 @@ namespace Barrage
 
         void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
 
-        virtual void SetRTTRValue(const rttr::variant& value) override;
+        void SetRTTRValue(const rttr::variant& value) override;
     };
   }
 }

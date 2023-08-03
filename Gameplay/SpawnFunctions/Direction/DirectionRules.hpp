@@ -45,7 +45,26 @@ namespace Barrage
 
         void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
 
-        virtual void SetRTTRValue(const rttr::variant& value) override;
+        void SetRTTRValue(const rttr::variant& value) override;
+    };
+
+    struct SetDirectionData
+    {
+      float angle_;
+      float xDirection_;
+      float yDirection_;
+
+      inline SetDirectionData() : angle_(0.0f), xDirection_(0.0f), yDirection_(0.0f) {};
+    };
+
+    class SetDirection : public SpawnRuleT<SetDirectionData>
+    {
+      public:
+        SetDirection();
+
+        void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
+
+        void SetRTTRValue(const rttr::variant& value) override;
     };
   }
 }

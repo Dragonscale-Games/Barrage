@@ -61,23 +61,13 @@ namespace Barrage
       }
     }
 
-    glm::vec2 SpawnRing::CalculatePositionVector(float radius, float theta)
+    void SpawnRing::SetPositionAndVelocity(Position& position, Velocity& velocity, const Position& origin, float theta, float speed, float radius)
     {
       float cosTheta = glm::cos(theta);
       float sinTheta = glm::sin(theta);
-
-      return glm::vec2(radius * cosTheta, radius * sinTheta);
-    }
-
-    glm::vec2 SpawnRing::CalculateVelocityVector(float speed, glm::vec2 positionVector)
-    {
-      return speed * glm::normalize(positionVector);
-    }
-
-    void SpawnRing::SetPositionAndVelocity(Position& position, Velocity& velocity, const Position& origin, float theta, float speed, float radius)
-    {
-      glm::vec2 positionVector = CalculatePositionVector(radius, theta);
-      glm::vec2 velocityVector = CalculateVelocityVector(speed, positionVector);
+      
+      glm::vec2 positionVector = glm::vec2(radius * cosTheta, radius * sinTheta);
+      glm::vec2 velocityVector = speed * glm::vec2(cosTheta, sinTheta);
 
       position.x_ = origin.x_ + positionVector.x;
       position.y_ = origin.y_ + positionVector.y;

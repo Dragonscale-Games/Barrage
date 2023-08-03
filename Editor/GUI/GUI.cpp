@@ -33,7 +33,7 @@ namespace Barrage
 
     firstRun_ = true;
 
-    //SetStyle();
+    SetStyle();
   }
 
   void GUI::StartWidgets()

@@ -63,5 +63,30 @@ namespace Barrage
       data_.cosineAngle_ = glm::cos(data_.angle_);
       data_.sinAngle_ = glm::sin(data_.angle_);
     }
+
+    SetDirection::SetDirection() : SpawnRuleT<SetDirectionData>("SetDirection") {};
+
+    void SetDirection::Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
+    {
+      VelocityArray& dest_velocities = *destPool.GetComponentArray<Velocity>("Velocity");
+
+      for (unsigned i = 0; i < numNewObjects; ++i)
+      {
+        unsigned dest_index = i + firstObjIndex;
+        Velocity& velocity = dest_velocities.Data(dest_index);
+        float speed = glm::length(glm::vec2(velocity.vx_, velocity.vy_));
+
+        velocity.vx_ = data_.xDirection_;
+        velocity.vy_ = data_.yDirection_;
+      }
+    }
+
+    void SetDirection::SetRTTRValue(const rttr::variant& value)
+    {
+      SpawnRuleT<SetDirectionData>::SetRTTRValue(value);
+
+      data_.xDirection_ = glm::cos(data_.angle_);
+      data_.yDirection_ = glm::sin(data_.angle_);
+    }
   }
 }
