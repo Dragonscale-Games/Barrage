@@ -75,6 +75,7 @@ namespace Barrage
     RegisterSpawnRule<Spawn::RandomDirection>("RandomDirection");
     RegisterSpawnRule<Spawn::RotateDirection>("RotateDirection");
     RegisterSpawnRule<Spawn::SetDirection>("SetDirection");
+    RegisterSpawnRule<Spawn::Spiral>("Spiral");
 
     RegisterSpawnRule<Spawn::SpawnRing>("SpawnRing");
 

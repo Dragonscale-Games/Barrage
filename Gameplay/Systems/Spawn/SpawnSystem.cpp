@@ -132,7 +132,7 @@ namespace Barrage
     Spawner& spawner = pool->GetComponent<Spawner>("Spawner")->Data();
 
     //
-    // make sure all spawn types have a valid destination pool and spawn archetype
+    // validate all spawn types
     //
 
     SpawnTypeMap& spawnTypes = spawner.spawnTypes_;
@@ -141,23 +141,36 @@ namespace Barrage
     {
       SpawnInfo& spawnType = it->second;
 
+      // make sure spawn type has a valid destination pool
       spawnType.destinationPool_ = objectManager.GetPool(spawnType.destinationPoolName_);
-      
       if (spawnType.destinationPool_ == nullptr)
       {
         it = spawnTypes.erase(it);
         continue;
       }
 
+      // make sure spawn type has a valid spawn archetype
       spawnType.spawnArchetype_ = spawnType.destinationPool_->GetSpawnArchetype(spawnType.spawnArchetypeName_);
-
       if (spawnType.spawnArchetype_ == nullptr)
       {
         it = spawnTypes.erase(it);
         continue;
       }
 
+      // preallocate source index array
       spawnType.sourceIndices_.reserve(spawnType.destinationPool_->GetCapacity());
+
+      // find spawn rules with arrays and allocate them to match pool capacity
+      for (auto& spawnRule : spawnType.spawnRules_)
+      {
+        auto spawnRuleWithArray = std::dynamic_pointer_cast<SpawnRuleWithArray>(spawnRule);
+
+        if (spawnRuleWithArray)
+        {
+          spawnRuleWithArray->SetCapacity(pool->GetCapacity());
+          spawnType.spawnRulesWithArrays_.push_back(spawnRuleWithArray);
+        }
+      }
 
       ++it;
     }

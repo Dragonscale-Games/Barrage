@@ -33,9 +33,10 @@ namespace Barrage
     
     std::vector<unsigned> sourceIndices_; //!< Indices of spawner objects (cleared after spawn)
 
-    SpawnRuleList spawnRules_;        //!< List of spawn rules to apply
-    std::string destinationPoolName_; //!< Name of the pool to spawn the object in
-    std::string spawnArchetypeName_;  //!< Name of spawn archetype to use
+    SpawnRuleList spawnRules_;                    //!< List of spawn rules to apply
+    SpawnRuleWithArrayList spawnRulesWithArrays_; //!< List of spawn rules that contain per-spawner data arrays
+    std::string destinationPoolName_;             //!< Name of the pool to spawn the object in
+    std::string spawnArchetypeName_;              //!< Name of spawn archetype to use
   };
 }
 

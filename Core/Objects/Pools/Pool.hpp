@@ -320,6 +320,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the pool's component arrays.
+
+        \return
+          Returns a reference to the pool's component array map.
+      */
+      /**************************************************************/
+      ComponentArrayMap& GetComponentArrays();
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the spawn archetype with the given name. Throws an
           out_of_range exception if no spawn archetype matches the
           input name.

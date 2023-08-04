@@ -15,95 +15,95 @@
 #include "stdafx.h"
 #include "DestructionSystem.hpp"
 #include "ComponentArrays/DestructibleArray.hpp"
+#include "Components/Spawner.hpp"
 
 namespace Barrage
 {
-  static const unsigned BASIC_DESTRUCTIBLE_POOLS = 0;
-  static const unsigned DIRECTORY_POOLS = 1;
+  static const std::string_view BASIC_DESTRUCTIBLE_POOLS("Basic Destructible Pools");
+  static const std::string_view DESTRUCTIBLE_SPAWNER_POOLS("Destructible Spawner Pools");
   
   DestructionSystem::DestructionSystem() :
     System()
   {
-    PoolType destructible_type;
-    destructible_type.AddComponentArray("Destructible");
-    poolTypes_["Basic Destructible Pools"] = destructible_type;
+    PoolType basic_destructible_type;
+    basic_destructible_type.AddComponentArray("Destructible");
+    poolTypes_[BASIC_DESTRUCTIBLE_POOLS] = basic_destructible_type;
+
+    PoolType destructible_spawner_type;
+    destructible_spawner_type.AddComponentArray("Destructible");
+    destructible_spawner_type.AddComponent("Spawner");
+    poolTypes_[DESTRUCTIBLE_SPAWNER_POOLS] = destructible_spawner_type;
   }
   
   void DestructionSystem::Update()
   {
-    UpdatePoolGroup("Basic Destructible Pools", DestroyObjects);
+    UpdatePoolGroup(DESTRUCTIBLE_SPAWNER_POOLS, UpdateSpawnRules);
+    UpdatePoolGroup(BASIC_DESTRUCTIBLE_POOLS, DestroyObjects);
+  }
+
+  void DestructionSystem::UpdateSpawnRules(Pool* pool)
+  {
+    Spawner& spawner = pool->GetComponent<Spawner>("Spawner")->Data();
+    DestructibleArray& destructibleArray = *pool->GetComponentArray<Destructible>("Destructible");
+    const bool* destructiblesRaw = reinterpret_cast<bool*>(&destructibleArray.Data(0));
+    unsigned numActiveObjects = pool->GetActiveObjectCount();
+    unsigned deadBeginIndex = GetFirstDeadObjectIndex(destructiblesRaw, numActiveObjects);
+    
+    // if no objects were destroyed, early out
+    if (deadBeginIndex >= numActiveObjects)
+      return;
+
+    for (auto it = spawner.spawnTypes_.begin(); it != spawner.spawnTypes_.end(); ++it)
+    {
+      SpawnInfo& spawnType = it->second;
+
+      for (auto jt = spawnType.spawnRulesWithArrays_.begin(); jt != spawnType.spawnRulesWithArrays_.end(); ++jt)
+      {
+        std::shared_ptr<SpawnRuleWithArray>& spawnRuleWithArray = *jt;
+
+        spawnRuleWithArray->HandleDestructions(destructiblesRaw, deadBeginIndex, numActiveObjects);
+      }
+    }
   }
 
   void DestructionSystem::DestroyObjects(Pool* pool)
   {
-    DestructibleArray& destructible_array = *pool->GetComponentArray<Destructible>("Destructible");
-
-    /*
-     *  Objectives:
-     *  1. Shift all alive objects to be densely packed at the beginning of the object array.
-     *  2. Make this change in-place, using the original object array (and update the size).
-     *  3. Preserve the relative order of the alive objects.
-     */
-
-     // keep track of where the first dead object is, this will be reused as a starting place for each component array
-    unsigned initial_alive_end_index = 0;
-
-    // starting at the beginning of the original object array, find the index of the first destroyed object (if one exists) or one
-    // past the end of the original object array
-    while (initial_alive_end_index < pool->numActiveObjects_)
-    {
-      if (destructible_array.Data(initial_alive_end_index).destroyed_ == true)
-        break;
-
-      ++initial_alive_end_index;
-    }
+    DestructibleArray& destructibleArray = *pool->GetComponentArray<Destructible>("Destructible");
+    const bool* destructiblesRaw = reinterpret_cast<bool*>(&destructibleArray.Data(0));
+    unsigned numActiveObjects = pool->GetActiveObjectCount();
+    unsigned deadBeginIndex = GetFirstDeadObjectIndex(destructiblesRaw, numActiveObjects);
 
     // if no objects were destroyed, early out
-    if (initial_alive_end_index >= pool->numActiveObjects_)
+    if (deadBeginIndex >= numActiveObjects)
       return;
 
-    // in each component array, shift the components from alive objects to the beginning of the array
     for (auto it = pool->componentArrays_.begin(); it != pool->componentArrays_.end(); ++it)
     {
       // we'll operate on the destructible array last; after the loop finishes
       if (it->first == "Destructible")
         continue;
 
-      unsigned alive_end_index = initial_alive_end_index;
-      unsigned next_alive_index = alive_end_index + 1;
-
-      ComponentArray* component_array = it->second;
-
-      while (next_alive_index < pool->numActiveObjects_)
-      {
-        if (destructible_array.Data(next_alive_index).destroyed_ == false)
-        {
-          component_array->CopyToThis(*component_array, next_alive_index, alive_end_index);
-
-          ++alive_end_index;
-        }
-
-        ++next_alive_index;
-      }
+      it->second->HandleDestructions(destructiblesRaw, deadBeginIndex, numActiveObjects);
     }
 
-    // operate on the destructibles array last, after all other components
-    unsigned alive_end_index = initial_alive_end_index;
-    unsigned next_alive_index = alive_end_index + 1;
+    // operate on the destructibles array last and update the number of alive objects in the pool
+    pool->numActiveObjects_ = destructibleArray.HandleDestructions(destructiblesRaw, deadBeginIndex, numActiveObjects);
+  }
 
-    while (next_alive_index < pool->numActiveObjects_)
+  unsigned DestructionSystem::GetFirstDeadObjectIndex(const bool* destructiblesArray, unsigned numElements)
+  {
+    unsigned index = 0;
+
+    while (index < numElements)
     {
-      if (destructible_array.Data(next_alive_index).destroyed_ == false)
+      if (destructiblesArray[index] == true)
       {
-        destructible_array.CopyToThis(destructible_array, next_alive_index, alive_end_index);
-
-        ++alive_end_index;
+        break;
       }
-
-      ++next_alive_index;
+        
+      ++index;
     }
 
-    // update the size of the newly packed object array
-    pool->numActiveObjects_ = alive_end_index;
+    return index;
   }
 }

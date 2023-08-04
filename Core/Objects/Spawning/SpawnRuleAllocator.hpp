@@ -52,14 +52,16 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Creates a shared component whose type matches the given
-          name. If no component with that name has been registered,
+          Creates a spawn rule whose type matches the given
+          name. If no spawn rule with that name has been registered,
           returns nullptr.
+
+        \param name
+          The name of the spawn rule to create.
 
         \return
           Returns a pointer to the newly allocated spawn rule if the
-          component type has been registered, otherwise returns
-          nullptr.
+          spawn rule has been registered, otherwise returns nullptr.
       */
       /**************************************************************/
       static std::shared_ptr<SpawnRule> CreateSpawnRule(const std::string& name);

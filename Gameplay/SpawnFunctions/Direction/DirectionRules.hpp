@@ -66,6 +66,28 @@ namespace Barrage
 
         void SetRTTRValue(const rttr::variant& value) override;
     };
+
+    struct SpiralData
+    {
+      float angleDelta_;
+
+      inline SpiralData() : angleDelta_(0.0f) {};
+    };
+
+    struct SpiralArrayElement
+    {
+      float angle_;
+
+      inline SpiralArrayElement() : angle_(0.0f) {};
+    };
+
+    class Spiral : public SpawnRuleTA<SpiralData, SpiralArrayElement>
+    {
+      public:
+        Spiral();
+
+        void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
+    };
   }
 }
 

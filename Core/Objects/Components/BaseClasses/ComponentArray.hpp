@@ -60,6 +60,31 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Using the destructionArray to see which objects have been
+          destroyed, tightly packs the remaining alive objects at
+          the beginning of the array.
+
+        \param destructionArray
+          Array of bools denoting whether an object at a given index
+          is destroyed (true) or alive (false).
+
+        \param deadBeginIndex
+          Optimization hint that holds the index of the first dead
+          object in the array.
+
+        \param aliveEndIndex
+          Optimization hint that holds one past the index of the
+          last object that could be alive.
+
+        \return
+          Returns the number of alive objects.
+      */
+      /**************************************************************/
+      virtual unsigned HandleDestructions(const bool* destructionArray, unsigned deadBeginIndex, unsigned aliveEndIndex) = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets an rttr::variant representation of the component at
           some index. Should not generally be used except for
           serialization/the editor.
@@ -135,6 +160,18 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Reallocates the data array with a new capacity.
+          Note: Sets all values to default values.
+
+        \param capacity
+          The new capacity to set.
+      */
+      /**************************************************************/
+      void SetCapacity(unsigned capacity);
+
+      /**************************************************************/
+      /*!
+        \brief
           Copies a component from some source component array to a
           recipient component in this component array. The arrays
           should be the same type (this function is not safety
@@ -153,6 +190,28 @@ namespace Barrage
       */
       /**************************************************************/
       void CopyToThis(const ComponentArray& source, unsigned sourceIndex, unsigned recipientIndex) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Using the destructionArray to see which objects have been
+          destroyed, tightly packs the remaining alive objects at
+          the beginning of the array.
+
+        \param destructionArray
+          Array of bools denoting whether an object at a given index
+          is destroyed (true) or alive (false).
+
+        \param deadBeginIndex
+          Optimization hint that holds the index of the first dead
+          object in the array.
+
+        \param aliveEndIndex
+          Optimization hint that holds one past the index of the
+          last object that could be alive.
+      */
+      /**************************************************************/
+      unsigned HandleDestructions(const bool* destructionArray, unsigned deadBeginIndex, unsigned aliveEndIndex) override;
 
       /**************************************************************/
       /*!

@@ -15,6 +15,7 @@
 #define SpawnRule_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "Objects/Components/BaseClasses/ComponentArray.hpp"
 #include <rttr/rttr_enable.h>
 #include <string>
 
@@ -110,7 +111,7 @@ namespace Barrage
 
   typedef std::vector<std::shared_ptr<SpawnRule>> SpawnRuleList;
 
-  //! Used for spawn rules that store data
+  //! Spawn rules that store data shared by all spawners
   template <typename T>
   class SpawnRuleT : public SpawnRule
   {
@@ -141,7 +142,7 @@ namespace Barrage
           Returns the spawn rule's value as an rttr::variant.
       */
       /**************************************************************/
-      virtual rttr::variant GetRTTRValue() override;
+      rttr::variant GetRTTRValue() override;
 
       /**************************************************************/
       /*!
@@ -149,11 +150,130 @@ namespace Barrage
           Sets the spawn rule's data using an rttr::variant.
       */
       /**************************************************************/
-      virtual void SetRTTRValue(const rttr::variant& value) override;
+      void SetRTTRValue(const rttr::variant& value) override;
 
     protected:
       T data_;
+  };
 
+  class SpawnRuleWithArray : public SpawnRule
+  {
+    public:
+      /**************************************************************/
+      /*!
+        \brief
+          Constructs the spawn rule with a given name.
+      */
+      /**************************************************************/
+      SpawnRuleWithArray(const std::string& name);
+      
+      /**************************************************************/
+      /*!
+        \brief
+          Base class requires virtual destructor.
+      */
+      /**************************************************************/
+      virtual ~SpawnRuleWithArray() = default;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the number of elements in this spawn rule's data 
+          array.
+
+        \param capacity
+          The number of elements in this spawn rule's data array.
+      */
+      /**************************************************************/
+      virtual void SetCapacity(unsigned capacity) = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Updates the elements of the spawn rule's array to match
+          the positions of still-alive spawners when some spawners
+          have been destroyed.
+      
+        \param destructionArray
+          Array of bools that tell whether each spawner is destroyed
+          or not.
+      */
+      /**************************************************************/
+      virtual void HandleDestructions(const bool* destructionArray, unsigned deadBeginIndex, unsigned aliveEndIndex) = 0;
+  };
+
+  typedef std::vector<std::shared_ptr<SpawnRuleWithArray>> SpawnRuleWithArrayList;
+
+  //! Spawn rules that store an array of data (one element per spawner)
+  template <typename T, typename A>
+  class SpawnRuleTA : public SpawnRuleWithArray
+  {
+    public:
+      /**************************************************************/
+      /*!
+        \brief
+          Constructs the spawn rule with a given name.
+      */
+      /**************************************************************/
+      SpawnRuleTA(const std::string& name);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Base class requires virtual destructor.
+      */
+      /**************************************************************/
+      virtual ~SpawnRuleTA() = default;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets an rttr::variant representation of the spawn rule's
+          data.
+
+        \return
+          Returns the spawn rule's value as an rttr::variant.
+      */
+      /**************************************************************/
+      rttr::variant GetRTTRValue() override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the spawn rule's data using an rttr::variant.
+      */
+      /**************************************************************/
+      void SetRTTRValue(const rttr::variant& value) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the number of elements in this spawn rule's data
+          array.
+
+        \param capacity
+          The number of elements in this spawn rule's data array.
+      */
+      /**************************************************************/
+      void SetCapacity(unsigned capacity) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Updates the elements of the array to match the positions 
+          of still-alive spawners when some spawners have been 
+          destroyed.
+
+        \param destructionArray
+          Array of bools that tell whether each spawner is destroyed
+          or not.
+      */
+      /**************************************************************/
+      void HandleDestructions(const bool* destructionArray, unsigned deadBeginIndex, unsigned aliveEndIndex) override;
+
+    protected:
+      T data_;
+      ComponentArrayT<A> dataArray_;
   };
 }
 

@@ -49,5 +49,10 @@ namespace Barrage
       .property("xVariance", &Spawn::RandomOffsetData::xVariance_)
       .property("yVariance", &Spawn::RandomOffsetData::yVariance_)
       ;
+
+    rttr::registration::class_<Spawn::SpiralData>("SpiralData")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("angleDelta", &Spawn::SpiralData::angleDelta_)
+      ;
   }
 }

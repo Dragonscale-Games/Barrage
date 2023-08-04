@@ -192,6 +192,11 @@ namespace Barrage
     return capacity_;
   }
 
+  ComponentArrayMap& Pool::GetComponentArrays()
+  {
+    return componentArrays_;
+  }
+
   ObjectArchetype* Pool::GetSpawnArchetype(const std::string& name)
   {
     if (spawnArchetypes_.count(name))

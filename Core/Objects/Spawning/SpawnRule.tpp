@@ -40,6 +40,47 @@ namespace Barrage
 
     data_ = value.get_value<T>();
   }
+
+  template <typename T, typename A>
+  SpawnRuleTA<T,A>::SpawnRuleTA(const std::string& name) : SpawnRuleWithArray(name), data_(), dataArray_()
+  {
+  }
+
+  template <typename T, typename A>
+  rttr::variant SpawnRuleTA<T, A>::GetRTTRValue()
+  {
+    rttr::variant value = data_;
+
+    return value;
+  }
+
+  template <typename T, typename A>
+  void SpawnRuleTA<T, A>::SetRTTRValue(const rttr::variant& value)
+  {
+    if (value.get_type() != rttr::type::get<T>())
+    {
+      return;
+    }
+
+    data_ = value.get_value<T>();
+  }
+
+  template <typename T, typename A>
+  void SpawnRuleTA<T, A>::SetCapacity(unsigned capacity)
+  {
+    dataArray_.SetCapacity(capacity);
+  }
+
+  template <typename T, typename A>
+  void SpawnRuleTA<T, A>::HandleDestructions(const bool* destructionArray, unsigned deadBeginIndex, unsigned aliveEndIndex)
+  {
+    unsigned numAliveObjects = dataArray_.HandleDestructions(destructionArray, deadBeginIndex, aliveEndIndex);
+
+    for (unsigned i = numAliveObjects; i < aliveEndIndex; ++i)
+    {
+      dataArray_.Data(i) = A();
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
