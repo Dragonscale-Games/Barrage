@@ -23,7 +23,10 @@ namespace Barrage
     rttr::variant objectVariant(object);
     Deserialize(objectVariant, data, objectVariant.get_type());
 
-    object = objectVariant.get_value<T>();
+    if (objectVariant.is_type<T>())
+    {
+      object = objectVariant.get_value<T>();
+    }
   }
 
   template <class T>
@@ -34,7 +37,11 @@ namespace Barrage
     {
       objectVariant.convert(type);
       Deserialize(objectVariant, data, type);
-      object = objectVariant.get_value<T>();
+
+      if (objectVariant.is_type<T>())
+      {
+        object = objectVariant.get_value<T>();
+      }
     }
   }
 }

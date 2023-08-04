@@ -145,10 +145,10 @@ namespace Barrage
              
       static void StringWidget(DataObject& object);
 
+      static void AngleWidget(DataObject& object);
+
       static void SpawnRuleListWidget(DataObject& object);
-             
-      static void RotationWidget(DataObject& object);
-             
+                 
       static void SpriteWidget(DataObject& object);
 
     private:

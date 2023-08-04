@@ -24,7 +24,7 @@ namespace Barrage
   //!< Counterclockwise rotation of an object
   struct AngularSpeed
   {
-    Barrage::RADIAN w_; //!< Counterclockwise rotation speed in radians per tick
+    RADIAN w_; //!< Counterclockwise rotation speed in radians per tick
 
     inline AngularSpeed() : w_(0.0f) {}
   };

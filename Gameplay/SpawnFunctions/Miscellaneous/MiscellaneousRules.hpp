@@ -19,6 +19,7 @@
 #include "ComponentArrays/PositionArray.hpp"
 #include "ComponentArrays/VelocityArray.hpp"
 #include <glm/glm.hpp>
+#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
@@ -40,7 +41,26 @@ namespace Barrage
         void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
 
       private:
-        void SetPositionAndVelocity(Position& position, Velocity& velocity, const Position& origin, float theta, float speed, float radius);
+        static void SetPositionAndVelocity(Position& position, Velocity& velocity, const Position& origin, float theta, float speed, float radius);
+    };
+
+    struct MirrorAcrossAxisData
+    {
+      glm::mat2 rotationMatrix_;
+      
+      RADIAN angle_;
+
+      inline MirrorAcrossAxisData() : rotationMatrix_(1.0f), angle_(0.0f) {};
+    };
+
+    class MirrorAcrossAxis : public SpawnRuleT<MirrorAcrossAxisData>
+    {
+      public:
+        MirrorAcrossAxis();
+
+        void Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) override;
+
+        void SetRTTRValue(const rttr::variant& value);
     };
   }
 }

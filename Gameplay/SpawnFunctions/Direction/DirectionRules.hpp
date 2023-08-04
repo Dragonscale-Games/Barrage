@@ -15,7 +15,8 @@
 #define DirectionRules_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Objects/Spawning/SpawnRule.hpp>
+#include "Objects/Spawning/SpawnRule.hpp"
+#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
@@ -31,7 +32,7 @@ namespace Barrage
 
     struct RotateDirectionData
     {
-      float angle_;
+      RADIAN angle_;
       float cosineAngle_; // precomputed, should not be edited manually
       float sinAngle_;    // precomputed, should not be edited manually
 
@@ -50,7 +51,7 @@ namespace Barrage
 
     struct SetDirectionData
     {
-      float angle_;
+      RADIAN angle_;
       float xDirection_;
       float yDirection_;
 
@@ -69,14 +70,14 @@ namespace Barrage
 
     struct SpiralData
     {
-      float angleDelta_;
+      RADIAN angleDelta_;
 
       inline SpiralData() : angleDelta_(0.0f) {};
     };
 
     struct SpiralArrayElement
     {
-      float angle_;
+      RADIAN angle_;
 
       inline SpiralArrayElement() : angle_(0.0f) {};
     };

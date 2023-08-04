@@ -148,8 +148,8 @@ namespace Barrage
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      rotation_array.Data(i).angle_ += angular_speed_array.Data(i).w_;
-      rotation_array.Data(i).angle_ = ClampWrapped(rotation_array.Data(i).angle_, 0.0f, 2.0f * 3.141592f);
+      rotation_array.Data(i).angle_.value_ += angular_speed_array.Data(i).w_.value_;
+      rotation_array.Data(i).angle_.value_ = ClampWrapped(rotation_array.Data(i).angle_.value_, 0.0f, 2.0f * 3.141592f);
     }
   }
 }

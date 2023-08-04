@@ -60,8 +60,8 @@ namespace Barrage
     {
       SpawnRuleT<RotateDirectionData>::SetRTTRValue(value);
 
-      data_.cosineAngle_ = glm::cos(data_.angle_);
-      data_.sinAngle_ = glm::sin(data_.angle_);
+      data_.cosineAngle_ = glm::cos(data_.angle_.value_);
+      data_.sinAngle_ = glm::sin(data_.angle_.value_);
     }
 
     SetDirection::SetDirection() : SpawnRuleT<SetDirectionData>("SetDirection") {};
@@ -85,8 +85,8 @@ namespace Barrage
     {
       SpawnRuleT<SetDirectionData>::SetRTTRValue(value);
 
-      data_.xDirection_ = glm::cos(data_.angle_);
-      data_.yDirection_ = glm::sin(data_.angle_);
+      data_.xDirection_ = glm::cos(data_.angle_.value_);
+      data_.yDirection_ = glm::sin(data_.angle_.value_);
     }
 
     Spiral::Spiral() : SpawnRuleTA<SpiralData, SpiralArrayElement>("Spiral") {};
@@ -101,7 +101,7 @@ namespace Barrage
         unsigned sourceIndex = sourceIndices[i];
 
         Velocity& velocity = dest_velocities.Data(dest_index);
-        float angle = dataArray_.Data(sourceIndex).angle_;
+        float angle = dataArray_.Data(sourceIndex).angle_.value_;
         Velocity original_velocity = velocity;
         
         float cosAngle = glm::cos(angle);
@@ -113,9 +113,9 @@ namespace Barrage
 
       for (unsigned i = 0; i < initPool.GetActiveObjectCount(); ++i)
       {
-        float& angle = dataArray_.Data(i).angle_;
+        float& angle = dataArray_.Data(i).angle_.value_;
 
-        angle = ClampWrapped(angle + data_.angleDelta_, 0.0f, 2.0f * 3.1415926f);
+        angle = ClampWrapped(angle + data_.angleDelta_.value_, 0.0f, 2.0f * 3.1415926f);
       }
     }
   }

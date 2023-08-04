@@ -386,8 +386,8 @@ namespace Barrage
     AddDataWidget<long long>(LongLongWidget);
     AddDataWidget<unsigned long long>(UnsignedLongLongWidget);
     AddDataWidget<std::string>(StringWidget);
+    AddDataWidget<RADIAN>(AngleWidget);
     AddDataWidget<SpawnRuleList>(SpawnRuleListWidget);
-    AddDataWidget<Rotation>(RotationWidget);
     AddDataWidget<Sprite>(SpriteWidget);
   }
 
@@ -520,6 +520,31 @@ namespace Barrage
     }
   }
 
+  void DataWidget::AngleWidget(DataObject& object)
+  {
+    RADIAN angle = object.GetValue<RADIAN>();
+    angle.value_ = -angle.value_ * 360.0f / (2 * IM_PI);
+
+    // just so the user never sees "negative zero" in the editor
+    if (angle.value_ == -0.0f)
+    {
+      angle.value_ = 0.0f;
+    }
+
+    bool fieldChanged = ImGui::DragFloat("angle", &angle.value_);
+
+    if (ImGui::IsItemActive())
+    {
+      object.SetChainUndo(true);
+    }
+
+    if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
+    {
+      angle.value_ = -angle.value_ * (2 * IM_PI) / 360.0f;
+      object.SetValue(angle);
+    }
+  }
+
   void DataWidget::SpawnRuleListWidget(DataObject& object)
   {
     if (!ImGui::TreeNode("Spawn rules"))
@@ -624,6 +649,7 @@ namespace Barrage
 
         if (newSpawnRule)
         {
+          newSpawnRule->SetRTTRValue(newSpawnRule->GetRTTRValue());
           spawnRuleList.push_back(newSpawnRule);
           object.SetValue(spawnRuleList);
           selectedSpawnRule.clear();
@@ -645,32 +671,6 @@ namespace Barrage
     ImGui::Spacing();
 
     ImGui::TreePop();
-  }
-
-  void DataWidget::RotationWidget(DataObject& object)
-  {
-    Rotation rotation = object.GetValue<Rotation>();
-
-    float angleDeg = -rotation.angle_ * 360.0f / (2 * IM_PI);
-
-    // just so the user never sees "negative zero" in the editor
-    if (angleDeg == -0.0f)
-    {
-      angleDeg = 0.0f;
-    }
-
-    bool fieldChanged = ImGui::DragFloat("angle", &angleDeg);
-    
-    if (ImGui::IsItemActive())
-    {
-      object.SetChainUndo(true);
-    }
-
-    if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
-    {
-      rotation.angle_ = -angleDeg * (2 * IM_PI) / 360.0f;
-      object.SetValue(rotation);
-    }
   }
 
   void DataWidget::SpriteWidget(DataObject& object)

@@ -329,7 +329,7 @@ namespace Barrage
 
               if (spawnRuleData.is_valid())
               {
-                Deserialize(spawnRuleData, element["Data"]);
+                Deserialize(spawnRuleData, element["Data"], spawnRuleData.get_type());
                 newSpawnRule->SetRTTRValue(spawnRuleData);
               }
             }

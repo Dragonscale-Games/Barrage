@@ -43,7 +43,9 @@
                             "vy": 0.0
                         },
                         "Rotation": {
-                            "angle": -0.0
+                            "angle": {
+                                "value": 0.0
+                            }
                         },
                         "Scale": {
                             "w": 64.0,
@@ -96,7 +98,9 @@
                             "vy": 0.0
                         },
                         "Rotation": {
-                            "angle": 0.0
+                            "angle": {
+                                "value": 0.0
+                            }
                         },
                         "Scale": {
                             "w": 32.0,
@@ -201,7 +205,9 @@
                     "Name": "Frame",
                     "Components": {
                         "Rotation": {
-                            "angle": 0.0
+                            "angle": {
+                                "value": 0.0
+                            }
                         },
                         "Scale": {
                             "w": 1920.0,
@@ -426,7 +432,9 @@
                             "vy": 0.0
                         },
                         "Rotation": {
-                            "angle": 0.0
+                            "angle": {
+                                "value": 0.0
+                            }
                         },
                         "Scale": {
                             "w": 32.0,
@@ -479,7 +487,9 @@
                             "y": 540.0
                         },
                         "Rotation": {
-                            "angle": 0.0
+                            "angle": {
+                                "value": 0.0
+                            }
                         },
                         "Scale": {
                             "w": 32.0,

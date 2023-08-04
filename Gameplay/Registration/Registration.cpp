@@ -78,8 +78,10 @@ namespace Barrage
     RegisterSpawnRule<Spawn::Spiral>("Spiral");
 
     RegisterSpawnRule<Spawn::SpawnRing>("SpawnRing");
+    RegisterSpawnRule<Spawn::MirrorAcrossAxis>("MirrorAcrossAxis");
 
     RegisterSpawnRule<Spawn::MatchPosition>("MatchPosition");
+    RegisterSpawnRule<Spawn::Offset>("Offset");
     RegisterSpawnRule<Spawn::RandomOffset>("RandomOffset");
 
     RegisterSpawnRule<Spawn::RandomSpeed>("RandomSpeed");

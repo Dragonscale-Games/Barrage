@@ -18,6 +18,7 @@
 #include "ComponentArrays/RttrComponentArrays.hpp"
 #include "Components/RttrComponents.hpp"
 #include "SpawnRules/RttrSpawnRules.hpp"
+#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
@@ -33,6 +34,11 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("Spaces", &Entry::spaces_)
       .property("Textures", &Entry::textures_)
+      ;
+
+    rttr::registration::class_<RADIAN>("RADIAN")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("value", &RADIAN::value_)
       ;
 
     ReflectComponentArrays();

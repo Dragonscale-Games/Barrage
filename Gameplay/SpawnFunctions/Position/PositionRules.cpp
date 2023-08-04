@@ -35,6 +35,21 @@ namespace Barrage
       }
     }
 
+    Offset::Offset() : SpawnRuleT<OffsetData>("Offset") {}
+
+    void Offset::Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)
+    {
+      PositionArray& dest_positions = *destPool.GetComponentArray<Position>("Position");
+
+      for (unsigned i = 0; i < numNewObjects; ++i)
+      {
+        unsigned dest_index = i + firstObjIndex;
+
+        dest_positions.Data(dest_index).x_ += data_.xOffset_;
+        dest_positions.Data(dest_index).y_ += data_.yOffset_;
+      }
+    }
+
     RandomOffset::RandomOffset() : SpawnRuleT<RandomOffsetData>("RandomOffset") {}
 
     void RandomOffset::Execute(Barrage::Pool& initPool, Barrage::Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices)

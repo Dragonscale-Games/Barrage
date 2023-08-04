@@ -54,5 +54,16 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("angleDelta", &Spawn::SpiralData::angleDelta_)
       ;
+
+    rttr::registration::class_<Spawn::MirrorAcrossAxisData>("MirrorAcrossAxisData")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("angle", &Spawn::MirrorAcrossAxisData::angle_)
+      ;
+
+    rttr::registration::class_<Spawn::OffsetData>("OffsetData")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("xOffset", &Spawn::OffsetData::xOffset_)
+      .property("yOffset", &Spawn::OffsetData::yOffset_)
+      ;
   }
 }

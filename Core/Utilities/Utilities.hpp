@@ -18,8 +18,13 @@
 
 namespace Barrage
 {
-  typedef float RADIAN;
-  typedef float DEGREE;
+  struct RADIAN
+  {
+    float value_;
+
+    inline RADIAN() : value_(0.0f) {};
+    inline RADIAN(float value) : value_(value) {};
+  };
   
   /**************************************************************/
   /*!
