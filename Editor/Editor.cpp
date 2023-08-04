@@ -328,8 +328,8 @@ namespace Barrage
     HierarchyWidget::Use();
     InspectorWidget::Use();
     LogWidget::Use();
-    TimelineWidget::Use();
     PerformanceWidget::Use();
+    TimelineWidget::Use();
 
     if (data_.openComponentModal_)
     {
