@@ -101,7 +101,7 @@ namespace Barrage
         unsigned sourceIndex = sourceIndices[i];
 
         Velocity& velocity = dest_velocities.Data(dest_index);
-        float& angle = dataArray_.Data(sourceIndex).angle_;
+        float angle = dataArray_.Data(sourceIndex).angle_;
         Velocity original_velocity = velocity;
         
         float cosAngle = glm::cos(angle);
@@ -109,6 +109,11 @@ namespace Barrage
 
         velocity.vx_ = original_velocity.vx_ * cosAngle - original_velocity.vy_ * sinAngle;
         velocity.vy_ = original_velocity.vx_ * sinAngle + original_velocity.vy_ * cosAngle;
+      }
+
+      for (unsigned i = 0; i < initPool.GetActiveObjectCount(); ++i)
+      {
+        float& angle = dataArray_.Data(i).angle_;
 
         angle = ClampWrapped(angle + data_.angleDelta_, 0.0f, 2.0f * 3.1415926f);
       }
