@@ -17,6 +17,7 @@
 #include "nfd.h"
 #include <filesystem>
 #include <Windows.h>
+#include "Widgets/Windows/Performance/PerformanceWidget.hpp"
 
 namespace Barrage
 {
@@ -197,6 +198,7 @@ namespace Barrage
         if (ImGui::MenuItem("Play"))
         {
           Editor::Instance->Data().gamePlaying_ = true;
+          PerformanceWidget::Reset();
         }
       }
 

@@ -21,6 +21,7 @@
 #include "Widgets/MainMenu/MainMenuWidget.hpp"
 #include "Widgets/Windows/Game/GameWidget.hpp"
 #include "Widgets/Windows/Timeline/TimelineWidget.hpp"
+#include "Widgets/Windows/Performance/PerformanceWidget.hpp"
 
 #include <Widgets/Modals/Component/ComponentModal.hpp>
 #include <Widgets/Modals/ComponentArray/ComponentArrayModal.hpp>
@@ -240,16 +241,18 @@ namespace Barrage
 
     unsigned numTicks = engine_.Frames().ConsumeTicks();
 
-    /*TimePoint beginT;
-    TimePoint endT;*/
+    TimePoint beginT;
+    TimePoint endT;
 
     if (data_.gamePlaying_)
     {
       for (unsigned i = 0; i < numTicks; ++i)
       {
-        //beginT = std::chrono::high_resolution_clock::now();
+        beginT = std::chrono::high_resolution_clock::now();
         engine_.Spaces().Update();
-        //endT = std::chrono::high_resolution_clock::now();
+        endT = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
+        PerformanceWidget::AddFrameSample(duration.count());
       }
     }
 
@@ -275,7 +278,7 @@ namespace Barrage
       //std::cout << "Scene set time: " << duration.count() << " microseconds" << std::endl;
     }
 
-    //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
+    // duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
 
     gui_.StartWidgets();
     /*ImGui::Begin("Time Test");
@@ -321,14 +324,12 @@ namespace Barrage
   void Editor::UseWidgets()
   {
     GameWidget::Use();
-    
-    bool gamePlaying = data_.gamePlaying_;
-  
     MainMenuWidget::Use();
     HierarchyWidget::Use();
     InspectorWidget::Use();
     LogWidget::Use();
     TimelineWidget::Use();
+    PerformanceWidget::Use();
 
     if (data_.openComponentModal_)
     {
