@@ -93,13 +93,13 @@ add_library(BarrageCore STATIC
 
   "Objects/Spawning/SpawnInfo.cpp"  
 
-  "Entry/Entry.cpp"  "Window/WindowManager.cpp" "Renderer/Framebuffers/Framebuffer.cpp"  "Objects/Spawning/SpawnRule.cpp"  "Objects/Spawning/SpawnRuleAllocator.cpp")
+  "Entry/Entry.cpp"  "Window/WindowManager.cpp" "Renderer/Framebuffers/Framebuffer.cpp"  "Objects/Spawning/SpawnRule.cpp"  "Objects/Spawning/SpawnRuleAllocator.cpp" "Audio/AudioManager.cpp")
 
 add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
-target_link_libraries(BarrageCore LINK_PUBLIC spdlog::spdlog glad glfw glm rapidjson stb_image RTTR::Core)
+target_link_libraries(BarrageCore LINK_PUBLIC spdlog::spdlog glad glfw glm rapidjson stb_image RTTR::Core Soloud)
 if(WIN32)
   target_link_libraries(BarrageCore PUBLIC DbgHelp Userenv)
 endif()
-target_include_directories(BarrageCore PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(BarrageCore PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}/ThirdParty/soloud/include")

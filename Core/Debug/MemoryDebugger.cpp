@@ -155,8 +155,8 @@ namespace Barrage
     };
     assert(statList.size() == availableStats.size());
     // Create the file to dump our statistics.
-    FILE* statFile = fopen(filepath, "wt");
-    if (statFile)
+    std::ofstream statFile(filepath);
+    if (statFile.is_open())
     {
       size_t length = statList.size();
       DumpStatHeader(statFile);
@@ -169,7 +169,6 @@ namespace Barrage
           DumpList(statFile, *statList[i], labels[i]);
         }
       }
-      fclose(statFile);
     }
     else
     {
@@ -177,9 +176,8 @@ namespace Barrage
     }
   }
 
-  void MemoryDebuggerImpl::DumpList(FILE* statFile, const AllocList& list, const char* entryLabel)
+  void MemoryDebuggerImpl::DumpList(std::ostream& statFile, const AllocList& list, const char* entryLabel)
   {
-    assert(statFile);
     assert(entryLabel);
     for (auto iter = list.cbegin(); iter != list.cend(); ++iter)
     {
@@ -188,19 +186,19 @@ namespace Barrage
     }
   }
 
-  void MemoryDebuggerImpl::DumpStatHeader(FILE* statFile)
+  void MemoryDebuggerImpl::DumpStatHeader(std::ostream& statFile)
   {
     assert(statFile);
-    fprintf(statFile, "Status, Allocation Size, Memory Address, File\nimage.png");
+    statFile << "Status, Allocation Size, Memory Address, File\nimage.png";
   }
 
   void MemoryDebuggerImpl::DumpAllocation(
-    FILE* statFile, const Allocation& allocation, const char* entryLabel)
+    std::ostream& statFile, const Allocation& allocation, const char* entryLabel)
   {
     assert(statFile);
-    fprintf(statFile, "%s, %u, %p, %s\n",
-      entryLabel, allocation.allocSize_, allocation.allocation_,
-      allocation.file_.c_str());
+    
+    statFile << entryLabel << ", " << allocation.allocSize_ << ", "
+      << allocation.allocation_ << ", " << allocation.file_ << "\n";
   }
 
   AllocList::iterator MemoryDebuggerImpl::FindAddressIn(AllocList& list, const void* address)

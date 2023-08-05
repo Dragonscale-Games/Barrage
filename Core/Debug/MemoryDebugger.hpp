@@ -25,6 +25,7 @@
 //  ===========================================================================
 #include <stddef.h>
 #include <list>
+#include <fstream>
 
 #include <Utilities/Mallocator.hpp>
 #include <Debug/SymbolManager.hpp>
@@ -157,7 +158,7 @@ namespace Barrage
         The header of the statistics file.
     */
     /*************************************************************************/
-    static void DumpStatHeader(FILE* statFile);
+    static void DumpStatHeader(std::ostream& statFile);
     /*************************************************************************/
     /*!
       \brief
@@ -170,7 +171,7 @@ namespace Barrage
         The status label for every entry on this list.
     */
     /*************************************************************************/
-    static void DumpList(FILE* statFile, const AllocList& list, const char* entryLabel);
+    static void DumpList(std::ostream& statFile, const AllocList& list, const char* entryLabel);
     /*************************************************************************/
     /*!
       \brief
@@ -183,7 +184,7 @@ namespace Barrage
         The label for the allocationo entry being written.
     */
     /*************************************************************************/
-    static void DumpAllocation(FILE* statFile, const Allocation& allocation, const char* entryLabel);
+    static void DumpAllocation(std::ostream& statFile, const Allocation& allocation, const char* entryLabel);
 
     /*************************************************************************/
     /*!

@@ -29,6 +29,7 @@ namespace Barrage
     windowManager_.SetFramebufferSizeCallback(FramebufferSizeCallback);
     inputManager_.Initialize(windowManager_.GetWindowHandle());
     framerateController_.Initialize(windowManager_.GetWindowHandle(), FramerateController::FpsCap::FPS_120, true);
+    audioManager_.Initialize();
   }
 
   void Engine::SetUpGame(Entry& entry)
@@ -54,11 +55,17 @@ namespace Barrage
 
   void Engine::Shutdown()
   {
+    audioManager_.Shutdown();
     inputManager_.Shutdown();
     renderer_.Shutdown();
     windowManager_.Shutdown();
 
     Instance = nullptr;
+  }
+
+  AudioManager& Engine::Audio()
+  {
+    return audioManager_;
   }
 
   FramerateController& Engine::Frames()

@@ -16,6 +16,7 @@
 #define Engine_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "Audio/AudioManager.hpp"
 #include "FramerateController/FramerateController.hpp"
 #include "Input/InputManager.hpp"
 #include "Renderer/Renderer.hpp"
@@ -58,6 +59,17 @@ namespace Barrage
       */
       /**************************************************************/
       void Shutdown();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's audio manager.
+
+        \return
+          Returns a reference to the engine's audio manager.
+      */
+      /**************************************************************/
+      AudioManager& Audio();
 
       /**************************************************************/
       /*!
@@ -126,6 +138,7 @@ namespace Barrage
       WindowManager& Window();
 
     private:
+      AudioManager audioManager_;
       FramerateController framerateController_; 
       InputManager inputManager_; 
       Renderer renderer_;
