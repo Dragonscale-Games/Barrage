@@ -95,7 +95,26 @@ namespace Barrage
       pool_tree_flags |= ImGuiTreeNodeFlags_Selected;
     }
 
-    std::string poolCapacityLabel = "(" + std::to_string(poolArchetype->GetStartingObjects().size()) + "/" + std::to_string(poolArchetype->GetCapacity()) + ")";
+    std::string poolCapacityLabel;
+    
+    if (Editor::Instance->Data().gamePlaying_)
+    {
+      Space* space = Engine::Instance->Spaces().GetSpace(Editor::Instance->Data().selectedSpace_);
+
+      if (space)
+      {
+        Pool* pool = space->GetObjectManager().GetPool(poolName);
+
+        if (pool)
+        {
+          poolCapacityLabel = "(" + std::to_string(pool->GetActiveObjectCount()) + "/" + std::to_string(poolArchetype->GetCapacity()) + ")";
+        }
+      }
+    }
+    else
+    {
+      poolCapacityLabel = "(" + std::to_string(poolArchetype->GetStartingObjects().size()) + "/" + std::to_string(poolArchetype->GetCapacity()) + ")";
+    } 
 
     float freeSpace = ImGui::GetWindowWidth() - ImGui::CalcTextSize(poolLabel.c_str()).x - ImGui::CalcTextSize(poolCapacityLabel.c_str()).x;
 

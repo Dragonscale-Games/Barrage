@@ -161,14 +161,17 @@ namespace Barrage
       spawnType.sourceIndices_.reserve(spawnType.destinationPool_->GetCapacity());
 
       // find spawn rules with arrays and allocate them to match pool capacity
-      for (auto& spawnRule : spawnType.spawnRules_)
+      if (spawnType.spawnRulesWithArrays_.size() == 0)
       {
-        auto spawnRuleWithArray = std::dynamic_pointer_cast<SpawnRuleWithArray>(spawnRule);
-
-        if (spawnRuleWithArray)
+        for (auto& spawnRule : spawnType.spawnRules_)
         {
-          spawnRuleWithArray->SetCapacity(pool->GetCapacity());
-          spawnType.spawnRulesWithArrays_.push_back(spawnRuleWithArray);
+          auto spawnRuleWithArray = std::dynamic_pointer_cast<SpawnRuleWithArray>(spawnRule);
+
+          if (spawnRuleWithArray)
+          {
+            spawnRuleWithArray->SetCapacity(pool->GetCapacity());
+            spawnType.spawnRulesWithArrays_.push_back(spawnRuleWithArray);
+          }
         }
       }
 
