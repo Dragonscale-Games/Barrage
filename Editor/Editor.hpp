@@ -99,6 +99,7 @@ namespace Barrage
       CommandQueue commandQueue_; //!< Allows commands to be sent and processed
 
       long long repeatTimer_;
+      GLuint timeQueryID_;
 
       /**************************************************************/
       /*!

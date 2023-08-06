@@ -18,6 +18,9 @@
 
 #include "Components/BoundaryBox.hpp"
 #include "Components/CircleCollider.hpp"
+#include "Components/Player.hpp"
+
+#include "Spaces/Space.hpp"
 
 namespace Barrage
 {
@@ -48,7 +51,10 @@ namespace Barrage
   void CollisionSystem::Update()
   {
     UpdatePoolGroup("Bounded Bullet Pools", UpdateBoundedBullets);
+
     UpdateInteraction("Circle Player Pools", "Circle Bullet Pools", UpdatePlayerBulletCollisions);
+    UpdateInteraction("Circle Player Pools", "Circle Bullet Pools", ClearBulletsOnPlayerHit);
+    UpdatePoolGroup("Circle Player Pools", ResetPlayerHit);
   }
 
   void CollisionSystem::UpdateBoundedBullets(Pool* pool)
@@ -73,13 +79,13 @@ namespace Barrage
 
   void CollisionSystem::UpdatePlayerBulletCollisions(Pool* player_pool, Pool* bullet_pool)
   {
+    Player& player = player_pool->GetComponent<Player>("Player")->Data();
+    
     CircleCollider& player_collider = player_pool->GetComponent<CircleCollider>("CircleCollider")->Data();
     CircleCollider& bullet_collider = bullet_pool->GetComponent<CircleCollider>("CircleCollider")->Data();
 
     PositionArray& player_positions = *player_pool->GetComponentArray<Position>("Position");
     PositionArray& bullet_positions = *bullet_pool->GetComponentArray<Position>("Position");
-
-    DestructibleArray& bullet_destructibles = *bullet_pool->GetComponentArray<Destructible>("Destructible");
 
     float collision_radius = player_collider.radius_ + bullet_collider.radius_;
 
@@ -95,9 +101,33 @@ namespace Barrage
 
         if (delta_x * delta_x + delta_y * delta_y <= collision_radius * collision_radius)
         {
-          bullet_destructibles.Data(j).destroyed_ = true;
+          player.playerHit_ = true;
         }
       }
     }
+  }
+
+  void CollisionSystem::ClearBulletsOnPlayerHit(Pool* player_pool, Pool* bullet_pool)
+  {
+    Player& player = player_pool->GetComponent<Player>("Player")->Data();
+
+    if (player.playerHit_)
+    {
+      DestructibleArray& bullet_destructibles = *bullet_pool->GetComponentArray<Destructible>("Destructible");
+
+      unsigned num_bullets = bullet_pool->GetActiveObjectCount();
+
+      for (unsigned i = 0; i < num_bullets; ++i)
+      {
+        bullet_destructibles.Data(i).destroyed_ = true;
+      }
+    }
+  }
+
+  void CollisionSystem::ResetPlayerHit(Pool* pool)
+  {
+    Player& player = pool->GetComponent<Player>("Player")->Data();
+
+    player.playerHit_ = false;
   }
 }

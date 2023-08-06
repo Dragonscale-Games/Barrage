@@ -22,7 +22,10 @@ namespace Barrage
     objectManager_(*this),
     rng_(),
     paused_(false),
-    visible_(true)
+    visible_(true),
+    allowSceneChangesDuringUpdate_(true),
+    isUpdating_(false),
+    queuedScene_()
   {
   }
 
@@ -30,8 +33,16 @@ namespace Barrage
   {
     if (!paused_)
     {
+      isUpdating_ = true;
       actionManager_.Update();
       objectManager_.Update();
+      isUpdating_ = false;
+
+      if (!queuedScene_.empty())
+      {
+        SetScene(queuedScene_);
+        queuedScene_.clear();
+      }
     }
   }
 
@@ -60,6 +71,16 @@ namespace Barrage
 
   void Space::SetScene(const std::string& name)
   {
+    if (isUpdating_)
+    {
+      if (allowSceneChangesDuringUpdate_)
+      {
+        queuedScene_ = name;
+      }
+      
+      return;
+    }
+    
     Scene* new_scene = Engine::Instance->Scenes().GetScene(name);
 
     if (new_scene == nullptr)
@@ -87,6 +108,11 @@ namespace Barrage
   void Space::SetVisible(bool isVisible)
   {
     visible_ = isVisible;
+  }
+
+  void Space::AllowSceneChangesDuringUpdate(bool allow)
+  {
+    allowSceneChangesDuringUpdate_ = allow;
   }
 
   bool Space::IsPaused() const

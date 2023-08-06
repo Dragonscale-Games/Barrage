@@ -36,9 +36,24 @@ namespace Barrage
 
       void Shutdown();
 
-      void Draw(const glm::vec2& position, float rotation, const glm::vec2& scale, const std::string& texture);
+      void Draw(
+        const glm::vec2& position, 
+        float rotation, 
+        const glm::vec2& scale, 
+        const glm::vec4& colorTint, 
+        const glm::vec4& textureUVs, 
+        const std::string& texture
+      );
 
-      void DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture);
+      void DrawInstanced(
+        const glm::vec2* positionArray, 
+        float* rotationArray, 
+        const glm::vec2* scaleArray, 
+        const glm::vec4* colorTintArray,
+        const glm::vec4* textureUVArray, 
+        unsigned instances, 
+        const std::string& texture
+      );
 
       void DrawFsq();
 
@@ -66,6 +81,8 @@ namespace Barrage
       GLuint translationBuffer_;
       GLuint scaleBuffer_;
       GLuint rotationBuffer_;
+      GLuint colorTintBuffer_;
+      GLuint textureUVBuffer_;
       GLuint uniformBuffer_;
 
       void LoadGLFunctions();
@@ -85,6 +102,10 @@ namespace Barrage
       void CreateQuadMesh();
 
       void SetUpTransforms();
+
+      void SetUpColorTints();
+
+      void SetUpTextureUVs();
 
       void DeleteVertexAttributes();
   };

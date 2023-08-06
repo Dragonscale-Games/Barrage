@@ -5,15 +5,15 @@
             "Name": "Player Pool",
             "Capacity": 1,
             "Components": {
-                "Player": {
-                    "speedFast": 6.0,
-                    "speedSlow": 3.5
-                },
                 "BoundaryBox": {
                     "xMin": 480.0,
                     "xMax": 1440.0,
                     "yMin": 60.0,
                     "yMax": 1020.0
+                },
+                "Player": {
+                    "speedFast": 6.0,
+                    "speedSlow": 3.5
                 },
                 "CircleCollider": {
                     "radius": 0.0
@@ -27,38 +27,17 @@
                 "Position",
                 "Rotation",
                 "Scale",
-                "Velocity"
+                "Velocity",
+                "ColorTint",
+                "TextureUV"
             ],
             "Tags": [],
-            "Starting Objects": [
-                {
-                    "Name": "Player",
-                    "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 120.0
-                        },
-                        "Velocity": {
-                            "vx": 0.0,
-                            "vy": 0.0
-                        },
-                        "Rotation": {
-                            "angle": {
-                                "value": 0.0
-                            }
-                        },
-                        "Scale": {
-                            "w": 64.0,
-                            "h": 64.0
-                        }
-                    }
-                }
-            ],
+            "Starting Objects": [],
             "Spawn Archetypes": []
         },
         {
             "Name": "Red Bullet Pool",
-            "Capacity": 1000,
+            "Capacity": 100000,
             "Components": {
                 "CircleCollider": {
                     "radius": 12.5
@@ -79,7 +58,9 @@
                 "Rotation",
                 "Scale",
                 "Velocity",
-                "Destructible"
+                "Destructible",
+                "ColorTint",
+                "TextureUV"
             ],
             "Tags": [
                 "Bullet"
@@ -89,24 +70,36 @@
                 {
                     "Name": "Red Bullet",
                     "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 794.0
-                        },
                         "Velocity": {
                             "vx": 2.083329916000366,
                             "vy": 0.0
+                        },
+                        "Position": {
+                            "x": 960.0,
+                            "y": 794.0
                         },
                         "Rotation": {
                             "angle": {
                                 "value": 0.0
                             }
                         },
+                        "TextureUV": {
+                            "uMin": 0.0,
+                            "vMin": 0.0,
+                            "uSize": 1.0,
+                            "vSize": 1.0
+                        },
                         "Scale": {
                             "w": 32.0,
                             "h": 32.0
                         },
-                        "Destructible": {}
+                        "Destructible": {},
+                        "ColorTint": {
+                            "red": 0.0,
+                            "green": 0.0,
+                            "blue": 0.0,
+                            "alpha": 1.0
+                        }
                     }
                 }
             ]
@@ -125,8 +118,8 @@
                                 "automaticSpawns": [
                                     {
                                         "spawnType": "Red Bullet Spawn",
-                                        "ticksPerSpawn": 40,
-                                        "numberPerBurst": 1,
+                                        "ticksPerSpawn": 1,
+                                        "numberPerBurst": 1000,
                                         "delay": 0
                                     }
                                 ]
@@ -197,13 +190,21 @@
             "Component Arrays": [
                 "Rotation",
                 "Scale",
-                "Position"
+                "Position",
+                "ColorTint",
+                "TextureUV"
             ],
             "Tags": [],
             "Starting Objects": [
                 {
                     "Name": "Frame",
                     "Components": {
+                        "TextureUV": {
+                            "uMin": 0.0,
+                            "vMin": 0.0,
+                            "uSize": 1.0,
+                            "vSize": 1.0
+                        },
                         "Rotation": {
                             "angle": {
                                 "value": 0.0
@@ -216,6 +217,12 @@
                         "Position": {
                             "x": 960.0,
                             "y": 540.0
+                        },
+                        "ColorTint": {
+                            "red": 0.0,
+                            "green": 0.0,
+                            "blue": 0.0,
+                            "alpha": 1.0
                         }
                     }
                 }
@@ -227,7 +234,7 @@
             "Capacity": 2,
             "Components": {
                 "Spawner": {
-                    "currentPattern": "PDH",
+                    "currentPattern": "PD",
                     "patterns": [
                         {
                             "Key": "PDH",
@@ -238,7 +245,7 @@
                                         "spawnType": "Purple Bullet Spawn",
                                         "ticksPerSpawn": 60,
                                         "numberPerBurst": 1,
-                                        "delay": 240
+                                        "delay": 0
                                     }
                                 ]
                             }
@@ -311,7 +318,7 @@
             "Capacity": 2,
             "Components": {
                 "Spawner": {
-                    "currentPattern": "PDH",
+                    "currentPattern": "PD",
                     "patterns": [
                         {
                             "Key": "PDH",
@@ -322,7 +329,7 @@
                                         "spawnType": "Blue Bullet Spawn",
                                         "ticksPerSpawn": 120,
                                         "numberPerBurst": 1,
-                                        "delay": 480
+                                        "delay": 0
                                     }
                                 ]
                             }
@@ -413,7 +420,9 @@
                 "Rotation",
                 "Scale",
                 "Destructible",
-                "Velocity"
+                "Velocity",
+                "ColorTint",
+                "TextureUV"
             ],
             "Tags": [
                 "Bullet"
@@ -423,13 +432,19 @@
                 {
                     "Name": "Purple Bullet",
                     "Components": {
+                        "Velocity": {
+                            "vx": 2.2916600704193117,
+                            "vy": 0.0
+                        },
                         "Position": {
                             "x": 960.0,
                             "y": 540.0
                         },
-                        "Velocity": {
-                            "vx": 2.2916600704193117,
-                            "vy": 0.0
+                        "TextureUV": {
+                            "uMin": 0.0,
+                            "vMin": 0.0,
+                            "uSize": 1.0,
+                            "vSize": 1.0
                         },
                         "Rotation": {
                             "angle": {
@@ -440,7 +455,13 @@
                             "w": 32.0,
                             "h": 32.0
                         },
-                        "Destructible": {}
+                        "Destructible": {},
+                        "ColorTint": {
+                            "red": 0.0,
+                            "green": 0.0,
+                            "blue": 0.0,
+                            "alpha": 1.0
+                        }
                     }
                 }
             ]
@@ -468,7 +489,9 @@
                 "Position",
                 "Rotation",
                 "Scale",
-                "Destructible"
+                "Destructible",
+                "TextureUV",
+                "ColorTint"
             ],
             "Tags": [
                 "Bullet"
@@ -478,13 +501,19 @@
                 {
                     "Name": "Blue Bullet",
                     "Components": {
+                        "Position": {
+                            "x": 960.0,
+                            "y": 540.0
+                        },
                         "Velocity": {
                             "vx": 2.3299999237060549,
                             "vy": 0.0
                         },
-                        "Position": {
-                            "x": 960.0,
-                            "y": 540.0
+                        "TextureUV": {
+                            "uMin": 0.0,
+                            "vMin": 0.0,
+                            "uSize": 1.0,
+                            "vSize": 1.0
                         },
                         "Rotation": {
                             "angle": {
@@ -495,7 +524,13 @@
                             "w": 32.0,
                             "h": 32.0
                         },
-                        "Destructible": {}
+                        "Destructible": {},
+                        "ColorTint": {
+                            "red": 0.0,
+                            "green": 0.0,
+                            "blue": 0.0,
+                            "alpha": 1.0
+                        }
                     }
                 }
             ]

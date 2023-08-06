@@ -15,11 +15,13 @@
 #include <Entry/Entry.hpp>
 
 #include "ComponentArrays/AngularSpeedArray.hpp"
+#include "ComponentArrays/ColorTintArray.hpp"
 #include "ComponentArrays/DestructibleArray.hpp"
 #include "ComponentArrays/PositionArray.hpp"
 #include "ComponentArrays/RotationArray.hpp"
 #include "ComponentArrays/ScaleArray.hpp"
 #include "ComponentArrays/SpawnTimerArray.hpp"
+#include "ComponentArrays/TextureUVArray.hpp"
 #include "ComponentArrays/VelocityArray.hpp"
 
 #include "Components/BoundaryBox.hpp"
@@ -44,11 +46,13 @@ namespace Barrage
   void ObjectManager::RegisterCustomComponents()
   {
     RegisterComponentArray<AngularSpeed>("AngularSpeed");
+    RegisterComponentArray<ColorTint>("ColorTint");
     RegisterComponentArray<Destructible>("Destructible");
     RegisterComponentArray<Position>("Position");
     RegisterComponentArray<Rotation>("Rotation");
     RegisterComponentArray<Scale>("Scale");
     RegisterComponentArray<SpawnTimer>("SpawnTimer");
+    RegisterComponentArray<TextureUV>("TextureUV");
     RegisterComponentArray<Velocity>("Velocity");
 
     RegisterComponent<BoundaryBox>("BoundaryBox");

@@ -15,6 +15,7 @@
 #include "imgui/imgui_internal.h"
 #include "imgui/imgui_stdlib.h"
 #include <Editor.hpp>
+#include "ComponentArrays/ColorTintArray.hpp"
 #include "ComponentArrays/RotationArray.hpp"
 #include "Components/Sprite.hpp"
 #include "Objects/Spawning/SpawnRuleAllocator.hpp"
@@ -387,6 +388,7 @@ namespace Barrage
     AddDataWidget<unsigned long long>(UnsignedLongLongWidget);
     AddDataWidget<std::string>(StringWidget);
     AddDataWidget<RADIAN>(AngleWidget);
+    AddDataWidget<ColorTint>(ColorWidget);
     AddDataWidget<SpawnRuleList>(SpawnRuleListWidget);
     AddDataWidget<Sprite>(SpriteWidget);
   }
@@ -542,6 +544,26 @@ namespace Barrage
     {
       angle.value_ = -angle.value_ * (2 * IM_PI) / 360.0f;
       object.SetValue(angle);
+    }
+  }
+
+  void DataWidget::ColorWidget(DataObject& object)
+  {
+    ColorTint value = object.GetValue<ColorTint>();
+
+    bool fieldChanged = ImGui::ColorPicker3(object.GetName().c_str(), &value.red_);
+    bool itemActive = ImGui::IsItemActive();
+    fieldChanged |= ImGui::SliderFloat("alpha", &value.alpha_, 0.0f, 1.0f);
+    itemActive |= ImGui::IsItemActive();
+
+    if (itemActive)
+    {
+      object.SetChainUndo(true);
+    }
+
+    if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
+    {
+      object.SetValue(value);
     }
   }
 

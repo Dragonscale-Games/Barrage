@@ -37,6 +37,8 @@ namespace Barrage
     translationBuffer_(0),
     scaleBuffer_(0),
     rotationBuffer_(0),
+    colorTintBuffer_(0),
+    textureUVBuffer_(0),
     uniformBuffer_(0)
   {
   }
@@ -69,7 +71,13 @@ namespace Barrage
     framebuffer_.reset();
   }
 
-  void Renderer::Draw(const glm::vec2& position, float rotation, const glm::vec2& scale, const std::string& texture)
+  void Renderer::Draw(
+    const glm::vec2& position, 
+    float rotation, 
+    const glm::vec2& scale, 
+    const glm::vec4& colorTint, 
+    const glm::vec4& textureUV, 
+    const std::string& texture)
   {
     defaultShader_->Bind();
     textureManager_.BindTexture(texture);
@@ -83,10 +91,23 @@ namespace Barrage
     glBindBuffer(GL_ARRAY_BUFFER, scaleBuffer_);
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2), &scale);
     
+    glBindBuffer(GL_ARRAY_BUFFER, colorTintBuffer_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4), &colorTint);
+
+    glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4), &textureUV);
+
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   }
 
-  void Renderer::DrawInstanced(const glm::vec2* positionArray, float* rotationArray, const glm::vec2* scaleArray, unsigned instances, const std::string& texture)
+  void Renderer::DrawInstanced(
+    const glm::vec2* positionArray, 
+    float* rotationArray, 
+    const glm::vec2* scaleArray, 
+    const glm::vec4* colorTintArray,
+    const glm::vec4* textureUVArray, 
+    unsigned instances, 
+    const std::string& texture)
   {
     defaultShader_->Bind();
     textureManager_.BindTexture(texture);
@@ -100,6 +121,12 @@ namespace Barrage
     glBindBuffer(GL_ARRAY_BUFFER, scaleBuffer_);
     glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(glm::vec2), scaleArray);
     
+    glBindBuffer(GL_ARRAY_BUFFER, colorTintBuffer_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(glm::vec4), colorTintArray);
+
+    glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(glm::vec4), textureUVArray);
+
     glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, instances);
   }
 
@@ -133,6 +160,12 @@ namespace Barrage
 
     glBindBuffer(GL_ARRAY_BUFFER, rotationBuffer_);
     glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(float), nullptr, GL_STREAM_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, colorTintBuffer_);
+    glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(glm::vec4), nullptr, GL_STREAM_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer_);
+    glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(glm::vec4), nullptr, GL_STREAM_DRAW);
   }
 
   void Renderer::SetViewport(int width, int height, int x, int y)
@@ -177,6 +210,8 @@ namespace Barrage
       layout (location = 2) in vec2 a_translation;
       layout (location = 3) in vec2 a_scale;
       layout (location = 4) in float a_rotation;
+      layout (location = 5) in vec4 a_color_tint;
+      layout (location = 6) in vec4 a_texture_uvs;
       
       layout(std140) uniform Matrices 
       {
@@ -185,6 +220,7 @@ namespace Barrage
       };
       
       out vec2 tex_coord;
+      out vec4 tint_color;
       
       void main()
       {
@@ -198,7 +234,8 @@ namespace Barrage
       
         gl_Position = proj_matrix * view_matrix * transform_matrix * vec4(a_position, 0.0, 1.0);
         
-        tex_coord = a_tex_coord;
+        tex_coord = a_texture_uvs.xy + a_tex_coord * a_texture_uvs.zw;
+        tint_color = a_color_tint;
       }
     )";
 
@@ -208,12 +245,35 @@ namespace Barrage
       out vec4 color;
       
       in vec2 tex_coord;
+      in vec4 tint_color;
       
       uniform sampler2D tex_sampler;
       
+      vec3 rgb2hsv(vec3 c)
+      {
+          vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+          vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+          vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+      
+          float d = q.x - min(q.w, q.y);
+          float e = 1.0e-10;
+          return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+      }
+
       void main()
       {
-        color = texture(tex_sampler, tex_coord);
+        vec4 tex_color = texture(tex_sampler, tex_coord);     
+        
+        // Calculate the grayscale of the texture color
+        float gray = dot(tex_color.rgb, vec3(0.299, 0.587, 0.114));
+
+        // Linearly interpolate from the grayscale to the tint color
+        vec3 tinted_color = mix(tint_color.rgb, vec3(gray), gray);
+        
+        vec3 tint_hsv = rgb2hsv(tint_color.rgb);
+
+        // Set the output color to the tinted color
+        color = vec4(mix(tex_color.rgb, tinted_color.rgb, tint_hsv.z), tex_color.a * tint_color.a);
       }
     )";
 
@@ -294,6 +354,9 @@ namespace Barrage
     
     CreateQuadMesh();
     SetUpTransforms();
+    SetUpColorTints();
+    SetUpTextureUVs();
+    IncreaseMaxInstances(1);
   }
 
   void Renderer::CreateQuadMesh()
@@ -354,8 +417,28 @@ namespace Barrage
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
     glVertexAttribDivisor(4, 1);
+  }
 
-    IncreaseMaxInstances(1);
+  void Renderer::SetUpColorTints()
+  {
+    // color tints
+    glGenBuffers(1, &colorTintBuffer_);
+    glBindBuffer(GL_ARRAY_BUFFER, colorTintBuffer_);
+
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+    glVertexAttribDivisor(5, 1);
+  }
+
+  void Renderer::SetUpTextureUVs()
+  {
+    // texture uvs
+    glGenBuffers(1, &textureUVBuffer_);
+    glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer_);
+
+    glEnableVertexAttribArray(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+    glVertexAttribDivisor(6, 1);
   }
 
   void Renderer::DeleteVertexAttributes()
@@ -366,5 +449,7 @@ namespace Barrage
     glDeleteBuffers(1, &translationBuffer_);
     glDeleteBuffers(1, &scaleBuffer_);
     glDeleteBuffers(1, &rotationBuffer_);
+    glDeleteBuffers(1, &colorTintBuffer_);
+    glDeleteBuffers(1, &textureUVBuffer_);
   }
 }

@@ -47,6 +47,7 @@ namespace Barrage
   {
     engine_.Initialize();
     engine_.Window().Maximize();
+    engine_.Frames().SetVsync(false);
 
     Entry entry = Entry::LoadFromFile("./Assets/entry.json");
     engine_.SetUpGame(entry);

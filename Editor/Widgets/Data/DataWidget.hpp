@@ -147,6 +147,8 @@ namespace Barrage
 
       static void AngleWidget(DataObject& object);
 
+      static void ColorWidget(DataObject& object);
+
       static void SpawnRuleListWidget(DataObject& object);
                  
       static void SpriteWidget(DataObject& object);

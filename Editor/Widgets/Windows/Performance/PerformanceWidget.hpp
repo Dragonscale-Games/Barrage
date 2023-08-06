@@ -36,14 +36,19 @@ namespace Barrage
 
      static void AddFrameSample(long long sample);
 
-    private:
-      static const size_t MAX_FRAME_SAMPLES = 100;
-      
-      static long long frameSamples_[MAX_FRAME_SAMPLES];
-      static long long maxSample_;
-      static size_t currentIndex_;
-      static size_t numSamples_;
+     static void AddDrawSample(long long sample);
 
+    private:
+      static const size_t MAX_SAMPLES = 100;
+      
+      static long long frameSamples_[MAX_SAMPLES];
+      static long long maxFrameSample_;
+      static size_t currentFrameSampleIndex_;
+      static size_t numFrameSamples_;
+      static long long drawSamples_[MAX_SAMPLES];
+      static long long maxDrawSample_;
+      static size_t currentDrawSampleIndex_;
+      static size_t numDrawSamples_;
   };
 }
 

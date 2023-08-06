@@ -1,42 +1,38 @@
 /* ======================================================================== */
 /*!
- * \file            Player.hpp
+ * \file            ColorTintArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Basic player component.
+   Determines the tint of game objects.
  */
  /* ======================================================================== */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef Player_BARRAGE_H
-#define Player_BARRAGE_H
+#ifndef ColorTintArray_BARRAGE_H
+#define ColorTintArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Components/BaseClasses/Component.hpp"
-
-#include <unordered_map>
-#include <string>
+#include "Objects/Components/BaseClasses/ComponentArray.hpp"
 
 namespace Barrage
 {
-  //! Basic player component
-  class Player
+  //!< Color tint of an object
+  struct ColorTint
   {
-    public:
-      float speedSlow_;
-      float speedFast_;
-      
-      bool playerHit_;
+    float red_;
+    float green_;
+    float blue_;
+    float alpha_;
 
-      inline Player() : speedSlow_(3.5f), speedFast_(6.0f), playerHit_(false) {}
+    inline ColorTint() : red_(1.0f), green_(1.0f), blue_(1.0f), alpha_(1.0f) {}
   };
 
-  typedef Barrage::ComponentT<Player> PlayerComponent;
+  typedef Barrage::ComponentArrayT<ColorTint> ColorTintArray;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // Player_BARRAGE_H
+#endif // ColorTintArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

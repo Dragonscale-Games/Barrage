@@ -41,9 +41,13 @@ namespace Barrage
     void Update() override;
 
   private:
-    static void UpdateBoundedBullets(Barrage::Pool* pool);
+    static void UpdateBoundedBullets(Pool* pool);
     
-    static void UpdatePlayerBulletCollisions(Barrage::Pool* player_pool, Barrage::Pool* bullet_pool);
+    static void UpdatePlayerBulletCollisions(Pool* player_pool, Pool* bullet_pool);
+
+    static void ClearBulletsOnPlayerHit(Pool* player_pool, Pool* bullet_pool);
+
+    static void ResetPlayerHit(Pool* pool);
   };
 }
 

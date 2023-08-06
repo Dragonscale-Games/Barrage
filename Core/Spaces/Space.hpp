@@ -45,6 +45,8 @@ namespace Barrage
 
       void SetVisible(bool isVisible);
 
+      void AllowSceneChangesDuringUpdate(bool allow);
+
       bool IsPaused() const;
       
       bool IsVisible() const;
@@ -55,6 +57,9 @@ namespace Barrage
       Random rng_;
       bool paused_;
       bool visible_;
+      bool allowSceneChangesDuringUpdate_;
+      bool isUpdating_;
+      std::string queuedScene_;
 	};
 }
 

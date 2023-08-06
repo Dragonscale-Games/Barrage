@@ -16,9 +16,11 @@
 #include <Engine/Engine.hpp>
 
 #include "Components/Sprite.hpp"
+#include "ComponentArrays/ColorTintArray.hpp"
 #include "ComponentArrays/PositionArray.hpp"
 #include "ComponentArrays/RotationArray.hpp"
 #include "ComponentArrays/ScaleArray.hpp"
+#include "ComponentArrays/TextureUVArray.hpp"
 
 namespace Barrage
 {
@@ -27,9 +29,11 @@ namespace Barrage
     drawPools_()
   {
     PoolType basic_sprite_type;
+    basic_sprite_type.AddComponentArray("ColorTint");
     basic_sprite_type.AddComponentArray("Position");
     basic_sprite_type.AddComponentArray("Scale");
     basic_sprite_type.AddComponentArray("Rotation");
+    basic_sprite_type.AddComponentArray("TextureUV");
     basic_sprite_type.AddComponent("Sprite");
     poolTypes_["Basic 2D Sprite Pools"] = basic_sprite_type;
   }
@@ -81,14 +85,18 @@ namespace Barrage
         PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
         ScaleArray& scale_array = *pool->GetComponentArray<Scale>("Scale");
         RotationArray& rotation_array = *pool->GetComponentArray<Rotation>("Rotation");
+        ColorTintArray& color_tint_array = *pool->GetComponentArray<ColorTint>("ColorTint");
+        TextureUVArray& texture_uv_array = *pool->GetComponentArray<TextureUV>("TextureUV");
 
         glm::vec2* positions = reinterpret_cast<glm::vec2*>(&position_array.Data(0));
         glm::vec2* scales = reinterpret_cast<glm::vec2*>(&scale_array.Data(0));
         float* rotations = reinterpret_cast<float*>(&rotation_array.Data(0));
+        glm::vec4* colorTints = reinterpret_cast<glm::vec4*>(&color_tint_array.Data(0));
+        glm::vec4* textureUVs = reinterpret_cast<glm::vec4*>(&texture_uv_array.Data(0));
 
         Sprite& pool_sprite = pool->GetComponent<Sprite>("Sprite")->Data();
 
-        renderer.DrawInstanced(positions, rotations, scales, pool->GetActiveObjectCount(), pool_sprite.texture_);
+        renderer.DrawInstanced(positions, rotations, scales, colorTints, textureUVs, pool->GetActiveObjectCount(), pool_sprite.texture_);
       }
     }
   }
