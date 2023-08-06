@@ -27,7 +27,7 @@ namespace Barrage
     float blue_;
     float alpha_;
 
-    inline ColorTint() : red_(1.0f), green_(1.0f), blue_(1.0f), alpha_(1.0f) {}
+    inline ColorTint() : red_(0.0f), green_(0.0f), blue_(0.0f), alpha_(1.0f) {}
   };
 
   typedef Barrage::ComponentArrayT<ColorTint> ColorTintArray;

@@ -270,10 +270,15 @@ namespace Barrage
         // Linearly interpolate from the grayscale to the tint color
         vec3 tinted_color = mix(tint_color.rgb, vec3(gray), gray);
         
+        // The last hsv coordinate (brightness) for each color is used below
         vec3 tint_hsv = rgb2hsv(tint_color.rgb);
+        vec3 tex_hsv = rgb2hsv(tex_color.rgb);
 
-        // Set the output color to the tinted color
-        color = vec4(mix(tex_color.rgb, tinted_color.rgb, tint_hsv.z), tex_color.a * tint_color.a);
+        // Tint such that:
+        // 1. Brightness stays constant
+        // 2. When tint brightness is low, make color close to original texture color
+        // 3. When tint brightness is high, make color close to calculated tint color
+        color = vec4(mix(tex_color.rgb, tinted_color.rgb * tex_hsv.z, tint_hsv.z), tex_color.a * tint_color.a);
       }
     )";
 
@@ -292,7 +297,7 @@ namespace Barrage
       
       void main()
       {
-        gl_Position =  vec4(a_position, 0.0f, 1.0);
+        gl_Position = vec4(a_position, 0.0f, 1.0);
         
         tex_coord = a_tex_coord;
       }
