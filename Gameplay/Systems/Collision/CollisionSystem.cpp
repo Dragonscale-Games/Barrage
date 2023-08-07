@@ -87,6 +87,8 @@ namespace Barrage
     PositionArray& player_positions = *player_pool->GetComponentArray<Position>("Position");
     PositionArray& bullet_positions = *bullet_pool->GetComponentArray<Position>("Position");
 
+    DestructibleArray& bullet_destructibles = *bullet_pool->GetComponentArray<Destructible>("Destructible");
+
     float collision_radius = player_collider.radius_ + bullet_collider.radius_;
 
     unsigned num_players = player_pool->GetActiveObjectCount();
@@ -102,6 +104,7 @@ namespace Barrage
         if (delta_x * delta_x + delta_y * delta_y <= collision_radius * collision_radius)
         {
           player.playerHit_ = true;
+          bullet_destructibles.Data(i).destroyed_ = true;
         }
       }
     }

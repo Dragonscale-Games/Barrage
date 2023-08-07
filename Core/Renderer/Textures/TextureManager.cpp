@@ -105,6 +105,6 @@ namespace Barrage
       128,   0, 128, 255  // Purple (Bottom-right)
     };
 
-    defaultTexture_ = std::make_shared<Texture>(2, 2, imageData, GL_NEAREST);
+    defaultTexture_ = std::make_shared<Texture>(2, 2, 4, imageData, GL_NEAREST);
   }
 }

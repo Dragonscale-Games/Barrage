@@ -5,15 +5,15 @@
             "Name": "Player Pool",
             "Capacity": 1,
             "Components": {
-                "Player": {
-                    "speedFast": 5.599999904632568,
-                    "speedSlow": 3.0
-                },
                 "BoundaryBox": {
                     "xMin": 480.0,
                     "xMax": 1440.0,
                     "yMin": 60.0,
                     "yMax": 1020.0
+                },
+                "Player": {
+                    "speedFast": 5.599999904632568,
+                    "speedSlow": 3.0
                 },
                 "CircleCollider": {
                     "radius": 0.0
@@ -36,24 +36,24 @@
                 {
                     "Name": "Player",
                     "Components": {
+                        "Position": {
+                            "x": 960.0,
+                            "y": 120.0
+                        },
                         "Velocity": {
                             "vx": 0.0,
                             "vy": 0.0
                         },
-                        "Position": {
-                            "x": 960.0,
-                            "y": 120.0
+                        "Rotation": {
+                            "angle": {
+                                "value": 0.0
+                            }
                         },
                         "TextureUV": {
                             "uMin": 0.0,
                             "vMin": 0.0,
                             "uSize": 1.0,
                             "vSize": 1.0
-                        },
-                        "Rotation": {
-                            "angle": {
-                                "value": 0.0
-                            }
                         },
                         "Scale": {
                             "w": 64.0,
@@ -78,7 +78,7 @@
                     "radius": 12.5
                 },
                 "Sprite": {
-                    "texture": "TestBulletRed",
+                    "texture": "TestBullet",
                     "layer": 2
                 },
                 "BoundaryBox": {
@@ -105,13 +105,18 @@
                 {
                     "Name": "Red Bullet",
                     "Components": {
+                        "Velocity": {
+                            "vx": 2.083329916000366,
+                            "vy": 0.0
+                        },
                         "Position": {
                             "x": 960.0,
                             "y": 794.0
                         },
-                        "Velocity": {
-                            "vx": 2.083329916000366,
-                            "vy": 0.0
+                        "Rotation": {
+                            "angle": {
+                                "value": 0.0
+                            }
                         },
                         "TextureUV": {
                             "uMin": 0.0,
@@ -119,20 +124,15 @@
                             "uSize": 1.0,
                             "vSize": 1.0
                         },
-                        "Rotation": {
-                            "angle": {
-                                "value": 0.0
-                            }
-                        },
                         "Scale": {
                             "w": 32.0,
                             "h": 32.0
                         },
                         "Destructible": {},
                         "ColorTint": {
-                            "red": 0.0,
-                            "green": 0.0,
-                            "blue": 0.0,
+                            "red": 1.0,
+                            "green": 0.1423611044883728,
+                            "blue": 0.1423611044883728,
                             "alpha": 1.0
                         }
                     }
@@ -234,16 +234,16 @@
                 {
                     "Name": "Frame",
                     "Components": {
-                        "Rotation": {
-                            "angle": {
-                                "value": 0.0
-                            }
-                        },
                         "TextureUV": {
                             "uMin": 0.0,
                             "vMin": 0.0,
                             "uSize": 1.0,
                             "vSize": 1.0
+                        },
+                        "Rotation": {
+                            "angle": {
+                                "value": 0.0
+                            }
                         },
                         "Scale": {
                             "w": 1920.0,
@@ -467,24 +467,24 @@
                 {
                     "Name": "Purple Bullet",
                     "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 540.0
-                        },
                         "Velocity": {
                             "vx": 2.2916600704193117,
                             "vy": 0.0
                         },
-                        "Rotation": {
-                            "angle": {
-                                "value": 0.0
-                            }
+                        "Position": {
+                            "x": 960.0,
+                            "y": 540.0
                         },
                         "TextureUV": {
                             "uMin": 0.0,
                             "vMin": 0.0,
                             "uSize": 1.0,
                             "vSize": 1.0
+                        },
+                        "Rotation": {
+                            "angle": {
+                                "value": 0.0
+                            }
                         },
                         "Scale": {
                             "w": 32.0,
@@ -509,7 +509,7 @@
                     "radius": 12.5
                 },
                 "Sprite": {
-                    "texture": "TestBulletBlue",
+                    "texture": "TestBullet",
                     "layer": 3
                 },
                 "BoundaryBox": {
@@ -536,18 +536,13 @@
                 {
                     "Name": "Blue Bullet",
                     "Components": {
-                        "Velocity": {
-                            "vx": 2.3299999237060549,
-                            "vy": 0.0
-                        },
                         "Position": {
                             "x": 960.0,
                             "y": 540.0
                         },
-                        "Rotation": {
-                            "angle": {
-                                "value": 0.0
-                            }
+                        "Velocity": {
+                            "vx": 2.3299999237060549,
+                            "vy": 0.0
                         },
                         "TextureUV": {
                             "uMin": 0.0,
@@ -555,15 +550,20 @@
                             "uSize": 1.0,
                             "vSize": 1.0
                         },
+                        "Rotation": {
+                            "angle": {
+                                "value": 0.0
+                            }
+                        },
                         "Scale": {
                             "w": 32.0,
                             "h": 32.0
                         },
                         "Destructible": {},
                         "ColorTint": {
-                            "red": 0.0,
-                            "green": 0.0,
-                            "blue": 0.0,
+                            "red": 0.1388888955116272,
+                            "green": 0.15682882070541383,
+                            "blue": 1.0,
                             "alpha": 1.0
                         }
                     }

@@ -28,8 +28,8 @@ namespace Barrage
   {
   }
 
-  Texture::Texture(int width, int height, const GLubyte* imageData, GLint filter) :
-    id_(CreateTexture(width, height, imageData, filter))
+  Texture::Texture(int width, int height, int channels, const GLubyte* imageData, GLint filter) :
+    id_(CreateTexture(width, height, channels, imageData, filter))
   {
   }
 
@@ -69,16 +69,35 @@ namespace Barrage
       return 0;
     }
 
-    GLuint id = CreateTexture(width, height, imageData, filter);
+    GLuint id = CreateTexture(width, height, channels, imageData, filter);
 
     stbi_image_free(imageData);
 
     return id;
   }
 
-  GLuint Texture::CreateTexture(int width, int height, const GLubyte* imageData, GLint filter)
+  GLuint Texture::CreateTexture(int width, int height, int channels, const GLubyte* imageData, GLint filter)
   {
     GLuint id;
+    GLenum format;
+
+    switch (channels)
+    {
+      case 1:
+        format = GL_RED;
+        break;
+      case 2:
+        format = GL_RG;
+        break;
+      case 3:
+        format = GL_RGB;
+        break;
+      case 4:
+        format = GL_RGBA;
+        break;
+      default:
+        return 0;  // Invalid number of channels
+    }
 
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_2D, id);
@@ -88,7 +107,7 @@ namespace Barrage
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, imageData);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     return id;
