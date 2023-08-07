@@ -19,6 +19,7 @@
 #include "ComponentArrays/RotationArray.hpp"
 #include "Components/Sprite.hpp"
 #include "Objects/Spawning/SpawnRuleAllocator.hpp"
+#include <algorithm>
 
 namespace Barrage
 {
@@ -591,6 +592,12 @@ namespace Barrage
       ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - buttonWidth - 150.0f);
       ImGui::BeginGroup();
       ImGui::Text(spawnRule->GetName().c_str());
+      if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
+      {
+        ImGui::Text(spawnRule->GetName().c_str());
+        ImGui::SetDragDropPayload("SpawnRulePayload", &i, sizeof(size_t));
+        ImGui::EndDragDropSource();
+      }
       rttr::variant dataVariant = spawnRule->GetRTTRValue();
       
       if (dataVariant.is_valid())
@@ -620,6 +627,57 @@ namespace Barrage
       }
 
       ImGui::EndGroup();
+
+      if (ImGui::BeginDragDropTarget())
+      {
+        const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("SpawnRulePayload", ImGuiDragDropFlags_AcceptPeekOnly);
+        
+        if (payload)
+        {
+          ImVec2 widgetPos = ImGui::GetItemRectMin();
+
+          // Draw a horizontal line
+          ImGui::GetWindowDrawList()->AddLine(
+            ImVec2(widgetPos.x, widgetPos.y - 9.0f),               // Start point (a bit above the Text widget)
+            ImVec2(widgetPos.x + ImGui::GetContentRegionAvail().x - buttonWidth - 150.0f, widgetPos.y - 9.0f),  // End point
+            IM_COL32(255, 0, 0, 255),  // Color (red in this example)
+            2.0f                       // Line thickness
+          );
+
+          if (payload->IsDelivery() && !object.valueWasSet_)
+          {
+            size_t sourceIndex = *static_cast<size_t*>(payload->Data);
+            size_t destinationIndex = i;
+
+            bool insertionHappened = false;
+
+            if (sourceIndex < destinationIndex)
+            {
+              spawnRuleList.insert(spawnRuleList.begin() + destinationIndex, spawnRuleList[sourceIndex]);
+              spawnRuleList.erase(spawnRuleList.begin() + sourceIndex);
+              insertionHappened = true;
+            }
+            else if (sourceIndex > destinationIndex)
+            {
+              spawnRuleList.insert(spawnRuleList.begin() + destinationIndex, spawnRuleList[sourceIndex]);
+              spawnRuleList.erase(spawnRuleList.begin() + sourceIndex + 1);
+              insertionHappened = true;
+            }
+
+            if (insertionHappened)
+            {
+              object.SetValue(spawnRuleList);
+
+              ImGui::EndDragDropTarget();
+              ImGui::PopID();
+              ImGui::TreePop();
+              return;
+            }
+          }
+        }
+        
+        ImGui::EndDragDropTarget();
+      }
       
       ImVec2 itemRectMin = ImGui::GetItemRectMin();
       ImVec2 itemRectMax = ImGui::GetItemRectMax();
