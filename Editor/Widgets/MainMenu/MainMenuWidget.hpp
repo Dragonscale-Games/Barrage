@@ -35,8 +35,6 @@ namespace Barrage
 
     private:
       static void ImportTexture();
-      
-      static void BuildGame(bool runExecutable = false);
 
       static ImVec2 size_;
   };

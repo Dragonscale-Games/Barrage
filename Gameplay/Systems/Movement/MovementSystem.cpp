@@ -51,9 +51,9 @@ namespace Barrage
   void MovementSystem::Update()
   {
     UpdatePoolGroup("Player Pools", UpdatePlayerMovement);
-    UpdatePoolGroup("Bounded Player Pools", UpdatePlayerBounds);
     UpdatePoolGroup("Basic Movement Pools", UpdateBasicMovement);
     UpdatePoolGroup("Basic Rotation Pools", UpdateBasicRotation);
+    UpdatePoolGroup("Bounded Player Pools", UpdatePlayerBounds);
   }
 
   void MovementSystem::UpdatePlayerMovement(Pool* pool)

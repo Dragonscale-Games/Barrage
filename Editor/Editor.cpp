@@ -37,6 +37,8 @@
 #include <filesystem>
 #include "nfd.h"
 
+#include <Windows.h>
+
 namespace Barrage
 {
   Editor* Editor::Instance = nullptr;
@@ -465,6 +467,11 @@ namespace Barrage
         repeatTimer_ -= engine_.Frames().DT();
       }
     }
+
+    if (engine_.Input().KeyTriggered(KEY_F5))
+    {
+      BuildGame(true);
+    }
   }
 
   bool Editor::OpenProjectInternal(const std::string& path)
@@ -520,5 +527,82 @@ namespace Barrage
     LogWidget::AddEntry("Opened project \"" + filePath.filename().string() + "\".");
 
     return true;
+  }
+
+  void Editor::BuildGame(bool runExecutable)
+  {
+    EditorData& editorData = Editor::Instance->Data();
+    std::string project_directory = editorData.projectDirectory_;
+    std::string build_folder_name = "Build";
+    std::string output_path = project_directory + "/" + build_folder_name;
+
+    if (!std::filesystem::exists(project_directory + "/Assets"))
+    {
+      LogWidget::AddEntry("Could not build game. (No Assets folder.)");
+      return;
+    }
+
+    if (!std::filesystem::exists("executable"))
+    {
+      LogWidget::AddEntry("Could not build game. (Could not locate executable to copy.)");
+      return;
+    }
+
+    std::filesystem::remove_all(output_path);
+    std::filesystem::create_directory(output_path);
+
+    if (!std::filesystem::exists(output_path))
+    {
+      LogWidget::AddEntry("Could not build game. (Could not create build directory.)");
+      return;
+    }
+
+    std::string executable_path = output_path + "/" + editorData.projectName_ + ".exe";
+    std::filesystem::copy_file("executable", executable_path);
+
+    for (auto const& dll_file : std::filesystem::directory_iterator{ "." })
+    {
+      if (dll_file.is_regular_file() && dll_file.path().extension() == ".dll")
+      {
+        std::filesystem::copy_file(dll_file, output_path + "/" + dll_file.path().filename().string());
+      }
+    }
+
+    std::filesystem::copy(project_directory + "/Assets", output_path + "/Assets", std::filesystem::copy_options::recursive);
+
+    LogWidget::AddEntry("Build succeeded.");
+
+    if (runExecutable && std::filesystem::exists(executable_path))
+    {
+      STARTUPINFO si;
+      PROCESS_INFORMATION pi;
+
+      ZeroMemory(&si, sizeof(si));
+      si.cb = sizeof(si);
+      ZeroMemory(&pi, sizeof(pi));
+
+      // Start the child process. 
+      if (!CreateProcess
+      (
+        executable_path.c_str(), // Module name
+        NULL,                    // Command line
+        NULL,                    // Process handle not inheritable
+        NULL,                    // Thread handle not inheritable
+        FALSE,                   // Set handle inheritance to FALSE
+        0,                       // No creation flags
+        NULL,                    // Environment block
+        output_path.c_str(),     // Starting directory 
+        &si,                     // Pointer to STARTUPINFO structure
+        &pi                      // Pointer to PROCESS_INFORMATION structure
+      )
+        )
+      {
+        return;
+      }
+
+      // Close process and thread handles. 
+      CloseHandle(pi.hProcess);
+      CloseHandle(pi.hThread);
+    }
   }
 }

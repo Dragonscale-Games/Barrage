@@ -92,6 +92,8 @@ namespace Barrage
 
       bool SaveProject(const std::string& directory);
 
+      static void BuildGame(bool runExecutable = false);
+
     private:
       Engine engine_;             //!< Barrage game engine
       GUI gui_;                   //!< Contains all widgets/user controls
