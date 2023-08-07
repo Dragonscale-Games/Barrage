@@ -578,6 +578,7 @@ namespace Barrage
     SpawnRuleList spawnRuleList = object.GetValue<SpawnRuleList>();
 
     size_t listSize = spawnRuleList.size();
+    float buttonWidth = ImGui::CalcTextSize("X").x + ImGui::GetStyle().FramePadding.x * 2.0f;
 
     for (size_t i = 0; i < listSize; ++i)
     {
@@ -588,7 +589,6 @@ namespace Barrage
       ImGui::Spacing();
       ImGui::Spacing();
       ImGui::BeginGroup();
-      float buttonWidth = ImGui::CalcTextSize("X").x + ImGui::GetStyle().FramePadding.x * 2.0f;
       ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x - buttonWidth - 150.0f);
       ImGui::BeginGroup();
       ImGui::Text(spawnRule->GetName().c_str());
@@ -743,9 +743,47 @@ namespace Barrage
         addingNewSpawnRule = false;
       }
     }
-    else if (ImGui::Button("Add new") && !object.valueWasSet_)
+    else 
     {
-      addingNewSpawnRule = true;
+      ImGui::BeginGroup();
+      
+      if (ImGui::Button("Add new") && !object.valueWasSet_)
+      {
+        addingNewSpawnRule = true;
+      }
+      ImGui::SameLine();
+      float remainingSpace = ImGui::GetContentRegionAvail().x;
+      ImGui::Dummy(ImVec2(remainingSpace, -1));
+      ImGui::EndGroup();
+
+      if (ImGui::BeginDragDropTarget())
+      {
+        const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("SpawnRulePayload", ImGuiDragDropFlags_AcceptPeekOnly);
+
+        if (payload)
+        {
+          ImVec2 widgetPos = ImGui::GetItemRectMin();
+
+          // Draw a horizontal line
+          ImGui::GetWindowDrawList()->AddLine(
+            ImVec2(widgetPos.x, widgetPos.y - 4.0f),               // Start point (a bit above the Text widget)
+            ImVec2(widgetPos.x + ImGui::GetContentRegionAvail().x - buttonWidth - 150.0f, widgetPos.y - 4.0f),  // End point
+            IM_COL32(255, 0, 0, 255),  // Color (red in this example)
+            2.0f                       // Line thickness
+          );
+
+          if (payload->IsDelivery() && !object.valueWasSet_)
+          {
+            size_t sourceIndex = *static_cast<size_t*>(payload->Data);
+
+            spawnRuleList.push_back(spawnRuleList[sourceIndex]);
+            spawnRuleList.erase(spawnRuleList.begin() + sourceIndex);
+            object.SetValue(spawnRuleList);
+          }
+        }
+
+        ImGui::EndDragDropTarget();
+      }
     }
 
     ImGui::Spacing();
