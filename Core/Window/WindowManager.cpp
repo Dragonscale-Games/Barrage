@@ -87,6 +87,31 @@ namespace Barrage
     glfwSetWindowTitle(window_, title);
   }
 
+  void WindowManager::SetFullScreen()
+  {
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    int monitorPosX = 0;
+    int monitorPosY = 0;
+    glfwGetMonitorPos(monitor, &monitorPosX, &monitorPosY);
+    SetDecoration(false);
+    const GLFWvidmode* videoMode = glfwGetVideoMode(monitor);
+    SetSize(videoMode->width, videoMode->height);
+    glfwSetWindowPos(window_, monitorPosX, monitorPosY);
+  }
+
+  void WindowManager::SetWindowed()
+  {
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    int monitorPosX = 0;
+    int monitorPosY = 0;
+    glfwGetMonitorPos(monitor, &monitorPosX, &monitorPosY);
+    const GLFWvidmode* videoMode = glfwGetVideoMode(monitor);
+    SetDecoration(true);
+    SetSize(videoMode->width * 3 / 4, videoMode->height * 3 / 4);
+    glfwSetWindowPos(window_, monitorPosX + videoMode->width / 8, monitorPosY + videoMode->height / 8);
+    Maximize();
+  }
+
   void WindowManager::CreateWindow()
   {
     // Then create the window according to the specifications.

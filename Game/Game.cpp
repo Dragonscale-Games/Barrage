@@ -46,7 +46,7 @@ namespace Barrage
   void Game::Initialize()
   {
     engine_.Initialize();
-    engine_.Window().Maximize();
+    engine_.Window().SetFullScreen();
     engine_.Frames().SetVsync(false);
 
     Entry entry = Entry::LoadFromFile("./Assets/entry.json");
@@ -83,6 +83,11 @@ namespace Barrage
     engine_.Graphics().GetFramebuffer().UnbindFramebuffer();
     engine_.Graphics().DrawFsq();
     engine_.Window().SwapBuffers();
+
+    if (engine_.Input().KeyTriggered(KEY_ESCAPE))
+    {
+      engine_.Window().SetWindowed();
+    }
 
     if (engine_.Window().IsClosed())
     {

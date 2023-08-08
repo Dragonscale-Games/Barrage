@@ -119,6 +119,22 @@ namespace Barrage
       /*************************************************************************/
       /*!
         \brief
+          Makes the window fullscreen (covers full screen, no decoration).
+      */
+      /*************************************************************************/
+      void SetFullScreen();
+
+      /*************************************************************************/
+      /*!
+        \brief
+          Makes the window windowed (decorated and maximized).
+      */
+      /*************************************************************************/
+      void SetWindowed();
+
+      /*************************************************************************/
+      /*!
+        \brief
           Checks whether the window is closing or not.
         \returns
           - True if the window is closing, false otherwise.
