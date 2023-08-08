@@ -32,7 +32,7 @@ namespace Barrage
     // Initialize GLFW
     if (!glfwInit())
     {
-      throw std::runtime_error("ERROR: Failed to initialize GLFW somehow.");
+      throw std::runtime_error("ERROR: Failed to initialize GLFW.");
     }
 
     CreateWindow();

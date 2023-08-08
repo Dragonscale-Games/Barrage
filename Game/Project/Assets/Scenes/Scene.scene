@@ -13,7 +13,8 @@
                 },
                 "Player": {
                     "speedFast": 5.599999904632568,
-                    "speedSlow": 3.0
+                    "speedSlow": 3.0,
+                    "isInvincible": true
                 },
                 "CircleCollider": {
                     "radius": 0.0
@@ -561,8 +562,8 @@
                         },
                         "Destructible": {},
                         "ColorTint": {
-                            "red": 0.1388888955116272,
-                            "green": 0.15682882070541383,
+                            "red": 0.0,
+                            "green": 0.04166674613952637,
                             "blue": 1.0,
                             "alpha": 1.0
                         }

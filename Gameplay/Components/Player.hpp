@@ -28,10 +28,12 @@ namespace Barrage
     public:
       float speedSlow_;
       float speedFast_;
-      
-      bool playerHit_;
+      bool isInvincible_;
 
-      inline Player() : speedSlow_(3.5f), speedFast_(6.0f), playerHit_(false) {}
+      bool playerHit_;
+      
+
+      inline Player() : speedSlow_(3.5f), speedFast_(6.0f), isInvincible_(false), playerHit_(false) {}
   };
 
   typedef Barrage::ComponentT<Player> PlayerComponent;

@@ -104,7 +104,7 @@ namespace Barrage
         if (delta_x * delta_x + delta_y * delta_y <= collision_radius * collision_radius)
         {
           player.playerHit_ = true;
-          bullet_destructibles.Data(i).destroyed_ = true;
+          bullet_destructibles.Data(j).destroyed_ = true;
         }
       }
     }
@@ -114,7 +114,7 @@ namespace Barrage
   {
     Player& player = player_pool->GetComponent<Player>("Player")->Data();
 
-    if (player.playerHit_)
+    if (player.playerHit_ && !player.isInvincible_)
     {
       DestructibleArray& bullet_destructibles = *bullet_pool->GetComponentArray<Destructible>("Destructible");
 

@@ -40,6 +40,7 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("speedFast", &Player::speedFast_)
       .property("speedSlow", &Player::speedSlow_)
+      .property("isInvincible", &Player::isInvincible_)
       ;
 
     rttr::registration::class_<Sprite>("Sprite")

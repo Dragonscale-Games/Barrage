@@ -377,6 +377,7 @@ namespace Barrage
 
   void DataWidget::Initialize()
   {
+    AddDataWidget<bool>(BoolWidget);
     AddDataWidget<float>(FloatWidget);
     AddDataWidget<double>(DoubleWidget);
     AddDataWidget<int>(IntWidget);
@@ -392,6 +393,18 @@ namespace Barrage
     AddDataWidget<ColorTint>(ColorWidget);
     AddDataWidget<SpawnRuleList>(SpawnRuleListWidget);
     AddDataWidget<Sprite>(SpriteWidget);
+  }
+
+  void DataWidget::BoolWidget(DataObject& object)
+  {
+    bool value = object.GetValue<bool>();
+
+    bool fieldChanged = ImGui::Checkbox(object.GetName().c_str(), &value);
+
+    if (fieldChanged)
+    {
+      object.SetValue(value);
+    }
   }
 
   void DataWidget::FloatWidget(DataObject& object)

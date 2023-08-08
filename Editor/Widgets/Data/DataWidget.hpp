@@ -123,6 +123,8 @@ namespace Barrage
       template <typename T>
       static void AddDataWidget(DataWidgetFunction widgetFunction);
 
+      static void BoolWidget(DataObject& object);
+
       static void FloatWidget(DataObject& object);
              
       static void DoubleWidget(DataObject& object);
