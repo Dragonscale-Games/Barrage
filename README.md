@@ -1,4 +1,6 @@
-# Barrage
+# **Pre-alpha work in progress**
+
+# Barrage engine
 A C++ game engine for building bullet hell games.
 
 # Getting the engine
