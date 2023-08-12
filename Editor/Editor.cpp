@@ -472,6 +472,12 @@ namespace Barrage
     {
       BuildGame(true);
     }
+
+    if (engine_.Input().KeyTriggered(KEY_ESCAPE) && data_.gamePlaying_)
+    {
+      data_.gamePlaying_ = false;
+      data_.sceneIsDirty_ = true;
+    }
   }
 
   bool Editor::OpenProjectInternal(const std::string& path)
