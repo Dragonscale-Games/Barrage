@@ -17,6 +17,7 @@
 #include <Commands/Create/Component/CreateComponent.hpp>
 #include <Commands/Delete/Pool/DeletePool.hpp>
 #include <Commands/Rename/Pool/RenamePool.hpp>
+#include <Commands/Duplicate/Pool/DuplicatePool.hpp>
 
 #include <Editor.hpp>
 
@@ -76,7 +77,12 @@ namespace Barrage
     }
 
     ImGui::Spacing();
-    ImGui::Separator();
+    
+    if (ImGui::Selectable("Duplicate"))
+    {
+      Editor::Instance->Command().Send(new DuplicatePool(editorData.selectedScene_, editorData.selectedPool_));
+    }
+
     ImGui::Spacing();
 
     if (ImGui::Selectable("Delete"))
