@@ -72,60 +72,60 @@ namespace Barrage
   }
 
   void Renderer::Draw(
-    const glm::vec2& position, 
-    float rotation, 
-    const glm::vec2& scale, 
-    const glm::vec4& colorTint, 
-    const glm::vec4& textureUV, 
+    const Position& position,
+    const Rotation& rotation,
+    const Scale& scale,
+    const ColorTint& colorTint,
+    const TextureUV& textureUV,
     const std::string& texture)
   {
     defaultShader_->Bind();
     textureManager_.BindTexture(texture);
     
     glBindBuffer(GL_ARRAY_BUFFER, translationBuffer_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2), &position);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Position), &position);
 
     glBindBuffer(GL_ARRAY_BUFFER, rotationBuffer_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float), &rotation);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Rotation), &rotation);
 
     glBindBuffer(GL_ARRAY_BUFFER, scaleBuffer_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec2), &scale);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Scale), &scale);
     
     glBindBuffer(GL_ARRAY_BUFFER, colorTintBuffer_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4), &colorTint);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(ColorTint), &colorTint);
 
     glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4), &textureUV);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(TextureUV), &textureUV);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   }
 
   void Renderer::DrawInstanced(
-    const glm::vec2* positionArray, 
-    float* rotationArray, 
-    const glm::vec2* scaleArray, 
-    const glm::vec4* colorTintArray,
-    const glm::vec4* textureUVArray, 
-    unsigned instances, 
+    const Position* positionArray,
+    const Rotation* rotationArray,
+    const Scale* scaleArray,
+    const ColorTint* colorTintArray,
+    const TextureUV* textureUVArray,
+    unsigned instances,
     const std::string& texture)
   {
     defaultShader_->Bind();
     textureManager_.BindTexture(texture);
 
     glBindBuffer(GL_ARRAY_BUFFER, translationBuffer_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(glm::vec2), positionArray);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(Position), positionArray);
     
     glBindBuffer(GL_ARRAY_BUFFER, rotationBuffer_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(float), rotationArray);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(Rotation), rotationArray);
     
     glBindBuffer(GL_ARRAY_BUFFER, scaleBuffer_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(glm::vec2), scaleArray);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(Scale), scaleArray);
     
     glBindBuffer(GL_ARRAY_BUFFER, colorTintBuffer_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(glm::vec4), colorTintArray);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(ColorTint), colorTintArray);
 
     glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(glm::vec4), textureUVArray);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instances * sizeof(TextureUV), textureUVArray);
 
     glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, instances);
   }
@@ -143,29 +143,29 @@ namespace Barrage
     glClear(GL_COLOR_BUFFER_BIT);
   }
 
-  void Renderer::IncreaseMaxInstances(unsigned maxInstances)
+  void Renderer::ReserveInstances(unsigned numInstances)
   {
-    if (maxInstances <= maxInstances_)
+    if (numInstances <= maxInstances_)
     {
       return;
     }
     
-    maxInstances_ = maxInstances;
+    maxInstances_ = numInstances;
 
     glBindBuffer(GL_ARRAY_BUFFER, translationBuffer_);
-    glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(glm::vec2), nullptr , GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxInstances_ * sizeof(Position), nullptr , GL_STREAM_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, scaleBuffer_);
-    glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(glm::vec2), nullptr, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxInstances_ * sizeof(Scale), nullptr, GL_STREAM_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, rotationBuffer_);
-    glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(float), nullptr, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxInstances_ * sizeof(Rotation), nullptr, GL_STREAM_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, colorTintBuffer_);
-    glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(glm::vec4), nullptr, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxInstances_ * sizeof(ColorTint), nullptr, GL_STREAM_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer_);
-    glBufferData(GL_ARRAY_BUFFER, maxInstances * sizeof(glm::vec4), nullptr, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxInstances_ * sizeof(TextureUV), nullptr, GL_STREAM_DRAW);
   }
 
   void Renderer::SetViewport(int width, int height, int x, int y)
@@ -361,7 +361,7 @@ namespace Barrage
     SetUpTransforms();
     SetUpColorTints();
     SetUpTextureUVs();
-    IncreaseMaxInstances(1);
+    ReserveInstances(1);
   }
 
   void Renderer::CreateQuadMesh()
@@ -404,7 +404,7 @@ namespace Barrage
     glBindBuffer(GL_ARRAY_BUFFER, translationBuffer_);
 
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Position), (void*)0);
     glVertexAttribDivisor(2, 1);
 
     // scales
@@ -412,7 +412,7 @@ namespace Barrage
     glBindBuffer(GL_ARRAY_BUFFER, scaleBuffer_);
 
     glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Scale), (void*)0);
     glVertexAttribDivisor(3, 1);
 
     // rotations
@@ -420,7 +420,7 @@ namespace Barrage
     glBindBuffer(GL_ARRAY_BUFFER, rotationBuffer_);
 
     glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+    glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(Rotation), (void*)0);
     glVertexAttribDivisor(4, 1);
   }
 
@@ -431,7 +431,7 @@ namespace Barrage
     glBindBuffer(GL_ARRAY_BUFFER, colorTintBuffer_);
 
     glEnableVertexAttribArray(5);
-    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(ColorTint), (void*)0);
     glVertexAttribDivisor(5, 1);
   }
 
@@ -442,7 +442,7 @@ namespace Barrage
     glBindBuffer(GL_ARRAY_BUFFER, textureUVBuffer_);
 
     glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(TextureUV), (void*)0);
     glVertexAttribDivisor(6, 1);
   }
 
