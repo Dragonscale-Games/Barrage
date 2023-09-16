@@ -38,11 +38,8 @@ namespace Barrage
 
       void PlaySound(const std::string& name);
 
-      void PlaySfx();
-
     private:
       SoLoud::Soloud audioEngine_;
-      SoLoud::Sfxr laser_;
       SoundMap sounds_;
   };
 }
