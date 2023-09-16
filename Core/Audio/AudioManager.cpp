@@ -21,7 +21,6 @@ namespace Barrage
   void AudioManager::Initialize()
   {
     audioEngine_.init();
-    laser_.loadPreset(SoLoud::Sfxr::LASER, 3);
   }
 
   void AudioManager::Shutdown()
@@ -34,15 +33,10 @@ namespace Barrage
   {
     if (sounds_.count(name) == 0)
     {
-      std::string texture_path = "Assets/Audio/" + name + ".wav";
-      sounds_[name].load(texture_path.c_str());
+      std::string sound_path = "Assets/Audio/" + name + ".wav";
+      sounds_[name].load(sound_path.c_str());
     }
 
     audioEngine_.play(sounds_.at(name));
-  }
-
-  void AudioManager::PlaySfx()
-  {
-    audioEngine_.play(laser_);
   }
 }

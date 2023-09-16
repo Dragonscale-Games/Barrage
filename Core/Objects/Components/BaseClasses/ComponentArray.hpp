@@ -261,7 +261,7 @@ namespace Barrage
   };
 
   //! Associates each component array with its name
-  typedef std::unordered_map<std::string_view, ComponentArray*> ComponentArrayMap;
+  typedef std::unordered_map<std::string_view, ComponentArray*> ComponentArrayUmap;
 }
 
 #include "ComponentArray.tpp"

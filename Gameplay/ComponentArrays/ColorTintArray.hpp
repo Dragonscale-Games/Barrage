@@ -16,20 +16,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Components/BaseClasses/ComponentArray.hpp"
+#include "Renderer/RendererTypes.hpp"
 
 namespace Barrage
 {
-  //!< Color tint of an object
-  struct ColorTint
-  {
-    float red_;
-    float green_;
-    float blue_;
-    float alpha_;
-
-    inline ColorTint() : red_(0.0f), green_(0.0f), blue_(0.0f), alpha_(1.0f) {}
-  };
-
   typedef Barrage::ComponentArrayT<ColorTint> ColorTintArray;
 }
 

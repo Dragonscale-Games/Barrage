@@ -24,6 +24,8 @@
 #include "Shaders/Shader.hpp"
 #include "Textures/TextureManager.hpp"
 
+#include "RendererTypes.hpp"
+
 namespace Barrage
 {
   //! Handles drawing/graphics
@@ -37,20 +39,20 @@ namespace Barrage
       void Shutdown();
 
       void Draw(
-        const glm::vec2& position, 
-        float rotation, 
-        const glm::vec2& scale, 
-        const glm::vec4& colorTint, 
-        const glm::vec4& textureUVs, 
+        const Position& position, 
+        const Rotation& rotation, 
+        const Scale& scale, 
+        const ColorTint& colorTint, 
+        const TextureUV& textureUV, 
         const std::string& texture
       );
 
       void DrawInstanced(
-        const glm::vec2* positionArray, 
-        float* rotationArray, 
-        const glm::vec2* scaleArray, 
-        const glm::vec4* colorTintArray,
-        const glm::vec4* textureUVArray, 
+        const Position* positionArray,
+        const Rotation* rotationArray,
+        const Scale* scaleArray,
+        const ColorTint* colorTintArray,
+        const TextureUV* textureUVArray,
         unsigned instances, 
         const std::string& texture
       );
@@ -59,7 +61,7 @@ namespace Barrage
 
       void ClearBackground();
 
-      void IncreaseMaxInstances(unsigned maxInstances);
+      void ReserveInstances(unsigned numInstances);
 
       void SetViewport(int width, int height, int x = 0, int y = 0);
 

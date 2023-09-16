@@ -24,7 +24,7 @@
 namespace Barrage
 {
   //! Maps system names to systems
-  typedef std::unordered_map<std::string_view, System*> SystemMap;
+  typedef std::unordered_map<std::string_view, System*> SystemUmap;
 
   //! <class description>
   class SystemManager
@@ -139,7 +139,7 @@ namespace Barrage
       std::vector<std::string_view> GetSystemUpdateOrder();
 
     private:
-      SystemMap systems_;                             //!< The collection of registered systems
+      SystemUmap systems_;                             //!< The collection of registered systems
       std::vector<std::string_view> systemNames_;     //!< The names of all registered systems
       std::vector<std::string_view> updateOrderList_; //!< The order the systems will update in
 

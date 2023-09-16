@@ -230,7 +230,7 @@ namespace Barrage
     // spawn archetypes with a velocity of 0 break some spawn rules, so give them a slight magnitude here
     //
 
-    SpawnArchetypeMap& spawnArchetypes = pool->GetSpawnArchetypes();
+    SpawnArchetypeUmap& spawnArchetypes = pool->GetSpawnArchetypes();
 
     for (auto it = spawnArchetypes.begin(); it != spawnArchetypes.end(); ++it)
     {

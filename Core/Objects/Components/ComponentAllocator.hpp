@@ -30,8 +30,8 @@ namespace Barrage
   typedef Component* (*ComponentAllocFunc)(Component*);
   typedef ComponentArray* (*ComponentArrayAllocFunc)(unsigned);
 
-  typedef std::unordered_map<std::string_view, ComponentAllocFunc> ComponentAllocMap;
-  typedef std::unordered_map<std::string_view, ComponentArrayAllocFunc> ComponentArrayAllocMap;
+  typedef std::unordered_map<std::string_view, ComponentAllocFunc> ComponentAllocUmap;
+  typedef std::unordered_map<std::string_view, ComponentArrayAllocFunc> ComponentArrayAllocUmap;
 
   //! Responsible for allocating new components
   class ComponentAllocator
@@ -252,8 +252,8 @@ namespace Barrage
       static ComponentArray* AllocateComponentArray(unsigned capacity);
 
     private:
-      static ComponentAllocMap componentAllocMap_;           //!< Maps names of shared components to their allocation functions
-      static ComponentArrayAllocMap componentArrayAllocMap_; //!< Maps names of component arrays to their allocation functions
+      static ComponentAllocUmap componentAllocMap_;           //!< Maps names of shared components to their allocation functions
+      static ComponentArrayAllocUmap componentArrayAllocMap_; //!< Maps names of component arrays to their allocation functions
       static TagSet tagSet_;                                 //!< Set of all tags registered with the engine
 
       static std::vector<std::string_view> componentNames_;   //!< The names of all registered shared components

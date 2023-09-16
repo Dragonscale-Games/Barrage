@@ -194,7 +194,7 @@ namespace Barrage
     }
   }
 
-  const ComponentMap& PoolArchetype::GetComponents() const
+  const ComponentUmap& PoolArchetype::GetComponents() const
   {
     return components_;
   }
@@ -427,7 +427,7 @@ namespace Barrage
     return archetypeObject;
   }
 
-  void PoolArchetype::CopyComponentMap(const ComponentMap& other)
+  void PoolArchetype::CopyComponentMap(const ComponentUmap& other)
   {
     DeleteComponentMap();
     

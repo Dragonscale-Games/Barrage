@@ -26,7 +26,7 @@
 namespace Barrage
 {
   typedef uint32_t ACTION;
-  typedef std::unordered_map <ACTION, KEY> ActionKeyMap;
+  typedef std::unordered_map <ACTION, KEY> ActionKeyUmap;
 
   //! Turns inputs into game actions and handles game recording/replaying
   class ActionManager
@@ -73,7 +73,7 @@ namespace Barrage
       std::vector<bool> currentState_;
       std::vector<StateChange> replayData_;
       size_t replayPos_;
-      ActionKeyMap actionKeyMap_;
+      ActionKeyUmap actionKeyMap_;
   };
 }
 

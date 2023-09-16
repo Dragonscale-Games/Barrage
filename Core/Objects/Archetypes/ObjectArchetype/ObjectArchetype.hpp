@@ -134,7 +134,7 @@ namespace Barrage
           Returns the component arrays of the object archetype.
       */
       /**************************************************************/
-      const ComponentArrayMap& GetComponentArrays() const;
+      const ComponentArrayUmap& GetComponentArrays() const;
 
       /**************************************************************/
       /*!
@@ -187,7 +187,7 @@ namespace Barrage
           The map to copy.
       */
       /**************************************************************/
-      void CopyComponentArrayMap(const ComponentArrayMap& other);
+      void CopyComponentArrayMap(const ComponentArrayUmap& other);
 
       /**************************************************************/
       /*!
@@ -221,8 +221,8 @@ namespace Barrage
       void DeserializeComponentArrays(const rapidjson::Value& data);
 
     private:
-      std::string name_;                  //!< A name for an object created with this archetype (for debug purposes, as objects don't have names)
-      ComponentArrayMap componentArrays_; //!< A map of initialized components to copy (each array has only one component)
+      std::string name_;                   //!< A name for an object created with this archetype (for debug purposes, as objects don't have names)
+      ComponentArrayUmap componentArrays_; //!< A map of initialized components to copy (each array has only one component)
   };
 }
 

@@ -192,7 +192,7 @@ namespace Barrage
     return capacity_;
   }
 
-  ComponentArrayMap& Pool::GetComponentArrays()
+  ComponentArrayUmap& Pool::GetComponentArrays()
   {
     return componentArrays_;
   }
@@ -209,7 +209,7 @@ namespace Barrage
     }
   }
 
-  SpawnArchetypeMap& Pool::GetSpawnArchetypes()
+  SpawnArchetypeUmap& Pool::GetSpawnArchetypes()
   {
     return spawnArchetypes_;
   }

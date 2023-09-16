@@ -99,7 +99,7 @@ namespace Barrage
     }
 
     // allocate and initialize components
-    const ComponentMap& components = archetype.GetComponents();
+    const ComponentUmap& components = archetype.GetComponents();
     for (auto it = components.begin(); it != components.end(); ++it)
     {
       new_pool->AddComponent(it->first, it->second);

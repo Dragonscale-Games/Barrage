@@ -16,18 +16,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Components/BaseClasses/ComponentArray.hpp"
+#include "Renderer/RendererTypes.hpp"
 
 namespace Barrage
 {
-  //!< World position of an object
-  struct Position
-  {
-    float x_; //!< x coord in world units
-    float y_; //!< y coord in world units
-
-    inline Position() : x_(960.0f), y_(540.0f) {}
-  };
-
   typedef ComponentArrayT<Position> PositionArray;
 }
 

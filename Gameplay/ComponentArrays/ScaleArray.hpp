@@ -16,18 +16,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Components/BaseClasses/ComponentArray.hpp"
+#include "Renderer/RendererTypes.hpp"
 
 namespace Barrage
 {
-  //!< World dimensions of an object
-  struct Scale
-  {
-    float w_; //!< width in world units
-    float h_; //!< height in world units
-
-    inline Scale() : w_(100.0f), h_(100.0f) {}
-  };
-
   typedef ComponentArrayT<Scale> ScaleArray;
 }
 

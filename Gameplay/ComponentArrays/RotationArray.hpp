@@ -17,18 +17,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Components/BaseClasses/ComponentArray.hpp"
-#include "Utilities/Utilities.hpp"
+#include "Renderer/RendererTypes.hpp"
 
 namespace Barrage
 {
-  //!< Counterclockwise rotation of an object
-  struct Rotation
-  {
-    RADIAN angle_; //!< Rotation angle in radians
-
-    inline Rotation() : angle_(0.0f) {}
-  };
-
   typedef ComponentArrayT<Rotation> RotationArray;
 }
 

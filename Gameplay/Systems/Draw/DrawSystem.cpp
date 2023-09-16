@@ -46,7 +46,7 @@ namespace Barrage
       
       drawPools_[pool_sprite.layer_].push_back(pool);
 
-      Engine::Instance->Graphics().IncreaseMaxInstances(pool->GetCapacity());
+      Engine::Instance->Graphics().ReserveInstances(pool->GetCapacity());
     }
   }
 
@@ -88,15 +88,9 @@ namespace Barrage
         ColorTintArray& color_tint_array = *pool->GetComponentArray<ColorTint>("ColorTint");
         TextureUVArray& texture_uv_array = *pool->GetComponentArray<TextureUV>("TextureUV");
 
-        glm::vec2* positions = reinterpret_cast<glm::vec2*>(&position_array.Data(0));
-        glm::vec2* scales = reinterpret_cast<glm::vec2*>(&scale_array.Data(0));
-        float* rotations = reinterpret_cast<float*>(&rotation_array.Data(0));
-        glm::vec4* colorTints = reinterpret_cast<glm::vec4*>(&color_tint_array.Data(0));
-        glm::vec4* textureUVs = reinterpret_cast<glm::vec4*>(&texture_uv_array.Data(0));
-
         Sprite& pool_sprite = pool->GetComponent<Sprite>("Sprite")->Data();
 
-        renderer.DrawInstanced(positions, rotations, scales, colorTints, textureUVs, pool->GetActiveObjectCount(), pool_sprite.texture_);
+        renderer.DrawInstanced(&position_array.Data(0), &rotation_array.Data(0), &scale_array.Data(0), &color_tint_array.Data(0), &texture_uv_array.Data(0), pool->GetActiveObjectCount(), pool_sprite.texture_);
       }
     }
   }
