@@ -134,7 +134,7 @@ namespace Barrage
   };
 
   //! Associates each shared component with its name
-  typedef std::unordered_map<std::string_view, Component*> ComponentMap;
+  typedef std::unordered_map<std::string_view, Component*> ComponentUmap;
 }
 
 #include "Component.tpp"

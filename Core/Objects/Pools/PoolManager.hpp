@@ -23,7 +23,7 @@
 namespace Barrage
 {
   //! Maps pool names to pools
-  typedef std::unordered_map<std::string, Pool*> PoolMap;
+  typedef std::unordered_map<std::string, Pool*> PoolUmap;
 
   class Space;
 
@@ -129,7 +129,7 @@ namespace Barrage
       Pool* CreatePoolInternal(const PoolArchetype& archetype);
 
     private:
-      PoolMap pools_; //!< The collection of all object pools
+      PoolUmap pools_; //!< The collection of all object pools
       Space& space_;  //!< The space where the pools live
 	};
 }

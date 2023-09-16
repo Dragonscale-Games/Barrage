@@ -118,7 +118,7 @@ namespace Barrage
       }
     }
 
-    const ComponentMap& sharedComponents = poolArchetype->GetComponents();
+    const ComponentUmap& sharedComponents = poolArchetype->GetComponents();
     for (auto& sharedComponent : sharedComponents)
     {
       ComponentWidget::Use(sharedComponent.first, sharedComponent.second);
@@ -145,7 +145,7 @@ namespace Barrage
 
         ImGui::PushID(Editor::Instance->Data().selectedObject_.c_str());
         
-        const ComponentArrayMap& componentArrays = objectArchetype->GetComponentArrays();
+        const ComponentArrayUmap& componentArrays = objectArchetype->GetComponentArrays();
         for (auto& componentArray : componentArrays)
         {
           ComponentArrayWidget::Use(componentArray.first, componentArray.second);

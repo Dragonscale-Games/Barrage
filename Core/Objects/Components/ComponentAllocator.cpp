@@ -16,8 +16,8 @@
 
 namespace Barrage
 {
-  ComponentAllocMap ComponentAllocator::componentAllocMap_ = ComponentAllocMap();
-  ComponentArrayAllocMap ComponentAllocator::componentArrayAllocMap_ = ComponentArrayAllocMap();
+  ComponentAllocUmap ComponentAllocator::componentAllocMap_ = ComponentAllocUmap();
+  ComponentArrayAllocUmap ComponentAllocator::componentArrayAllocMap_ = ComponentArrayAllocUmap();
   TagSet ComponentAllocator::tagSet_ = TagSet();
 
   std::vector<std::string_view> ComponentAllocator::componentNames_ = std::vector<std::string_view>();

@@ -100,7 +100,7 @@ namespace Barrage
     }
   }
 
-  const ComponentArrayMap& ObjectArchetype::GetComponentArrays() const
+  const ComponentArrayUmap& ObjectArchetype::GetComponentArrays() const
   {
     return componentArrays_;
   }
@@ -145,7 +145,7 @@ namespace Barrage
     return archetypeObject;
   }
 
-  void ObjectArchetype::CopyComponentArrayMap(const ComponentArrayMap& other)
+  void ObjectArchetype::CopyComponentArrayMap(const ComponentArrayUmap& other)
   {
     DeleteComponentArrayMap();
 

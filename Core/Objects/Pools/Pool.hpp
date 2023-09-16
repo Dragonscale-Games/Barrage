@@ -28,7 +28,7 @@
 namespace Barrage
 {
   typedef std::unordered_set<std::string_view> TagSet;
-  typedef std::unordered_map<std::string, ObjectArchetype> SpawnArchetypeMap;
+  typedef std::unordered_map<std::string, ObjectArchetype> SpawnArchetypeUmap;
   
   class Space;
 
@@ -326,7 +326,7 @@ namespace Barrage
           Returns a reference to the pool's component array map.
       */
       /**************************************************************/
-      ComponentArrayMap& GetComponentArrays();
+      ComponentArrayUmap& GetComponentArrays();
 
       /**************************************************************/
       /*!
@@ -354,7 +354,7 @@ namespace Barrage
           Returns a reference to the map of all spawn archetypes.
       */
       /**************************************************************/
-      SpawnArchetypeMap& GetSpawnArchetypes();
+      SpawnArchetypeUmap& GetSpawnArchetypes();
 
       /**************************************************************/
       /*!
@@ -464,9 +464,9 @@ namespace Barrage
       void ApplySpawnRules(Pool* sourcePool, SpawnInfo& spawnInfo, unsigned startIndex);
 
     private:
-      ComponentMap components_;           //!< Holds shared components and their names
-      ComponentArrayMap componentArrays_; //!< Holds component arrays and their names
-      SpawnArchetypeMap spawnArchetypes_; //!< Objects that can be spawned in the pool
+      ComponentUmap components_;           //!< Holds shared components and their names
+      ComponentArrayUmap componentArrays_; //!< Holds component arrays and their names
+      SpawnArchetypeUmap spawnArchetypes_; //!< Objects that can be spawned in the pool
       TagSet tags_;                       //!< Holds the pool's tags
       unsigned numActiveObjects_;         //!< Number of currently active objects
       unsigned numQueuedObjects_;         //!< Number of objects ready to be spawned on the next tick

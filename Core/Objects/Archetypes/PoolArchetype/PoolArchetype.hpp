@@ -206,7 +206,7 @@ namespace Barrage
           Returns the pool archetype's components.
       */
       /**************************************************************/
-      const ComponentMap& GetComponents() const;
+      const ComponentUmap& GetComponents() const;
 
       /**************************************************************/
       /*!
@@ -472,7 +472,7 @@ namespace Barrage
           The map to copy.
       */
       /**************************************************************/
-      void CopyComponentMap(const ComponentMap& other);
+      void CopyComponentMap(const ComponentUmap& other);
 
       /**************************************************************/
       /*!
@@ -637,7 +637,7 @@ namespace Barrage
     private:
       std::string name_;                                  //!< Name of the pool this archetype will create
       unsigned capacity_;                                 //!< The number of objects the pool will be able to hold
-      ComponentMap components_;                           //!< Initialized components to copy to the pool
+      ComponentUmap components_;                          //!< Initialized components to copy to the pool
       std::vector<std::string_view> componentArrayNames_; //!< Names of the pool's component arrays
       std::vector<std::string_view> tags_;                //!< Tags of the pool
 

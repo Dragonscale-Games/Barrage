@@ -24,7 +24,7 @@
 
 namespace Barrage
 {
-  typedef std::unordered_map<std::string, SoLoud::Wav> SoundMap;
+  typedef std::unordered_map<std::string, SoLoud::Wav> SoundUmap;
   
   //! Manages game audio
   class AudioManager
@@ -40,7 +40,7 @@ namespace Barrage
 
     private:
       SoLoud::Soloud audioEngine_;
-      SoundMap sounds_;
+      SoundUmap sounds_;
   };
 }
 
