@@ -15,7 +15,7 @@
 #define Game_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Engine/Engine.hpp"
+#include "Engine.hpp"
 
 namespace Barrage
 {

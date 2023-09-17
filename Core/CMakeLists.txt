@@ -38,7 +38,25 @@ else()
 endif()
 
 # Add the sources for the core library.
-add_library(BarrageCore STATIC "Engine/Engine.cpp")
+add_library(BarrageCore STATIC 
+  "Engine.cpp" 
+
+  "Audio/AudioManager.cpp"
+
+  "Framerate/FramerateController.cpp"
+
+  "Input/InputManager.cpp"
+
+  "Random/Random.cpp"
+
+  "Renderer/Framebuffers/Framebuffer.cpp"
+  "Renderer/Shaders/Shader.cpp" 
+  "Renderer/Textures/Texture.cpp" 
+  "Renderer/Textures/TextureManager.cpp" 
+  "Renderer/Renderer.cpp" 
+
+  "Window/WindowManager.cpp"
+)
 
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
