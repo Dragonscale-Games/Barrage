@@ -12,22 +12,15 @@
 
 #include "Game.hpp"
 
-#include <rttr/registration.h>
-#include <Serialization/ComponentRefl.hpp>
+#include <memory>
 
-RTTR_REGISTRATION
-{
-  // Reflect all the core Barrage objects.
-  Barrage::ReflectBarrageCore();
-}
+using namespace Barrage;
 
 int main()
 {
-  Barrage::Game* game = new Barrage::Game();
+  std::unique_ptr<Game> game = std::make_unique<Game>();
 
   game->Run();
-
-  delete game;
 
   return 0;
 }

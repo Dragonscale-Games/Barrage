@@ -30,57 +30,13 @@
 # Date:         5/5/2022
 # =====================================================================================================================
 
-add_executable(Editor "main.cpp" 
-"GUI/GUI.cpp" 
-"Editor.cpp"
-
- "Widgets/Windows/Hierarchy/HierarchyWidget.cpp"
- "Widgets/Windows/Inspector/InspectorWidget.cpp"
-
- "EditorData.cpp"
- "Widgets/MainMenu/MainMenuWidget.cpp" 
-  
- "Widgets/Data/DataWidget.cpp" 
- "Widgets/Windows/Log/LogWidget.cpp"  
- "Commands/Command.cpp" 
- "Commands/CommandQueue.cpp" 
-  
- "Commands/Create/Pool/CreatePool.cpp" 
- "Commands/Create/Object/CreateObject.cpp" 
- "Widgets/Popups/Object/ObjectPopupWidget.cpp" 
- "Widgets/Popups/Pool/PoolPopupWidget.cpp" 
- "Widgets/Popups/Scene/ScenePopupWidget.cpp" 
- "Commands/Delete/Object/DeleteObject.cpp" 
- "Commands/Delete/Pool/DeletePool.cpp" 
- "Commands/Create/ComponentArray/CreateComponentArray.cpp" 
- "Commands/Create/Component/CreateComponent.cpp" 
- "Commands/Delete/ComponentArray/DeleteComponentArray.cpp" 
- "Commands/Delete/Component/DeleteComponent.cpp" 
- "Widgets/Popups/Component/ComponentPopupWidget.cpp" 
- "Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.cpp"  
- "Widgets/Modals/ComponentArray/ComponentArrayModal.cpp" 
- "Widgets/Modals/Component/ComponentModal.cpp" 
- "Widgets/Components/ComponentArray/ComponentArrayWidget.cpp" 
- "Widgets/Components/Component/ComponentWidget.cpp"  
- "Commands/Edit/ComponentArray/EditComponentArray.cpp" 
- "Commands/Edit/Component/EditComponent.cpp" 
-  
- "Commands/Create/Tag/CreateTag.cpp" 
- "Commands/Delete/Tag/DeleteTag.cpp" 
- "Widgets/Modals/Tag/TagModal.cpp" 
- "Commands/Edit/Capacity/EditCapacity.cpp" 
- "Commands/Rename/Object/RenameObject.cpp" 
- "Commands/Rename/Pool/RenamePool.cpp" 
- "Widgets/Modals/Rename/RenameModal.cpp" 
- "Commands/Rename/Scene/RenameScene.cpp" 
- "Widgets/Modals/Project/ProjectModal.cpp" 
- "Widgets/Windows/Game/GameWidget.cpp"  "Widgets/Windows/Timeline/TimelineWidget.cpp" "Widgets/Modals/SaveProject/SaveProjectModal.cpp" "Widgets/Windows/Performance/PerformanceWidget.cpp" "Commands/Duplicate/Pool/DuplicatePool.cpp")
+add_executable(Editor "main.cpp")
 
 target_link_libraries(Editor PUBLIC BarrageCore Gameplay imgui nativefiledialog)
 add_dependencies(Editor Game)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(Editor PUBLIC "${BARRAGE_SOURCE_DIR}/Core")
 
-add_custom_command(TARGET Editor POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:Game>" "executable"
-)
+#add_custom_command(TARGET Editor POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:Game>" "executable"
+#)

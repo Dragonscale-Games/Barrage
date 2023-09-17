@@ -32,13 +32,12 @@
 
 add_executable(Game
 "main.cpp"
-"Game.cpp"
-)
+ "Game.cpp")
 target_link_libraries(Game PUBLIC BarrageCore Gameplay)
 
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(Gameplay PUBLIC "${BARRAGE_SOURCE_DIR}/Core")
 
-add_custom_command(TARGET Game POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Project/Assets" "Assets"
-)
+#add_custom_command(TARGET Game POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Project/Assets" "Assets"
+#)

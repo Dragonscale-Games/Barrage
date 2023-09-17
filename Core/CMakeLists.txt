@@ -38,64 +38,8 @@ else()
 endif()
 
 # Add the sources for the core library.
-add_library(BarrageCore STATIC 
-  "template.cxx"
+add_library(BarrageCore STATIC "Engine/Engine.cpp")
 
-  "Actions/ActionManager.cpp" "Scenes/SceneManager.cpp"
-
-  "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
-  "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
-
-  "Engine/Engine.cpp" 
-  
-  "File/FileManager.cpp" "File/${OS_IMPL_FOLDER}/FileManager.cpp"
-  "File/FileManager.tpp"
-  
-  "File/Objects/ObjectSource.cpp"
-  
-  "FramerateController/FramerateController.cpp" 
-  
-  "Input/InputManager.cpp"
- 
-  "Objects/ObjectManager.cpp"
-  "Objects/Pools/Pool.cpp"    
-  
-  "Objects/Systems/BaseSystem.cpp"                             
-
-    
-         
-  "Objects/Pools/PoolManager.cpp"                        
-  "Objects/Systems/SystemManager.cpp"                   
-  "Objects/Components/ComponentAllocator.cpp"              
-  "Objects/Archetypes/ObjectArchetype/ObjectArchetype.cpp" 
-  "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
-  "Objects/Pools/PoolType.cpp"  
-  "Math/Curves.tpp"
-
-  "Random/Random.cpp"
-
-  "Renderer/Renderer.cpp" 
-  "Renderer/Textures/Texture.cpp" 
-  "Renderer/Textures/TextureManager.cpp" 
-  "Renderer/Shaders/Shader.cpp" 
-  
-  
-  "Scenes/Scene.cpp"
-
-  "Serialization/Serializer.cpp"
-
-  "Spaces/Space.cpp"
-  "Spaces/SpaceManager.cpp" 
-
-  "Utilities/RuntimeError.cpp"
-  "Utilities/RecursionTable.tpp"
-  "Utilities/Logger.cpp"
-
-  "Objects/Spawning/SpawnInfo.cpp"  
-
-  "Entry/Entry.cpp"  "Window/WindowManager.cpp" "Renderer/Framebuffers/Framebuffer.cpp"  "Objects/Spawning/SpawnRule.cpp"  "Objects/Spawning/SpawnRuleAllocator.cpp" "Audio/AudioManager.cpp")
-
-add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
 target_link_libraries(BarrageCore LINK_PUBLIC spdlog::spdlog glad glfw glm rapidjson stb_image RTTR::Core Soloud)

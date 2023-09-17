@@ -30,26 +30,7 @@
 # Date:         6/7/23
 # =====================================================================================================================
 
-add_library(Gameplay STATIC
-	"Registration/Registration.cpp"
-	
-	
-	
-	"SpawnFunctions/Miscellaneous/MiscellaneousRules.cpp"
-	
-	"Systems/Collision/CollisionSystem.cpp"
-	"Systems/Creation/CreationSystem.cpp"
-	"Systems/Destruction/DestructionSystem.cpp"
-	"Systems/Draw/DrawSystem.cpp"
-	"Systems/Movement/MovementSystem.cpp"
-	"Systems/Spawn/SpawnSystem.cpp"
- "SpawnFunctions/Direction/DirectionRules.cpp" 
- "SpawnFunctions/Position/PositionRules.cpp" 
- "Registration/RTTR/RttrRegistration.cpp" 
- "SpawnFunctions/Speed/SpeedRules.cpp" 
- "Registration/RTTR/ComponentArrays/RttrComponentArrays.cpp" 
- "Registration/RTTR/Components/RttrComponents.cpp" 
- "Registration/RTTR/SpawnRules/RttrSpawnRules.cpp")
+add_library(Gameplay STATIC "STUB.cpp")
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
