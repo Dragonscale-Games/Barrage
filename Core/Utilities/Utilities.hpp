@@ -16,14 +16,19 @@
 #define Utilities_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <set>
+#include <string>
+
 namespace Barrage
 {
-  struct RADIAN
+  using StringSet = std::set<std::string>;
+  
+  struct Radian
   {
     float value_;
 
-    inline RADIAN() : value_(0.0f) {};
-    inline RADIAN(float value) : value_(value) {};
+    inline Radian() : value_(0.0f) {};
+    inline Radian(float value) : value_(value) {};
   };
   
   /**************************************************************/

@@ -106,7 +106,7 @@ namespace Barrage
     }
   }
 
-  long long FramerateController::DT()
+  long long FramerateController::DT() const
   {
     return dt_;
   }

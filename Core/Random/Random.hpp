@@ -15,8 +15,6 @@
 #define Random_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <rttr/rttr_enable.h>
-
 namespace Barrage
 {
 	//! Random number generator based on xorshift.
@@ -42,7 +40,7 @@ namespace Barrage
           seed that was set in the constructor or by SetSeed().
       */
       /**************************************************************/
-      unsigned long long GetStartingSeed();
+      unsigned long long GetStartingSeed() const;
       
       /**************************************************************/
       /*!
@@ -52,7 +50,7 @@ namespace Barrage
           calls.
       */
       /**************************************************************/
-      unsigned long long GetCurrentSeed();
+      unsigned long long GetCurrentSeed() const;
 
       /**************************************************************/
       /*!

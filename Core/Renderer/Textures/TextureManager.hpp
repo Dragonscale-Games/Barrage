@@ -17,14 +17,14 @@
 
 #include "Texture.hpp"
 
-#include <unordered_map>
+#include <map>
 #include <string>
 #include <vector>
 #include <memory>
 
 namespace Barrage
 {
-  typedef std::unordered_map<std::string, std::shared_ptr<Texture>> TextureMap;
+  using TextureMap = std::map<std::string, std::shared_ptr<Texture>>;
 
   //! Texture manager for renderer
   class TextureManager

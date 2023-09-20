@@ -41,11 +41,25 @@ endif()
 add_library(BarrageCore STATIC 
   "Engine.cpp" 
 
+  "Actions/ActionManager.cpp" 
+
   "Audio/AudioManager.cpp"
+
+  "Entry/Entry.cpp"  
 
   "Framerate/FramerateController.cpp"
 
   "Input/InputManager.cpp"
+
+  "Logger/Logger.cpp" 
+
+  "Objects/Archetypes/ObjectArchetype.cpp" 
+  "Objects/Archetypes/PoolArchetype.cpp" 
+  "Objects/Components/ComponentFactory.cpp"
+  "Objects/Pools/Pool.cpp" 
+  "Objects/Spawning/SpawnRule.cpp" 
+  "Objects/Systems/System.cpp" 
+  "Objects/Systems/SystemManager.cpp" 
 
   "Random/Random.cpp"
 
@@ -55,8 +69,16 @@ add_library(BarrageCore STATIC
   "Renderer/Textures/TextureManager.cpp" 
   "Renderer/Renderer.cpp" 
 
+  "Scenes/Scene.cpp" 
+  "Scenes/SceneManager.cpp" 
+
+  "Serialization/Serializer.cpp"
+
+  "Spaces/Space.cpp" 
+  "Spaces/SpaceManager.cpp" 
+
   "Window/WindowManager.cpp"
-)
+   "Registration/Registrar.cpp" "Memory/MemoryDebugger.cpp")
 
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)

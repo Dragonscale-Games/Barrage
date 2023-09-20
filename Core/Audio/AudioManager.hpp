@@ -19,12 +19,12 @@
 #include "soloud/soloud_wav.h"
 #include "soloud/soloud_sfxr.h"
 
-#include <unordered_map>
+#include <map>
 #include <string>
 
 namespace Barrage
 {
-  typedef std::unordered_map<std::string, SoLoud::Wav> SoundUmap;
+  using SoundMap = std::map<std::string, SoLoud::Wav>;
   
   //! Manages game audio
   class AudioManager
@@ -40,7 +40,7 @@ namespace Barrage
 
     private:
       SoLoud::Soloud audioEngine_;
-      SoundUmap sounds_;
+      SoundMap sounds_;
   };
 }
 

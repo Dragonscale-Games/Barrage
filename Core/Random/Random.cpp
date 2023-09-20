@@ -30,12 +30,12 @@ namespace Barrage
     }
   }
 
-  unsigned long long Random::GetStartingSeed()
+  unsigned long long Random::GetStartingSeed() const
   {
     return startSeed_;
   }
 
-  unsigned long long Random::GetCurrentSeed()
+  unsigned long long Random::GetCurrentSeed() const
   {
     return currentSeed_;
   }

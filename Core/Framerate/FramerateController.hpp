@@ -20,7 +20,7 @@
 
 #include <chrono>
 
-typedef std::chrono::steady_clock::time_point TimePoint;
+using TimePoint = std::chrono::steady_clock::time_point;
 
 namespace Barrage
 { 
@@ -123,7 +123,7 @@ namespace Barrage
           Returns the amount of time elapsed last frame in microseconds.
       */
       /**************************************************************/
-      long long DT();
+      long long DT() const;
 
       /**************************************************************/
       /*!

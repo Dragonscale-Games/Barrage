@@ -29,7 +29,7 @@ namespace Barrage
 
   struct Rotation
   {
-    RADIAN angle_;
+    Radian angle_;
 
     inline Rotation() : angle_(0.0f) {}
   };
