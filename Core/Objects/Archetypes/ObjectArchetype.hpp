@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Objects/Components/ComponentArray.hpp>
+#include <set>
 
 namespace Barrage
 {
@@ -31,30 +32,8 @@ namespace Barrage
       /**************************************************************/
       ObjectArchetype(const std::string& name, const std::vector<std::string>& componentArrayNames = std::vector<std::string>());
 
-      /**************************************************************/
-      /*!
-        \brief
-          Copy constructor.
-
-        \param other
-          The archetype to copy.
-      */
-      /**************************************************************/
-      ObjectArchetype(const ObjectArchetype& other);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Copy assignment operator.
-
-        \param other
-          The archetype to copy.
-      */
-      /**************************************************************/
-      ObjectArchetype& operator=(const ObjectArchetype& other);
-
     private:
-      std::string name_;                  //!< A name for an object created with this archetype (for debug/editor purposes, as objects don't have names)
+      std::string name_;                  //!< Name of the object archetype
       ComponentArrayMap componentArrays_; //!< A map of initialized components to copy (each array in this map has only one component)
   };
 

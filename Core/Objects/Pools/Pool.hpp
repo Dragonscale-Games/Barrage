@@ -16,10 +16,9 @@
 #define Pool_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Archetypes/ObjectArchetype.hpp"
+#include "Objects/Archetypes/PoolArchetype.hpp"
 #include "Objects/Components/Component.hpp"
 #include "Objects/Components/ComponentArray.hpp"
-#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
@@ -32,36 +31,11 @@ namespace Barrage
         \brief
           Constructs an object pool.
 
-        \param name
-          The name of the pool (for debugging).
-
-        \param capacity
-          The number of objects the pool will be able to hold.
+        \param archetype
+          The archetype to construct the pool from.
       */
       /**************************************************************/
-      Pool(const std::string& name, unsigned capacity);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Copy constructor.
-
-        \param other
-          The pool to copy.
-      */
-      /**************************************************************/
-      Pool(const Pool& other);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Copy assignment operator.
-
-        \param other
-          The pool to copy.
-      */
-      /**************************************************************/
-      Pool& operator=(const Pool& other);
+      Pool(const PoolArchetype& archetype);
 
     private:
       ComponentMap components_;            //!< Holds shared components and their names

@@ -25,33 +25,10 @@ namespace Barrage
       std::shared_ptr<ComponentArray> componentArray = ComponentFactory::AllocateComponentArray(componentArrayName, 1);
 
       // TODO: Log/throw something if these conditions aren't met
-      if (componentArray && componentArrays_.count(componentArrayName) == 0)
+      if (componentArray && componentArrays_.Data().count(componentArrayName) == 0)
       {
-        componentArrays_.emplace(componentArrayName, componentArray);
+        componentArrays_.Data().emplace(componentArrayName, componentArray);
       }
     }
-  }
-
-  ObjectArchetype::ObjectArchetype(const ObjectArchetype& other) :
-    name_(other.name_),
-    componentArrays_()
-  {
-    for (const auto& pair : other.componentArrays_)
-    {
-      componentArrays_.emplace(pair.first, pair.second->Clone());
-    }
-  }
-
-  ObjectArchetype& ObjectArchetype::operator=(const ObjectArchetype& other)
-  {
-    name_ = other.name_;
-    componentArrays_.clear();
-    
-    for (const auto& pair : other.componentArrays_)
-    {
-      componentArrays_.emplace(pair.first, pair.second->Clone());
-    }
-
-    return *this;
   }
 }

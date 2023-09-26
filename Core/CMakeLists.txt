@@ -78,7 +78,7 @@ add_library(BarrageCore STATIC
   "Spaces/SpaceManager.cpp" 
 
   "Window/WindowManager.cpp"
-   "Registration/Registrar.cpp" "Memory/MemoryDebugger.cpp")
+   "Registration/Registrar.cpp" "Memory/MemoryDebugger.cpp" "Objects/Components/Component.cpp" "Objects/Components/ComponentArray.cpp")
 
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)

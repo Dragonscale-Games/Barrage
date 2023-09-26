@@ -153,7 +153,55 @@ namespace Barrage
       T data_;
   };
 
-  using ComponentMap = std::map<std::string, std::shared_ptr<Component>>;
+  using ComponentMapInner = std::map<std::string, std::shared_ptr<Component>>;
+
+  class ComponentMap
+  {
+    public:
+      /**************************************************************/
+      /*!
+        \brief
+          Default constructor.
+      */
+      /**************************************************************/
+      ComponentMap();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copy constructor.
+
+        \param other
+          The component map to copy.
+      */
+      /**************************************************************/
+      ComponentMap(const ComponentMap& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copy assignment operator.
+
+        \param other
+          The component map to copy.
+      */
+      /**************************************************************/
+      ComponentMap& operator=(const ComponentMap& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the wrapped map.
+
+        \return
+          Returns a reference to the underlying map.
+      */
+      /**************************************************************/
+      ComponentMapInner& Data();
+
+    private:
+      ComponentMapInner data_;
+  };
 }
 
 #include "Component.tpp"

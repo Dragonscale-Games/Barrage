@@ -286,7 +286,55 @@ namespace Barrage
       unsigned capacity_;
   };
 
-  using ComponentArrayMap = std::map<std::string, std::shared_ptr<ComponentArray>>;
+  using ComponentArrayMapInner = std::map<std::string, std::shared_ptr<ComponentArray>>;
+
+  class ComponentArrayMap
+  {
+    public:
+      /**************************************************************/
+      /*!
+        \brief
+          Default constructor.
+      */
+      /**************************************************************/
+      ComponentArrayMap();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copy constructor.
+
+        \param other
+          The pool to copy.
+      */
+      /**************************************************************/
+      ComponentArrayMap(const ComponentArrayMap& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Copy assignment operator.
+
+        \param other
+          The pool to copy.
+      */
+      /**************************************************************/
+      ComponentArrayMap& operator=(const ComponentArrayMap& other);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the wrapped map.
+
+        \return
+          Returns a reference to the underlying map.
+      */
+      /**************************************************************/
+      ComponentArrayMapInner& Data();
+
+    private:
+      ComponentArrayMapInner data_;
+  };
 }
 
 #include "ComponentArray.tpp"
