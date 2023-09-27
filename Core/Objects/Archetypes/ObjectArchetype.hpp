@@ -35,6 +35,8 @@ namespace Barrage
     private:
       std::string name_;                  //!< Name of the object archetype
       ComponentArrayMap componentArrays_; //!< A map of initialized components to copy (each array in this map has only one component)
+
+      friend class Pool;
   };
 
   using ObjectArchetypeMap = std::map<std::string, ObjectArchetype>;

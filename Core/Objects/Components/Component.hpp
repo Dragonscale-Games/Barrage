@@ -153,55 +153,115 @@ namespace Barrage
       T data_;
   };
 
-  using ComponentMapInner = std::map<std::string, std::shared_ptr<Component>>;
-
-  class ComponentMap
+  class ComponentPtr
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Default constructor.
+          Default/conversion constructor. Wraps a nullptr.
+
+        \param nullPointer
+          Dummy parameter. Allows default parameter conversion like:
+            Foo(ComponentPtr pointer = nullptr)
       */
       /**************************************************************/
-      ComponentMap();
+      ComponentPtr(std::nullptr_t nullPointer = nullptr);
+      
+      /**************************************************************/
+      /*!
+        \brief
+          Constructs this ComponentPtr from a shared pointer. The
+          shared pointer is stored internally (wrapped).
+
+        \param ptr
+          The shared pointer to wrap.
+      */
+      /**************************************************************/
+      ComponentPtr(std::shared_ptr<Component> ptr);
 
       /**************************************************************/
       /*!
         \brief
-          Copy constructor.
+          Copy constructor for deep copying a component pointer.
 
         \param other
-          The component map to copy.
+          The component pointer to deep copy.
       */
       /**************************************************************/
-      ComponentMap(const ComponentMap& other);
+      ComponentPtr(const ComponentPtr& other);
 
       /**************************************************************/
       /*!
         \brief
-          Copy assignment operator.
+          Copy assignment operator for deep copying a component
+          pointer.
 
         \param other
-          The component map to copy.
+          The component pointer to deep copy.
       */
       /**************************************************************/
-      ComponentMap& operator=(const ComponentMap& other);
+      ComponentPtr& operator=(const ComponentPtr& other);
 
       /**************************************************************/
       /*!
         \brief
-          Gets the wrapped map.
+          Move constructor. Transfers ownership of the managed
+          object from the source component pointer.
+
+        \param other
+          The component pointer to move.
+      */
+      /**************************************************************/
+      ComponentPtr(ComponentPtr&& other) noexcept;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Move assignment operator. Transfers ownership of the
+          managed object from the source component pointer.
+
+        \param other
+          The component pointer to move.
+      */
+      /**************************************************************/
+      ComponentPtr& operator=(ComponentPtr&& other) noexcept;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Arrow operator overload.
 
         \return
-          Returns a reference to the underlying map.
+          Returns the underlying component as a pointer.
       */
       /**************************************************************/
-      ComponentMapInner& Data();
+      Component* operator->() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Star operator overload.
+
+        \return
+          Returns the underlying component as a reference.
+      */
+      /**************************************************************/
+      Component& operator*() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Bool conversion operator. Allows easy nullptr checks.
+      */
+      /**************************************************************/
+      operator bool() const noexcept;
 
     private:
-      ComponentMapInner data_;
+      std::shared_ptr<Component> ptr_;
   };
+
+  using ComponentMap = std::map<std::string, ComponentPtr>;
 }
 
 #include "Component.tpp"

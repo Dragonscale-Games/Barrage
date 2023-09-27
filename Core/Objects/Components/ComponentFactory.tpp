@@ -42,21 +42,20 @@ namespace Barrage
   }
 
   template <typename T>
-  std::shared_ptr<Component> ComponentFactory::AllocateComponent(std::shared_ptr<Component> initializer)
+  ComponentPtr ComponentFactory::AllocateComponent(ComponentPtr initializer)
   {
-    std::shared_ptr<ComponentT<T>> new_component = std::make_shared<ComponentT<T>>();
-    std::shared_ptr<ComponentT<T>> initializer_full = std::dynamic_pointer_cast<ComponentT<T>>(initializer);
-
-    if (initializer_full)
+    if (initializer)
     {
-      new_component->Data() = initializer_full->Data();
+      return initializer->Clone();
     }
-
-    return new_component;
+    else
+    {
+      return std::make_shared<ComponentT<T>>();
+    }
   }
 
   template <typename T>
-  std::shared_ptr<ComponentArray> ComponentFactory::AllocateComponentArray(unsigned capacity)
+  ComponentArrayPtr ComponentFactory::AllocateComponentArray(unsigned capacity)
   {
     return std::make_shared<ComponentArrayT<T>>(capacity);
   }

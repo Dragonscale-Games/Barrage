@@ -23,6 +23,8 @@
 
 namespace Barrage
 {
+  using KEY = int;
+  
   //! Handles input events from GLFW. 
   class InputManager
 	{
@@ -83,7 +85,7 @@ namespace Barrage
           returns false otherwise.
       */
       /**************************************************************/
-      bool KeyTriggered(int key) const;
+      bool KeyTriggered(KEY key) const;
 
       /**************************************************************/
       /*!
@@ -99,7 +101,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      bool KeyIsDown(int key) const;
+      bool KeyIsDown(KEY key) const;
 
       /**************************************************************/
       /*!
@@ -115,7 +117,7 @@ namespace Barrage
           returns false otherwise.
       */
       /**************************************************************/
-      bool KeyReleased(int key) const;
+      bool KeyReleased(KEY key) const;
 
     private:
       /**************************************************************/
@@ -132,7 +134,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      static bool KeyIsValid(int key);
+      static bool KeyIsValid(KEY key);
       
       /**************************************************************/
       /*!
@@ -158,7 +160,7 @@ namespace Barrage
           Unused in this function.
       */
       /**************************************************************/
-      static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+      static void KeyCallback(GLFWwindow* window, KEY key, int scancode, int action, int mods);
 
     private:
       GLFWwindow* window_; //!< Handle to the game window

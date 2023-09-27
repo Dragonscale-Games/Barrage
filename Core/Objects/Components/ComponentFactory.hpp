@@ -23,8 +23,8 @@ namespace Barrage
 {
   class ComponentFactory;
 
-  using ComponentFactoryMethod = std::shared_ptr<Component>(*)(std::shared_ptr<Component>);
-  using ComponentArrayFactoryMethod = std::shared_ptr<ComponentArray>(*)(unsigned);
+  using ComponentFactoryMethod = ComponentPtr(*)(ComponentPtr);
+  using ComponentArrayFactoryMethod = ComponentArrayPtr(*)(unsigned);
 
   using ComponentFactoryMethodMap = std::map<std::string, ComponentFactoryMethod>;
   using ComponentArrayFactoryMethodMap = std::map<std::string, ComponentArrayFactoryMethod>;
@@ -97,7 +97,7 @@ namespace Barrage
           nullptr.
       */
       /**************************************************************/
-      static std::shared_ptr<Component> AllocateComponent(const std::string& name, std::shared_ptr<Component> initializer = nullptr);
+      static ComponentPtr AllocateComponent(const std::string& name, ComponentPtr initializer = nullptr);
 
       /**************************************************************/
       /*!
@@ -119,7 +119,7 @@ namespace Barrage
           nullptr.
       */
       /**************************************************************/
-      static std::shared_ptr<ComponentArray> AllocateComponentArray(const std::string& name, unsigned capacity);
+      static ComponentArrayPtr AllocateComponentArray(const std::string& name, unsigned capacity);
 
       /**************************************************************/
       /*!
@@ -178,7 +178,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      static std::shared_ptr<Component> AllocateComponent(std::shared_ptr<Component> initializer);
+      static ComponentPtr AllocateComponent(ComponentPtr initializer);
 
       /**************************************************************/
       /*!
@@ -197,7 +197,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      static std::shared_ptr<ComponentArray> AllocateComponentArray(unsigned capacity);
+      static ComponentArrayPtr AllocateComponentArray(unsigned capacity);
 
     private:
       static ComponentFactoryMethodMap componentFactoryMethodMap_;           //!< Maps names of shared components to their allocation functions

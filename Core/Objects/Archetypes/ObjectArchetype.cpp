@@ -22,12 +22,12 @@ namespace Barrage
   {
     for (const auto& componentArrayName : componentArrayNames)
     {
-      std::shared_ptr<ComponentArray> componentArray = ComponentFactory::AllocateComponentArray(componentArrayName, 1);
+      ComponentArrayPtr componentArray = ComponentFactory::AllocateComponentArray(componentArrayName, 1);
 
       // TODO: Log/throw something if these conditions aren't met
-      if (componentArray && componentArrays_.Data().count(componentArrayName) == 0)
+      if (componentArray && componentArrays_.count(componentArrayName) == 0)
       {
-        componentArrays_.Data().emplace(componentArrayName, componentArray);
+        componentArrays_.emplace(componentArrayName, componentArray);
       }
     }
   }

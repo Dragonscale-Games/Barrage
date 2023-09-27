@@ -28,7 +28,7 @@ namespace Barrage
     tagNames_.insert(tag);
   }
 
-  std::shared_ptr<Component> ComponentFactory::AllocateComponent(const std::string& name, std::shared_ptr<Component> initializer)
+  ComponentPtr ComponentFactory::AllocateComponent(const std::string& name, ComponentPtr initializer)
   {
     if (componentFactoryMethodMap_.count(name))
     {
@@ -41,7 +41,7 @@ namespace Barrage
     }
   }
 
-  std::shared_ptr<ComponentArray> ComponentFactory::AllocateComponentArray(const std::string& name, unsigned capacity)
+  ComponentArrayPtr ComponentFactory::AllocateComponentArray(const std::string& name, unsigned capacity)
   {
     if (componentArrayFactoryMethodMap_.count(name))
     {

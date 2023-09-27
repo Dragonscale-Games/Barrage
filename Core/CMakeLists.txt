@@ -53,15 +53,23 @@ add_library(BarrageCore STATIC
 
   "Logger/Logger.cpp" 
 
+  "Memory/MemoryDebugger.cpp" 
+
   "Objects/Archetypes/ObjectArchetype.cpp" 
   "Objects/Archetypes/PoolArchetype.cpp" 
+  "Objects/Components/Component.cpp" 
+  "Objects/Components/ComponentArray.cpp" 
   "Objects/Components/ComponentFactory.cpp"
   "Objects/Pools/Pool.cpp" 
   "Objects/Spawning/SpawnRule.cpp" 
+  "Objects/Spawning/SpawnRuleFactory.cpp"
   "Objects/Systems/System.cpp" 
+  "Objects/Systems/SystemFactory.cpp" 
   "Objects/Systems/SystemManager.cpp" 
 
   "Random/Random.cpp"
+
+  "Registration/Registrar.cpp"
 
   "Renderer/Framebuffers/Framebuffer.cpp"
   "Renderer/Shaders/Shader.cpp" 
@@ -77,8 +85,7 @@ add_library(BarrageCore STATIC
   "Spaces/Space.cpp" 
   "Spaces/SpaceManager.cpp" 
 
-  "Window/WindowManager.cpp"
-   "Registration/Registrar.cpp" "Memory/MemoryDebugger.cpp" "Objects/Components/Component.cpp" "Objects/Components/ComponentArray.cpp")
+  "Window/WindowManager.cpp" "Objects/Pools/PoolType.cpp")
 
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)

@@ -38,28 +38,6 @@ namespace Barrage
       /**************************************************************/
       PoolArchetype(const std::string& name, unsigned capacity = 1);
 
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the name of the pool.
-
-        \return
-          Returns the name of the pool.
-      */
-      /**************************************************************/
-      const std::string& GetName() const;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the capacity of the pool.
-
-        \return
-          Returns the capacity of the pool.
-      */
-      /**************************************************************/
-      unsigned GetCapacity() const;
-
     private:
       std::string name_;              //!< Name of the pool this archetype will create
       unsigned capacity_;             //!< The number of objects the pool will be able to hold
@@ -69,6 +47,8 @@ namespace Barrage
 
       ObjectArchetypeMap startingObjects_; //!< Objects present in the pool at the start of a scene
       ObjectArchetypeMap spawnArchetypes_; //!< Objects that can be spawned in the pool
+
+      friend class Pool;
   };
 
   using PoolArchetypeMap = std::map<std::string, PoolArchetype>;

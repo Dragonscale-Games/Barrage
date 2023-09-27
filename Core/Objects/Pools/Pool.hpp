@@ -37,11 +37,157 @@ namespace Barrage
       /**************************************************************/
       Pool(const PoolArchetype& archetype);
 
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the number of active objects.
+
+        \return
+          Returns the number of active objects.
+      */
+      /**************************************************************/
+      unsigned ActiveObjectCount() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Get a reference to a given component. Throws an
+          out_of_range exception if no component matches the
+          input name.
+
+        \tparam T
+          The type of component to get.
+
+        \param componentName
+          The name of the component to get.
+
+        \return
+          Returns a reference to the component with the given name.
+      */
+      /**************************************************************/
+      template <typename T>
+      ComponentT<T>& GetComponent(std::string_view componentName);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Get a reference to a given component array. Throws an
+          out_of_range exception if no component array matches the
+          input name.
+
+        \tparam T
+          The type of component array to get.
+
+        \param componentName
+          The name of the component array to get.
+
+        \return
+          Returns a reference to the component array with the given
+          name.
+      */
+      /**************************************************************/
+      template <typename T>
+      ComponentArrayT<T>& GetComponentArray(std::string_view componentName);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Spawns all objects queued for spawn.
+      */
+      /**************************************************************/
+      void SpawnObjects();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Determines if the pool has a given  component.
+
+        \param componentName
+          The name of the component to check for.
+
+        \return
+          Returns true if the pool has the component, returns
+          false otherwise.
+      */
+      /**************************************************************/
+      bool HasComponent(const std::string& componentName);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Determines if the pool has a given component array.
+
+        \param componentArrayName
+          The name of the component array to check for.
+
+        \return
+          Returns true if the pool has the component array, returns
+          false otherwise.
+      */
+      /**************************************************************/
+      bool HasComponentArray(const std::string& componentArrayName);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Determines if the pool has a given tag.
+
+        \param tag
+          The tag to check for.
+
+        \return
+          Returns true if the pool has the tag, returns false
+          otherwise.
+      */
+      /**************************************************************/
+      bool HasTag(const std::string& tag) const;
+
+    private:
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the number of available object slots in the pool.
+
+        \return
+          Returns the number of available object slots in the pool.
+      */
+      /**************************************************************/
+      unsigned GetAvailableSlots() const;
+      
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the index of the first available object slot.
+
+        \return
+          Returns the index of the first available object slot.
+      */
+      /**************************************************************/
+      unsigned GetSpawnIndex() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Creates a number of objects in the pool by copying an
+          object archetype.
+
+          SAFETY:
+          This function assumes startIndex + numObjects <= capacity.
+
+        \param archetype
+          The archetype used to construct the objects.
+
+        \param numObjects
+          The number of objects to create.
+      */
+      /**************************************************************/
+      void CreateObjectsUnsafe(const ObjectArchetype& archetype, unsigned startIndex, unsigned numObjects);
+
     private:
       ComponentMap components_;            //!< Holds shared components and their names
       ComponentArrayMap componentArrays_;  //!< Holds component arrays and their names
-      ObjectArchetypeMap spawnArchetypes_; //!< Objects that can be spawned in this pool
       StringSet tags_;                     //!< Holds the pool's tags
+      ObjectArchetypeMap spawnArchetypes_; //!< Objects that can be spawned in this pool
       unsigned numActiveObjects_;          //!< Number of currently active objects
       unsigned numQueuedObjects_;          //!< Number of objects ready to be spawned on the next tick
       unsigned capacity_;                  //!< Total number of objects the pool can hold

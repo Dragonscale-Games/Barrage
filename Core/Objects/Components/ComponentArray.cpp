@@ -13,38 +13,60 @@
  */
  /* ======================================================================== */
 
+#include "stdafx.h"
 #include "ComponentArray.hpp"
 
 namespace Barrage
 {
-  ComponentArrayMap::ComponentArrayMap() :
-    data_()
+  ComponentArrayPtr::ComponentArrayPtr(std::nullptr_t) :
+    ptr_(nullptr)
   {
   }
 
-  ComponentArrayMap::ComponentArrayMap(const ComponentArrayMap& other) :
-    data_()
+  ComponentArrayPtr::ComponentArrayPtr(std::shared_ptr<ComponentArray> ptr) :
+    ptr_(ptr)
   {
-    for (const auto& pair : other.data_)
-    {
-      data_.emplace(pair.first, pair.second->Clone());
-    }
   }
 
-  ComponentArrayMap& ComponentArrayMap::operator=(const ComponentArrayMap& other)
+  ComponentArrayPtr::ComponentArrayPtr(const ComponentArrayPtr& other) :
+    ptr_(other->Clone())
   {
-    data_.clear();
+  }
 
-    for (const auto& pair : other.data_)
+  ComponentArrayPtr& ComponentArrayPtr::operator=(const ComponentArrayPtr& other)
+  {
+    ptr_ = other->Clone();
+
+    return *this;
+  }
+
+  ComponentArrayPtr::ComponentArrayPtr(ComponentArrayPtr&& other) noexcept :
+    ptr_(std::move(other.ptr_))
+  {
+  }
+
+  ComponentArrayPtr& ComponentArrayPtr::operator=(ComponentArrayPtr&& other) noexcept
+  {
+    if (this != &other) // Prevent self-assignment
     {
-      data_.emplace(pair.first, pair.second->Clone());
+      ptr_ = std::move(other.ptr_);
     }
 
     return *this;
   }
 
-  std::map<std::string, std::shared_ptr<ComponentArray>>& ComponentArrayMap::Data()
+  ComponentArray* ComponentArrayPtr::operator->() const
   {
-    return data_;
+    return ptr_.operator->();
+  }
+
+  ComponentArray& ComponentArrayPtr::operator*() const
+  {
+    return *ptr_;
+  }
+
+  ComponentArrayPtr::operator bool() const noexcept
+  {
+    return static_cast<bool>(ptr_);
   }
 }

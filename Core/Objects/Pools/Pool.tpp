@@ -17,7 +17,17 @@
 
 namespace Barrage
 {
-  
+  template <typename T>
+  ComponentT<T>& Pool::GetComponent(std::string_view componentName)
+  {
+    
+  }
+
+  template <typename T>
+  ComponentArrayT<T>& Pool::GetComponentArray(std::string_view componentName)
+  {
+    
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

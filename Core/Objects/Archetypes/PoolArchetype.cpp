@@ -28,14 +28,4 @@ namespace Barrage
     spawnArchetypes_()
   {
   }
-
-  const std::string& PoolArchetype::GetName() const
-  {
-    return name_;
-  }
-
-  unsigned PoolArchetype::GetCapacity() const
-  {
-    return capacity_;
-  }
 }

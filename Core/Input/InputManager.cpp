@@ -50,7 +50,7 @@ namespace Barrage
     }
   }
 
-  bool InputManager::KeyTriggered(int key) const
+  bool InputManager::KeyTriggered(KEY key) const
   {
     if (!KeyIsValid(key))
     {
@@ -60,7 +60,7 @@ namespace Barrage
     return keyTriggers_[static_cast<long long>(key - MIN_KEY_VALUE)];
   }
 
-  bool InputManager::KeyIsDown(int key) const
+  bool InputManager::KeyIsDown(KEY key) const
   {
     if (!KeyIsValid(key))
     {
@@ -70,7 +70,7 @@ namespace Barrage
     return glfwGetKey(window_, key) == GLFW_PRESS;
   }
 
-  bool InputManager::KeyReleased(int key) const
+  bool InputManager::KeyReleased(KEY key) const
   {
     if (!KeyIsValid(key))
     {
@@ -80,12 +80,12 @@ namespace Barrage
     return keyReleases_[static_cast<long long>(key - MIN_KEY_VALUE)];
   }
 
-  bool InputManager::KeyIsValid(int key)
+  bool InputManager::KeyIsValid(KEY key)
   {
     return key >= MIN_KEY_VALUE && key <= MAX_KEY_VALUE;
   }
 
-  void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+  void InputManager::KeyCallback(GLFWwindow* window, KEY key, int scancode, int action, int mods)
   {
     UNREFERENCED(window);
     UNREFERENCED(scancode);

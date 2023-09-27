@@ -286,55 +286,116 @@ namespace Barrage
       unsigned capacity_;
   };
 
-  using ComponentArrayMapInner = std::map<std::string, std::shared_ptr<ComponentArray>>;
-
-  class ComponentArrayMap
+  class ComponentArrayPtr
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Default constructor.
+          Default/conversion constructor. Wraps a nullptr.
+
+        \param nullPointer
+          Dummy parameter. Allows default parameter conversion like:
+            Foo(ComponentArrayPtr pointer = nullptr)
       */
       /**************************************************************/
-      ComponentArrayMap();
+      ComponentArrayPtr(std::nullptr_t nullPointer = nullptr);
+      
+      /**************************************************************/
+      /*!
+        \brief
+          Constructs this ComponentArrayPtr from a shared pointer. 
+          The shared pointer is stored internally (wrapped).
+
+        \param ptr
+          The shared pointer to wrap.
+      */
+      /**************************************************************/
+      ComponentArrayPtr(std::shared_ptr<ComponentArray> ptr);
 
       /**************************************************************/
       /*!
         \brief
-          Copy constructor.
+          Copy constructor for deep copying a component array
+          pointer.
 
         \param other
-          The pool to copy.
+          The component array pointer to deep copy.
       */
       /**************************************************************/
-      ComponentArrayMap(const ComponentArrayMap& other);
+      ComponentArrayPtr(const ComponentArrayPtr& other);
 
       /**************************************************************/
       /*!
         \brief
-          Copy assignment operator.
+          Copy assignment operator for deep copying a component
+          array pointer.
 
         \param other
-          The pool to copy.
+          The component array pointer to deep copy.
       */
       /**************************************************************/
-      ComponentArrayMap& operator=(const ComponentArrayMap& other);
+      ComponentArrayPtr& operator=(const ComponentArrayPtr& other);
 
       /**************************************************************/
       /*!
         \brief
-          Gets the wrapped map.
+          Move constructor. Transfers ownership of the managed
+          object from the source component array pointer.
+
+        \param other
+          The component array pointer to move.
+      */
+      /**************************************************************/
+      ComponentArrayPtr(ComponentArrayPtr&& other) noexcept;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Move assignment operator. Transfers ownership of the
+          managed object from the source component array pointer.
+
+        \param other
+          The component array pointer to move.
+      */
+      /**************************************************************/
+      ComponentArrayPtr& operator=(ComponentArrayPtr&& other) noexcept;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Arrow operator overload.
 
         \return
-          Returns a reference to the underlying map.
+          Returns the underlying component array as a pointer.
       */
       /**************************************************************/
-      ComponentArrayMapInner& Data();
+      ComponentArray* operator->() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Star operator overload.
+
+        \return
+          Returns the underlying component array as a reference.
+      */
+      /**************************************************************/
+      ComponentArray& operator*() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Bool conversion operator. Allows easy nullptr checks.
+      */
+      /**************************************************************/
+      operator bool() const noexcept;
 
     private:
-      ComponentArrayMapInner data_;
+      std::shared_ptr<ComponentArray> ptr_;
   };
+
+  using ComponentArrayMap = std::map<std::string, ComponentArrayPtr>;
 }
 
 #include "ComponentArray.tpp"
