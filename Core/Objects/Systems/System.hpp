@@ -155,8 +155,8 @@ namespace Barrage
       void UpdateInteraction(const std::string& group1, const std::string& group2, InteractionMemberFunction function);
 
     protected:
-      PoolTypeMap poolTypes_;        //!< Holds all pool types the system cares about
-      PoolGroupMap poolGroups_;      //!< Holds all subscribed pools in a specific order
+      PoolTypeMap poolTypes_;   //!< Holds all pool types the system cares about
+      PoolGroupMap poolGroups_; //!< Holds all subscribed pools in a specific order
   };
 }
 
