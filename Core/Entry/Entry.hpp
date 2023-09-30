@@ -20,33 +20,33 @@
 
 namespace Barrage
 {
-  //! Contains the information needed to initialize a game
+  //! Contains the information needed to initialize the game
   class Entry
   {
-  public:
-    class SpaceEntry
-    {
     public:
-      SpaceEntry();
+      class SpaceEntry
+      {
+        public:
+          SpaceEntry();
 
-      SpaceEntry(const std::string& name, const std::string& scene);
+          SpaceEntry(const std::string& name, const std::string& scene);
+
+        public:
+          std::string name_;
+          std::string scene_;
+      };
+
+      void AddTexture(const std::string& textureName);
+
+      void AddSpace(const SpaceEntry& space);
+
+      static bool SaveToFile(const Entry& entry, const std::string& path);
+
+      static Entry LoadFromFile(const std::string& path);
 
     public:
-      std::string name_;
-      std::string scene_;
-    };
-
-    void AddTexture(const std::string& textureName);
-
-    void AddSpace(const SpaceEntry& space);
-
-    static bool SaveToFile(const Entry& entry, const std::string& path);
-
-    static Entry LoadFromFile(const std::string& path);
-
-  public:
-    std::vector<std::string> textures_;
-    std::vector<SpaceEntry> spaces_;
+      std::vector<std::string> textures_;
+      std::vector<SpaceEntry> spaces_;
   };
 }
 

@@ -402,6 +402,17 @@ namespace Barrage
       /**************************************************************/
       operator bool() const noexcept;
 
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the underlying shared pointer for this object.
+
+        \return
+          Returns the shared pointer.
+      */
+      /**************************************************************/
+      std::shared_ptr<SpawnRule> Get();
+
     private:
       std::shared_ptr<SpawnRule> ptr_;
   };
