@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            ComponentAllocator.tpp
+ * \file            ComponentFactory.tpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -11,8 +11,8 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef ComponentAllocator_BARRAGE_T
-#define ComponentAllocator_BARRAGE_T
+#ifndef ComponentFactory_BARRAGE_T
+#define ComponentFactory_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace Barrage
@@ -20,7 +20,7 @@ namespace Barrage
   template <typename T>
   void ComponentFactory::RegisterComponent(const std::string& componentName)
   {
-    if (componentNames_.count(componentName))
+    if (componentFactoryMethodMap_.count(componentName))
     {
       return;
     }
@@ -32,7 +32,7 @@ namespace Barrage
   template <typename T>
   void ComponentFactory::RegisterComponentArray(const std::string& componentName)
   {
-    if (componentArrayNames_.count(componentName))
+    if (componentArrayFactoryMethodMap_.count(componentName))
     {
       return;
     }
@@ -62,5 +62,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ComponentAllocator_BARRAGE_T
+#endif // ComponentFactory_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////

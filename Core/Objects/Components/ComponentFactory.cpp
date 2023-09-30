@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            ComponentAllocator.cpp
+ * \file            ComponentFactory.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
