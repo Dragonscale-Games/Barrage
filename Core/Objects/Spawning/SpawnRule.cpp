@@ -38,11 +38,9 @@ namespace Barrage
   {
   }
 
-  void SpawnRuleWithArray::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex)
+  bool SpawnRuleWithArray::HasArray()
   {
-    UNREFERENCED(destructionArray);
-    UNREFERENCED(writeIndex);
-    UNREFERENCED(endIndex);
+    return true;
   }
 
   SpawnRulePtr::SpawnRulePtr(std::nullptr_t) :
@@ -100,5 +98,48 @@ namespace Barrage
   std::shared_ptr<SpawnRule> SpawnRulePtr::Get()
   {
     return ptr_;
+  }
+
+  SpawnRuleCollection::SpawnRuleCollection() :
+    basicRules_(),
+    arrayRules_()
+  {
+  }
+
+  void SpawnRuleCollection::AddSpawnRule(SpawnRulePtr spawnRule)
+  {
+    if (spawnRule->HasArray())
+    {
+      arrayRules_.push_back(spawnRule);
+    }
+    else
+    {
+      basicRules_.push_back(spawnRule);
+    }
+  }
+
+  void SpawnRuleCollection::SetCapacity(unsigned capacity)
+  {
+    for (auto it = arrayRules_.begin(); it != arrayRules_.end(); ++it)
+    {
+      std::shared_ptr<SpawnRuleWithArray> spawnRule = std::static_pointer_cast<SpawnRuleWithArray>(it->Get());
+
+      spawnRule->SetCapacity(capacity);
+    }
+  }
+
+  void SpawnRuleCollection::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex)
+  {
+    for (auto it = arrayRules_.begin(); it != arrayRules_.end(); ++it)
+    {
+      std::shared_ptr<SpawnRuleWithArray> spawnRule = std::static_pointer_cast<SpawnRuleWithArray>(it->Get());
+
+      spawnRule->HandleDestructions(destructionArray, writeIndex, endIndex);
+    }
+  }
+
+  size_t SpawnRuleCollection::Size()
+  {
+    return basicRules_.size() + arrayRules_.size();
   }
 }

@@ -24,11 +24,13 @@ namespace Barrage
   class Pool;
   class Space;
 
-  struct SpawnBatch
+  struct GroupInfo
   {
-    unsigned sourceIndex_;
     unsigned numGroups_;
     unsigned numObjectsPerGroup_;
+
+    inline GroupInfo() : numGroups_(0), numObjectsPerGroup_(1) {}
+    inline GroupInfo(unsigned numGroups) : numGroups_(numGroups), numObjectsPerGroup_(1) {}
   };
 
   struct SpawnRuleInfo
@@ -38,13 +40,39 @@ namespace Barrage
     Space& space_;
     unsigned startIndex_;
     unsigned numNewObjects_;
-    std::vector<SpawnBatch>& spawnBatches_;
+    std::vector<unsigned>& sourceIndices_;
+    ComponentArrayT<GroupInfo>& groupInfoArray_;
+
+    inline SpawnRuleInfo(
+      Pool& sourcePool, 
+      Pool& destinationPool, 
+      Space& space, 
+      unsigned startIndex, 
+      unsigned numNewObjects, 
+      std::vector<unsigned>& sourceIndices, 
+      ComponentArrayT<GroupInfo>& groupInfoArray
+    ) : 
+      sourcePool_(sourcePool),
+      destinationPool_(destinationPool),
+      space_(space),
+      startIndex_(startIndex),
+      numNewObjects_(numNewObjects),
+      sourceIndices_(sourceIndices),
+      groupInfoArray_(groupInfoArray)
+    {
+    }
   };
 
   //! Base class that all spawn rules should inherit from
   class SpawnRule
   {
     public:
+      enum class Stage
+      {
+        SIZE,
+        VALUES
+      };
+      
       /**************************************************************/
       /*!
         \brief
@@ -119,6 +147,30 @@ namespace Barrage
       /**************************************************************/
       virtual void SetRTTRValue(const rttr::variant& value);
 
+      /**************************************************************/
+      /*!
+        \brief
+          Checks whether the spawn rule has a component array that
+          needs to be updated when objects are destroyed.
+
+        \return
+          Returns true if the spawn rule has an array, returns false
+          otherwise.
+      */
+      /**************************************************************/
+      virtual bool HasArray() = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the stage in the spawn pipeline that the rule acts in.
+
+        \return
+          Returns the stage of the spawn rule.
+      */
+      /**************************************************************/
+      virtual Stage GetStage() = 0;
+
     private:
       std::string name_;
   };
@@ -166,6 +218,19 @@ namespace Barrage
       */
       /**************************************************************/
       void SetRTTRValue(const rttr::variant& value) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Checks whether the spawn rule has a component array that
+          needs to be updated when objects are destroyed.
+
+        \return
+          Returns true if the spawn rule has an array, returns false
+          otherwise.
+      */
+      /**************************************************************/
+      bool HasArray() override;
 
     protected:
       T data_;
@@ -221,6 +286,19 @@ namespace Barrage
       */
       /**************************************************************/
       virtual void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex) = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Checks whether the spawn rule has a component array that
+          needs to be updated when objects are destroyed.
+
+        \return
+          Returns true if the spawn rule has an array, returns false
+          otherwise.
+      */
+      /**************************************************************/
+      bool HasArray() override;
   };
 
   //! Spawn rules that store an array of data (one element per spawner)
@@ -418,6 +496,24 @@ namespace Barrage
   };
 
   using SpawnRuleList = std::vector<SpawnRulePtr>;
+
+  class SpawnRuleCollection
+  {
+    public:
+      SpawnRuleCollection();
+      
+      void AddSpawnRule(SpawnRulePtr spawnRule);
+
+      void SetCapacity(unsigned capacity);
+
+      void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex);
+
+      size_t Size();
+
+    private:
+      SpawnRuleList basicRules_;
+      SpawnRuleList arrayRules_;
+  };
 }
 
 #include "SpawnRule.tpp"

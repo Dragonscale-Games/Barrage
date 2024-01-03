@@ -87,7 +87,7 @@ add_library(BarrageCore STATIC
   "Spaces/Space.cpp" 
   "Spaces/SpaceManager.cpp" 
 
-  "Window/WindowManager.cpp" )
+  "Window/WindowManager.cpp"   "Objects/Spawning/SpawnType.cpp" "Objects/Spawning/SpawnLayer.cpp")
 
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)

@@ -43,7 +43,8 @@ namespace Barrage
       // TODO: Log/throw something if this condition isn't met
       if (GetAvailableSlots())
       {
-        CreateObjectsUnsafe(pair.second, GetSpawnIndex(), 1);
+        CreateObjectsUnsafe(pair.second, 1);
+        numActiveObjects_++;
       }
     }
   }
@@ -51,6 +52,31 @@ namespace Barrage
   unsigned Pool::ActiveObjectCount() const
   {
     return numActiveObjects_;
+  }
+
+  void Pool::QueueSpawns(Space& space, Pool& sourcePool, SpawnType& spawnType)
+  {
+    spawnType.CalculateObjectsPerGroup();
+    
+    unsigned numObjects = spawnType.GetNumberOfObjectsToSpawn();
+    unsigned availableSlots = GetAvailableSlots();
+    ObjectArchetype& spawnArchetype = spawnArchetypes_.at(spawnType.spawnArchetypeName_);
+    
+    if (numObjects > availableSlots)
+    {
+      numObjects = availableSlots;
+    }
+
+    if (numObjects != 0)
+    {
+      CreateObjectsUnsafe(spawnArchetype, numObjects);
+      numQueuedObjects_ += numObjects;
+    }
+    
+    // apply value spawn rules
+    // apply size spawn rules
+
+    spawnType.ClearSpawns();
   }
 
   void Pool::SpawnObjects()
@@ -84,8 +110,10 @@ namespace Barrage
     return numActiveObjects_ + numQueuedObjects_;
   }
 
-  void Pool::CreateObjectsUnsafe(const ObjectArchetype& archetype, unsigned startIndex, unsigned numObjects)
+  void Pool::CreateObjectsUnsafe(const ObjectArchetype& archetype, unsigned numObjects)
   {
+    unsigned startIndex = GetSpawnIndex();
+    
     for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
     {
       ComponentArrayPtr destination_array = it->second;

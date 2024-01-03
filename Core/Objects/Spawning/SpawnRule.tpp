@@ -47,6 +47,12 @@ namespace Barrage
     data_ = value.get_value<T>();
   }
 
+  template <typename T>
+  bool SpawnRuleT<T>::HasArray()
+  {
+    return false;
+  }
+
   template <typename T, typename A>
   SpawnRuleTA<T, A>::SpawnRuleTA(const std::string& name) : SpawnRuleWithArray(name), data_(), dataArray_()
   {

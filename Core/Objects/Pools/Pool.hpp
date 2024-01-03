@@ -19,6 +19,7 @@
 #include "Objects/Archetypes/PoolArchetype.hpp"
 #include "Objects/Components/Component.hpp"
 #include "Objects/Components/ComponentArray.hpp"
+#include "Objects/Spawning/SpawnType.hpp"
 
 namespace Barrage
 {
@@ -66,7 +67,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      ComponentT<T>& GetComponent(std::string_view componentName);
+      ComponentT<T>& GetComponent(const std::string& componentName);
 
       /**************************************************************/
       /*!
@@ -87,7 +88,25 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      ComponentArrayT<T>& GetComponentArray(std::string_view componentName);
+      ComponentArrayT<T>& GetComponentArray(const std::string& componentArrayName);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Creates new objects and queues them for spawn. The objects
+          are later spawned when SpawnObjects() is called.
+
+        \param space
+          The space the source and destination pools live in.
+
+        \param sourcePool
+          The pool spawning the objects.
+
+        \param spawnType
+          Contains the information needed to spawn the objects.
+      */
+      /**************************************************************/
+      void QueueSpawns(Space& space, Pool& sourcePool, SpawnType& spawnType);
 
       /**************************************************************/
       /*!
@@ -172,7 +191,7 @@ namespace Barrage
           object archetype.
 
           SAFETY:
-          This function assumes startIndex + numObjects <= capacity.
+          This function assumes numObjects <= available slots.
 
         \param archetype
           The archetype used to construct the objects.
@@ -181,7 +200,7 @@ namespace Barrage
           The number of objects to create.
       */
       /**************************************************************/
-      void CreateObjectsUnsafe(const ObjectArchetype& archetype, unsigned startIndex, unsigned numObjects);
+      void CreateObjectsUnsafe(const ObjectArchetype& archetype, unsigned numObjects);
 
     private:
       ComponentMap components_;            //!< Holds shared components and their names

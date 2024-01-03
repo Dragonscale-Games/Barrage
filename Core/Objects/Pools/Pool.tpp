@@ -10,7 +10,7 @@
  */
  /* ======================================================================== */
 
- ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #ifndef Pool_BARRAGE_T
 #define Pool_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////
@@ -18,13 +18,13 @@
 namespace Barrage
 {
   template <typename T>
-  ComponentT<T>& Pool::GetComponent(std::string_view componentName)
+  ComponentT<T>& Pool::GetComponent(const std::string& componentName)
   {
     
   }
 
   template <typename T>
-  ComponentArrayT<T>& Pool::GetComponentArray(std::string_view componentName)
+  ComponentArrayT<T>& Pool::GetComponentArray(const std::string& componentArrayName)
   {
     
   }
