@@ -23,8 +23,8 @@ namespace Barrage
 {
   class ComponentFactory;
 
-  using ComponentFactoryMethod = ComponentPtr(*)(ComponentPtr);
-  using ComponentArrayFactoryMethod = ComponentArrayPtr(*)(unsigned);
+  using ComponentFactoryMethod = GenericComponent(*)(GenericComponent);
+  using ComponentArrayFactoryMethod = GenericComponentArray(*)(unsigned);
 
   using ComponentFactoryMethodMap = std::map<std::string, ComponentFactoryMethod>;
   using ComponentArrayFactoryMethodMap = std::map<std::string, ComponentArrayFactoryMethod>;
@@ -97,7 +97,7 @@ namespace Barrage
           nullptr.
       */
       /**************************************************************/
-      static ComponentPtr AllocateComponent(const std::string& name, ComponentPtr initializer = nullptr);
+      static GenericComponent AllocateComponent(const std::string& name, GenericComponent initializer = nullptr);
 
       /**************************************************************/
       /*!
@@ -119,7 +119,7 @@ namespace Barrage
           nullptr.
       */
       /**************************************************************/
-      static ComponentArrayPtr AllocateComponentArray(const std::string& name, unsigned capacity);
+      static GenericComponentArray AllocateComponentArray(const std::string& name, unsigned capacity);
 
       /**************************************************************/
       /*!
@@ -178,7 +178,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      static ComponentPtr AllocateComponent(ComponentPtr initializer);
+      static GenericComponent AllocateComponent(GenericComponent initializer);
 
       /**************************************************************/
       /*!
@@ -197,7 +197,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      static ComponentArrayPtr AllocateComponentArray(unsigned capacity);
+      static GenericComponentArray AllocateComponentArray(unsigned capacity);
 
     private:
       static ComponentFactoryMethodMap componentFactoryMethodMap_;           //!< Maps names of shared components to their allocation functions

@@ -15,34 +15,34 @@
 
 namespace Barrage
 {
-  ComponentPtr::ComponentPtr(std::nullptr_t) :
+  GenericComponent::GenericComponent(std::nullptr_t) :
     ptr_(nullptr)
   {
   }
   
-  ComponentPtr::ComponentPtr(std::shared_ptr<Component> ptr) :
+  GenericComponent::GenericComponent(std::shared_ptr<Component> ptr) :
     ptr_(ptr)
   {
   }
 
-  ComponentPtr::ComponentPtr(const ComponentPtr& other) :
+  GenericComponent::GenericComponent(const GenericComponent& other) :
     ptr_(other->Clone())
   {
   }
 
-  ComponentPtr& ComponentPtr::operator=(const ComponentPtr& other)
+  GenericComponent& GenericComponent::operator=(const GenericComponent& other)
   {
     ptr_ = other->Clone();
 
     return *this;
   }
 
-  ComponentPtr::ComponentPtr(ComponentPtr&& other) noexcept :
+  GenericComponent::GenericComponent(GenericComponent&& other) noexcept :
     ptr_(std::move(other.ptr_))
   {
   }
 
-  ComponentPtr& ComponentPtr::operator=(ComponentPtr&& other) noexcept
+  GenericComponent& GenericComponent::operator=(GenericComponent&& other) noexcept
   {
     if (this != &other) // Prevent self-assignment
     {
@@ -52,17 +52,17 @@ namespace Barrage
     return *this;
   }
 
-  Component* ComponentPtr::operator->() const 
+  Component* GenericComponent::operator->() const 
   {
     return ptr_.operator->();
   }
 
-  Component& ComponentPtr::operator*() const 
+  Component& GenericComponent::operator*() const 
   {
     return *ptr_;
   }
 
-  ComponentPtr::operator bool() const noexcept
+  GenericComponent::operator bool() const noexcept
   {
     return static_cast<bool>(ptr_);
   }

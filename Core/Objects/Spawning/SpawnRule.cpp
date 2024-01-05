@@ -24,6 +24,38 @@ namespace Barrage
     return name_;
   }
 
+  void SpawnRule::ExecuteFull(
+    Pool& sourcePool,
+    Pool& destinationPool,
+    Space& space,
+    unsigned startIndex,
+    unsigned numObjects,
+    std::vector<unsigned>& sourceIndices,
+    ComponentArrayT<GroupInfo>& groupInfoArray
+  )
+  {
+    unsigned currentStartIndex = startIndex;
+    
+    for (auto it = sourceIndices.begin(); it != sourceIndices.end(); ++it)
+    {
+      unsigned sourceIndex = *it;
+      GroupInfo& groupInfo = groupInfoArray.Data(sourceIndex);
+      unsigned currentNumObjects = groupInfo.numGroups_ * groupInfo.numObjectsPerGroup_ * groupInfo.numLayerCopies_;
+
+      if (currentNumObjects > numObjects)
+      {
+        currentNumObjects = numObjects;
+      }
+
+      SpawnRuleInfo info(sourcePool, destinationPool, space, currentStartIndex, currentNumObjects, sourceIndex, groupInfo);
+
+      Execute(info);
+
+      numObjects -= currentNumObjects;
+      currentStartIndex += currentNumObjects;
+    }
+  }
+
   rttr::variant SpawnRule::GetRTTRValue()
   {
     return rttr::variant();
@@ -43,34 +75,34 @@ namespace Barrage
     return true;
   }
 
-  SpawnRulePtr::SpawnRulePtr(std::nullptr_t) :
+  GenericSpawnRule::GenericSpawnRule(std::nullptr_t) :
     ptr_(nullptr)
   {
   }
 
-  SpawnRulePtr::SpawnRulePtr(std::shared_ptr<SpawnRule> ptr) :
+  GenericSpawnRule::GenericSpawnRule(std::shared_ptr<SpawnRule> ptr) :
     ptr_(ptr)
   {
   }
 
-  SpawnRulePtr::SpawnRulePtr(const SpawnRulePtr& other) :
+  GenericSpawnRule::GenericSpawnRule(const GenericSpawnRule& other) :
     ptr_(other->Clone())
   {
   }
 
-  SpawnRulePtr& SpawnRulePtr::operator=(const SpawnRulePtr& other)
+  GenericSpawnRule& GenericSpawnRule::operator=(const GenericSpawnRule& other)
   {
     ptr_ = other->Clone();
 
     return *this;
   }
 
-  SpawnRulePtr::SpawnRulePtr(SpawnRulePtr&& other) noexcept :
+  GenericSpawnRule::GenericSpawnRule(GenericSpawnRule&& other) noexcept :
     ptr_(std::move(other.ptr_))
   {
   }
 
-  SpawnRulePtr& SpawnRulePtr::operator=(SpawnRulePtr&& other) noexcept
+  GenericSpawnRule& GenericSpawnRule::operator=(GenericSpawnRule&& other) noexcept
   {
     if (this != &other) // Prevent self-assignment
     {
@@ -80,22 +112,22 @@ namespace Barrage
     return *this;
   }
 
-  SpawnRule* SpawnRulePtr::operator->() const
+  SpawnRule* GenericSpawnRule::operator->() const
   {
     return ptr_.operator->();
   }
 
-  SpawnRule& SpawnRulePtr::operator*() const
+  SpawnRule& GenericSpawnRule::operator*() const
   {
     return *ptr_;
   }
 
-  SpawnRulePtr::operator bool() const noexcept
+  GenericSpawnRule::operator bool() const noexcept
   {
     return static_cast<bool>(ptr_);
   }
 
-  std::shared_ptr<SpawnRule> SpawnRulePtr::Get()
+  std::shared_ptr<SpawnRule> GenericSpawnRule::Get()
   {
     return ptr_;
   }
@@ -106,7 +138,7 @@ namespace Barrage
   {
   }
 
-  void SpawnRuleCollection::AddSpawnRule(SpawnRulePtr spawnRule)
+  void SpawnRuleCollection::AddSpawnRule(GenericSpawnRule spawnRule)
   {
     if (spawnRule->HasArray())
     {
@@ -141,5 +173,30 @@ namespace Barrage
   size_t SpawnRuleCollection::Size()
   {
     return basicRules_.size() + arrayRules_.size();
+  }
+
+  void SpawnRuleCollection::ApplyRules(
+    Pool& sourcePool,
+    Pool& destinationPool,
+    Space& space,
+    unsigned startIndex,
+    unsigned numObjects,
+    std::vector<unsigned>& sourceIndices,
+    ComponentArrayT<GroupInfo>& groupInfoArray
+  )
+  {
+    for (auto it = basicRules_.begin(); it != basicRules_.end(); ++it)
+    {
+      GenericSpawnRule& spawnRule = *it;
+
+      spawnRule->ExecuteFull(sourcePool, destinationPool, space, startIndex, numObjects, sourceIndices, groupInfoArray);
+    }
+
+    for (auto it = arrayRules_.begin(); it != arrayRules_.end(); ++it)
+    {
+      GenericSpawnRule& spawnRule = *it;
+
+      spawnRule->ExecuteFull(sourcePool, destinationPool, space, startIndex, numObjects, sourceIndices, groupInfoArray);
+    }
   }
 }

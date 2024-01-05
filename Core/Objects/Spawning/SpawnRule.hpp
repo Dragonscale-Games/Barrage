@@ -26,11 +26,12 @@ namespace Barrage
 
   struct GroupInfo
   {
-    unsigned numGroups_;
-    unsigned numObjectsPerGroup_;
+    unsigned numObjectsPerGroup_; // all objects in a group have the same value
+    unsigned numGroups_;          // each group has a different value
+    unsigned numLayerCopies_;     // each layer copy should have the same groups and objects
 
-    inline GroupInfo() : numGroups_(0), numObjectsPerGroup_(1) {}
-    inline GroupInfo(unsigned numGroups) : numGroups_(numGroups), numObjectsPerGroup_(1) {}
+    inline GroupInfo() : numObjectsPerGroup_(1), numGroups_(0), numLayerCopies_(1) {}
+    inline GroupInfo(unsigned numGroups) : numObjectsPerGroup_(1), numGroups_(numGroups), numLayerCopies_(1) {}
   };
 
   struct SpawnRuleInfo
@@ -39,26 +40,26 @@ namespace Barrage
     Pool& destinationPool_;
     Space& space_;
     unsigned startIndex_;
-    unsigned numNewObjects_;
-    std::vector<unsigned>& sourceIndices_;
-    ComponentArrayT<GroupInfo>& groupInfoArray_;
+    unsigned numObjects_;
+    unsigned sourceIndex_;
+    GroupInfo& groupInfo_;
 
     inline SpawnRuleInfo(
       Pool& sourcePool, 
       Pool& destinationPool, 
       Space& space, 
       unsigned startIndex, 
-      unsigned numNewObjects, 
-      std::vector<unsigned>& sourceIndices, 
-      ComponentArrayT<GroupInfo>& groupInfoArray
+      unsigned numObjects,
+      unsigned sourceIndex,
+      GroupInfo& groupInfo
     ) : 
       sourcePool_(sourcePool),
       destinationPool_(destinationPool),
       space_(space),
       startIndex_(startIndex),
-      numNewObjects_(numNewObjects),
-      sourceIndices_(sourceIndices),
-      groupInfoArray_(groupInfoArray)
+      numObjects_(numObjects),
+      sourceIndex_(sourceIndex),
+      groupInfo_(groupInfo)
     {
     }
   };
@@ -70,7 +71,7 @@ namespace Barrage
       enum class Stage
       {
         SIZE,
-        VALUES
+        VALUE
       };
       
       /**************************************************************/
@@ -114,15 +115,25 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Executes the spawn function. This is the typical spawn
-          function signature.
+          Executes the spawn rule for all objects from a single 
+          spawner.
 
         \param info
           Contains information about the current spawn (source pool,
           destination pool, number of objects spawned, etc).
       */
       /**************************************************************/
-      virtual void Execute(SpawnRuleInfo info) = 0;
+      virtual void Execute(SpawnRuleInfo& info) = 0;
+
+      void ExecuteFull(
+        Pool& sourcePool,
+        Pool& destinationPool,
+        Space& space,
+        unsigned startIndex,
+        unsigned numObjects,
+        std::vector<unsigned>& sourceIndices,
+        ComponentArrayT<GroupInfo>& groupInfoArray
+      );
 
       /**************************************************************/
       /*!
@@ -376,7 +387,7 @@ namespace Barrage
       ComponentArrayT<A> dataArray_;
   };
 
-  class SpawnRulePtr
+  class GenericSpawnRule
   {
     public:
       /**************************************************************/
@@ -386,22 +397,22 @@ namespace Barrage
 
         \param nullPointer
           Dummy parameter. Allows default parameter conversion like:
-            Foo(ComponentPtr pointer = nullptr)
+            Foo(GenericSpawnRule pointer = nullptr)
       */
       /**************************************************************/
-      SpawnRulePtr(std::nullptr_t nullPointer = nullptr);
+      GenericSpawnRule(std::nullptr_t nullPointer = nullptr);
 
       /**************************************************************/
       /*!
         \brief
-          Constructs this SpawnRulePtr from a shared pointer. The
+          Constructs this GenericSpawnRule from a shared pointer. The
           shared pointer is stored internally (wrapped).
 
         \param ptr
           The shared pointer to wrap.
       */
       /**************************************************************/
-      SpawnRulePtr(std::shared_ptr<SpawnRule> ptr);
+      GenericSpawnRule(std::shared_ptr<SpawnRule> ptr);
 
       /**************************************************************/
       /*!
@@ -412,7 +423,7 @@ namespace Barrage
           The spawn rule pointer to deep copy.
       */
       /**************************************************************/
-      SpawnRulePtr(const SpawnRulePtr& other);
+      GenericSpawnRule(const GenericSpawnRule& other);
 
       /**************************************************************/
       /*!
@@ -424,7 +435,7 @@ namespace Barrage
           The spawn rule pointer to deep copy.
       */
       /**************************************************************/
-      SpawnRulePtr& operator=(const SpawnRulePtr& other);
+      GenericSpawnRule& operator=(const GenericSpawnRule& other);
 
       /**************************************************************/
       /*!
@@ -436,7 +447,7 @@ namespace Barrage
           The spawn rule pointer to move.
       */
       /**************************************************************/
-      SpawnRulePtr(SpawnRulePtr&& other) noexcept;
+      GenericSpawnRule(GenericSpawnRule&& other) noexcept;
 
       /**************************************************************/
       /*!
@@ -448,7 +459,7 @@ namespace Barrage
           The spawn rule pointer to move.
       */
       /**************************************************************/
-      SpawnRulePtr& operator=(SpawnRulePtr&& other) noexcept;
+      GenericSpawnRule& operator=(GenericSpawnRule&& other) noexcept;
 
       /**************************************************************/
       /*!
@@ -495,20 +506,30 @@ namespace Barrage
       std::shared_ptr<SpawnRule> ptr_;
   };
 
-  using SpawnRuleList = std::vector<SpawnRulePtr>;
+  using SpawnRuleList = std::vector<GenericSpawnRule>;
 
   class SpawnRuleCollection
   {
     public:
       SpawnRuleCollection();
       
-      void AddSpawnRule(SpawnRulePtr spawnRule);
+      void AddSpawnRule(GenericSpawnRule spawnRule);
 
       void SetCapacity(unsigned capacity);
 
       void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex);
 
       size_t Size();
+
+      void ApplyRules(
+        Pool& sourcePool,
+        Pool& destinationPool,
+        Space& space,
+        unsigned startIndex,
+        unsigned numObjects,
+        std::vector<unsigned>& sourceIndices, 
+        ComponentArrayT<GroupInfo>& groupInfoArray
+      );
 
     private:
       SpawnRuleList basicRules_;

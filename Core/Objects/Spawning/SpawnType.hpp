@@ -28,7 +28,7 @@ namespace Barrage
 
       void ClearSpawns();
 
-      void CalculateObjectsPerGroup();
+      void FinalizeGroupInfo();
 
       unsigned GetNumberOfObjectsToSpawn();
 

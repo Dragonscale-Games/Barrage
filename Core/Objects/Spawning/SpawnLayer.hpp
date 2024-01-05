@@ -39,6 +39,7 @@ namespace Barrage
       SpawnRuleCollection valueRules_;
 
       friend class SpawnType;
+      friend class Pool;
   };
 }
 

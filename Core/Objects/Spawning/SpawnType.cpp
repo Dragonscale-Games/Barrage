@@ -32,11 +32,11 @@ namespace Barrage
     sourceIndices_.clear();
   }
 
-  void SpawnType::CalculateObjectsPerGroup()
+  void SpawnType::FinalizeGroupInfo()
   {
     size_t numLayers = spawnLayers_.size();
     
-    // start at second layer because base layer always has 1 object per group
+    // start at second layer
     for (size_t i = 1; i < numLayers; ++i)
     {
       SpawnLayer& previousLayer = spawnLayers_[i - 1];
@@ -48,6 +48,7 @@ namespace Barrage
         GroupInfo& previousGroupInfo = previousLayer.groupInfoArray_.Data(sourceIndex);
         GroupInfo& currentGroupInfo = currentLayer.groupInfoArray_.Data(sourceIndex);
 
+        previousGroupInfo.numLayerCopies_ = currentGroupInfo.numGroups_;
         currentGroupInfo.numObjectsPerGroup_ = previousGroupInfo.numGroups_ * previousGroupInfo.numObjectsPerGroup_;
       }
     }

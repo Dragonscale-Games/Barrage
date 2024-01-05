@@ -29,7 +29,7 @@ namespace Barrage
   {
     for (const auto& componentArrayName : archetype.componentArrayNames_)
     {
-      ComponentArrayPtr componentArray = ComponentFactory::AllocateComponentArray(componentArrayName, capacity_);
+      GenericComponentArray componentArray = ComponentFactory::AllocateComponentArray(componentArrayName, capacity_);
 
       // TODO: Log/throw something if these conditions aren't met
       if (componentArray && componentArrays_.count(componentArrayName) == 0)
@@ -56,11 +56,10 @@ namespace Barrage
 
   void Pool::QueueSpawns(Space& space, Pool& sourcePool, SpawnType& spawnType)
   {
-    spawnType.CalculateObjectsPerGroup();
+    spawnType.FinalizeGroupInfo();
     
     unsigned numObjects = spawnType.GetNumberOfObjectsToSpawn();
     unsigned availableSlots = GetAvailableSlots();
-    ObjectArchetype& spawnArchetype = spawnArchetypes_.at(spawnType.spawnArchetypeName_);
     
     if (numObjects > availableSlots)
     {
@@ -69,13 +68,14 @@ namespace Barrage
 
     if (numObjects != 0)
     {
+      ObjectArchetype& spawnArchetype = spawnArchetypes_.at(spawnType.spawnArchetypeName_);
       CreateObjectsUnsafe(spawnArchetype, numObjects);
-      numQueuedObjects_ += numObjects;
     }
     
-    // apply value spawn rules
-    // apply size spawn rules
-
+    ApplyValueSpawnRules(space, sourcePool, spawnType, numObjects);
+    ApplySizeSpawnRules(space, sourcePool, spawnType, numObjects);
+    
+    numQueuedObjects_ += numObjects;
     spawnType.ClearSpawns();
   }
 
@@ -116,13 +116,37 @@ namespace Barrage
     
     for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
     {
-      ComponentArrayPtr destination_array = it->second;
-      const ComponentArrayPtr source_component = archetype.componentArrays_.at(it->first);
+      GenericComponentArray& destination_array = it->second;
+      const GenericComponentArray& source_component = archetype.componentArrays_.at(it->first);
 
       for (unsigned i = 0; i < numObjects; ++i)
       {
         destination_array->CopyToThis(*source_component, 0, startIndex + i);
       }
+    }
+  }
+
+  void Pool::ApplyValueSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType, unsigned numObjects)
+  {
+    unsigned startIndex = GetSpawnIndex();
+    
+    for (auto it = spawnType.spawnLayers_.begin(); it != spawnType.spawnLayers_.end(); ++it)
+    {
+      SpawnLayer& spawnLayer = *it;
+
+      spawnLayer.valueRules_.ApplyRules(sourcePool, *this, space, startIndex, numObjects, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
+    }
+  }
+
+  void Pool::ApplySizeSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType, unsigned numObjects)
+  {
+    unsigned startIndex = GetSpawnIndex();
+
+    for (auto it = spawnType.spawnLayers_.begin(); it != spawnType.spawnLayers_.end(); ++it)
+    {
+      SpawnLayer& spawnLayer = *it;
+
+      spawnLayer.sizeRules_.ApplyRules(sourcePool, *this, space, startIndex, numObjects, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
     }
   }
 }

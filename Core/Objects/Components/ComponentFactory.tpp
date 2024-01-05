@@ -42,7 +42,7 @@ namespace Barrage
   }
 
   template <typename T>
-  ComponentPtr ComponentFactory::AllocateComponent(ComponentPtr initializer)
+  GenericComponent ComponentFactory::AllocateComponent(GenericComponent initializer)
   {
     if (initializer)
     {
@@ -55,9 +55,9 @@ namespace Barrage
   }
 
   template <typename T>
-  ComponentArrayPtr ComponentFactory::AllocateComponentArray(unsigned capacity)
+  GenericComponentArray ComponentFactory::AllocateComponentArray(unsigned capacity)
   {
-    return std::make_shared<ComponentArrayT<T>>(capacity);
+    return GenericComponentArray(std::make_shared<ComponentArrayT<T>>(capacity));
   }
 }
 

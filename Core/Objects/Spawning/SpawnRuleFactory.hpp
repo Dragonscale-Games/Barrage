@@ -20,7 +20,7 @@
 
 namespace Barrage
 {
-  using SpawnRuleFactoryMethod = SpawnRulePtr(*)();
+  using SpawnRuleFactoryMethod = GenericSpawnRule(*)();
   using SpawnRuleFactoryMethodMap = std::map<std::string, SpawnRuleFactoryMethod>;
 
   //! Responsible for allocating new spawn rules
@@ -58,7 +58,7 @@ namespace Barrage
           spawn rule has been registered, otherwise returns nullptr.
       */
       /**************************************************************/
-      static SpawnRulePtr CreateSpawnRule(const std::string& name);
+      static GenericSpawnRule CreateSpawnRule(const std::string& name);
 
       /**************************************************************/
       /*!
@@ -90,7 +90,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      static SpawnRulePtr AllocateSpawnRule();
+      static GenericSpawnRule AllocateSpawnRule();
 
     private:
       static SpawnRuleFactoryMethodMap spawnRuleFactoryMethodMap_; //!< Maps names of spawn rules to their allocation functions

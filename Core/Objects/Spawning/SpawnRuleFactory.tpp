@@ -32,9 +32,9 @@ namespace Barrage
   }
 
   template <typename T>
-  SpawnRulePtr SpawnRuleFactory::AllocateSpawnRule()
+  GenericSpawnRule SpawnRuleFactory::AllocateSpawnRule()
   {
-    return SpawnRulePtr(std::make_shared<T>());
+    return GenericSpawnRule(std::make_shared<T>());
   }
 }
 

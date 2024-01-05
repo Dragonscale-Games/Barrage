@@ -18,34 +18,34 @@
 
 namespace Barrage
 {
-  ComponentArrayPtr::ComponentArrayPtr(std::nullptr_t) :
+  GenericComponentArray::GenericComponentArray(std::nullptr_t) :
     ptr_(nullptr)
   {
   }
 
-  ComponentArrayPtr::ComponentArrayPtr(std::shared_ptr<ComponentArray> ptr) :
+  GenericComponentArray::GenericComponentArray(std::shared_ptr<ComponentArray> ptr) :
     ptr_(ptr)
   {
   }
 
-  ComponentArrayPtr::ComponentArrayPtr(const ComponentArrayPtr& other) :
+  GenericComponentArray::GenericComponentArray(const GenericComponentArray& other) :
     ptr_(other->Clone())
   {
   }
 
-  ComponentArrayPtr& ComponentArrayPtr::operator=(const ComponentArrayPtr& other)
+  GenericComponentArray& GenericComponentArray::operator=(const GenericComponentArray& other)
   {
     ptr_ = other->Clone();
 
     return *this;
   }
 
-  ComponentArrayPtr::ComponentArrayPtr(ComponentArrayPtr&& other) noexcept :
+  GenericComponentArray::GenericComponentArray(GenericComponentArray&& other) noexcept :
     ptr_(std::move(other.ptr_))
   {
   }
 
-  ComponentArrayPtr& ComponentArrayPtr::operator=(ComponentArrayPtr&& other) noexcept
+  GenericComponentArray& GenericComponentArray::operator=(GenericComponentArray&& other) noexcept
   {
     if (this != &other) // Prevent self-assignment
     {
@@ -55,17 +55,17 @@ namespace Barrage
     return *this;
   }
 
-  ComponentArray* ComponentArrayPtr::operator->() const
+  ComponentArray* GenericComponentArray::operator->() const
   {
     return ptr_.operator->();
   }
 
-  ComponentArray& ComponentArrayPtr::operator*() const
+  ComponentArray& GenericComponentArray::operator*() const
   {
     return *ptr_;
   }
 
-  ComponentArrayPtr::operator bool() const noexcept
+  GenericComponentArray::operator bool() const noexcept
   {
     return static_cast<bool>(ptr_);
   }
