@@ -30,9 +30,12 @@ namespace Barrage
       /*!
         \brief
           Default constructor.
+
+        \param space
+          The space the system manager lives in.
       */
       /**************************************************************/
-      SystemManager();
+      SystemManager(Space& space);
 
       /**************************************************************/
       /*!
@@ -99,6 +102,7 @@ namespace Barrage
       void SetUpdateOrder(const std::vector<std::string>& updateOrderList);
 
     private:
+      Space& space_;                             //!< The space the system manager lives in
       SystemMap systems_;                        //!< The collection of registered systems
       std::vector<std::string> updateOrderList_; //!< The order the systems will update in
   };

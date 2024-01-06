@@ -19,4 +19,16 @@ namespace Barrage
     scenes_()
   {
   }
+
+  Scene* SceneManager::GetScene(const std::string& name)
+  {
+    if (scenes_.count(name))
+    {
+      return &scenes_.at(name);
+    }
+    else
+    {
+      return nullptr;
+    }
+  }
 }

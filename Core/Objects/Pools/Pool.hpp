@@ -216,6 +216,8 @@ namespace Barrage
       unsigned capacity_;                  //!< Total number of objects the pool can hold
       std::string name_;                   //!< Name of the pool
   };
+
+  using PoolMap = std::map<std::string, Pool>;
 }
 
 #include "Pool.tpp"

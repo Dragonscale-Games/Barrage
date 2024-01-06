@@ -38,6 +38,8 @@ namespace Barrage
       /**************************************************************/
       PoolArchetype(const std::string& name, unsigned capacity = 1);
 
+      const std::string& GetName() const;
+
     private:
       std::string name_;              //!< Name of the pool this archetype will create
       unsigned capacity_;             //!< The number of objects the pool will be able to hold

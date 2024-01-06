@@ -20,4 +20,19 @@ namespace Barrage
     poolArchetypes_()
   {
   }
+
+  void Scene::SetName(const std::string& name)
+  {
+    name_ = name;
+  }
+
+  const std::string& Scene::GetName()
+  {
+    return name_;
+  }
+
+  const PoolArchetypeMap& Scene::GetPoolArchetypes()
+  {
+    return poolArchetypes_;
+  }
 }

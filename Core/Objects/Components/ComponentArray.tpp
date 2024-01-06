@@ -86,7 +86,7 @@ namespace Barrage
   {
     for (unsigned i = writeIndex + 1; i < endIndex; ++i)
     {
-      if (destructionArray[i].destroyed == false)
+      if (destructionArray[i].destroyed_ == false)
       {
         data_[writeIndex] = data_[i];
         ++writeIndex;

@@ -13,6 +13,7 @@
 */
 /* ======================================================================== */
 
+#include "stdafx.h"
 #include "SpawnLayer.hpp"
 
 namespace Barrage

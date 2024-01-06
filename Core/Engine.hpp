@@ -19,6 +19,8 @@
 #include "Framerate/FramerateController.hpp"
 #include "Input/InputManager.hpp"
 #include "Renderer/Renderer.hpp"
+#include "Scenes/SceneManager.hpp"
+#include "Spaces/SpaceManager.hpp"
 #include "Window/WindowManager.hpp"
 
 #include <memory>
@@ -108,6 +110,28 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the engine's scene manager.
+
+        \return
+          Returns a reference to the engine's scene manager.
+      */
+      /**************************************************************/
+      SceneManager& Scenes();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's space manager.
+
+        \return
+          Returns a reference to the engine's space manager.
+      */
+      /**************************************************************/
+      SpaceManager& Spaces();
+
+      /**************************************************************/
+      /*!
+        \brief
           Gets the engine's window manager.
 
         \return
@@ -148,6 +172,8 @@ namespace Barrage
       FramerateController framerateController_;
       InputManager inputManager_;
       Renderer renderer_;
+      SceneManager sceneManager_;
+      SpaceManager spaceManager_;
       WindowManager windowManager_;
   };
 }

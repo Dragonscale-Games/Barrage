@@ -24,6 +24,8 @@ namespace Barrage
     public:
       SceneManager();
 
+      Scene* GetScene(const std::string& name);
+
     private:
       SceneMap scenes_;
   };

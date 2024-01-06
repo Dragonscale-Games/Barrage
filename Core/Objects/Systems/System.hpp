@@ -29,10 +29,10 @@ namespace Barrage
   typedef std::map<std::string, PoolType, std::less<>> PoolTypeMap;
   typedef std::map<std::string, std::vector<Pool*>, std::less<>> PoolGroupMap;
 
-  using PoolUpdateFunction = void (*)(Pool&);
-  using InteractionFunction = void (*)(Pool&, Pool&);
-  using PoolUpdateMemberFunction = void (System::*)(Pool&);
-  using InteractionMemberFunction = void (System::*)(Pool&, Pool&);
+  using PoolUpdateFunction = void (*)(Space&, Pool&);
+  using InteractionFunction = void (*)(Space&, Pool&, Pool&);
+  using PoolUpdateMemberFunction = void (System::*)(Space&, Pool&);
+  using InteractionMemberFunction = void (System::*)(Space&, Pool&, Pool&);
 
   //! Base object system class that all object systems should inherit from
   class System
@@ -53,6 +53,17 @@ namespace Barrage
       */
       /**************************************************************/
       virtual ~System() = default;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the space the system lives in.
+
+        \param space
+          The space the system lives in.
+      */
+      /**************************************************************/
+      void SetSpace(Space* space);
 
       /**************************************************************/
       /*!
@@ -155,6 +166,7 @@ namespace Barrage
       void UpdateInteraction(const std::string& group1, const std::string& group2, InteractionMemberFunction function);
 
     protected:
+      Space* space_;
       PoolTypeMap poolTypes_;   //!< Holds all pool types the system cares about
       PoolGroupMap poolGroups_; //!< Holds all subscribed pools in a specific order
   };

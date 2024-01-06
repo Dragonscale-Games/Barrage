@@ -20,9 +20,15 @@
 namespace Barrage
 {
   System::System() :
+    space_(nullptr),
     poolTypes_(),
     poolGroups_()
   {
+  }
+
+  void System::SetSpace(Space* space)
+  {
+    space_ = space;
   }
 
   void System::Subscribe(Pool* pool)
@@ -71,7 +77,7 @@ namespace Barrage
 
       for (auto it = pool_group.begin(); it != pool_group.end(); ++it)
       {
-        function(**it);
+        function(*space_, **it);
       }
     }
   }
@@ -82,7 +88,7 @@ namespace Barrage
 
     for (auto it = pool_group.begin(); it != pool_group.end(); ++it)
     {
-      CALL_MEMBER_FN(*this, function)(**it);
+      CALL_MEMBER_FN(*this, function)(*space_, **it);
     }
   }
 
@@ -95,7 +101,7 @@ namespace Barrage
     {
       for (auto jt = pool_group_2.begin(); jt != pool_group_2.end(); ++jt)
       {
-        function(**it, **jt);
+        function(*space_, **it, **jt);
       }
     }
   }
@@ -109,7 +115,7 @@ namespace Barrage
     {
       for (auto jt = pool_group_2.begin(); jt != pool_group_2.end(); ++jt)
       {
-        CALL_MEMBER_FN(*this, function)(**it, **jt);
+        CALL_MEMBER_FN(*this, function)(*space_, **it, **jt);
       }
     }
   }

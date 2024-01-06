@@ -15,7 +15,8 @@
 
 namespace Barrage
 {
-  SystemManager::SystemManager() :
+  SystemManager::SystemManager(Space& space) :
+    space_(space),
     systems_(),
     updateOrderList_()
   {

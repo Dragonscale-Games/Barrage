@@ -10,6 +10,7 @@
 */
 /* ======================================================================== */
 
+#include "stdafx.h"
 #include "SpawnType.hpp"
 
 namespace Barrage

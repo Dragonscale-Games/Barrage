@@ -21,6 +21,8 @@ namespace Barrage
 {
   class Space;
 
+  using DrawCallback = void(*)();
+
   //! Main point of contact for game object manipulation
   class ObjectManager
   {
@@ -50,13 +52,20 @@ namespace Barrage
       /**************************************************************/
       void Draw();
 
+      void CreatePool(const PoolArchetype& archetype);
+
+      void DeleteAllPools();
+
+      void SubscribePools();
+
+      void SetDrawCallback(DrawCallback callback);
+
     private:
-      // pool manager?
+      DrawCallback drawCallback_;
+      PoolMap pools_;
       SystemManager systemManager_;
   };
 }
-
-#include "ObjectManager.tpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif // ObjectManager_BARRAGE_H

@@ -10,7 +10,7 @@
  */
  /* ======================================================================== */
 
- ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #ifndef Scene_BARRAGE_H
 #define Scene_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +25,13 @@ namespace Barrage
     public:
       Scene(const std::string& name);
 
-    public:
+      void SetName(const std::string& name);
+
+      const std::string& GetName();
+
+      const PoolArchetypeMap& GetPoolArchetypes();
+
+    private:
       std::string name_;
       PoolArchetypeMap poolArchetypes_;
   };

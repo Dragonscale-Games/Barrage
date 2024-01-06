@@ -61,6 +61,16 @@ namespace Barrage
     return renderer_;
   }
 
+  SceneManager& Engine::Scenes()
+  {
+    return sceneManager_;
+  }
+
+  SpaceManager& Engine::Spaces()
+  {
+    return spaceManager_;
+  }
+
   WindowManager& Engine::Window()
   {
     return windowManager_;
@@ -71,6 +81,8 @@ namespace Barrage
     framerateController_(),
     inputManager_(),
     renderer_(),
+    sceneManager_(),
+    spaceManager_(),
     windowManager_()
   {
   }
