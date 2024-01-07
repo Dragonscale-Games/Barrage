@@ -13,9 +13,9 @@
 #include "stdafx.h"
 #include "SpawnSystem.hpp"
 #include <Objects/Systems/SystemManager.hpp>
-#include "Components/Spawner.hpp"
-#include "ComponentArrays/SpawnTimerArray.hpp"
-#include "ComponentArrays/VelocityArray.hpp"
+#include "Components/Spawner/Spawner.hpp"
+#include "ComponentArrays/SpawnTimer/SpawnTimerArray.hpp"
+#include "ComponentArrays/Velocity/VelocityArray.hpp"
 #include "Spaces/Space.hpp"
 #include <algorithm>
 #include <glm/glm.hpp>
@@ -98,7 +98,7 @@ namespace Barrage
         }
       }
 
-      Pool& destinationPool = space.GetObjectManager().pools_.at(spawnType.destinationPoolName_);
+      Pool& destinationPool = space.GetObjectManager().pools_.at(spawnType.destinationPool_);
       destinationPool.QueueSpawns(space, pool, spawnType);
     }
   }
@@ -131,16 +131,16 @@ namespace Barrage
       SpawnType& spawnType = it->second;
 
       // make sure spawn type has a valid destination pool
-      if (objectManager.pools_.count(spawnType.destinationPoolName_) == 0)
+      if (objectManager.pools_.count(spawnType.destinationPool_) == 0)
       {
         it = spawnTypes.erase(it);
         continue;
       }
 
-      Pool& destinationPool = objectManager.pools_.at(spawnType.destinationPoolName_);
+      Pool& destinationPool = objectManager.pools_.at(spawnType.destinationPool_);
 
       // make sure spawn type has a valid spawn archetype
-      if (destinationPool.spawnArchetypes_.count(spawnType.spawnArchetypeName_) == 0)
+      if (destinationPool.spawnArchetypes_.count(spawnType.spawnArchetype_) == 0)
       {
         it = spawnTypes.erase(it);
         continue;

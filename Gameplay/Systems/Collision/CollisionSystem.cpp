@@ -13,12 +13,12 @@
 #include "stdafx.h"
 #include "CollisionSystem.hpp"
 
-#include "ComponentArrays/PositionArray.hpp"
-#include "ComponentArrays/DestructibleArray.hpp"
+#include "ComponentArrays/Position/PositionArray.hpp"
+#include "ComponentArrays/Destructible/DestructibleArray.hpp"
 
-#include "Components/BoundaryBox.hpp"
-#include "Components/CircleCollider.hpp"
-#include "Components/Player.hpp"
+#include "Components/BoundaryBox/BoundaryBox.hpp"
+#include "Components/CircleCollider/CircleCollider.hpp"
+#include "Components/Player/Player.hpp"
 
 #include "Spaces/Space.hpp"
 

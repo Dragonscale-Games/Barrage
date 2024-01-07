@@ -14,8 +14,8 @@
 
 #include "stdafx.h"
 #include "DestructionSystem.hpp"
-#include "ComponentArrays/DestructibleArray.hpp"
-#include "Components/Spawner.hpp"
+#include "ComponentArrays/Destructible/DestructibleArray.hpp"
+#include "Components/Spawner/Spawner.hpp"
 
 namespace Barrage
 {

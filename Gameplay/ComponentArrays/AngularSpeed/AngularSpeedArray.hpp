@@ -1,37 +1,39 @@
 /* ======================================================================== */
 /*!
- * \file            CircleCollider.hpp
+ * \file            AngularSpeedArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
-
+   The Angular Speed component keeps track of an object's counterclockwise
+   rotation speed.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef CircleCollider_BARRAGE_H
-#define CircleCollider_BARRAGE_H
+#ifndef AngularSpeedArray_BARRAGE_H
+#define AngularSpeedArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Components/Component.hpp"
+#include "Objects/Components/ComponentArray.hpp"
+#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
-  //! Holds all information needed to draw the objects in a pool
-  class CircleCollider
+  //!< Counterclockwise rotation of an object
+  struct AngularSpeed
   {
-    public:
-      float radius_;
+    Radian w_; //!< Counterclockwise rotation speed in radians per tick
 
-      CircleCollider() : radius_(50.0f) {}
+    AngularSpeed();
+
+    static void Reflect();
   };
 
-  typedef Barrage::ComponentT<CircleCollider> CircleColliderComponent;
+  typedef Barrage::ComponentArrayT<AngularSpeed> AngularSpeedArray;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // CircleCollider_BARRAGE_H
+#endif // AngularSpeedArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -149,46 +149,48 @@ namespace Barrage
   }
 
   SpawnRuleCollection::SpawnRuleCollection() :
-    basicRules_(),
-    arrayRules_()
+    spawnRules_()
   {
   }
 
   void SpawnRuleCollection::AddSpawnRule(GenericSpawnRule spawnRule)
   {
-    if (spawnRule->HasArray())
-    {
-      arrayRules_.push_back(spawnRule);
-    }
-    else
-    {
-      basicRules_.push_back(spawnRule);
-    }
+    spawnRules_.push_back(spawnRule);
   }
 
   void SpawnRuleCollection::SetCapacity(unsigned capacity)
   {
-    for (auto it = arrayRules_.begin(); it != arrayRules_.end(); ++it)
+    for (auto it = spawnRules_.begin(); it != spawnRules_.end(); ++it)
     {
-      std::shared_ptr<SpawnRuleWithArray> spawnRule = std::static_pointer_cast<SpawnRuleWithArray>(it->Get());
-
-      spawnRule->SetCapacity(capacity);
+      GenericSpawnRule& spawnRule = *it;
+    
+      if (spawnRule->HasArray())
+      {
+        std::shared_ptr<SpawnRuleWithArray> spawnRulePtr = std::static_pointer_cast<SpawnRuleWithArray>(spawnRule.Get());
+    
+        spawnRulePtr->SetCapacity(capacity);
+      }
     }
   }
 
   void SpawnRuleCollection::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex)
   {
-    for (auto it = arrayRules_.begin(); it != arrayRules_.end(); ++it)
+    for (auto it = spawnRules_.begin(); it != spawnRules_.end(); ++it)
     {
-      std::shared_ptr<SpawnRuleWithArray> spawnRule = std::static_pointer_cast<SpawnRuleWithArray>(it->Get());
+      GenericSpawnRule& spawnRule = *it;
+      
+      if (spawnRule->HasArray())
+      {
+        std::shared_ptr<SpawnRuleWithArray> spawnRulePtr = std::static_pointer_cast<SpawnRuleWithArray>(spawnRule.Get());
 
-      spawnRule->HandleDestructions(destructionArray, writeIndex, endIndex);
+        spawnRulePtr->HandleDestructions(destructionArray, writeIndex, endIndex);
+      }
     }
   }
 
   size_t SpawnRuleCollection::Size()
   {
-    return basicRules_.size() + arrayRules_.size();
+    return spawnRules_.size();
   }
 
   void SpawnRuleCollection::ApplyRules(
@@ -200,14 +202,7 @@ namespace Barrage
     ComponentArrayT<GroupInfo>& groupInfoArray
   )
   {
-    for (auto it = basicRules_.begin(); it != basicRules_.end(); ++it)
-    {
-      GenericSpawnRule& spawnRule = *it;
-
-      spawnRule->ExecuteFull(sourcePool, destinationPool, space, startIndex, sourceIndices, groupInfoArray);
-    }
-
-    for (auto it = arrayRules_.begin(); it != arrayRules_.end(); ++it)
+    for (auto it = spawnRules_.begin(); it != spawnRules_.end(); ++it)
     {
       GenericSpawnRule& spawnRule = *it;
 

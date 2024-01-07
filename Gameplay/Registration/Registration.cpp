@@ -13,21 +13,21 @@
 #include "Registration/Registrar.hpp"
 #include "Objects/ObjectManager.hpp"
 
-#include "ComponentArrays/AngularSpeedArray.hpp"
-#include "ComponentArrays/ColorTintArray.hpp"
-#include "ComponentArrays/DestructibleArray.hpp"
-#include "ComponentArrays/PositionArray.hpp"
-#include "ComponentArrays/RotationArray.hpp"
-#include "ComponentArrays/ScaleArray.hpp"
-#include "ComponentArrays/SpawnTimerArray.hpp"
-#include "ComponentArrays/TextureUVArray.hpp"
-#include "ComponentArrays/VelocityArray.hpp"
+#include "ComponentArrays/AngularSpeed/AngularSpeedArray.hpp"
+#include "ComponentArrays/ColorTint/ColorTintArray.hpp"
+#include "ComponentArrays/Destructible/DestructibleArray.hpp"
+#include "ComponentArrays/Position/PositionArray.hpp"
+#include "ComponentArrays/Rotation/RotationArray.hpp"
+#include "ComponentArrays/Scale/ScaleArray.hpp"
+#include "ComponentArrays/SpawnTimer/SpawnTimerArray.hpp"
+#include "ComponentArrays/TextureUV/TextureUVArray.hpp"
+#include "ComponentArrays/Velocity/VelocityArray.hpp"
 
-#include "Components/BoundaryBox.hpp"
-#include "Components/CircleCollider.hpp"
-#include "Components/Player.hpp"
-#include "Components/Spawner.hpp"
-#include "Components/Sprite.hpp"
+#include "Components/BoundaryBox/BoundaryBox.hpp"
+#include "Components/CircleCollider/CircleCollider.hpp"
+#include "Components/Player/Player.hpp"
+#include "Components/Spawner/Spawner.hpp"
+#include "Components/Sprite/Sprite.hpp"
 
 #include "SpawnRules/Position/PositionRules.hpp"
 
@@ -52,6 +52,9 @@ namespace Barrage
     RegisterComponentArray<TextureUV>("TextureUV");
     RegisterComponentArray<Velocity>("Velocity");
 
+    RegisterComponent<BoundaryBox>("BoundaryBox");
+    RegisterComponent<CircleCollider>("CircleCollider");
+    RegisterComponent<Player>("Player");
     RegisterComponent<Sprite>("Sprite");
     RegisterComponent<Spawner>("Spawner");
     
@@ -76,6 +79,25 @@ namespace Barrage
     update_order.push_back("CollisionSystem");
 
     SetSystemUpdateOrder(update_order);
+  }
+
+  void Registrar::Reflection()
+  {
+    AngularSpeed::Reflect();
+    ColorTintReflect();
+    DestructibleReflect();
+    PositionReflect();
+    RotationReflect();
+    ScaleReflect();
+    SpawnTimer::Reflect();
+    TextureUVReflect();
+    Velocity::Reflect();
+
+    BoundaryBox::Reflect();
+    CircleCollider::Reflect();
+    Player::Reflect();
+    Spawner::Reflect();
+    Sprite::Reflect();
   }
 
   void ObjectManager::Draw()

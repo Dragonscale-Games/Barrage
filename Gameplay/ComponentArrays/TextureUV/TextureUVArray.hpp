@@ -1,18 +1,18 @@
 /* ======================================================================== */
 /*!
- * \file            PositionArray.hpp
+ * \file            TextureUVArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Position component keeps track of an object's world position.
+   Texture coordinates (UVs).
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef PositionArray_BARRAGE_H
-#define PositionArray_BARRAGE_H
+#ifndef TextureUVArray_BARRAGE_H
+#define TextureUVArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Components/ComponentArray.hpp"
@@ -20,9 +20,11 @@
 
 namespace Barrage
 {
-  typedef ComponentArrayT<Position> PositionArray;
+  typedef Barrage::ComponentArrayT<TextureUV> TextureUVArray;
+
+  void TextureUVReflect();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // PositionArray_BARRAGE_H
+#endif // TextureUVArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

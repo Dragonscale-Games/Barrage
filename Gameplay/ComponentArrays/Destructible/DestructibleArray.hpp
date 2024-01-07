@@ -1,37 +1,30 @@
 /* ======================================================================== */
 /*!
- * \file            AngularSpeedArray.hpp
+ * \file            DestructibleArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Angular Speed component keeps track of an object's counterclockwise
-   rotation speed.
+   The Destructible component keeps track of whether an object is marked
+   for destruction.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef AngularSpeedArray_BARRAGE_H
-#define AngularSpeedArray_BARRAGE_H
+#ifndef DestructibleArray_BARRAGE_H
+#define DestructibleArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Components/ComponentArray.hpp"
-#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
-  //!< Counterclockwise rotation of an object
-  struct AngularSpeed
-  {
-    Radian w_; //!< Counterclockwise rotation speed in radians per tick
+  typedef ComponentArrayT<Destructible> DestructibleArray;
 
-    inline AngularSpeed() : w_(0.0f) {}
-  };
-
-  typedef Barrage::ComponentArrayT<AngularSpeed> AngularSpeedArray;
+  void DestructibleReflect();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // AngularSpeedArray_BARRAGE_H
+#endif // DestructibleArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -39,8 +39,8 @@ namespace Barrage
     public:
       std::vector<unsigned> sourceIndices_;
       std::vector<SpawnLayer> spawnLayers_;
-      std::string destinationPoolName_;
-      std::string spawnArchetypeName_;
+      std::string destinationPool_;
+      std::string spawnArchetype_;
 
       friend class Pool;
   };

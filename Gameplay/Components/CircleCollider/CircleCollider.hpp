@@ -1,29 +1,39 @@
 /* ======================================================================== */
 /*!
- * \file            RotationArray.hpp
+ * \file            CircleCollider.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Rotation component keeps track of the counterclockwise rotation of
-   an object in radians.
+   <put description here> 
+
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef RotationArray_BARRAGE_H
-#define RotationArray_BARRAGE_H
+#ifndef CircleCollider_BARRAGE_H
+#define CircleCollider_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Components/ComponentArray.hpp"
-#include "Renderer/RendererTypes.hpp"
+#include "Objects/Components/Component.hpp"
 
 namespace Barrage
 {
-  typedef ComponentArrayT<Rotation> RotationArray;
+  //! Holds all information needed to draw the objects in a pool
+  class CircleCollider
+  {
+    public:
+      float radius_;
+
+      CircleCollider();
+
+      static void Reflect();
+  };
+
+  typedef Barrage::ComponentT<CircleCollider> CircleColliderComponent;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // RotationArray_BARRAGE_H
+#endif // CircleCollider_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

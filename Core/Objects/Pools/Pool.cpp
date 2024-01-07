@@ -68,15 +68,16 @@ namespace Barrage
 
     if (numObjects != 0)
     {
-      ObjectArchetype& spawnArchetype = spawnArchetypes_.at(spawnType.spawnArchetypeName_);
+      ObjectArchetype& spawnArchetype = spawnArchetypes_.at(spawnType.spawnArchetype_);
       CreateObjectsUnsafe(spawnArchetype, numObjects);
+
+      ApplyValueSpawnRules(space, sourcePool, spawnType);
+      ApplySizeSpawnRules(space, sourcePool, spawnType);
+
+      numQueuedObjects_ += numObjects;
+
+      spawnType.ClearSpawns();
     }
-    
-    ApplyValueSpawnRules(space, sourcePool, spawnType, numObjects);
-    ApplySizeSpawnRules(space, sourcePool, spawnType, numObjects);
-    
-    numQueuedObjects_ += numObjects;
-    spawnType.ClearSpawns();
   }
 
   void Pool::SpawnObjects()
@@ -126,7 +127,7 @@ namespace Barrage
     }
   }
 
-  void Pool::ApplyValueSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType, unsigned numObjects)
+  void Pool::ApplyValueSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType)
   {
     unsigned startIndex = GetSpawnIndex();
     
@@ -138,7 +139,7 @@ namespace Barrage
     }
   }
 
-  void Pool::ApplySizeSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType, unsigned numObjects)
+  void Pool::ApplySizeSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType)
   {
     unsigned startIndex = GetSpawnIndex();
 

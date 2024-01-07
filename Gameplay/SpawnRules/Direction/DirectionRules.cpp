@@ -13,7 +13,7 @@
 #include <stdafx.h>
 #include "DirectionRules.hpp"
 #include "Random/Random.hpp"
-#include "ComponentArrays/VelocityArray.hpp"
+#include "ComponentArrays/Velocity/VelocityArray.hpp"
 #include "Spaces/Space.hpp"
 #include "glm/glm.hpp"
 

@@ -20,6 +20,7 @@
 #include <map>
 #include <unordered_map>
 #include <rttr/variant.h>
+#include <rttr/registration.h>
 
 namespace Barrage
 {

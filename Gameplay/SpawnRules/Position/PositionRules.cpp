@@ -12,7 +12,7 @@
 
 #include <stdafx.h>
 #include "PositionRules.hpp"
-#include "ComponentArrays/PositionArray.hpp"
+#include "ComponentArrays/Position/PositionArray.hpp"
 #include "Random/Random.hpp"
 #include "Objects/Pools/Pool.hpp"
 #include "Spaces/Space.hpp"

@@ -36,11 +36,11 @@ namespace Barrage
     }
   }
 
-  void SpaceManager::AddSpace(const std::string& name, const Space& space)
+  void SpaceManager::AddSpace(const std::string& name)
   {
     if (spaces_.find(name) == spaces_.end())
     {
-      spaces_.emplace(name, space);
+      spaces_[name];
       updateOrder_.push_front(name);
     }
   }

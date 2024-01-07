@@ -18,8 +18,8 @@ namespace Barrage
   SpawnType::SpawnType() :
     sourceIndices_(),
     spawnLayers_(),
-    destinationPoolName_(),
-    spawnArchetypeName_()
+    destinationPool_(),
+    spawnArchetype_()
   {
   }
 
@@ -66,13 +66,11 @@ namespace Barrage
     for (size_t i = 1; i < numLayers; ++i)
     {
       SpawnLayer& previousLayer = spawnLayers_[i - 1];
-      SpawnLayer& currentLayer = spawnLayers_[i];
 
       for (auto it = sourceIndices_.begin(); it != sourceIndices_.end(); ++it)
       {
         unsigned sourceIndex = *it;
         GroupInfo& previousGroupInfo = previousLayer.groupInfoArray_.Data(sourceIndex);
-        GroupInfo& currentGroupInfo = currentLayer.groupInfoArray_.Data(sourceIndex);
         GroupInfo& lastGroupInfo = lastLayer.groupInfoArray_.Data(sourceIndex);
 
         unsigned numObjectsInPreviousLayer = previousGroupInfo.numGroups_ * previousGroupInfo.numObjectsPerGroup_;

@@ -6,8 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
-
+   Information used to texture and draw an object.
  */
 /* ======================================================================== */
 
@@ -27,7 +26,9 @@ namespace Barrage
       std::string texture_; //!< Name of the texture to draw with
       unsigned layer_;      //!< Layer of the drawn object (lower layers are drawn beneath higher ones)
 
-      inline Sprite() : texture_("<default>"), layer_(0) {}
+      Sprite();
+
+      static void Reflect();
   };
 
   typedef ComponentT<Sprite> SpriteComponent;

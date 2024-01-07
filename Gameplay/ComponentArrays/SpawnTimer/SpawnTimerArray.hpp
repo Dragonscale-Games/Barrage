@@ -1,28 +1,37 @@
 /* ======================================================================== */
 /*!
- * \file            ColorTintArray.hpp
+ * \file            SpawnTimerArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Determines the tint of game objects.
+   Keeps track of the number of ticks since a spawn pattern started.
  */
  /* ======================================================================== */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef ColorTintArray_BARRAGE_H
-#define ColorTintArray_BARRAGE_H
+#ifndef SpawnTimerArray_BARRAGE_H
+#define SpawnTimerArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Components/ComponentArray.hpp"
-#include "Renderer/RendererTypes.hpp"
 
 namespace Barrage
 {
-  typedef Barrage::ComponentArrayT<ColorTint> ColorTintArray;
+  //!< Number of ticks since a spawn pattern started
+  struct SpawnTimer
+  {
+    unsigned ticks_;
+
+    SpawnTimer();
+
+    static void Reflect();
+  };
+
+  typedef ComponentArrayT<SpawnTimer> SpawnTimerArray;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ColorTintArray_BARRAGE_H
+#endif // SpawnTimerArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

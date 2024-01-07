@@ -37,6 +37,11 @@ namespace Barrage
       /**************************************************************/
       SystemManager(Space& space);
 
+      SystemManager(const SystemManager&) = delete;
+      SystemManager& operator=(const SystemManager&) = delete;
+      SystemManager(SystemManager&&) = delete;
+      SystemManager& operator=(SystemManager&&) = delete;
+
       /**************************************************************/
       /*!
         \brief

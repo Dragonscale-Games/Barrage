@@ -16,11 +16,11 @@
 #include "Systems/Draw/DrawSystem.hpp"
 #include "Objects/Components/ComponentFactory.hpp"
 #include "Objects/Spawning/SpawnRuleFactory.hpp"
-#include "Components/Sprite.hpp"
-#include "Components/CircleCollider.hpp"
-#include "Components/BoundaryBox.hpp"
-#include "Components/Spawner.hpp"
-#include "ComponentArrays/PositionArray.hpp"
+#include "Components/Sprite/Sprite.hpp"
+#include "Components/CircleCollider/CircleCollider.hpp"
+#include "Components/BoundaryBox/BoundaryBox.hpp"
+#include "Components/Spawner/Spawner.hpp"
+#include "ComponentArrays/Position/PositionArray.hpp"
 #include "SpawnRules/Position/PositionRules.hpp"
 
 #include <iostream>
@@ -57,8 +57,7 @@ namespace Barrage
     
     engine.Initialize();
 
-    engine.Spaces().spaces_["Test Space"];
-    engine.Spaces().updateOrder_.push_back("Test Space");
+    engine.Spaces().AddSpace("Test Space");
     Space& testSpace = *engine.Spaces().GetSpace("Test Space");
 
     PoolArchetype spawnerPoolArchetype("Spawner Pool");
@@ -102,8 +101,8 @@ namespace Barrage
 
     SpawnType spawnType;
 
-    spawnType.destinationPoolName_ = "Bullet Pool";
-    spawnType.spawnArchetypeName_ = "Bullet Object";
+    spawnType.destinationPool_ = "Bullet Pool";
+    spawnType.spawnArchetype_ = "Bullet Object";
     spawnType.spawnLayers_.push_back(spawnLayer0);
     spawnType.spawnLayers_.push_back(spawnLayer1);
 
@@ -111,7 +110,7 @@ namespace Barrage
 
     automaticSpawn.delay_ = 0;
     automaticSpawn.spawnType_ = "Test Spawn Type";
-    automaticSpawn.ticksPerSpawn_ = 0;
+    automaticSpawn.ticksPerSpawn_ = 10;
 
     SpawnPattern pattern;
 
@@ -160,7 +159,11 @@ namespace Barrage
     engine.Input().Reset();
     engine.Window().PollEvents();
 
-    engine.Spaces().Update();
+    unsigned numTicks = engine.Frames().ConsumeTicks();
+    for (unsigned i = 0; i < numTicks; ++i)
+    {
+      engine.Spaces().Update();
+    }
 
     engine.Graphics().GetFramebuffer().BindFramebuffer();
     engine.Graphics().ClearBackground();

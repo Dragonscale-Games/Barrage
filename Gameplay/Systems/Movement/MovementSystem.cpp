@@ -15,12 +15,12 @@
 #include "Engine.hpp"
 #include "Utilities/Utilities.hpp"
 
-#include "Components/Player.hpp"
-#include "ComponentArrays/VelocityArray.hpp"
-#include "Components/BoundaryBox.hpp"
-#include "ComponentArrays/AngularSpeedArray.hpp"
-#include "ComponentArrays/PositionArray.hpp"
-#include "ComponentArrays/RotationArray.hpp"
+#include "Components/Player/Player.hpp"
+#include "ComponentArrays/Velocity/VelocityArray.hpp"
+#include "Components/BoundaryBox/BoundaryBox.hpp"
+#include "ComponentArrays/AngularSpeed/AngularSpeedArray.hpp"
+#include "ComponentArrays/Position/PositionArray.hpp"
+#include "ComponentArrays/Rotation/RotationArray.hpp"
 
 namespace Barrage
 {

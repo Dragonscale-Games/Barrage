@@ -29,6 +29,11 @@ namespace Barrage
     public:
       Space();
 
+      Space(const Space&) = delete;
+      Space& operator=(const Space&) = delete;
+      Space(Space&&) = delete;
+      Space& operator=(Space&&) = delete;
+
       void Update();
 
       void Draw();

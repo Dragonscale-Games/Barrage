@@ -31,7 +31,7 @@
 # =====================================================================================================================
 
 add_library(Gameplay STATIC 
-	"Registration.cpp"
+	"Registration/Registration.cpp"
 
 	"Systems/Collision/CollisionSystem.cpp"
 	"Systems/Creation/CreationSystem.cpp"
@@ -44,6 +44,22 @@ add_library(Gameplay STATIC
 	"SpawnRules/Miscellaneous/MiscellaneousRules.cpp"
 	"SpawnRules/Position/PositionRules.cpp" 
 	"SpawnRules/Speed/SpeedRules.cpp" 
+
+    "ComponentArrays/AngularSpeed/AngularSpeedArray.cpp" 
+	"ComponentArrays/ColorTint/ColorTintArray.cpp" 
+	"ComponentArrays/Destructible/DestructibleArray.cpp" 
+	"ComponentArrays/Position/PositionArray.cpp" 
+	"ComponentArrays/Rotation/RotationArray.cpp" 
+	"ComponentArrays/Scale/ScaleArray.cpp" 
+	"ComponentArrays/SpawnTimer/SpawnTimerArray.cpp" 
+	"ComponentArrays/TextureUV/TextureUVArray.cpp" 
+	"ComponentArrays/Velocity/VelocityArray.cpp" 
+
+	"Components/BoundaryBox/BoundaryBox.cpp" 
+	"Components/CircleCollider/CircleCollider.cpp" 
+	"Components/Player/Player.cpp" 
+	"Components/Spawner/Spawner.cpp" 
+	"Components/Sprite/Sprite.cpp" 
 )
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)

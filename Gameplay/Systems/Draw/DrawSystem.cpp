@@ -15,12 +15,12 @@
 
 #include "Engine.hpp"
 
-#include "Components/Sprite.hpp"
-#include "ComponentArrays/ColorTintArray.hpp"
-#include "ComponentArrays/PositionArray.hpp"
-#include "ComponentArrays/RotationArray.hpp"
-#include "ComponentArrays/ScaleArray.hpp"
-#include "ComponentArrays/TextureUVArray.hpp"
+#include "Components/Sprite/Sprite.hpp"
+#include "ComponentArrays/ColorTint/ColorTintArray.hpp"
+#include "ComponentArrays/Position/PositionArray.hpp"
+#include "ComponentArrays/Rotation/RotationArray.hpp"
+#include "ComponentArrays/Scale/ScaleArray.hpp"
+#include "ComponentArrays/TextureUV/TextureUVArray.hpp"
 
 namespace Barrage
 {

@@ -36,6 +36,11 @@ namespace Barrage
       /**************************************************************/
       ObjectManager(Space& space);
 
+      ObjectManager(const ObjectManager&) = delete;
+      ObjectManager& operator=(const ObjectManager&) = delete;
+      ObjectManager(ObjectManager&&) = delete;
+      ObjectManager& operator=(ObjectManager&&) = delete;
+
       /**************************************************************/
       /*!
         \brief

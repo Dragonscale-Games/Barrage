@@ -1,35 +1,45 @@
 /* ======================================================================== */
 /*!
- * \file            SpawnTimerArray.hpp
+ * \file            Player.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Keeps track of the number of ticks since a spawn pattern started.
+   Basic player component.
  */
  /* ======================================================================== */
 
  ////////////////////////////////////////////////////////////////////////////////
-#ifndef SpawnTimerArray_BARRAGE_H
-#define SpawnTimerArray_BARRAGE_H
+#ifndef Player_BARRAGE_H
+#define Player_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Components/ComponentArray.hpp"
+#include "Objects/Components/Component.hpp"
+
+#include <unordered_map>
+#include <string>
 
 namespace Barrage
 {
-  //!< Number of ticks since a spawn pattern started
-  struct SpawnTimer
+  //! Basic player component
+  class Player
   {
-    unsigned ticks_;
+    public:
+      float speedSlow_;
+      float speedFast_;
+      bool isInvincible_;
 
-    inline SpawnTimer() : ticks_(0) {}
+      bool playerHit_;
+      
+      Player();
+
+      static void Reflect();
   };
 
-  typedef ComponentArrayT<SpawnTimer> SpawnTimerArray;
+  typedef Barrage::ComponentT<Player> PlayerComponent;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // SpawnTimerArray_BARRAGE_H
+#endif // Player_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,28 +1,30 @@
 /* ======================================================================== */
 /*!
- * \file            DestructibleArray.hpp
+ * \file            PositionArray.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The Destructible component keeps track of whether an object is marked
-   for destruction.
+   The Position component keeps track of an object's world position.
  */
 /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef DestructibleArray_BARRAGE_H
-#define DestructibleArray_BARRAGE_H
+#ifndef PositionArray_BARRAGE_H
+#define PositionArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Components/ComponentArray.hpp"
+#include "Renderer/RendererTypes.hpp"
 
 namespace Barrage
 {
-  typedef ComponentArrayT<Destructible> DestructibleArray;
+  typedef ComponentArrayT<Position> PositionArray;
+
+  void PositionReflect();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // DestructibleArray_BARRAGE_H
+#endif // PositionArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

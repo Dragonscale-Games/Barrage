@@ -213,9 +213,9 @@ namespace Barrage
       /**************************************************************/
       void CreateObjectsUnsafe(const ObjectArchetype& archetype, unsigned numObjects);
 
-      void ApplyValueSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType, unsigned numObjects);
+      void ApplyValueSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType);
 
-      void ApplySizeSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType, unsigned numObjects);
+      void ApplySizeSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType);
 
     public:
       ComponentMap components_;            //!< Holds shared components and their names

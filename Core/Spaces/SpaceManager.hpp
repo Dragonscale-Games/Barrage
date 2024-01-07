@@ -25,11 +25,16 @@ namespace Barrage
     public:
       SpaceManager();
 
+      SpaceManager(const SpaceManager&) = delete;
+      SpaceManager& operator=(const SpaceManager&) = delete;
+      SpaceManager(SpaceManager&&) = delete;
+      SpaceManager& operator=(SpaceManager&&) = delete;
+
       void Update();
 
       void Draw();
 
-      void AddSpace(const std::string& name, const Space& space);
+      void AddSpace(const std::string& name);
 
       Space* GetSpace(const std::string& name);
 

@@ -33,6 +33,15 @@ namespace Barrage
       /**************************************************************/
       static void Registration();
 
+      /**************************************************************/
+      /*!
+        \brief
+          Function defined in the (external) Gameplay library that
+          sets up gameplay code for RTTR reflection.
+      */
+      /**************************************************************/
+      static void Reflection();
+
       static std::vector<std::string>& GetSystemUpdateOrder();
 
     private:

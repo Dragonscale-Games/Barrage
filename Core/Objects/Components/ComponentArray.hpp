@@ -22,6 +22,7 @@
 #include <memory>
 #include <map>
 #include <rttr/variant.h>
+#include <rttr/registration.h>
 
 namespace Barrage
 {

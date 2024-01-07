@@ -538,9 +538,8 @@ namespace Barrage
         ComponentArrayT<GroupInfo>& groupInfoArray
       );
 
-    private:
-      SpawnRuleList basicRules_;
-      SpawnRuleList arrayRules_;
+    public:
+      SpawnRuleList spawnRules_;
   };
 }
 

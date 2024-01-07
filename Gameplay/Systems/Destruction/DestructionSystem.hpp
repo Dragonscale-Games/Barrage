@@ -18,7 +18,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Systems/System.hpp"
-#include "ComponentArrays/DestructibleArray.hpp"
+#include "ComponentArrays/Destructible/DestructibleArray.hpp"
 
 namespace Barrage
 {
