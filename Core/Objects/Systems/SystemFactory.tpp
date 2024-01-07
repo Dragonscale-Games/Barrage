@@ -22,7 +22,7 @@ namespace Barrage
   template <typename T>
   void SystemFactory::RegisterSystem(const std::string& name)
   {
-    if (spawnRuleFactoryMethodMap_.count(name) || !std::is_base_of<System, T>::value)
+    if (systemFactoryMethodMap_.count(name) || !std::is_base_of<System, T>::value)
     {
       return;
     }

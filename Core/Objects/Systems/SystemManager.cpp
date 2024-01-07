@@ -12,14 +12,21 @@
 
 #include "stdafx.h"
 #include "SystemManager.hpp"
+#include "Registration/Registrar.hpp"
 
 namespace Barrage
 {
   SystemManager::SystemManager(Space& space) :
     space_(space),
     systems_(),
-    updateOrderList_()
+    updateOrderList_(Registrar::GetSystemUpdateOrder())
   {
+    const StringSet& systemNames = SystemFactory::GetSystemNames();
+
+    for (auto& system : systemNames)
+    {
+      systems_.emplace(system, SystemFactory::CreateSystem(system, space));
+    }
   }
 
   void SystemManager::Subscribe(Pool* pool)
@@ -30,7 +37,7 @@ namespace Barrage
       {
         std::shared_ptr<System> system = it->second;
 
-        system->Subscribe(pool);
+        system->Subscribe(space_, pool);
       }
     }
   }
@@ -41,7 +48,7 @@ namespace Barrage
     {
       std::shared_ptr<System> system = it->second;
 
-      system->Unsubscribe(pool);
+      system->Unsubscribe(space_, pool);
     }
   }
 

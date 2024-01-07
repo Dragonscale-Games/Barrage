@@ -52,6 +52,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Gets the number of objects the pool can hold.
+
+        \return
+          Returns the number of objects the pool can hold.
+      */
+      /**************************************************************/
+      unsigned GetCapacity() const;
+
+      /**************************************************************/
+      /*!
+        \brief
           Get a reference to a given component. Throws an
           out_of_range exception if no component matches the
           input name.
@@ -206,7 +217,7 @@ namespace Barrage
 
       void ApplySizeSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType, unsigned numObjects);
 
-    private:
+    public:
       ComponentMap components_;            //!< Holds shared components and their names
       ComponentArrayMap componentArrays_;  //!< Holds component arrays and their names
       StringSet tags_;                     //!< Holds the pool's tags

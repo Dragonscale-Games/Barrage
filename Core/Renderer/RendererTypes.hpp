@@ -39,7 +39,7 @@ namespace Barrage
     float w_;
     float h_;
 
-    inline Scale() : w_(100.0f), h_(100.0f) {}
+    inline Scale() : w_(10.0f), h_(10.0f) {}
   };
 
   struct ColorTint

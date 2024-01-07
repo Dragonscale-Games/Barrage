@@ -121,6 +121,12 @@ namespace Barrage
 
     data_[index] = value.get_value<T>();
   }
+
+  template <typename T>
+  T* ComponentArrayT<T>::GetRaw()
+  {
+    return data_;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

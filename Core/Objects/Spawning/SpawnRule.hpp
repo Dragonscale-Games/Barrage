@@ -21,8 +21,8 @@
 
 namespace Barrage
 {
-  class Pool;
   class Space;
+  class Pool;
 
   struct GroupInfo
   {
@@ -40,7 +40,6 @@ namespace Barrage
     Pool& destinationPool_;
     Space& space_;
     unsigned startIndex_;
-    unsigned numObjects_;
     unsigned sourceIndex_;
     GroupInfo& groupInfo_;
 
@@ -49,7 +48,6 @@ namespace Barrage
       Pool& destinationPool, 
       Space& space, 
       unsigned startIndex, 
-      unsigned numObjects,
       unsigned sourceIndex,
       GroupInfo& groupInfo
     ) : 
@@ -57,23 +55,22 @@ namespace Barrage
       destinationPool_(destinationPool),
       space_(space),
       startIndex_(startIndex),
-      numObjects_(numObjects),
       sourceIndex_(sourceIndex),
       groupInfo_(groupInfo)
     {
     }
   };
 
+  enum class SpawnRuleStage
+  {
+    SIZE_RULE,
+    VALUE_RULE
+  };
+
   //! Base class that all spawn rules should inherit from
   class SpawnRule
   {
     public:
-      enum class Stage
-      {
-        SIZE,
-        VALUE
-      };
-      
       /**************************************************************/
       /*!
         \brief
@@ -123,14 +120,13 @@ namespace Barrage
           destination pool, number of objects spawned, etc).
       */
       /**************************************************************/
-      virtual void Execute(SpawnRuleInfo& info) = 0;
+      virtual void Execute(SpawnRuleInfo& info);
 
       void ExecuteFull(
         Pool& sourcePool,
         Pool& destinationPool,
         Space& space,
         unsigned startIndex,
-        unsigned numObjects,
         std::vector<unsigned>& sourceIndices,
         ComponentArrayT<GroupInfo>& groupInfoArray
       );
@@ -169,19 +165,44 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      virtual bool HasArray() = 0;
+      virtual bool HasArray();
 
+    protected:
       /**************************************************************/
       /*!
         \brief
-          Gets the stage in the spawn pipeline that the rule acts in.
+          Helper function for calculating the index of the object
+          being modified.
+
+        \param groupInfo
+          Information about the spawn layer's group and layer copy
+          sizes.
+
+        \param startIndex
+          The index of the first object produced by the spawner.
+
+        \param objectNumber
+          In a group, the number of the current object (starting at
+          zero).
+
+        \param groupNumber
+          In a layer copy, the number of the current group (starting
+          at zero).
+
+        \param layerCopyNumber
+          The number of the current layer copy.
 
         \return
-          Returns the stage of the spawn rule.
+          Returns the index of the object to modify.
       */
       /**************************************************************/
-      virtual Stage GetStage() = 0;
-
+      static unsigned CalculateDestinationIndex(
+        SpawnRuleInfo& info,
+        unsigned objectNumber,
+        unsigned groupNumber,
+        unsigned layerCopyNumber
+      );
+    
     private:
       std::string name_;
   };
@@ -229,19 +250,6 @@ namespace Barrage
       */
       /**************************************************************/
       void SetRTTRValue(const rttr::variant& value) override;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Checks whether the spawn rule has a component array that
-          needs to be updated when objects are destroyed.
-
-        \return
-          Returns true if the spawn rule has an array, returns false
-          otherwise.
-      */
-      /**************************************************************/
-      bool HasArray() override;
 
     protected:
       T data_;
@@ -526,7 +534,6 @@ namespace Barrage
         Pool& destinationPool,
         Space& space,
         unsigned startIndex,
-        unsigned numObjects,
         std::vector<unsigned>& sourceIndices, 
         ComponentArrayT<GroupInfo>& groupInfoArray
       );

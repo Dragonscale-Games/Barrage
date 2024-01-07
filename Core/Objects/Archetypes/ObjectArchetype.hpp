@@ -15,8 +15,8 @@
 #define ObjectArchetype_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Objects/Components/ComponentArray.hpp>
-#include <set>
+#include "Objects/Components/ComponentArray.hpp"
+#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
@@ -30,9 +30,9 @@ namespace Barrage
           Initializes the archetype with an empty map of components.
       */
       /**************************************************************/
-      ObjectArchetype(const std::string& name, const std::vector<std::string>& componentArrayNames = std::vector<std::string>());
+      ObjectArchetype(const std::string& name, const StringSet& componentArrayNames = StringSet());
 
-    private:
+    public:
       std::string name_;                  //!< Name of the object archetype
       ComponentArrayMap componentArrays_; //!< A map of initialized components to copy (each array in this map has only one component)
 

@@ -31,7 +31,7 @@ namespace Barrage
 
       const PoolArchetypeMap& GetPoolArchetypes();
 
-    private:
+    public:
       std::string name_;
       PoolArchetypeMap poolArchetypes_;
   };

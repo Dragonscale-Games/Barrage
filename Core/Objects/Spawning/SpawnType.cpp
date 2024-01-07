@@ -36,6 +36,13 @@ namespace Barrage
   void SpawnType::FinalizeGroupInfo()
   {
     size_t numLayers = spawnLayers_.size();
+
+    if (numLayers == 0)
+    {
+      return;
+    }
+
+    SpawnLayer& lastLayer = spawnLayers_.back();
     
     // start at second layer
     for (size_t i = 1; i < numLayers; ++i)
@@ -49,15 +56,36 @@ namespace Barrage
         GroupInfo& previousGroupInfo = previousLayer.groupInfoArray_.Data(sourceIndex);
         GroupInfo& currentGroupInfo = currentLayer.groupInfoArray_.Data(sourceIndex);
 
-        previousGroupInfo.numLayerCopies_ = currentGroupInfo.numGroups_;
-        currentGroupInfo.numObjectsPerGroup_ = previousGroupInfo.numGroups_ * previousGroupInfo.numObjectsPerGroup_;
+        unsigned numObjectsInPreviousLayer = previousGroupInfo.numGroups_ * previousGroupInfo.numObjectsPerGroup_;
+
+        currentGroupInfo.numObjectsPerGroup_ = numObjectsInPreviousLayer;
+      }
+    }
+
+    // start at second layer
+    for (size_t i = 1; i < numLayers; ++i)
+    {
+      SpawnLayer& previousLayer = spawnLayers_[i - 1];
+      SpawnLayer& currentLayer = spawnLayers_[i];
+
+      for (auto it = sourceIndices_.begin(); it != sourceIndices_.end(); ++it)
+      {
+        unsigned sourceIndex = *it;
+        GroupInfo& previousGroupInfo = previousLayer.groupInfoArray_.Data(sourceIndex);
+        GroupInfo& currentGroupInfo = currentLayer.groupInfoArray_.Data(sourceIndex);
+        GroupInfo& lastGroupInfo = lastLayer.groupInfoArray_.Data(sourceIndex);
+
+        unsigned numObjectsInPreviousLayer = previousGroupInfo.numGroups_ * previousGroupInfo.numObjectsPerGroup_;
+        unsigned totalObjectsInSpawn = lastGroupInfo.numGroups_ * lastGroupInfo.numObjectsPerGroup_;
+
+        previousGroupInfo.numLayerCopies_ = totalObjectsInSpawn / numObjectsInPreviousLayer;
       }
     }
   }
 
-  unsigned SpawnType::GetNumberOfObjectsToSpawn()
+  unsigned SpawnType::CalculateSpawnSize(unsigned maxSpawns)
   {
-    unsigned numObjects = 0;
+    unsigned totalSpawns = 0;
     
     if (!spawnLayers_.empty())
     {
@@ -67,11 +95,40 @@ namespace Barrage
       {
         unsigned sourceIndex = *it;
         GroupInfo& groupInfo = lastLayer.groupInfoArray_.Data(sourceIndex);
-        
-        numObjects += groupInfo.numGroups_ * groupInfo.numObjectsPerGroup_;
+        unsigned numSpawnsFromSource = groupInfo.numGroups_ * groupInfo.numObjectsPerGroup_;
+
+        if (totalSpawns + numSpawnsFromSource <= maxSpawns)
+        {
+          totalSpawns += numSpawnsFromSource;
+        }
+        else
+        {
+          sourceIndices_.erase(it, sourceIndices_.end());
+          break;
+        }
       }
     }
 
-    return numObjects;
+    return totalSpawns;
+  }
+
+  void SpawnType::SetCapacity(unsigned capacity)
+  {
+    for (auto it = spawnLayers_.begin(); it != spawnLayers_.end(); ++it)
+    {
+      SpawnLayer& spawnLayer = *it;
+
+      spawnLayer.SetCapacity(capacity);
+    }
+  }
+
+  void SpawnType::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex)
+  {
+    for (auto it = spawnLayers_.begin(); it != spawnLayers_.end(); ++it)
+    {
+      SpawnLayer& spawnLayer = *it;
+
+      spawnLayer.HandleDestructions(destructionArray, writeIndex, endIndex);
+    }
   }
 }

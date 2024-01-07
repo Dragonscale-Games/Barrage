@@ -12,6 +12,7 @@
 
 #include "stdafx.h"
 #include "Engine.hpp"
+#include "Registration/Registrar.hpp"
 
 namespace Barrage
 {
@@ -23,6 +24,7 @@ namespace Barrage
 
   void Engine::Initialize()
   {
+    Registrar::Registration();
     windowManager_.Initialize();
     inputManager_.Initialize(windowManager_.GetWindowHandle());
     renderer_.Initialize(WindowManager::DEFAULT_WIDTH, WindowManager::DEFAULT_HEIGHT);

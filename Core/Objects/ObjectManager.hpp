@@ -17,11 +17,11 @@
 
 #include "Systems/SystemManager.hpp"
 
+#include <functional>
+
 namespace Barrage
 {
   class Space;
-
-  using DrawCallback = void(*)();
 
   //! Main point of contact for game object manipulation
   class ObjectManager
@@ -58,10 +58,7 @@ namespace Barrage
 
       void SubscribePools();
 
-      void SetDrawCallback(DrawCallback callback);
-
-    private:
-      DrawCallback drawCallback_;
+    public:
       PoolMap pools_;
       SystemManager systemManager_;
   };

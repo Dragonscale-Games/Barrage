@@ -47,21 +47,9 @@ namespace Barrage
     data_ = value.get_value<T>();
   }
 
-  template <typename T>
-  bool SpawnRuleT<T>::HasArray()
-  {
-    return false;
-  }
-
   template <typename T, typename A>
   SpawnRuleTA<T, A>::SpawnRuleTA(const std::string& name) : SpawnRuleWithArray(name), data_(), dataArray_()
   {
-  }
-
-  template <typename T, typename A>
-  std::shared_ptr<SpawnRule> SpawnRuleTA<T, A>::Clone() const
-  {
-    return std::make_shared<SpawnRuleTA<T, A>>(*this);
   }
 
   template <typename T, typename A>

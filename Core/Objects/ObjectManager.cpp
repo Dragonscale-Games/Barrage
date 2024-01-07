@@ -17,7 +17,6 @@
 namespace Barrage
 {
   ObjectManager::ObjectManager(Space& space) :
-    drawCallback_(nullptr),
     pools_(),
     systemManager_(space)
   {
@@ -26,14 +25,6 @@ namespace Barrage
   void ObjectManager::Update()
   {
     systemManager_.Update();
-  }
-
-  void ObjectManager::Draw()
-  {
-    if (drawCallback_)
-    {
-      drawCallback_();
-    }
   }
 
   void ObjectManager::SubscribePools()
@@ -59,10 +50,5 @@ namespace Barrage
     }
 
     pools_.clear();
-  }
-
-  void ObjectManager::SetDrawCallback(DrawCallback callback)
-  {
-    drawCallback_ = callback;
   }
 }

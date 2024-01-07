@@ -16,7 +16,7 @@
 
 namespace Barrage
 {
-  ObjectArchetype::ObjectArchetype(const std::string& name, const std::vector<std::string>& componentArrayNames) :
+  ObjectArchetype::ObjectArchetype(const std::string& name, const StringSet& componentArrayNames) :
     name_(name),
     componentArrays_()
   {

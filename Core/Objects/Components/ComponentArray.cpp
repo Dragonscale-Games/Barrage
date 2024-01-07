@@ -29,13 +29,13 @@ namespace Barrage
   }
 
   GenericComponentArray::GenericComponentArray(const GenericComponentArray& other) :
-    ptr_(other->Clone())
+    ptr_(other ? other->Clone() : nullptr)
   {
   }
 
   GenericComponentArray& GenericComponentArray::operator=(const GenericComponentArray& other)
   {
-    ptr_ = other->Clone();
+    ptr_ = other ? other->Clone() : nullptr;
 
     return *this;
   }

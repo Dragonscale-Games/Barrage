@@ -29,7 +29,6 @@ namespace Barrage
     Pool& destinationPool,
     Space& space,
     unsigned startIndex,
-    unsigned numObjects,
     std::vector<unsigned>& sourceIndices,
     ComponentArrayT<GroupInfo>& groupInfoArray
   )
@@ -42,16 +41,10 @@ namespace Barrage
       GroupInfo& groupInfo = groupInfoArray.Data(sourceIndex);
       unsigned currentNumObjects = groupInfo.numGroups_ * groupInfo.numObjectsPerGroup_ * groupInfo.numLayerCopies_;
 
-      if (currentNumObjects > numObjects)
-      {
-        currentNumObjects = numObjects;
-      }
-
-      SpawnRuleInfo info(sourcePool, destinationPool, space, currentStartIndex, currentNumObjects, sourceIndex, groupInfo);
+      SpawnRuleInfo info(sourcePool, destinationPool, space, currentStartIndex, sourceIndex, groupInfo);
 
       Execute(info);
 
-      numObjects -= currentNumObjects;
       currentStartIndex += currentNumObjects;
     }
   }
@@ -64,6 +57,29 @@ namespace Barrage
   void SpawnRule::SetRTTRValue(const rttr::variant& value)
   {
     UNREFERENCED(value);
+  }
+
+  bool SpawnRule::HasArray()
+  {
+    return false;
+  }
+
+  void SpawnRule::Execute(SpawnRuleInfo& info)
+  {
+    UNREFERENCED(info);
+  }
+
+  unsigned SpawnRule::CalculateDestinationIndex(
+    SpawnRuleInfo& info, 
+    unsigned objectNumber, 
+    unsigned groupNumber, 
+    unsigned layerCopyNumber)
+  {
+    unsigned numObjectsPerLayerCopy = info.groupInfo_.numGroups_ * info.groupInfo_.numObjectsPerGroup_;
+    unsigned layerOffset = layerCopyNumber * numObjectsPerLayerCopy;
+    unsigned groupOffset = groupNumber * info.groupInfo_.numObjectsPerGroup_;
+
+    return info.startIndex_ + layerOffset + groupOffset + objectNumber;
   }
 
   SpawnRuleWithArray::SpawnRuleWithArray(const std::string& name) : SpawnRule(name)
@@ -86,13 +102,13 @@ namespace Barrage
   }
 
   GenericSpawnRule::GenericSpawnRule(const GenericSpawnRule& other) :
-    ptr_(other->Clone())
+    ptr_(other ? other->Clone() : nullptr)
   {
   }
 
   GenericSpawnRule& GenericSpawnRule::operator=(const GenericSpawnRule& other)
   {
-    ptr_ = other->Clone();
+    ptr_ = other ? other->Clone() : nullptr;
 
     return *this;
   }
@@ -180,7 +196,6 @@ namespace Barrage
     Pool& destinationPool,
     Space& space,
     unsigned startIndex,
-    unsigned numObjects,
     std::vector<unsigned>& sourceIndices,
     ComponentArrayT<GroupInfo>& groupInfoArray
   )
@@ -189,14 +204,14 @@ namespace Barrage
     {
       GenericSpawnRule& spawnRule = *it;
 
-      spawnRule->ExecuteFull(sourcePool, destinationPool, space, startIndex, numObjects, sourceIndices, groupInfoArray);
+      spawnRule->ExecuteFull(sourcePool, destinationPool, space, startIndex, sourceIndices, groupInfoArray);
     }
 
     for (auto it = arrayRules_.begin(); it != arrayRules_.end(); ++it)
     {
       GenericSpawnRule& spawnRule = *it;
 
-      spawnRule->ExecuteFull(sourcePool, destinationPool, space, startIndex, numObjects, sourceIndices, groupInfoArray);
+      spawnRule->ExecuteFull(sourcePool, destinationPool, space, startIndex, sourceIndices, groupInfoArray);
     }
   }
 }

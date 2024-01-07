@@ -14,6 +14,7 @@
 #include "stdafx.h"
 #include "Pool.hpp"
 #include "Objects/Components/ComponentFactory.hpp"
+#include "Objects/Spawning/SpawnType.hpp"
 
 namespace Barrage
 {
@@ -54,17 +55,16 @@ namespace Barrage
     return numActiveObjects_;
   }
 
+  unsigned Pool::GetCapacity() const
+  {
+    return capacity_;
+  }
+
   void Pool::QueueSpawns(Space& space, Pool& sourcePool, SpawnType& spawnType)
   {
     spawnType.FinalizeGroupInfo();
     
-    unsigned numObjects = spawnType.GetNumberOfObjectsToSpawn();
-    unsigned availableSlots = GetAvailableSlots();
-    
-    if (numObjects > availableSlots)
-    {
-      numObjects = availableSlots;
-    }
+    unsigned numObjects = spawnType.CalculateSpawnSize(GetAvailableSlots());
 
     if (numObjects != 0)
     {
@@ -134,7 +134,7 @@ namespace Barrage
     {
       SpawnLayer& spawnLayer = *it;
 
-      spawnLayer.valueRules_.ApplyRules(sourcePool, *this, space, startIndex, numObjects, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
+      spawnLayer.valueRules_.ApplyRules(sourcePool, *this, space, startIndex, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
     }
   }
 
@@ -146,7 +146,7 @@ namespace Barrage
     {
       SpawnLayer& spawnLayer = *it;
 
-      spawnLayer.sizeRules_.ApplyRules(sourcePool, *this, space, startIndex, numObjects, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
+      spawnLayer.sizeRules_.ApplyRules(sourcePool, *this, space, startIndex, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
     }
   }
 }

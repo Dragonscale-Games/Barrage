@@ -21,7 +21,6 @@
 #include <string>
 #include <memory>
 #include <map>
-#include <unordered_map>
 #include <rttr/variant.h>
 
 namespace Barrage
@@ -280,6 +279,17 @@ namespace Barrage
       */
       /**************************************************************/
       void SetRTTRValue(const rttr::variant& value, int index) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the raw array that this type wraps.
+
+        \return
+          Returns a pointer to this type's raw array.
+      */
+      /**************************************************************/
+      T* GetRaw();
 
     private:
       T* data_;

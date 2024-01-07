@@ -77,7 +77,7 @@ namespace Barrage
           in.
       */
       /**************************************************************/
-      virtual void Subscribe(Pool* pool);
+      virtual void Subscribe(Space& space, Pool* pool);
 
       /**************************************************************/
       /*!
@@ -86,7 +86,7 @@ namespace Barrage
           and, if so, unsubscribes it from the system.
       */
       /**************************************************************/
-      virtual void Unsubscribe(Pool* pool);
+      virtual void Unsubscribe(Space& space, Pool* pool);
 
       /**************************************************************/
       /*!

@@ -30,9 +30,13 @@ namespace Barrage
 
       void FinalizeGroupInfo();
 
-      unsigned GetNumberOfObjectsToSpawn();
+      unsigned CalculateSpawnSize(unsigned maxSpawns);
 
-    private:
+      void SetCapacity(unsigned capacity);
+
+      void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex);
+
+    public:
       std::vector<unsigned> sourceIndices_;
       std::vector<SpawnLayer> spawnLayers_;
       std::string destinationPoolName_;
@@ -40,6 +44,8 @@ namespace Barrage
 
       friend class Pool;
   };
+
+  using SpawnTypeMap = std::map<std::string, SpawnType>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

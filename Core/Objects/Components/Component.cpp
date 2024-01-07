@@ -26,13 +26,13 @@ namespace Barrage
   }
 
   GenericComponent::GenericComponent(const GenericComponent& other) :
-    ptr_(other->Clone())
+    ptr_(other ? other->Clone() : nullptr)
   {
   }
 
   GenericComponent& GenericComponent::operator=(const GenericComponent& other)
   {
-    ptr_ = other->Clone();
+    ptr_ = other ? other->Clone() : nullptr;
 
     return *this;
   }

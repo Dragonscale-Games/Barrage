@@ -31,8 +31,10 @@ namespace Barrage
     space_ = space;
   }
 
-  void System::Subscribe(Pool* pool)
+  void System::Subscribe(Space& space, Pool* pool)
   {
+    UNREFERENCED(space);
+    
     for (auto it = poolTypes_.begin(); it != poolTypes_.end(); ++it)
     {
       PoolType& pool_type = it->second;
@@ -44,8 +46,10 @@ namespace Barrage
     }
   }
 
-  void System::Unsubscribe(Pool* pool)
+  void System::Unsubscribe(Space& space, Pool* pool)
   {
+    UNREFERENCED(space);
+    
     for (auto it = poolGroups_.begin(); it != poolGroups_.end(); ++it)
     {
       std::vector<Pool*>& pool_group = it->second;

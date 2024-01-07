@@ -35,7 +35,7 @@ namespace Barrage
 
       void SetSpacePaused(const std::string& name, bool isPaused);
 
-    private:
+    public:
       SpaceMap spaces_;
       std::list<std::string> updateOrder_;
   };

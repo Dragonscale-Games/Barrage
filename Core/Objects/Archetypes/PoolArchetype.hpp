@@ -40,7 +40,7 @@ namespace Barrage
 
       const std::string& GetName() const;
 
-    private:
+    public:
       std::string name_;              //!< Name of the pool this archetype will create
       unsigned capacity_;             //!< The number of objects the pool will be able to hold
       ComponentMap components_;       //!< Initialized components to copy to the pool

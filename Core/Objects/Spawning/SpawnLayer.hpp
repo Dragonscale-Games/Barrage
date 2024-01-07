@@ -32,7 +32,7 @@ namespace Barrage
 
       void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex);
 
-    private:
+    public:
       unsigned baseNumGroups_;
       ComponentArrayT<GroupInfo> groupInfoArray_;
       SpawnRuleCollection sizeRules_;
