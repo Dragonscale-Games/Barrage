@@ -12,10 +12,19 @@
 
 #include "stdafx.h"
 #include "Game.hpp"
+#include "Registration/Registrar.hpp"
+
+#include <string>
+#include <rttr/registration.h>
 
 #include <memory>
 
 using namespace Barrage;
+
+RTTR_REGISTRATION
+{
+  Registrar::Reflection();
+}
 
 int main()
 {

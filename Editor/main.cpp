@@ -10,11 +10,23 @@
  */
  /* ======================================================================== */
 
-#include <iostream>
+#include "stdafx.h"
+#include "Registration/Registrar.hpp"
+#include "Editor.hpp"
+
+#include <string>
+#include <rttr/registration.h>
+
+using namespace Barrage;
+
+RTTR_REGISTRATION
+{
+  Registrar::Reflection();
+}
 
 int main(int argc, char* argv[])
 {
-
+  Editor::Get().Run();
 
   return 0;
 }

@@ -30,7 +30,7 @@
 # Date:         5/5/2022
 # =====================================================================================================================
 
-add_executable(Editor "main.cpp" "Editor.cpp")
+add_executable(Editor "main.cpp" "Editor.cpp" "GUI/GUI.cpp" )
 
 target_link_libraries(Editor PUBLIC BarrageCore Gameplay imgui nativefiledialog)
 add_dependencies(Editor Game)
