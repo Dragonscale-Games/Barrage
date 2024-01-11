@@ -24,6 +24,14 @@ namespace Barrage
   class Editor
   {
     public:
+      /**************************************************************/
+      /*!
+        \brief
+          Private constructor for singleton class.
+      */
+      /**************************************************************/
+      Editor();
+      
       Editor(Editor const&) = delete;
       Editor(Editor&&) = delete;
       Editor& operator=(Editor const&) = delete;
@@ -63,18 +71,14 @@ namespace Barrage
       /**************************************************************/
       GUI& Gui();
 
-    private:
-      Engine& engine_;            //!< Barrage game engine
-      GUI gui_;                   //!< Contains all widgets/user controls
       bool isRunning_;
 
-      /**************************************************************/
-      /*!
-        \brief
-          Private constructor for singleton class.
-      */
-      /**************************************************************/
-      Editor();
+    private:
+      Engine engine_;            //!< Barrage game engine
+      GUI gui_;                  //!< Contains all widgets/user controls
+      
+
+      static Editor* instance_;
 
       /**************************************************************/
       /*!

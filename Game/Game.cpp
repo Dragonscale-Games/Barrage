@@ -28,6 +28,7 @@
 namespace Barrage
 {
   Game::Game() :
+    engine_(),
     isRunning_(false)
   {
   }
@@ -53,12 +54,10 @@ namespace Barrage
 
   void Game::Initialize()
   {
-    Engine& engine = Engine::Get();
-    
-    engine.Initialize();
+    engine_.Initialize();
 
-    engine.Spaces().AddSpace("Test Space");
-    Space& testSpace = *engine.Spaces().GetSpace("Test Space");
+    engine_.Spaces().AddSpace("Test Space");
+    Space& testSpace = *engine_.Spaces().GetSpace("Test Space");
 
     PoolArchetype spawnerPoolArchetype("Spawner Pool");
 
@@ -146,42 +145,40 @@ namespace Barrage
     testScene.poolArchetypes_.emplace("Bullet Pool", bulletPoolArchetype);
     testScene.poolArchetypes_.emplace("Spawner Pool", spawnerPoolArchetype);
 
-    engine.Scenes().scenes_.emplace("Test Scene", testScene);
+    engine_.Scenes().scenes_.emplace("Test Scene", testScene);
     testSpace.SetScene("Test Scene");
   }
 
   void Game::Update()
   {
-    Engine& engine = Engine::Get();
+    engine_.Frames().StartFrame();
     
-    engine.Frames().StartFrame();
-    
-    engine.Input().Reset();
-    engine.Window().PollEvents();
+    engine_.Input().Reset();
+    engine_.Window().PollEvents();
 
-    unsigned numTicks = engine.Frames().ConsumeTicks();
+    unsigned numTicks = engine_.Frames().ConsumeTicks();
     for (unsigned i = 0; i < numTicks; ++i)
     {
-      engine.Spaces().Update();
+      engine_.Spaces().Update();
     }
 
-    engine.Graphics().GetFramebuffer().BindFramebuffer();
-    engine.Graphics().ClearBackground();
-    engine.Spaces().Draw();
-    engine.Graphics().GetFramebuffer().UnbindFramebuffer();
-    engine.Graphics().DrawFsq();
-    engine.Window().SwapBuffers();
+    engine_.Graphics().GetFramebuffer().BindFramebuffer();
+    engine_.Graphics().ClearBackground();
+    engine_.Spaces().Draw();
+    engine_.Graphics().GetFramebuffer().UnbindFramebuffer();
+    engine_.Graphics().DrawFsq();
+    engine_.Window().SwapBuffers();
 
-    if (engine.Window().IsClosed())
+    if (engine_.Window().IsClosed())
     {
       isRunning_ = false;
     }
 
-    engine.Frames().EndFrame(!engine.Window().IsFocused());
+    engine_.Frames().EndFrame(!engine_.Window().IsFocused());
   }
 
   void Game::Shutdown()
   {
-    Engine::Get().Shutdown();
+    engine_.Shutdown();
   }
 }

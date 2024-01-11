@@ -30,13 +30,28 @@
 # Date:         5/5/2022
 # =====================================================================================================================
 
-add_executable(Editor "main.cpp" "Editor.cpp" "GUI/GUI.cpp" )
+add_executable(Editor 
+"main.cpp" 
+"Editor.cpp" 
+"GUI/GUI.cpp" 
+
+"Commands/Command.cpp" 
+ 
+
+"Widgets/Windows/Hierarchy/HierarchyWidget.cpp"
+"Widgets/Windows/Inspector/InspectorWidget.cpp"
+"Widgets/Windows/Log/LogWidget.cpp"  
+"Widgets/Windows/Game/GameWidget.cpp"  
+"Widgets/Windows/Timeline/TimelineWidget.cpp" 
+"Widgets/Windows/Performance/PerformanceWidget.cpp"
+
+"Widgets/MainMenu/MainMenuWidget.cpp" )
 
 target_link_libraries(Editor PUBLIC BarrageCore Gameplay imgui nativefiledialog)
 add_dependencies(Editor Game)
 target_include_directories(Editor PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(Editor PUBLIC "${BARRAGE_SOURCE_DIR}/Core")
 
-#add_custom_command(TARGET Editor POST_BUILD
-#    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:Game>" "executable"
-#)
+add_custom_command(TARGET Editor POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:Game>" "executable"
+)

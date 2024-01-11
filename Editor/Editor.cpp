@@ -15,12 +15,29 @@
 
 #include "Editor.hpp"
 
+#include "Widgets/Windows/Game/GameWidget.hpp"
+#include "Widgets/Windows/Hierarchy/HierarchyWidget.hpp"
+#include "Widgets/Windows/Inspector/InspectorWidget.hpp"
+#include "Widgets/Windows/Log/LogWidget.hpp"
+#include "Widgets/Windows/Performance/PerformanceWidget.hpp"
+#include "Widgets/Windows/Timeline/TimelineWidget.hpp"
+
+#include "Widgets/MainMenu/MainMenuWidget.hpp"
+
 namespace Barrage
 {
+  Editor* Editor::instance_ = nullptr;
+  
+  Editor::Editor() :
+    isRunning_(false),
+    engine_(),
+    gui_()
+  {
+  }
+  
   Editor& Editor::Get()
   {
-    static Editor instance;
-    return instance;
+    return *instance_;
   }
   
   void Editor::Run(const std::string& projectPath)
@@ -47,21 +64,17 @@ namespace Barrage
     return gui_;
   }
 
-  Editor::Editor() :
-    engine_(Engine::Get()),
-    gui_(),
-    isRunning_(false)
-  {
-  }
-
   void Editor::Initialize(const std::string& projectPath)
   {
+    instance_ = this;
     engine_.Initialize();
     gui_.Initialize(engine_.Window().GetWindowHandle());
     engine_.Window().Maximize();
     engine_.Frames().SetVsync(true);
 
     engine_.Spaces().AddSpace("Editor Space");
+    Space& editorSpace = *engine_.Spaces().GetSpace("Editor Space");
+    editorSpace.AllowSceneChangesDuringUpdate(false);
   }
 
   void Editor::Update()
@@ -97,10 +110,17 @@ namespace Barrage
     gui_.Shutdown();
 
     engine_.Shutdown();
+    instance_ = nullptr;
   }
 
   void Editor::UseWidgets()
   {
-    
+    GameWidget::Use();
+    MainMenuWidget::Use();
+    HierarchyWidget::Use();
+    InspectorWidget::Use();
+    LogWidget::Use();
+    PerformanceWidget::Use();
+    TimelineWidget::Use();
   }
 }

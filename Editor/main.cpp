@@ -26,7 +26,9 @@ RTTR_REGISTRATION
 
 int main(int argc, char* argv[])
 {
-  Editor::Get().Run();
+  std::unique_ptr<Editor> editor = std::make_unique<Editor>();
+
+  editor->Run();
 
   return 0;
 }

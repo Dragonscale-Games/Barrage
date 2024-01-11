@@ -16,14 +16,27 @@
 
 namespace Barrage
 {
+  Engine* Engine::instance_ = nullptr;
+  
+  Engine::Engine() :
+    audioManager_(),
+    framerateController_(),
+    inputManager_(),
+    renderer_(),
+    sceneManager_(),
+    spaceManager_(),
+    windowManager_()
+  {
+  }
+  
   Engine& Engine::Get()
   {
-    static Engine instance;
-    return instance;
+    return *instance_;
   }
 
   void Engine::Initialize()
   {
+    instance_ = this;
     Registrar::Registration();
     windowManager_.Initialize();
     inputManager_.Initialize(windowManager_.GetWindowHandle());
@@ -41,6 +54,8 @@ namespace Barrage
     renderer_.Shutdown();
     inputManager_.Shutdown();
     windowManager_.Shutdown();
+
+    instance_ = nullptr;
   }
   
   AudioManager& Engine::Audio()
@@ -76,17 +91,6 @@ namespace Barrage
   WindowManager& Engine::Window()
   {
     return windowManager_;
-  }
-
-  Engine::Engine() :
-    audioManager_(),
-    framerateController_(),
-    inputManager_(),
-    renderer_(),
-    sceneManager_(),
-    spaceManager_(),
-    windowManager_()
-  {
   }
 
   void Engine::FramebufferSizeCallback(GLFWwindow* window, int width, int height)

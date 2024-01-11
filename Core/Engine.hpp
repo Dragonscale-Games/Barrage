@@ -31,6 +31,14 @@ namespace Barrage
   class Engine
   {
     public:
+      /**************************************************************/
+      /*!
+        \brief
+          Default constructor.
+      */
+      /**************************************************************/
+      Engine();
+      
       Engine(Engine const&) = delete;
       Engine(Engine&&) = delete;
       Engine& operator=(Engine const&) = delete;
@@ -39,7 +47,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the instance of the (singleton) engine.
+          Gets the instance of the currently running engine.
 
         \return
           Returns a reference to the engine instance.
@@ -144,14 +152,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Private constructor for singleton class.
-      */
-      /**************************************************************/
-      Engine();
-
-      /**************************************************************/
-      /*!
-        \brief
           Used to resize the renderer's framebuffer when the window
           size changes.
 
@@ -175,6 +175,8 @@ namespace Barrage
       SceneManager sceneManager_;
       SpaceManager spaceManager_;
       WindowManager windowManager_;
+
+      static Engine* instance_;
   };
 }
 

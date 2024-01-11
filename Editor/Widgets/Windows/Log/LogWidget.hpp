@@ -1,75 +1,75 @@
 /* ======================================================================== */
 /*!
- * \file            Game.hpp
+ * \file            LogWidget.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Standard game loop for Barrage.
+   Widget for displaying a log window. Code taken from imgui_demo.cpp.
  */
  /* ======================================================================== */
 
- ////////////////////////////////////////////////////////////////////////////////
-#ifndef Game_BARRAGE_H
-#define Game_BARRAGE_H
+////////////////////////////////////////////////////////////////////////////////
+#ifndef LogWidget_BARRAGE_H
+#define LogWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Engine.hpp"
+#include <imgui/imgui.h>
+#include <string>
 
 namespace Barrage
 {
-  //! Standard game loop for Barrage
-  class Game
+  //! Displays a log window
+  class LogWidget
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Default constructor.
+          Adds the widget to the window.
       */
       /**************************************************************/
-      Game();
+      static void Use();
 
       /**************************************************************/
       /*!
         \brief
-          Runs the game.
+          Clears the log window.
       */
       /**************************************************************/
-      void Run();
+      static void Clear();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Adds an entry to the log.
+
+        \param text
+          A printf()-style formatted C string.
+      */
+      /**************************************************************/
+      static void AddEntry(const char* text, ...) IM_FMTARGS(2);
+      
+      /**************************************************************/
+      /*!
+        \brief
+          Adds an entry to the log.
+
+        \param text
+          The text to add as a std::string.
+      */
+      /**************************************************************/
+      static void AddEntry(const std::string& text);
 
     private:
-      /**************************************************************/
-      /*!
-        \brief
-          Initializes Barrage engine and game systems.
-      */
-      /**************************************************************/
-      void Initialize();
-
-      /**************************************************************/
-      /*!
-        \brief
-          Updates main game loop.
-      */
-      /**************************************************************/
-      void Update();
-
-      /**************************************************************/
-      /*!
-        \brief
-          Shuts down Barrage engine and game systems.
-      */
-      /**************************************************************/
-      void Shutdown();
-
-    private:
-      Engine engine_;
-      bool isRunning_; //!< Keeps track of whether game is running
+      static ImGuiTextBuffer buffer_;
+      static ImGuiTextFilter filter_;
+      static ImVector<int> lineOffsets_;
+      static bool scrollToBottom_;
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // Game_BARRAGE_H
+#endif // LogWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
