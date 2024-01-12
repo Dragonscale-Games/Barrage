@@ -18,6 +18,16 @@
 
 namespace Barrage
 {
+  ComponentArray::ComponentArray(unsigned capacity) :
+    capacity_(capacity)
+  {
+  }
+  
+  unsigned ComponentArray::GetCapacity()
+  {
+    return capacity_;
+  }
+  
   GenericComponentArray::GenericComponentArray(std::nullptr_t) :
     ptr_(nullptr)
   {

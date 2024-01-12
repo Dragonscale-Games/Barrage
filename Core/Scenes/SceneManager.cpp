@@ -20,6 +20,11 @@ namespace Barrage
   {
   }
 
+  void SceneManager::AddScene(const std::string& name, Scene&& scene)
+  {
+    scenes_.emplace(name, std::move(scene));
+  }
+
   Scene* SceneManager::GetScene(const std::string& name)
   {
     if (scenes_.count(name))

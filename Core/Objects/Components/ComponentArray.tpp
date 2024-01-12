@@ -21,16 +21,16 @@ namespace Barrage
 {
   template <typename T>
   ComponentArrayT<T>::ComponentArrayT(unsigned capacity) :
-    data_(nullptr),
-    capacity_(capacity)
+    ComponentArray(capacity),
+    data_(nullptr)
   {
     data_ = new T[capacity];
   }
 
   template <typename T>
   ComponentArrayT<T>::ComponentArrayT(const ComponentArrayT<T>& other) :
-    data_(nullptr),
-    capacity_(other.capacity_)
+    ComponentArray(other.capacity_),
+    data_(nullptr)
   {
     data_ = new T[capacity_];
 

@@ -23,6 +23,8 @@ namespace Barrage
   class Scene
   {
     public:
+      Scene();
+
       Scene(const std::string& name);
 
       void SetName(const std::string& name);
@@ -30,6 +32,10 @@ namespace Barrage
       const std::string& GetName();
 
       const PoolArchetypeMap& GetPoolArchetypes();
+
+      bool SaveToFile(const Scene& scene, const std::string& path);
+
+      Scene LoadFromFile(const std::string& path);
 
     public:
       std::string name_;

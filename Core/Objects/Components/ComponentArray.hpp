@@ -41,6 +41,17 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Constructs a component array with the given capacity.
+
+        \param capacity
+          The number of components held in the array.
+      */
+      /**************************************************************/
+      ComponentArray(unsigned capacity);
+      
+      /**************************************************************/
+      /*!
+        \brief
           Base class requires virtual destructor.
       */
       /**************************************************************/
@@ -125,6 +136,20 @@ namespace Barrage
       */
       /**************************************************************/
       virtual void SetRTTRValue(const rttr::variant& value, int index) = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the number of objects the array is holding.
+      
+        \return
+          Returns the number of objects the array is holding.
+      */
+      /**************************************************************/
+      unsigned GetCapacity();
+
+    protected:
+      unsigned capacity_;
   };
 
   //! All component arrays are a specialization of this template
@@ -294,7 +319,6 @@ namespace Barrage
 
     private:
       T* data_;
-      unsigned capacity_;
   };
 
   class GenericComponentArray

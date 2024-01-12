@@ -30,6 +30,10 @@
 #include <rttr/variant.h>
 #include <rapidjson/document.h>
 
+#include "Objects/Components/Component.hpp"
+#include "Objects/Components/ComponentArray.hpp"
+#include "Objects/Spawning/SpawnRule.hpp"
+
 namespace
 {
   bool IsRapidJsonPrimitive(const rttr::type& type)
@@ -197,7 +201,25 @@ namespace Barrage
       unwrappedObject = unwrappedObject.extract_wrapped_value();
     }
 
-    if (type.is_sequential_container())
+    if (type == rttr::type::get<GenericComponent>())
+    {
+      const GenericComponent& component = object.get_value<GenericComponent>();
+      value = Serialize(component->GetRTTRValue(), allocator);
+    }
+    else if (type == rttr::type::get<GenericComponentArray>())
+    {
+      const GenericComponentArray& componentArray = object.get_value<GenericComponentArray>();
+      if (componentArray->GetCapacity())
+      {
+        value = Serialize(componentArray->GetRTTRValue(0), allocator);
+      }
+    }
+    else if (type == rttr::type::get<GenericSpawnRule>())
+    {
+      const GenericSpawnRule& spawnRule = object.get_value<GenericSpawnRule>();
+      value = Serialize(spawnRule->GetRTTRValue(), allocator);
+    }
+    else if (type.is_sequential_container())
     {
       const rttr::variant_sequential_view& asArray = unwrappedObject.create_sequential_view();
       // Make this value an array.

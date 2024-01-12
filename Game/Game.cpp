@@ -145,7 +145,7 @@ namespace Barrage
     testScene.poolArchetypes_.emplace("Bullet Pool", bulletPoolArchetype);
     testScene.poolArchetypes_.emplace("Spawner Pool", spawnerPoolArchetype);
 
-    engine_.Scenes().scenes_.emplace("Test Scene", testScene);
+    engine_.Scenes().AddScene("Test Scene", std::move(testScene));
     testSpace.SetScene("Test Scene");
   }
 
