@@ -33,10 +33,17 @@
 add_executable(Editor 
 "main.cpp" 
 "Editor.cpp" 
-"GUI/GUI.cpp" 
 
 "Commands/Command.cpp" 
- 
+"Commands/CommandQueue.cpp" 
+
+"Data/EditorData.cpp"
+
+"GUI/GUI.cpp" 
+
+"Widgets/MainMenu/MainMenuWidget.cpp"  
+
+"Widgets/Modals/Project/ProjectModal.cpp" 
 
 "Widgets/Windows/Hierarchy/HierarchyWidget.cpp"
 "Widgets/Windows/Inspector/InspectorWidget.cpp"
@@ -44,8 +51,7 @@ add_executable(Editor
 "Widgets/Windows/Game/GameWidget.cpp"  
 "Widgets/Windows/Timeline/TimelineWidget.cpp" 
 "Widgets/Windows/Performance/PerformanceWidget.cpp"
-
-"Widgets/MainMenu/MainMenuWidget.cpp" )
+)
 
 target_link_libraries(Editor PUBLIC BarrageCore Gameplay imgui nativefiledialog)
 add_dependencies(Editor Game)

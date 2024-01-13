@@ -16,7 +16,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Engine.hpp"
+#include "Data/EditorData.hpp"
 #include "GUI/GUI.hpp"
+#include "Commands/CommandQueue.hpp"
+
+#include "Widgets/Windows/Log/LogWidget.hpp"
 
 namespace Barrage
 {
@@ -71,12 +75,43 @@ namespace Barrage
       /**************************************************************/
       GUI& Gui();
 
-      bool isRunning_;
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the public editor data that widgets can modify.
+
+        \return
+          Returns a reference to the editor's public data.
+      */
+      /**************************************************************/
+      EditorData& Data();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the editor's command queue.
+
+        \return
+          Returns a reference to the editor's command queue.
+      */
+      /**************************************************************/
+      CommandQueue& Command();
+
+      bool CreateProject(const std::string& name);
+
+      bool OpenProject();
+
+      bool SaveProject(const std::string& directory);
+
+      static void BuildGame(bool runExecutable = false);
 
     private:
-      Engine engine_;            //!< Barrage game engine
-      GUI gui_;                  //!< Contains all widgets/user controls
-      
+      Engine engine_;             //!< Barrage game engine
+      CommandQueue commandQueue_; //!< Allows commands to be sent and processed
+      EditorData data_;           //!< Public settings and data for the editor
+      GUI gui_;                   //!< Contains all widgets/user controls
+
+      long long repeatTimer_;
 
       static Editor* instance_;
 
@@ -111,6 +146,16 @@ namespace Barrage
       */
       /**************************************************************/
       void UseWidgets();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Handles keyboard shortcuts and other keyboard input.
+      */
+      /**************************************************************/
+      void HandleKeyboard();
+
+      bool OpenProjectInternal(const std::string& path);
   };
 }
 

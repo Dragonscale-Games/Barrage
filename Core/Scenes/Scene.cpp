@@ -22,7 +22,7 @@
 namespace Barrage
 {
   Scene::Scene() :
-    name_("Unnamed Scene"),
+    name_("<untitled>"),
     poolArchetypes_()
   {
   }

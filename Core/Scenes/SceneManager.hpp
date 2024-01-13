@@ -28,6 +28,8 @@ namespace Barrage
 
       Scene* GetScene(const std::string& name);
 
+      void Clear();
+
     public:
       SceneMap scenes_;
   };

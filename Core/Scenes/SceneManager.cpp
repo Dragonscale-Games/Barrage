@@ -36,4 +36,9 @@ namespace Barrage
       return nullptr;
     }
   }
+
+  void SceneManager::Clear()
+  {
+    scenes_.clear();
+  }
 }

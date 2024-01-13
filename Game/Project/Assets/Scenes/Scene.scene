@@ -1,5 +1,5 @@
 {
-    "name": "Test Scene",
+    "name": "Scene",
     "poolArchetypes": [
         {
             "Key": "Bullet Pool",
