@@ -48,6 +48,24 @@ namespace Barrage
     glfwSetFramebufferSizeCallback(windowManager_.GetWindowHandle(), FramebufferSizeCallback);
   }
 
+  void Engine::SetUpGame(Entry& entry)
+  {
+    for (auto it = entry.spaces_.begin(); it != entry.spaces_.end(); ++it)
+    {
+      Spaces().AddSpace(it->name_);
+      
+      Space* new_space = Spaces().GetSpace(it->name_);
+
+      std::string scene_name = it->scene_;
+      std::string scene_path = "./Assets/Scenes/" + scene_name + ".scene";
+
+      Scene new_scene = Scene::LoadFromFile(scene_path);
+
+      Scenes().AddScene(scene_name, std::move(new_scene));
+      new_space->SetScene(scene_name);
+    }
+  }
+
   void Engine::Shutdown()
   {
     audioManager_.Shutdown();

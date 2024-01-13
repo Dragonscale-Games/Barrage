@@ -55,14 +55,11 @@ namespace Barrage
   void Game::Initialize()
   {
     engine_.Initialize();
+    engine_.Window().SetFullScreen();
+    engine_.Frames().SetVsync(false);
 
-    engine_.Spaces().AddSpace("Test Space");
-    Space& testSpace = *engine_.Spaces().GetSpace("Test Space");
-
-    Scene testScene;
-
-    engine_.Scenes().AddScene("Test Scene", std::move(testScene));
-    testSpace.SetScene("Test Scene");
+    Entry entry = Entry::LoadFromFile("./Assets/entry.json");
+    engine_.SetUpGame(entry);
   }
 
   void Game::Update()
@@ -85,29 +82,14 @@ namespace Barrage
     engine_.Graphics().DrawFsq();
     engine_.Window().SwapBuffers();
 
+    if (engine_.Input().KeyTriggered(GLFW_KEY_ESCAPE))
+    {
+      engine_.Window().SetWindowed();
+    }
+
     if (engine_.Window().IsClosed())
     {
       isRunning_ = false;
-    }
-
-    if (engine_.Input().KeyTriggered(GLFW_KEY_S))
-    {
-      Scene* testScene = engine_.Scenes().GetScene("Test Scene");
-
-      if (testScene)
-      {
-        Scene::SaveToFile(*testScene, "test_scene_boogalizer_s.scene");
-      }
-    }
-
-    if (engine_.Input().KeyTriggered(GLFW_KEY_P))
-    {
-      Scene* testScene = engine_.Scenes().GetScene("Test Scene");
-
-      if (testScene)
-      {
-        Scene::SaveToFile(*testScene, "test_scene_boogalizer_p.scene");
-      }
     }
 
     engine_.Frames().EndFrame(!engine_.Window().IsFocused());

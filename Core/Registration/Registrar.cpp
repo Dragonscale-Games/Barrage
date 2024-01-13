@@ -14,6 +14,7 @@
 #include "Registrar.hpp"
 
 #include "Scenes/Scene.hpp"
+#include "Entry/Entry.hpp"
 
 #include <string>
 #include <rttr/variant.h>
@@ -68,6 +69,18 @@ namespace Barrage
     rttr::registration::class_<Radian>("Radian")
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("value", &Radian::value_)
+      ;
+
+    rttr::registration::class_<Entry::SpaceEntry>("SpaceEntry")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("Name", &Entry::SpaceEntry::name_)
+      .property("Scene", &Entry::SpaceEntry::scene_)
+      ;
+
+    rttr::registration::class_<Entry>("Entry")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("Spaces", &Entry::spaces_)
+      .property("Textures", &Entry::textures_)
       ;
   }
 

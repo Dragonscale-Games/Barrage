@@ -23,6 +23,8 @@
 #include "Spaces/SpaceManager.hpp"
 #include "Window/WindowManager.hpp"
 
+#include "Entry/Entry.hpp"
+
 #include <memory>
 
 namespace Barrage
@@ -66,6 +68,18 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Sets the initial conditions of a game (spaces, scenes,
+          loaded assets, etc).
+
+        \param entry
+          Holds the information needed to initialize the game.
+      */
+      /**************************************************************/
+      void SetUpGame(Entry& entry);
+
+      /**************************************************************/
+      /*!
+        \brief
           Shuts down the engine and all its modules.
       */
       /**************************************************************/
@@ -96,17 +110,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Gets the engine's input manager.
-
-        \return
-          Returns a reference to the engine's input manager.
-      */
-      /**************************************************************/
-      InputManager& Input();
-
-      /**************************************************************/
-      /*!
-        \brief
           Gets the engine's renderer.
 
         \return
@@ -114,6 +117,17 @@ namespace Barrage
       */
       /**************************************************************/
       Renderer& Graphics();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the engine's input manager.
+
+        \return
+          Returns a reference to the engine's input manager.
+      */
+      /**************************************************************/
+      InputManager& Input();
 
       /**************************************************************/
       /*!
