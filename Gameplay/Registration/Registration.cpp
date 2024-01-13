@@ -40,7 +40,7 @@
 
 namespace Barrage
 {
-  void Registrar::Registration()
+  void Registrar::GameplayRegistration()
   {
     RegisterComponentArray<AngularSpeed>("AngularSpeed");
     RegisterComponentArray<ColorTint>("ColorTint");
@@ -81,7 +81,7 @@ namespace Barrage
     SetSystemUpdateOrder(update_order);
   }
 
-  void Registrar::Reflection()
+  void Registrar::GameplayReflection()
   {
     AngularSpeed::Reflect();
     ColorTintReflect();
@@ -98,6 +98,12 @@ namespace Barrage
     Player::Reflect();
     Spawner::Reflect();
     Sprite::Reflect();
+
+    rttr::registration::class_<Spawn::RandomOffsetData>("RandomOffsetData")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("xVariance", &Spawn::RandomOffsetData::xVariance_)
+      .property("yVariance", &Spawn::RandomOffsetData::yVariance_)
+      ;
   }
 
   void ObjectManager::Draw()

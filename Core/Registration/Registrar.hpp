@@ -53,6 +53,38 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Registration for core engine types.
+      */
+      /**************************************************************/
+      static void CoreRegistration();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Registration for custom gameplay types.
+      */
+      /**************************************************************/
+      static void GameplayRegistration();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Reflection for core engine types.
+      */
+      /**************************************************************/
+      static void CoreReflection();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Reflection for custom gameplay types.
+      */
+      /**************************************************************/
+      static void GameplayReflection();
+
+      /**************************************************************/
+      /*!
+        \brief
           Registers a component for use in the engine.
 
         \tparam T

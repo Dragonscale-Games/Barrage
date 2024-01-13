@@ -515,32 +515,6 @@ namespace Barrage
   };
 
   using SpawnRuleList = std::vector<GenericSpawnRule>;
-
-  class SpawnRuleCollection
-  {
-    public:
-      SpawnRuleCollection();
-      
-      void AddSpawnRule(GenericSpawnRule spawnRule);
-
-      void SetCapacity(unsigned capacity);
-
-      void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex);
-
-      size_t Size();
-
-      void ApplyRules(
-        Pool& sourcePool,
-        Pool& destinationPool,
-        Space& space,
-        unsigned startIndex,
-        std::vector<unsigned>& sourceIndices, 
-        ComponentArrayT<GroupInfo>& groupInfoArray
-      );
-
-    public:
-      SpawnRuleList spawnRules_;
-  };
 }
 
 #include "SpawnRule.tpp"

@@ -35,8 +35,8 @@ namespace Barrage
     public:
       unsigned baseNumGroups_;
       ComponentArrayT<GroupInfo> groupInfoArray_;
-      SpawnRuleCollection sizeRules_;
-      SpawnRuleCollection valueRules_;
+      SpawnRuleList sizeRules_;
+      SpawnRuleList valueRules_;
 
       friend class SpawnType;
       friend class Pool;

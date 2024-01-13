@@ -34,6 +34,11 @@
 #include "Objects/Components/ComponentArray.hpp"
 #include "Objects/Spawning/SpawnRule.hpp"
 
+#include "Utilities/Utilities.hpp"
+
+#include "Objects/Spawning/SpawnRuleFactory.hpp"
+#include "Objects/Components/ComponentFactory.hpp"
+
 namespace
 {
   bool IsRapidJsonPrimitive(const rttr::type& type)
@@ -201,23 +206,72 @@ namespace Barrage
       unwrappedObject = unwrappedObject.extract_wrapped_value();
     }
 
-    if (type == rttr::type::get<GenericComponent>())
+    if (type == rttr::type::get<ComponentMap>())
     {
-      const GenericComponent& component = object.get_value<GenericComponent>();
-      value = Serialize(component->GetRTTRValue(), allocator);
-    }
-    else if (type == rttr::type::get<GenericComponentArray>())
-    {
-      const GenericComponentArray& componentArray = object.get_value<GenericComponentArray>();
-      if (componentArray->GetCapacity())
+      const ComponentMap& componentMap = object.get_value<ComponentMap>();
+      value.SetObject();
+
+      for (auto it = componentMap.begin(); it != componentMap.end(); ++it)
       {
-        value = Serialize(componentArray->GetRTTRValue(0), allocator);
+        rapidjson::Value componentObject = Barrage::Serialize(it->second->GetRTTRValue(), allocator);
+        rapidjson::Value componentKey(it->first.data(), static_cast<rapidjson::SizeType>(it->first.size()), allocator);
+        value.AddMember(componentKey, componentObject, allocator);
       }
     }
-    else if (type == rttr::type::get<GenericSpawnRule>())
+    else if (type == rttr::type::get<ComponentArrayMap>())
     {
-      const GenericSpawnRule& spawnRule = object.get_value<GenericSpawnRule>();
-      value = Serialize(spawnRule->GetRTTRValue(), allocator);
+      const ComponentArrayMap& componentArrayMap = object.get_value<ComponentArrayMap>();
+      value.SetObject();
+
+      for (auto it = componentArrayMap.begin(); it != componentArrayMap.end(); ++it)
+      {
+        if (it->second->GetCapacity() == 0)
+        {
+          continue;
+        }
+        
+        rapidjson::Value componentObject = Barrage::Serialize(it->second->GetRTTRValue(0), allocator);
+        rapidjson::Value componentKey(it->first.data(), static_cast<rapidjson::SizeType>(it->first.size()), allocator);
+        value.AddMember(componentKey, componentObject, allocator);
+      }
+    }
+    else if (type == rttr::type::get<SpawnRuleList>())
+    {
+      const SpawnRuleList& spawnRuleList = object.get_value<SpawnRuleList>();
+
+      value.SetArray();
+
+      for (auto it = spawnRuleList.begin(); it != spawnRuleList.end(); ++it)
+      {
+        const GenericSpawnRule& spawnRule = *it;
+
+        rapidjson::Value spawnRuleValue;
+        spawnRuleValue.SetObject();
+        rapidjson::Value spawnRuleName = Serialize(spawnRule->GetName(), allocator);
+        spawnRuleValue.AddMember("Name", spawnRuleName, allocator);
+        rttr::variant dataVariant = spawnRule->GetRTTRValue();
+
+        if (dataVariant.is_valid())
+        {
+          rapidjson::Value spawnRuleData = Serialize(dataVariant, allocator);
+          spawnRuleValue.AddMember("Data", spawnRuleData, allocator);
+        }
+
+        value.PushBack(spawnRuleValue, allocator);
+      }
+    }
+    else if (type == rttr::type::get<StringSet>())
+    {
+      const StringSet& stringSet = object.get_value<StringSet>();
+
+      value.SetArray();
+
+      for (auto it = stringSet.begin(); it != stringSet.end(); ++it)
+      {
+        rapidjson::Value currentString = Serialize(*it, allocator);
+
+        value.PushBack(currentString, allocator);
+      }
     }
     else if (type.is_sequential_container())
     {
@@ -298,7 +352,116 @@ namespace Barrage
       unwrappedObject = unwrappedObject.extract_wrapped_value();
     }
 
-    if (type.is_sequential_container())
+    if (type == rttr::type::get<ComponentMap>())
+    {
+      ComponentMap newComponentMap;
+      
+      for (auto it = data.MemberBegin(); it != data.MemberEnd(); ++it)
+      {
+        std::string name = it->name.GetString();
+      
+        GenericComponent component = ComponentFactory::AllocateComponent(name);
+      
+        if (component)
+        {
+          rttr::type type = rttr::type::get_by_name(name);
+      
+          if (type.is_valid())
+          {
+            rttr::variant value = component->GetRTTRValue();
+            Barrage::Deserialize(value, it->value, type);
+            component->SetRTTRValue(value);
+          }
+      
+          newComponentMap.emplace(name, component);
+        }
+      }
+
+      object = newComponentMap;
+    }
+    else if (type == rttr::type::get<ComponentArrayMap>())
+    {
+      ComponentArrayMap newComponentArrayMap;
+      
+      for (auto it = data.MemberBegin(); it != data.MemberEnd(); ++it)
+      {
+        std::string name = it->name.GetString();
+
+        GenericComponentArray componentArray = ComponentFactory::AllocateComponentArray(name, 1);
+
+        if (componentArray)
+        {
+          rttr::type type = rttr::type::get_by_name(name);
+
+          if (type.is_valid())
+          {
+            rttr::variant value = componentArray->GetRTTRValue(0);
+            Barrage::Deserialize(value, it->value, type);
+            componentArray->SetRTTRValue(value, 0);
+          }
+
+          newComponentArrayMap.emplace(name, componentArray);
+        }
+      }
+
+      object = newComponentArrayMap;
+    }
+    else if (type == rttr::type::get<SpawnRuleList>())
+    {
+      SpawnRuleList newSpawnRuleList;
+      
+      const rapidjson::GenericArray<true, rapidjson::Value> dataAsArray = data.GetArray();
+      size_t arraySize = dataAsArray.Size();
+      
+      for (uint32_t i = 0; i < arraySize; ++i)
+      {
+        const rapidjson::Value& element = dataAsArray[i];
+      
+        if (element.HasMember("Name") && element["Name"].IsString())
+        {
+          GenericSpawnRule newSpawnRule = SpawnRuleFactory::CreateSpawnRule(element["Name"].GetString());
+      
+          if (newSpawnRule)
+          {
+            if (element.HasMember("Data") && element["Data"].IsObject())
+            {
+              rttr::variant spawnRuleData = newSpawnRule->GetRTTRValue();
+      
+              if (spawnRuleData.is_valid())
+              {
+                Deserialize(spawnRuleData, element["Data"], spawnRuleData.get_type());
+                newSpawnRule->SetRTTRValue(spawnRuleData);
+              }
+            }
+      
+            newSpawnRuleList.push_back(newSpawnRule);
+          }
+        }
+      }
+      
+      object = newSpawnRuleList;
+    }
+    else if (type == rttr::type::get<StringSet>())
+    {
+      StringSet newStringSet;
+
+      const rapidjson::GenericArray<true, rapidjson::Value> dataAsArray = data.GetArray();
+
+      size_t arraySize = dataAsArray.Size();
+      
+      for (uint32_t i = 0; i < arraySize; ++i)
+      {
+        const rapidjson::Value& element = dataAsArray[i];
+      
+        if (element.IsString())
+        {
+          newStringSet.insert(element.GetString());
+        }
+      }
+
+      object = newStringSet;
+    }
+    else if (type.is_sequential_container())
     {
       // The array from the JSON data.
       const rapidjson::GenericArray<true, rapidjson::Value> dataAsArray = data.GetArray();

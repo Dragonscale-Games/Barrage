@@ -24,6 +24,8 @@ namespace Barrage
   class ObjectArchetype
   {
     public:
+      ObjectArchetype();
+      
       /**************************************************************/
       /*!
         \brief

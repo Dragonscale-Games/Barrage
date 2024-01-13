@@ -33,9 +33,9 @@ namespace Barrage
 
       const PoolArchetypeMap& GetPoolArchetypes();
 
-      bool SaveToFile(const Scene& scene, const std::string& path);
+      static bool SaveToFile(const Scene& scene, const std::string& path);
 
-      Scene LoadFromFile(const std::string& path);
+      static Scene LoadFromFile(const std::string& path);
 
     public:
       std::string name_;

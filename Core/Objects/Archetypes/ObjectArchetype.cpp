@@ -16,6 +16,12 @@
 
 namespace Barrage
 {
+  ObjectArchetype::ObjectArchetype() :
+    name_("Unnamed"),
+    componentArrays_()
+  {
+  }
+  
   ObjectArchetype::ObjectArchetype(const std::string& name, const StringSet& componentArrayNames) :
     name_(name),
     componentArrays_()

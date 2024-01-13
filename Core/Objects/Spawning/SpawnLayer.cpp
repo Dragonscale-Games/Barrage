@@ -35,8 +35,29 @@ namespace Barrage
       groupInfoArray_.Data(i) = GroupInfo(baseNumGroups_);
     }
 
-    sizeRules_.SetCapacity(capacity);
-    valueRules_.SetCapacity(capacity);
+    for (auto it = valueRules_.begin(); it != valueRules_.end(); ++it)
+    {
+      GenericSpawnRule& spawnRule = *it;
+
+      if (spawnRule->HasArray())
+      {
+        std::shared_ptr<SpawnRuleWithArray> spawnRulePtr = std::static_pointer_cast<SpawnRuleWithArray>(spawnRule.Get());
+
+        spawnRulePtr->SetCapacity(capacity);
+      }
+    }
+
+    for (auto it = sizeRules_.begin(); it != sizeRules_.end(); ++it)
+    {
+      GenericSpawnRule& spawnRule = *it;
+
+      if (spawnRule->HasArray())
+      {
+        std::shared_ptr<SpawnRuleWithArray> spawnRulePtr = std::static_pointer_cast<SpawnRuleWithArray>(spawnRule.Get());
+
+        spawnRulePtr->SetCapacity(capacity);
+      }
+    }
   }
 
   void SpawnLayer::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex)
@@ -48,7 +69,28 @@ namespace Barrage
       groupInfoArray_.Data(i) = GroupInfo(baseNumGroups_);
     }
     
-    sizeRules_.HandleDestructions(destructionArray, writeIndex, endIndex);
-    valueRules_.HandleDestructions(destructionArray, writeIndex, endIndex);
+    for (auto it = sizeRules_.begin(); it != sizeRules_.end(); ++it)
+    {
+      GenericSpawnRule& spawnRule = *it;
+    
+      if (spawnRule->HasArray())
+      {
+        std::shared_ptr<SpawnRuleWithArray> spawnRulePtr = std::static_pointer_cast<SpawnRuleWithArray>(spawnRule.Get());
+    
+        spawnRulePtr->HandleDestructions(destructionArray, writeIndex, endIndex);
+      }
+    }
+    
+    for (auto it = valueRules_.begin(); it != valueRules_.end(); ++it)
+    {
+      GenericSpawnRule& spawnRule = *it;
+    
+      if (spawnRule->HasArray())
+      {
+        std::shared_ptr<SpawnRuleWithArray> spawnRulePtr = std::static_pointer_cast<SpawnRuleWithArray>(spawnRule.Get());
+    
+        spawnRulePtr->HandleDestructions(destructionArray, writeIndex, endIndex);
+      }
+    }
   }
 }

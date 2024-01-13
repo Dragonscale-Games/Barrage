@@ -135,7 +135,12 @@ namespace Barrage
     {
       SpawnLayer& spawnLayer = *it;
 
-      spawnLayer.valueRules_.ApplyRules(sourcePool, *this, space, startIndex, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
+      for (auto jt = spawnLayer.valueRules_.begin(); jt != spawnLayer.valueRules_.end(); ++jt)
+      {
+        GenericSpawnRule& spawnRule = *jt;
+
+        spawnRule->ExecuteFull(sourcePool, *this, space, startIndex, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
+      }
     }
   }
 
@@ -147,7 +152,12 @@ namespace Barrage
     {
       SpawnLayer& spawnLayer = *it;
 
-      spawnLayer.sizeRules_.ApplyRules(sourcePool, *this, space, startIndex, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
+      for (auto jt = spawnLayer.sizeRules_.begin(); jt != spawnLayer.sizeRules_.end(); ++jt)
+      {
+        GenericSpawnRule& spawnRule = *jt;
+
+        spawnRule->ExecuteFull(sourcePool, *this, space, startIndex, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
+      }
     }
   }
 }

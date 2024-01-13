@@ -27,6 +27,8 @@ namespace Barrage
   class PoolArchetype
   {
     public:
+      PoolArchetype();
+      
       /**************************************************************/
       /*!
         \brief

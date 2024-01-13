@@ -18,6 +18,17 @@
 
 namespace Barrage
 {
+  PoolArchetype::PoolArchetype() :
+    name_("Unnamed"),
+    capacity_(1),
+    components_(),
+    componentArrayNames_(),
+    tags_(),
+    startingObjects_(),
+    spawnArchetypes_()
+  {
+  }
+  
   PoolArchetype::PoolArchetype(const std::string& name, unsigned capacity) :
     name_(name),
     capacity_(capacity),
