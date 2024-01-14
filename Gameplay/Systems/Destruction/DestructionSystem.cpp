@@ -43,29 +43,21 @@ namespace Barrage
 
   void DestructionSystem::UpdateSpawnRules(Space& space, Pool& pool)
   {
-    UNREFERENCED(space);
-    UNREFERENCED(pool);
+    Spawner& spawner = pool.GetComponent<Spawner>("Spawner").Data();
+    DestructibleArray& destructibleArray = pool.GetComponentArray<Destructible>("Destructible");
+    unsigned numActiveObjects = pool.ActiveObjectCount();
+    unsigned deadBeginIndex = GetFirstDeadObjectIndex(destructibleArray, numActiveObjects);
     
-    //Spawner& spawner = pool.GetComponent<Spawner>("Spawner").Data();
-    //DestructibleArray& destructibleArray = pool.GetComponentArray<Destructible>("Destructible");
-    //unsigned numActiveObjects = pool.ActiveObjectCount();
-    //unsigned deadBeginIndex = GetFirstDeadObjectIndex(destructibleArray, numActiveObjects);
-    //
-    //// if no objects were destroyed, early out
-    //if (deadBeginIndex >= numActiveObjects)
-    //  return;
+    // if no objects were destroyed, early out
+    if (deadBeginIndex >= numActiveObjects)
+      return;
 
-    //for (auto it = spawner.spawnTypes_.begin(); it != spawner.spawnTypes_.end(); ++it)
-    //{
-    //  SpawnInfo& spawnType = it->second;
+    for (auto it = spawner.spawnTypes_.begin(); it != spawner.spawnTypes_.end(); ++it)
+    {
+      SpawnType& spawnType = it->second;
 
-    //  for (auto jt = spawnType.spawnRulesWithArrays_.begin(); jt != spawnType.spawnRulesWithArrays_.end(); ++jt)
-    //  {
-    //    std::shared_ptr<SpawnRuleWithArray>& spawnRuleWithArray = *jt;
-
-    //    spawnRuleWithArray->HandleDestructions(destructibleArray.GetRaw(), deadBeginIndex, numActiveObjects);
-    //  }
-    //}
+      spawnType.HandleDestructions(destructibleArray.GetRaw(), deadBeginIndex, numActiveObjects);
+    }
   }
 
   void DestructionSystem::DestroyObjects(Space& space, Pool& pool)

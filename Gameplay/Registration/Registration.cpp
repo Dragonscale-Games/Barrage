@@ -68,6 +68,7 @@ namespace Barrage
     RegisterSystem<MovementSystem>("MovementSystem");
     RegisterSystem<SpawnSystem>("SpawnSystem");
     
+    RegisterTag("Bullet");
 
     std::vector<std::string> update_order;
 

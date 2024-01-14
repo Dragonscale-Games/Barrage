@@ -15,8 +15,12 @@
 
 #include "Editor.hpp"
 
+#include <Widgets/Modals/Component/ComponentModal.hpp>
+#include <Widgets/Modals/ComponentArray/ComponentArrayModal.hpp>
 #include "Widgets/Modals/Project/ProjectModal.hpp"
+#include <Widgets/Modals/Rename/RenameModal.hpp>
 #include "Widgets/Modals/SaveProject/SaveProjectModal.hpp"
+#include <Widgets/Modals/Tag/TagModal.hpp>
 
 #include "Widgets/Windows/Game/GameWidget.hpp"
 #include "Widgets/Windows/Hierarchy/HierarchyWidget.hpp"
@@ -324,6 +328,30 @@ namespace Barrage
     PerformanceWidget::Use();
     TimelineWidget::Use();
 
+    if (data_.openComponentModal_)
+    {
+      ImGui::OpenPopup("Add shared component");
+      data_.openComponentModal_ = false;
+    }
+
+    if (data_.openComponentArrayModal_)
+    {
+      ImGui::OpenPopup("Add component array");
+      data_.openComponentArrayModal_ = false;
+    }
+
+    if (data_.openTagModal_)
+    {
+      ImGui::OpenPopup("Add tag");
+      data_.openTagModal_ = false;
+    }
+
+    if (data_.openRenameModal_)
+    {
+      ImGui::OpenPopup("Rename");
+      data_.openRenameModal_ = false;
+    }
+
     if (data_.openProjectModal_)
     {
       ImGui::OpenPopup("Project");
@@ -336,6 +364,10 @@ namespace Barrage
       data_.openSaveProjectModal_ = false;
     }
 
+    ComponentModal::Use("Add shared component");
+    ComponentArrayModal::Use("Add component array");
+    TagModal::Use("Add tag");
+    RenameModal::Use("Rename", data_.renameCallback_);
     ProjectModal::Use("Project");
     SaveProjectModal::Use("Save Project");
   }

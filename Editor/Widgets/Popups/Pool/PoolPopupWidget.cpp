@@ -30,7 +30,7 @@ namespace Barrage
       return;
     }
 
-    //EditorData& editorData = Editor::Instance->Data();
+    EditorData& editorData = Editor::Get().Data();
 
     if (ImGui::Selectable("Create object"))
     {
@@ -50,16 +50,16 @@ namespace Barrage
 
     if (ImGui::Selectable("Add component to pool"))
     {
-      /*editorData.selectedComponent_ = std::string_view();
-      editorData.openComponentModal_ = true;*/
+      editorData.selectedComponent_ = std::string();
+      editorData.openComponentModal_ = true;
     }
 
     ImGui::Spacing();
 
     if (ImGui::Selectable("Add component to objects"))
     {
-      /*editorData.selectedComponentArray_ = std::string_view();
-      editorData.openComponentArrayModal_ = true;*/
+      editorData.selectedComponentArray_ = std::string();
+      editorData.openComponentArrayModal_ = true;
     }
 
     ImGui::Spacing();

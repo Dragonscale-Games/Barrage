@@ -48,8 +48,12 @@ add_executable(Editor
 
 "Widgets/MainMenu/MainMenuWidget.cpp"  
 
+"Widgets/Modals/ComponentArray/ComponentArrayModal.cpp" 
+"Widgets/Modals/Component/ComponentModal.cpp" 
 "Widgets/Modals/Project/ProjectModal.cpp" 
+"Widgets/Modals/Rename/RenameModal.cpp" 
 "Widgets/Modals/SaveProject/SaveProjectModal.cpp"
+"Widgets/Modals/Tag/TagModal.cpp"
 
 "Widgets/Popups/Component/ComponentPopupWidget.cpp" 
  "Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.cpp"  

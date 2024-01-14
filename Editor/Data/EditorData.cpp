@@ -22,7 +22,12 @@ namespace Barrage
     sceneIsDirty_(false),
     projectIsDirty_(false),
 
+    openComponentModal_(false),
+    openComponentArrayModal_(false),
     openProjectModal_(false),
+    openRenameModal_(false),
+    openTagModal_(false),
+    
     openSaveProjectModal_(false),
 
     gameTick_(0),
@@ -33,7 +38,13 @@ namespace Barrage
     selectedScene_(),
     selectedPool_(),
     selectedStartingObject_(),
-    selectedSpawnArchetype_()
+    selectedSpawnArchetype_(),
+
+    selectedComponent_(),
+    selectedComponentArray_(),
+    selectedTag_(),
+
+    renameCallback_(nullptr)
   {
   }
 }

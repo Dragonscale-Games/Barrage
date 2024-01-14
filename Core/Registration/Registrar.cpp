@@ -91,7 +91,7 @@ namespace Barrage
 
   void Registrar::RegisterTag(const std::string& tag)
   {
-    
+    ComponentFactory::RegisterTag(tag);
   }
 
   void Registrar::SetSystemUpdateOrder(const std::vector<std::string>& updateOrder)
