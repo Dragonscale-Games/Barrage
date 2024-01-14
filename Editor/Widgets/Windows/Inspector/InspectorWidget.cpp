@@ -16,6 +16,11 @@
 #include "Widgets/Components/ComponentArrayWidget.hpp"
 #include "Widgets/Components/ComponentWidget.hpp"
 
+#include "Widgets/Data/DataWidget.hpp"
+
+#include "Commands/Delete/Tag/DeleteTag.hpp"
+#include "Commands/Edit/Capacity/EditCapacity.hpp"
+
 namespace Barrage
 {
   void InspectorWidget::Use()
@@ -49,7 +54,7 @@ namespace Barrage
 
     ImGui::PushID(Editor::Get().Data().selectedPool_.c_str());
 
-    /*unsigned old_capacity_value = poolArchetype->GetCapacity();
+    unsigned old_capacity_value = poolArchetype.capacity_;
     rttr::variant capacity_value = old_capacity_value;
     DataWidget::DataObject capacity_object("Capacity", capacity_value);
 
@@ -61,25 +66,14 @@ namespace Barrage
     {
       unsigned new_value = capacity_object.GetValue<unsigned>();
 
-      if (new_value < 1)
-      {
-        new_value = 1;
-        LogWidget::AddEntry("Capacity cannot go lower than 1.");
-      }
-      else if (new_value < poolArchetype->GetStartingObjects().size())
-      {
-        new_value = static_cast<unsigned>(poolArchetype->GetStartingObjects().size());
-        LogWidget::AddEntry("Capacity cannot go lower than number of objects in pool.");
-      }
-
-      EditorData& editorData = Editor::Instance->Data();
-      EditCapacity* capacity_command = new EditCapacity(
+      EditorData& editorData = Editor::Get().Data();
+      Editor::Get().Command().Send(std::make_shared<EditCapacity>(
         editorData.selectedScene_,
         editorData.selectedPool_,
         new_value,
-        capacity_object.ChainUndoEnabled());
-      Editor::Instance->Command().Send(capacity_command);
-    }*/
+        capacity_object.ChainUndoEnabled()
+      ));
+    }
 
     if (ImGui::CollapsingHeader("Tags"))
     {
@@ -89,12 +83,11 @@ namespace Barrage
         ImGui::PushID(tag.data());
         if (ImGui::Button("X"))
         {
-          /*EditorData& editorData = Editor::Instance->Data();
-          DeleteTag* command = new DeleteTag(
+          EditorData& editorData = Editor::Get().Data();
+          Editor::Get().Command().Send(std::make_shared<DeleteTag>(
             editorData.selectedScene_,
             editorData.selectedPool_,
-            tag);
-          Editor::Instance->Command().Send(command);*/
+            tag));
         }
         ImGui::SameLine();
         ImGui::Text(tag.data());
@@ -103,7 +96,7 @@ namespace Barrage
 
       if (ImGui::Button("Add tag"))
       {
-        //Editor::Instance->Data().openTagModal_ = true;
+        Editor::Get().Data().openTagModal_ = true;
       }
     }
 

@@ -12,12 +12,13 @@
 
 #include "PoolPopupWidget.hpp"
 
-//#include <Commands/Create/Object/CreateObject.hpp>
-//#include <Commands/Create/ComponentArray/CreateComponentArray.hpp>
-//#include <Commands/Create/Component/CreateComponent.hpp>
-//#include <Commands/Delete/Pool/DeletePool.hpp>
-//#include <Commands/Rename/Pool/RenamePool.hpp>
-//#include <Commands/Duplicate/Pool/DuplicatePool.hpp>
+#include <Commands/Create/StartingObject/CreateStartingObject.hpp>
+#include <Commands/Create/SpawnArchetype/CreateSpawnArchetype.hpp>
+#include <Commands/Create/ComponentArray/CreateComponentArray.hpp>
+#include <Commands/Create/Component/CreateComponent.hpp>
+#include <Commands/Delete/Pool/DeletePool.hpp>
+#include <Commands/Rename/Pool/RenamePool.hpp>
+#include <Commands/Duplicate/Pool/DuplicatePool.hpp>
 
 #include <Editor.hpp>
 
@@ -34,14 +35,14 @@ namespace Barrage
 
     if (ImGui::Selectable("Create object"))
     {
-      //Editor::Instance->Command().Send(new CreateObject(editorData.selectedScene_, editorData.selectedPool_, true));
+      Editor::Get().Command().Send(std::make_shared<CreateStartingObject>(editorData.selectedScene_, editorData.selectedPool_));
     }
 
     ImGui::Spacing();
 
     if (ImGui::Selectable("Create spawn archetype"))
     {
-      //Editor::Instance->Command().Send(new CreateObject(editorData.selectedScene_, editorData.selectedPool_, false));
+      Editor::Get().Command().Send(std::make_shared<CreateSpawnArchetype>(editorData.selectedScene_, editorData.selectedPool_));
     }
 
     ImGui::Spacing();
@@ -68,26 +69,26 @@ namespace Barrage
 
     if (ImGui::Selectable("Rename"))
     {
-      /*editorData.openRenameModal_ = true;
+      editorData.openRenameModal_ = true;
       editorData.renameCallback_ = [](const std::string& newName)
       {
-        EditorData& editorData = Editor::Instance->Data();
-        Editor::Instance->Command().Send(new RenamePool(editorData.selectedScene_, editorData.selectedPool_, newName));
-      };*/
+        EditorData& editorData = Editor::Get().Data();
+        Editor::Get().Command().Send(std::make_shared<RenamePool>(editorData.selectedScene_, editorData.selectedPool_, newName));
+      };
     }
 
     ImGui::Spacing();
     
     if (ImGui::Selectable("Duplicate"))
     {
-      //Editor::Instance->Command().Send(new DuplicatePool(editorData.selectedScene_, editorData.selectedPool_));
+      Editor::Get().Command().Send(std::make_shared<DuplicatePool>(editorData.selectedScene_, editorData.selectedPool_));
     }
 
     ImGui::Spacing();
 
     if (ImGui::Selectable("Delete"))
     {
-      //Editor::Instance->Command().Send(new DeletePool(editorData.selectedScene_, editorData.selectedPool_));
+      Editor::Get().Command().Send(std::make_shared<DeletePool>(editorData.selectedScene_, editorData.selectedPool_));
     }
 
     ImGui::EndPopup();

@@ -1,26 +1,26 @@
 /* ======================================================================== */
 /*!
- * \file            ObjectPopupWidget.hpp
+ * \file            SpawnArchetypePopupWidget.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The menu that pops up when you right click an object.
+   The menu that pops up when you right click a spawn archetype.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef ObjectPopupWidget_BARRAGE_H
-#define ObjectPopupWidget_BARRAGE_H
+#ifndef SpawnArchetypePopupWidget_BARRAGE_H
+#define SpawnArchetypePopupWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
 
 namespace Barrage
 {   
-  //! Object right click menu
-  class ObjectPopupWidget
+  //! Spawn archetype right click menu
+  class SpawnArchetypePopupWidget
   {
     public:
       /**************************************************************/
@@ -41,5 +41,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // ObjectPopupWidget_BARRAGE_H
+#endif // SpawnArchetypePopupWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

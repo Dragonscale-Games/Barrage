@@ -12,8 +12,7 @@
 
 #include "ScenePopupWidget.hpp"
 
-//#include <Commands/Create/Pool/CreatePool.hpp>
-//#include <Commands/Rename/Scene/RenameScene.hpp>
+#include <Commands/Create/Pool/CreatePool.hpp>
 #include <Editor.hpp>
 
 namespace Barrage
@@ -25,11 +24,11 @@ namespace Barrage
       return;
     }
 
-    //EditorData& editorData = Editor::Get().Data();
+    EditorData& editorData = Editor::Get().Data();
 
     if (ImGui::Selectable("Create pool"))
     {
-      //Editor::Instance->Command().Send(new CreatePool(editorData.selectedScene_));
+      Editor::Get().Command().Send(std::make_shared<CreatePool>(editorData.selectedScene_));
     }
 
     /*ImGui::Spacing();
@@ -41,8 +40,8 @@ namespace Barrage
       editorData.openRenameModal_ = true;
       editorData.renameCallback_ = [](const std::string& newName)
       {
-        EditorData& editorData = Editor::Instance->Data();
-        Editor::Instance->Command().Send(new RenameScene(editorData.selectedScene_, newName));
+        EditorData& editorData = Editor::Get().Data();
+        Editor::Get().Command().Send(new RenameScene(editorData.selectedScene_, newName));
       };
     }*/
 

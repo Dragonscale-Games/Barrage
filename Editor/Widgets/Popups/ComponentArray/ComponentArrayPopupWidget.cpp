@@ -12,7 +12,7 @@
 
 #include "ComponentArrayPopupWidget.hpp"
 
-//#include <Commands/Delete/ComponentArray/DeleteComponentArray.hpp>
+#include <Commands/Delete/ComponentArray/DeleteComponentArray.hpp>
 #include <Editor.hpp>
 
 namespace Barrage
@@ -26,8 +26,8 @@ namespace Barrage
 
     if (ImGui::Selectable("Remove"))
     {
-      /*EditorData& editorData = Editor::Instance->Data();
-      Editor::Instance->Command().Send(new DeleteComponentArray(editorData.selectedScene_, editorData.selectedPool_, componentArrayName));*/
+      EditorData& editorData = Editor::Get().Data();
+      Editor::Get().Command().Send(std::make_shared<DeleteComponentArray>(editorData.selectedScene_, editorData.selectedPool_, componentArrayName));
     }
 
     ImGui::EndPopup();

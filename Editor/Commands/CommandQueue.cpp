@@ -164,7 +164,7 @@ namespace Barrage
   void CommandQueue::SetSceneAndProjectDirty()
   {
     Editor::Get().Data().sceneIsDirty_ = true;
-    //Editor::Get().Data().projectIsDirty_ = true;
+    Editor::Get().Data().projectIsDirty_ = true;
   }
 
   void CommandQueue::Clear()

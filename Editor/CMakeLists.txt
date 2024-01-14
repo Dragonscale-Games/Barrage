@@ -37,6 +37,30 @@ add_executable(Editor
 "Commands/Command.cpp" 
 "Commands/CommandQueue.cpp" 
 
+"Commands/Create/Component/CreateComponent.cpp" 
+"Commands/Create/ComponentArray/CreateComponentArray.cpp" 
+"Commands/Create/StartingObject/CreateStartingObject.cpp" 
+"Commands/Create/SpawnArchetype/CreateSpawnArchetype.cpp" 
+"Commands/Create/Pool/CreatePool.cpp" 
+"Commands/Create/Tag/CreateTag.cpp" 
+
+"Commands/Delete/Component/DeleteComponent.cpp" 
+"Commands/Delete/ComponentArray/DeleteComponentArray.cpp" 
+"Commands/Delete/StartingObject/DeleteStartingObject.cpp" 
+"Commands/Delete/SpawnArchetype/DeleteSpawnArchetype.cpp" 
+"Commands/Delete/Pool/DeletePool.cpp" 
+"Commands/Delete/Tag/DeleteTag.cpp" 
+
+"Commands/Duplicate/Pool/DuplicatePool.cpp"
+ 
+"Commands/Edit/Capacity/EditCapacity.cpp" 
+"Commands/Edit/Component/EditComponent.cpp" 
+"Commands/Edit/ComponentArray/EditComponentArray.cpp" 
+
+"Commands/Rename/StartingObject/RenameStartingObject.cpp" 
+"Commands/Rename/SpawnArchetype/RenameSpawnArchetype.cpp" 
+"Commands/Rename/Pool/RenamePool.cpp" 
+
 "Data/EditorData.cpp"
 
 "GUI/GUI.cpp" 
@@ -57,7 +81,8 @@ add_executable(Editor
 
 "Widgets/Popups/Component/ComponentPopupWidget.cpp" 
  "Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.cpp"  
-"Widgets/Popups/Object/ObjectPopupWidget.cpp" 
+"Widgets/Popups/StartingObject/StartingObjectPopupWidget.cpp" 
+"Widgets/Popups/SpawnArchetype/SpawnArchetypePopupWidget.cpp" 
 "Widgets/Popups/Pool/PoolPopupWidget.cpp" 
 "Widgets/Popups/Scene/ScenePopupWidget.cpp" 
 

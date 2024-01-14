@@ -43,8 +43,7 @@ namespace Barrage
           each frame will be kept; the rest will be discarded.
 
         \param command
-          This should be a pointer to a Command object allocated with
-          new. The CommandQueue will take care of deallocating it.
+          Shared pointer to command object.
       */
       /**************************************************************/
       void Send(std::shared_ptr<Command> command);

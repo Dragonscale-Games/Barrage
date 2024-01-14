@@ -14,7 +14,7 @@
 #include "Widgets/Data/DataWidget.hpp"
 #include <iostream>
 #include "Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.hpp"
-//#include "Commands/Edit/ComponentArray/EditComponentArray.hpp"
+#include "Commands/Edit/ComponentArray/EditComponentArray.hpp"
 #include "Editor.hpp"
 
 namespace Barrage
@@ -41,15 +41,24 @@ namespace Barrage
 
       if (object.ValueWasSet())
       {
-        /*EditorData& editorData = Editor::Instance->Data();
-        EditComponentArray* command = new EditComponentArray(
-          editorData.selectedScene_, 
+        EditorData& editorData = Editor::Get().Data();
+        
+        bool isSpawnArchetype = false;
+
+        if (!editorData.selectedSpawnArchetype_.empty())
+        {
+          isSpawnArchetype = true;
+        }
+
+        Editor::Get().Command().Send(std::make_shared<EditComponentArray>(
+          editorData.selectedScene_,
           editorData.selectedPool_,
-          editorData.selectedObject_,
+          isSpawnArchetype ? editorData.selectedSpawnArchetype_ : editorData.selectedStartingObject_,
           componentName,
+          isSpawnArchetype,
           object.GetRTTRValue(),
-          object.ChainUndoEnabled());
-        Editor::Instance->Command().Send(command);*/
+          object.ChainUndoEnabled()
+        ));
       }
     }
 

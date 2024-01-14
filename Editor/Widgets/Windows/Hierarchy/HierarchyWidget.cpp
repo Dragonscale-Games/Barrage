@@ -13,7 +13,8 @@
 #include "HierarchyWidget.hpp"
 #include "Editor.hpp"
 
-#include "Widgets/Popups/Object/ObjectPopupWidget.hpp"
+#include "Widgets/Popups/StartingObject/StartingObjectPopupWidget.hpp"
+#include "Widgets/Popups/SpawnArchetype/SpawnArchetypePopupWidget.hpp"
 #include "Widgets/Popups/Pool/PoolPopupWidget.hpp"
 #include "Widgets/Popups/Scene/ScenePopupWidget.hpp"
 
@@ -144,7 +145,8 @@ namespace Barrage
         itemClicked |= ObjectGUI(poolName, it->second, true);
       }
 
-      ObjectPopupWidget::Use("Object Popup");
+      StartingObjectPopupWidget::Use("Starting Object Popup");
+      SpawnArchetypePopupWidget::Use("Spawn Archetype Popup");
 
       ImGui::TreePop();
     }
@@ -194,15 +196,20 @@ namespace Barrage
       if (isSpawnArchetype)
       {
         SelectSpawnArchetype(objectName);
+
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+        {
+          ImGui::OpenPopup("Spawn Archetype Popup");
+        }
       }
       else
       {
         SelectStartingObject(objectName);
-      }
-      
-      if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-      {
-        ImGui::OpenPopup("Object Popup");
+
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+        {
+          ImGui::OpenPopup("Starting Object Popup");
+        }
       }
     }
 

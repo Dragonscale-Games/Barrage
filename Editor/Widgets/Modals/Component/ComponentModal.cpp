@@ -12,9 +12,9 @@
  /* ======================================================================== */
 
 #include "ComponentModal.hpp"
-#include <Objects/Components/ComponentFactory.hpp>
 #include <Editor.hpp>
-//#include <Commands/Create/Component/CreateComponent.hpp>
+#include <Objects/Components/ComponentFactory.hpp>
+#include <Commands/Create/Component/CreateComponent.hpp>
 
 namespace Barrage
 {
@@ -63,7 +63,7 @@ namespace Barrage
 
       if (ImGui::Button("Add", ImVec2(120.0f, 0.0f))) 
       { 
-        //Editor::Instance->Command().Send(new CreateComponent(editorData.selectedScene_, editorData.selectedPool_, editorData.selectedComponent_));
+        Editor::Get().Command().Send(std::make_shared<CreateComponent>(editorData.selectedScene_, editorData.selectedPool_, editorData.selectedComponent_));
         ImGui::CloseCurrentPopup(); 
       }
       ImGui::SameLine();

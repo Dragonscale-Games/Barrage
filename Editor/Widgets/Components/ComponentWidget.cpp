@@ -15,7 +15,7 @@
 #include <iostream>
 #include "Widgets/Popups/Component/ComponentPopupWidget.hpp"
 #include <Editor.hpp>
-//#include "Commands/Edit/Component/EditComponent.hpp"
+#include "Commands/Edit/Component/EditComponent.hpp"
 
 namespace Barrage
 {
@@ -41,14 +41,14 @@ namespace Barrage
 
       if (object.ValueWasSet())
       {
-        /*EditorData& editorData = Editor::Instance->Data();
-        EditComponent* command = new EditComponent(
+        EditorData& editorData = Editor::Get().Data();
+        Editor::Get().Command().Send(std::make_shared<EditComponent>(
           editorData.selectedScene_,
           editorData.selectedPool_,
           componentName,
           object.GetRTTRValue(),
-          object.ChainUndoEnabled());
-        Editor::Instance->Command().Send(command);*/
+          object.ChainUndoEnabled()
+        ));
       }
     }
 
