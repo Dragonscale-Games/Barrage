@@ -126,7 +126,7 @@
                     }
                 },
                 "name": "Spawner Pool",
-                "spawnArchetypes": [],
+              "spawnArchetypes": [],
                 "startingObjects": [
                     {
                         "Key": "Spawner Object",

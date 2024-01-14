@@ -18,7 +18,7 @@ namespace Barrage
   SpawnRuleFactoryMethodMap SpawnRuleFactory::spawnRuleFactoryMethodMap_ = SpawnRuleFactoryMethodMap();
   StringSet SpawnRuleFactory::spawnRuleNames_ = StringSet();
 
-  GenericSpawnRule SpawnRuleFactory::CreateSpawnRule(const std::string& name)
+  SpawnRuleDeepPtr SpawnRuleFactory::CreateSpawnRule(const std::string& name)
   {
     if (spawnRuleFactoryMethodMap_.count(name))
     {

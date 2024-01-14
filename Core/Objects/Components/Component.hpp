@@ -154,7 +154,7 @@ namespace Barrage
       T data_;
   };
 
-  class GenericComponent
+  class ComponentDeepPtr
   {
     public:
       /**************************************************************/
@@ -164,22 +164,22 @@ namespace Barrage
 
         \param nullPointer
           Dummy parameter. Allows default parameter conversion like:
-            Foo(GenericComponent pointer = nullptr)
+            Foo(ComponentDeepPtr pointer = nullptr)
       */
       /**************************************************************/
-      GenericComponent(std::nullptr_t nullPointer = nullptr);
+      ComponentDeepPtr(std::nullptr_t nullPointer = nullptr);
       
       /**************************************************************/
       /*!
         \brief
-          Constructs this GenericComponent from a shared pointer. The
+          Constructs this ComponentDeepPtr from a shared pointer. The
           shared pointer is stored internally (wrapped).
 
         \param ptr
           The shared pointer to wrap.
       */
       /**************************************************************/
-      GenericComponent(std::shared_ptr<Component> ptr);
+      ComponentDeepPtr(std::shared_ptr<Component> ptr);
 
       /**************************************************************/
       /*!
@@ -190,7 +190,7 @@ namespace Barrage
           The component pointer to deep copy.
       */
       /**************************************************************/
-      GenericComponent(const GenericComponent& other);
+      ComponentDeepPtr(const ComponentDeepPtr& other);
 
       /**************************************************************/
       /*!
@@ -202,7 +202,7 @@ namespace Barrage
           The component pointer to deep copy.
       */
       /**************************************************************/
-      GenericComponent& operator=(const GenericComponent& other);
+      ComponentDeepPtr& operator=(const ComponentDeepPtr& other);
 
       /**************************************************************/
       /*!
@@ -214,7 +214,7 @@ namespace Barrage
           The component pointer to move.
       */
       /**************************************************************/
-      GenericComponent(GenericComponent&& other) noexcept;
+      ComponentDeepPtr(ComponentDeepPtr&& other) noexcept;
 
       /**************************************************************/
       /*!
@@ -226,7 +226,7 @@ namespace Barrage
           The component pointer to move.
       */
       /**************************************************************/
-      GenericComponent& operator=(GenericComponent&& other) noexcept;
+      ComponentDeepPtr& operator=(ComponentDeepPtr&& other) noexcept;
 
       /**************************************************************/
       /*!
@@ -262,7 +262,7 @@ namespace Barrage
       std::shared_ptr<Component> ptr_;
   };
 
-  using ComponentMap = std::map<std::string, GenericComponent>;
+  using ComponentMap = std::map<std::string, ComponentDeepPtr>;
 }
 
 #include "Component.tpp"

@@ -28,7 +28,7 @@ namespace Barrage
   {
     for (const auto& componentArrayName : componentArrayNames)
     {
-      GenericComponentArray componentArray = ComponentFactory::AllocateComponentArray(componentArrayName, 1);
+      ComponentArrayDeepPtr componentArray = ComponentFactory::AllocateComponentArray(componentArrayName, 1);
 
       // TODO: Log/throw something if these conditions aren't met
       if (componentArray && componentArrays_.count(componentArrayName) == 0)

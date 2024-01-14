@@ -37,7 +37,7 @@ namespace Barrage
 
     for (auto it = valueRules_.begin(); it != valueRules_.end(); ++it)
     {
-      GenericSpawnRule& spawnRule = *it;
+      SpawnRuleDeepPtr& spawnRule = *it;
 
       if (spawnRule->HasArray())
       {
@@ -49,7 +49,7 @@ namespace Barrage
 
     for (auto it = sizeRules_.begin(); it != sizeRules_.end(); ++it)
     {
-      GenericSpawnRule& spawnRule = *it;
+      SpawnRuleDeepPtr& spawnRule = *it;
 
       if (spawnRule->HasArray())
       {
@@ -71,7 +71,7 @@ namespace Barrage
     
     for (auto it = sizeRules_.begin(); it != sizeRules_.end(); ++it)
     {
-      GenericSpawnRule& spawnRule = *it;
+      SpawnRuleDeepPtr& spawnRule = *it;
     
       if (spawnRule->HasArray())
       {
@@ -83,7 +83,7 @@ namespace Barrage
     
     for (auto it = valueRules_.begin(); it != valueRules_.end(); ++it)
     {
-      GenericSpawnRule& spawnRule = *it;
+      SpawnRuleDeepPtr& spawnRule = *it;
     
       if (spawnRule->HasArray())
       {

@@ -1,41 +1,42 @@
 /* ======================================================================== */
 /*!
- * \file            MainMenuWidget.hpp
+ * \file            PoolPopupWidget.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The main menu bar that shows at the top of the screen.
+   The menu that pops up when you right click a pool.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef MainMenuWidget_BARRAGE_H
-#define MainMenuWidget_BARRAGE_H
+#ifndef PoolPopupWidget_BARRAGE_H
+#define PoolPopupWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
 
 namespace Barrage
 {
-  //! Main menu bar at top of screen
-  class MainMenuWidget
+  //! Pool right click menu
+  class PoolPopupWidget
   {
-    public:
-      /**************************************************************/
-      /*!
-        \brief
-          Adds the widget to the window.
-      */
-      /**************************************************************/
-      static void Use();
+  public:
+    /**************************************************************/
+    /*!
+      \brief
+        Adds the widget to the window.
 
-    private:
-      static void ImportTexture();
+      \param strId
+        The ID passed to ImGui::OpenPopup() that tells this popup
+        when to open.
+    */
+    /**************************************************************/
+    static void Use(const char* strId);
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // MainMenuWidget_BARRAGE_H
+#endif // PoolPopupWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

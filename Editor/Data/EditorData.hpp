@@ -30,13 +30,19 @@ namespace Barrage
     bool sceneIsDirty_;                       //!< Flag for when user changes something in current scene
     bool projectIsDirty_;                     //!< Flag for whether project has changed since the last save
 
-    bool openProjectModal_;                   //!< Flag for when user opens the "project" modal
-
+    bool openProjectModal_;                   //!< Flag for opening startup "new/open project" modal
+    bool openSaveProjectModal_;               //!< Flag for opening "save before closing?" modal
     unsigned gameTick_;                       //!< The tick to show/start on in the preview window
 
     std::string projectName_;                 //!< The name of the game project
     std::string projectDirectory_;            //!< The directory of the game project
+
     std::string selectedScene_;               //!< The currently selected scene
+    std::string selectedPool_;                //!< The currently selected pool in a scene
+    std::string selectedStartingObject_;      //!< The currently selected starting object in a pool
+    std::string selectedSpawnArchetype_;      //!< The currently selected spawn archetype in a pool
+
+    static std::string editorSpace_;
   };
 }
 

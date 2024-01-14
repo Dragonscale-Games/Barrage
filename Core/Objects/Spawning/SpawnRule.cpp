@@ -91,34 +91,34 @@ namespace Barrage
     return true;
   }
 
-  GenericSpawnRule::GenericSpawnRule(std::nullptr_t) :
+  SpawnRuleDeepPtr::SpawnRuleDeepPtr(std::nullptr_t) :
     ptr_(nullptr)
   {
   }
 
-  GenericSpawnRule::GenericSpawnRule(std::shared_ptr<SpawnRule> ptr) :
+  SpawnRuleDeepPtr::SpawnRuleDeepPtr(std::shared_ptr<SpawnRule> ptr) :
     ptr_(ptr)
   {
   }
 
-  GenericSpawnRule::GenericSpawnRule(const GenericSpawnRule& other) :
+  SpawnRuleDeepPtr::SpawnRuleDeepPtr(const SpawnRuleDeepPtr& other) :
     ptr_(other ? other->Clone() : nullptr)
   {
   }
 
-  GenericSpawnRule& GenericSpawnRule::operator=(const GenericSpawnRule& other)
+  SpawnRuleDeepPtr& SpawnRuleDeepPtr::operator=(const SpawnRuleDeepPtr& other)
   {
     ptr_ = other ? other->Clone() : nullptr;
 
     return *this;
   }
 
-  GenericSpawnRule::GenericSpawnRule(GenericSpawnRule&& other) noexcept :
+  SpawnRuleDeepPtr::SpawnRuleDeepPtr(SpawnRuleDeepPtr&& other) noexcept :
     ptr_(std::move(other.ptr_))
   {
   }
 
-  GenericSpawnRule& GenericSpawnRule::operator=(GenericSpawnRule&& other) noexcept
+  SpawnRuleDeepPtr& SpawnRuleDeepPtr::operator=(SpawnRuleDeepPtr&& other) noexcept
   {
     if (this != &other) // Prevent self-assignment
     {
@@ -128,22 +128,22 @@ namespace Barrage
     return *this;
   }
 
-  SpawnRule* GenericSpawnRule::operator->() const
+  SpawnRule* SpawnRuleDeepPtr::operator->() const
   {
     return ptr_.operator->();
   }
 
-  SpawnRule& GenericSpawnRule::operator*() const
+  SpawnRule& SpawnRuleDeepPtr::operator*() const
   {
     return *ptr_;
   }
 
-  GenericSpawnRule::operator bool() const noexcept
+  SpawnRuleDeepPtr::operator bool() const noexcept
   {
     return static_cast<bool>(ptr_);
   }
 
-  std::shared_ptr<SpawnRule> GenericSpawnRule::Get()
+  std::shared_ptr<SpawnRule> SpawnRuleDeepPtr::Get()
   {
     return ptr_;
   }

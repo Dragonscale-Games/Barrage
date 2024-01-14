@@ -28,34 +28,34 @@ namespace Barrage
     return capacity_;
   }
   
-  GenericComponentArray::GenericComponentArray(std::nullptr_t) :
+  ComponentArrayDeepPtr::ComponentArrayDeepPtr(std::nullptr_t) :
     ptr_(nullptr)
   {
   }
 
-  GenericComponentArray::GenericComponentArray(std::shared_ptr<ComponentArray> ptr) :
+  ComponentArrayDeepPtr::ComponentArrayDeepPtr(std::shared_ptr<ComponentArray> ptr) :
     ptr_(ptr)
   {
   }
 
-  GenericComponentArray::GenericComponentArray(const GenericComponentArray& other) :
+  ComponentArrayDeepPtr::ComponentArrayDeepPtr(const ComponentArrayDeepPtr& other) :
     ptr_(other ? other->Clone() : nullptr)
   {
   }
 
-  GenericComponentArray& GenericComponentArray::operator=(const GenericComponentArray& other)
+  ComponentArrayDeepPtr& ComponentArrayDeepPtr::operator=(const ComponentArrayDeepPtr& other)
   {
     ptr_ = other ? other->Clone() : nullptr;
 
     return *this;
   }
 
-  GenericComponentArray::GenericComponentArray(GenericComponentArray&& other) noexcept :
+  ComponentArrayDeepPtr::ComponentArrayDeepPtr(ComponentArrayDeepPtr&& other) noexcept :
     ptr_(std::move(other.ptr_))
   {
   }
 
-  GenericComponentArray& GenericComponentArray::operator=(GenericComponentArray&& other) noexcept
+  ComponentArrayDeepPtr& ComponentArrayDeepPtr::operator=(ComponentArrayDeepPtr&& other) noexcept
   {
     if (this != &other) // Prevent self-assignment
     {
@@ -65,17 +65,17 @@ namespace Barrage
     return *this;
   }
 
-  ComponentArray* GenericComponentArray::operator->() const
+  ComponentArray* ComponentArrayDeepPtr::operator->() const
   {
     return ptr_.operator->();
   }
 
-  ComponentArray& GenericComponentArray::operator*() const
+  ComponentArray& ComponentArrayDeepPtr::operator*() const
   {
     return *ptr_;
   }
 
-  GenericComponentArray::operator bool() const noexcept
+  ComponentArrayDeepPtr::operator bool() const noexcept
   {
     return static_cast<bool>(ptr_);
   }

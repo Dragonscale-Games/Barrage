@@ -43,7 +43,7 @@ namespace Barrage
     return name_;
   }
 
-  const PoolArchetypeMap& Scene::GetPoolArchetypes()
+  PoolArchetypeMap& Scene::GetPoolArchetypes()
   {
     return poolArchetypes_;
   }

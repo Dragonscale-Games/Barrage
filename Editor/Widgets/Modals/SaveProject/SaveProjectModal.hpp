@@ -1,41 +1,42 @@
 /* ======================================================================== */
 /*!
- * \file            MainMenuWidget.hpp
+ * \file            SaveProjectModal.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The main menu bar that shows at the top of the screen.
+   The "Save project before closing?" popup window.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef MainMenuWidget_BARRAGE_H
-#define MainMenuWidget_BARRAGE_H
+#ifndef SaveProjectModal_BARRAGE_H
+#define SaveProjectModal_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
 
 namespace Barrage
 {
-  //! Main menu bar at top of screen
-  class MainMenuWidget
+  //! "Save project before closing?" popup window
+  class SaveProjectModal
   {
     public:
       /**************************************************************/
       /*!
         \brief
           Adds the widget to the window.
+
+        \param strId
+          The ID passed to ImGui::OpenPopup() that tells this modal
+          when to open.
       */
       /**************************************************************/
-      static void Use();
-
-    private:
-      static void ImportTexture();
+      static void Use(const char* strId);
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // MainMenuWidget_BARRAGE_H
+#endif // SaveProjectModal_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -243,7 +243,7 @@ namespace Barrage
 
       for (auto it = spawnRuleList.begin(); it != spawnRuleList.end(); ++it)
       {
-        const GenericSpawnRule& spawnRule = *it;
+        const SpawnRuleDeepPtr& spawnRule = *it;
 
         rapidjson::Value spawnRuleValue;
         spawnRuleValue.SetObject();
@@ -360,16 +360,16 @@ namespace Barrage
       {
         std::string name = it->name.GetString();
       
-        GenericComponent component = ComponentFactory::AllocateComponent(name);
+        ComponentDeepPtr component = ComponentFactory::AllocateComponent(name);
       
         if (component)
         {
-          rttr::type type = rttr::type::get_by_name(name);
+          rttr::type componentType = rttr::type::get_by_name(name);
       
-          if (type.is_valid())
+          if (componentType.is_valid())
           {
             rttr::variant value = component->GetRTTRValue();
-            Barrage::Deserialize(value, it->value, type);
+            Barrage::Deserialize(value, it->value, componentType);
             component->SetRTTRValue(value);
           }
       
@@ -387,16 +387,16 @@ namespace Barrage
       {
         std::string name = it->name.GetString();
 
-        GenericComponentArray componentArray = ComponentFactory::AllocateComponentArray(name, 1);
+        ComponentArrayDeepPtr componentArray = ComponentFactory::AllocateComponentArray(name, 1);
 
         if (componentArray)
         {
-          rttr::type type = rttr::type::get_by_name(name);
+          rttr::type componentType = rttr::type::get_by_name(name);
 
-          if (type.is_valid())
+          if (componentType.is_valid())
           {
             rttr::variant value = componentArray->GetRTTRValue(0);
-            Barrage::Deserialize(value, it->value, type);
+            Barrage::Deserialize(value, it->value, componentType);
             componentArray->SetRTTRValue(value, 0);
           }
 
@@ -419,7 +419,7 @@ namespace Barrage
       
         if (element.HasMember("Name") && element["Name"].IsString())
         {
-          GenericSpawnRule newSpawnRule = SpawnRuleFactory::CreateSpawnRule(element["Name"].GetString());
+          SpawnRuleDeepPtr newSpawnRule = SpawnRuleFactory::CreateSpawnRule(element["Name"].GetString());
       
           if (newSpawnRule)
           {

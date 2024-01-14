@@ -15,6 +15,9 @@
 
 #include "Widgets/Windows/Performance/PerformanceWidget.hpp"
 
+#include <nfd.h>
+#include <filesystem>
+
 namespace Barrage
 {
   void MainMenuWidget::Use()
@@ -40,6 +43,15 @@ namespace Barrage
       if (ImGui::MenuItem("Save project"))
       {
         Editor::Get().SaveProject(Editor::Get().Data().projectDirectory_);
+      }
+
+      ImGui::Spacing();
+      ImGui::Separator();
+      ImGui::Spacing();
+
+      if (ImGui::MenuItem("Import texture"))
+      {
+        ImportTexture();
       }
 
       ImGui::Spacing();
@@ -150,5 +162,48 @@ namespace Barrage
     }
 
     ImGui::EndMainMenuBar();
+  }
+
+  void MainMenuWidget::ImportTexture()
+  {
+    nfdchar_t* raw_path = NULL;
+    nfdresult_t result = NFD_OpenDialog("png", NULL, &raw_path);
+
+    if (result != NFD_OKAY)
+    {
+      LogWidget::AddEntry("Could not import texture. (Problem selecting texture file.)");
+      return;
+    }
+
+    std::filesystem::path file_path(raw_path);
+    free(raw_path);
+
+    std::string texture_directory(Editor::Get().Data().projectDirectory_ + "/Assets/Textures");
+
+    if (!std::filesystem::exists(texture_directory))
+    {
+      LogWidget::AddEntry("Could not import texture. (No Textures folder in Assets folder.)");
+      return;
+    }
+
+    if (file_path.extension() != ".png")
+    {
+      LogWidget::AddEntry("Could not import texture. (Invalid file type.)");
+      return;
+    }
+
+    if (!std::filesystem::copy_file(file_path, texture_directory + "/" + file_path.filename().string()))
+    {
+      LogWidget::AddEntry("Could not import texture. (Could not copy file.)");
+      return;
+    }
+
+    if (!Engine::Get().Graphics().Textures().LoadTexture(file_path.stem().string()))
+    {
+      LogWidget::AddEntry("Error loading texture file after import.");
+      return;
+    }
+
+    LogWidget::AddEntry("Imported texture file \"" + file_path.filename().string() + "\".");
   }
 }

@@ -1,41 +1,46 @@
 /* ======================================================================== */
 /*!
- * \file            MainMenuWidget.hpp
+ * \file            ComponentArrayPopupWidget.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The main menu bar that shows at the top of the screen.
+   The menu that pops up when you right click a component array.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef MainMenuWidget_BARRAGE_H
-#define MainMenuWidget_BARRAGE_H
+#ifndef ComponentArrayPopupWidget_BARRAGE_H
+#define ComponentArrayPopupWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
+#include <string>
 
 namespace Barrage
 {
-  //! Main menu bar at top of screen
-  class MainMenuWidget
+  //! Component array right click menu
+  class ComponentArrayPopupWidget
   {
     public:
       /**************************************************************/
       /*!
         \brief
           Adds the widget to the window.
+
+        \param strId
+          The ID passed to ImGui::OpenPopup() that tells this popup
+          when to open.
+
+        \param componentArrayName
+          The name of the component being modified.
       */
       /**************************************************************/
-      static void Use();
-
-    private:
-      static void ImportTexture();
+      static void Use(const char* strId, const std::string& componentArrayName);
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // MainMenuWidget_BARRAGE_H
+#endif // ComponentArrayPopupWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -395,7 +395,7 @@ namespace Barrage
       ComponentArrayT<A> dataArray_;
   };
 
-  class GenericSpawnRule
+  class SpawnRuleDeepPtr
   {
     public:
       /**************************************************************/
@@ -405,22 +405,22 @@ namespace Barrage
 
         \param nullPointer
           Dummy parameter. Allows default parameter conversion like:
-            Foo(GenericSpawnRule pointer = nullptr)
+            Foo(SpawnRuleDeepPtr pointer = nullptr)
       */
       /**************************************************************/
-      GenericSpawnRule(std::nullptr_t nullPointer = nullptr);
+      SpawnRuleDeepPtr(std::nullptr_t nullPointer = nullptr);
 
       /**************************************************************/
       /*!
         \brief
-          Constructs this GenericSpawnRule from a shared pointer. The
+          Constructs this SpawnRuleDeepPtr from a shared pointer. The
           shared pointer is stored internally (wrapped).
 
         \param ptr
           The shared pointer to wrap.
       */
       /**************************************************************/
-      GenericSpawnRule(std::shared_ptr<SpawnRule> ptr);
+      SpawnRuleDeepPtr(std::shared_ptr<SpawnRule> ptr);
 
       /**************************************************************/
       /*!
@@ -431,7 +431,7 @@ namespace Barrage
           The spawn rule pointer to deep copy.
       */
       /**************************************************************/
-      GenericSpawnRule(const GenericSpawnRule& other);
+      SpawnRuleDeepPtr(const SpawnRuleDeepPtr& other);
 
       /**************************************************************/
       /*!
@@ -443,7 +443,7 @@ namespace Barrage
           The spawn rule pointer to deep copy.
       */
       /**************************************************************/
-      GenericSpawnRule& operator=(const GenericSpawnRule& other);
+      SpawnRuleDeepPtr& operator=(const SpawnRuleDeepPtr& other);
 
       /**************************************************************/
       /*!
@@ -455,7 +455,7 @@ namespace Barrage
           The spawn rule pointer to move.
       */
       /**************************************************************/
-      GenericSpawnRule(GenericSpawnRule&& other) noexcept;
+      SpawnRuleDeepPtr(SpawnRuleDeepPtr&& other) noexcept;
 
       /**************************************************************/
       /*!
@@ -467,7 +467,7 @@ namespace Barrage
           The spawn rule pointer to move.
       */
       /**************************************************************/
-      GenericSpawnRule& operator=(GenericSpawnRule&& other) noexcept;
+      SpawnRuleDeepPtr& operator=(SpawnRuleDeepPtr&& other) noexcept;
 
       /**************************************************************/
       /*!
@@ -514,7 +514,7 @@ namespace Barrage
       std::shared_ptr<SpawnRule> ptr_;
   };
 
-  using SpawnRuleList = std::vector<GenericSpawnRule>;
+  using SpawnRuleList = std::vector<SpawnRuleDeepPtr>;
 }
 
 #include "SpawnRule.tpp"

@@ -16,6 +16,7 @@
 #include "Editor.hpp"
 
 #include "Widgets/Modals/Project/ProjectModal.hpp"
+#include "Widgets/Modals/SaveProject/SaveProjectModal.hpp"
 
 #include "Widgets/Windows/Game/GameWidget.hpp"
 #include "Widgets/Windows/Hierarchy/HierarchyWidget.hpp"
@@ -225,8 +226,8 @@ namespace Barrage
     engine_.Window().Maximize();
     engine_.Frames().SetVsync(true);
 
-    engine_.Spaces().AddSpace("Editor Space");
-    Space* editorSpace = engine_.Spaces().GetSpace("Editor Space");
+    engine_.Spaces().AddSpace(data_.editorSpace_);
+    Space* editorSpace = engine_.Spaces().GetSpace(data_.editorSpace_);
     editorSpace->AllowSceneChangesDuringUpdate(false);
 
     if (!OpenProjectInternal(projectPath))
@@ -264,7 +265,7 @@ namespace Barrage
 
     if (data_.sceneIsDirty_)
     {
-      Space* editorSpace = engine_.Spaces().GetSpace("Editor Space");
+      Space* editorSpace = engine_.Spaces().GetSpace(data_.editorSpace_);
 
       editorSpace->SetScene(data_.selectedScene_);
       editorSpace->GetRNG().SetSeed(0xC0FFEEC0FFEE);
@@ -292,7 +293,14 @@ namespace Barrage
 
     if (engine_.Window().IsClosed())
     {
+      glfwSetWindowShouldClose(engine_.Window().GetWindowHandle(), false);
       data_.isRunning_ = false;
+    }
+
+    if (!data_.isRunning_ && data_.projectIsDirty_)
+    {
+      data_.isRunning_ = true;
+      data_.openSaveProjectModal_ = true;
     }
 
     engine_.Frames().EndFrame(!engine_.Window().IsFocused());
@@ -322,7 +330,14 @@ namespace Barrage
       data_.openProjectModal_ = false;
     }
 
+    if (data_.openSaveProjectModal_)
+    {
+      ImGui::OpenPopup("Save Project");
+      data_.openSaveProjectModal_ = false;
+    }
+
     ProjectModal::Use("Project");
+    SaveProjectModal::Use("Save Project");
   }
 
   void Editor::HandleKeyboard()
@@ -411,7 +426,7 @@ namespace Barrage
     engine_.Scenes().Clear();
     engine_.Scenes().AddScene(sceneName, std::move(scene));
     data_.selectedScene_ = sceneName;
-    engine_.Spaces().GetSpace("Editor Space")->SetScene(sceneName);
+    engine_.Spaces().GetSpace(data_.editorSpace_)->SetScene(sceneName);
 
     if (std::filesystem::exists(textureDirectory))
     {

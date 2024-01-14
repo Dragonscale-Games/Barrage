@@ -1,41 +1,51 @@
 /* ======================================================================== */
 /*!
- * \file            MainMenuWidget.hpp
+ * \file            ComponentWidget.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The main menu bar that shows at the top of the screen.
+   Allows user to edit the values of a component.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef MainMenuWidget_BARRAGE_H
-#define MainMenuWidget_BARRAGE_H
+#ifndef ComponentWidget_BARRAGE_H
+#define ComponentWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
+#include <Objects/Components/Component.hpp>
+#include <string>
 
 namespace Barrage
 {
-  //! Main menu bar at top of screen
-  class MainMenuWidget
+  //! Allows user to edit the values of a component
+  class ComponentWidget
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Adds the widget to the window.
+          Adds a widget to the window that allows the user to edit
+          a component.
+
+        \param componentName
+          The name of the component.
+
+        \param component
+          The component being edited.
+
+        \return
+          Returns true if the component's value changed, returns
+          false otherwise.
       */
       /**************************************************************/
-      static void Use();
-
-    private:
-      static void ImportTexture();
+      static void Use(const std::string& componentName, ComponentDeepPtr& component);
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // MainMenuWidget_BARRAGE_H
+#endif // ComponentWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

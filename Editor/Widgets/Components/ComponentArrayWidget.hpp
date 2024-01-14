@@ -1,41 +1,51 @@
 /* ======================================================================== */
 /*!
- * \file            MainMenuWidget.hpp
+ * \file            ComponentArrayWidget.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   The main menu bar that shows at the top of the screen.
+   Allows user to edit the values of a component array.
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef MainMenuWidget_BARRAGE_H
-#define MainMenuWidget_BARRAGE_H
+#ifndef ComponentArrayWidget_BARRAGE_H
+#define ComponentArrayWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
+#include <Objects/Components/ComponentArray.hpp>
+#include <string>
 
 namespace Barrage
 {
-  //! Main menu bar at top of screen
-  class MainMenuWidget
+  //! Allows user to edit the values of a component array
+  class ComponentArrayWidget
   {
     public:
       /**************************************************************/
       /*!
         \brief
-          Adds the widget to the window.
+          Adds a widget to the window that allows the user to edit
+          a component array.
+         
+        \param componentName
+          The name of the component array.
+
+        \param componentArray
+          The component array being edited.
+
+        \return
+          Returns true if the component array's value changed, returns 
+          false otherwise.
       */
       /**************************************************************/
-      static void Use();
-
-    private:
-      static void ImportTexture();
+      static void Use(const std::string& componentName, ComponentArrayDeepPtr& componentArray);
   };
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // MainMenuWidget_BARRAGE_H
+#endif // ComponentArrayWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

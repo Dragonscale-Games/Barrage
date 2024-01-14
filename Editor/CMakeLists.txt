@@ -41,9 +41,21 @@ add_executable(Editor
 
 "GUI/GUI.cpp" 
 
+"Widgets/Components/ComponentArrayWidget.cpp" 
+"Widgets/Components/ComponentWidget.cpp"  
+
+"Widgets/Data/DataWidget.cpp" 
+
 "Widgets/MainMenu/MainMenuWidget.cpp"  
 
 "Widgets/Modals/Project/ProjectModal.cpp" 
+"Widgets/Modals/SaveProject/SaveProjectModal.cpp"
+
+"Widgets/Popups/Component/ComponentPopupWidget.cpp" 
+ "Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.cpp"  
+"Widgets/Popups/Object/ObjectPopupWidget.cpp" 
+"Widgets/Popups/Pool/PoolPopupWidget.cpp" 
+"Widgets/Popups/Scene/ScenePopupWidget.cpp" 
 
 "Widgets/Windows/Hierarchy/HierarchyWidget.cpp"
 "Widgets/Windows/Inspector/InspectorWidget.cpp"

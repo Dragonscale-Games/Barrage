@@ -321,7 +321,7 @@ namespace Barrage
       T* data_;
   };
 
-  class GenericComponentArray
+  class ComponentArrayDeepPtr
   {
     public:
       /**************************************************************/
@@ -331,22 +331,22 @@ namespace Barrage
 
         \param nullPointer
           Dummy parameter. Allows default parameter conversion like:
-            Foo(GenericComponentArray pointer = nullptr)
+            Foo(ComponentArrayDeepPtr pointer = nullptr)
       */
       /**************************************************************/
-      GenericComponentArray(std::nullptr_t nullPointer = nullptr);
+      ComponentArrayDeepPtr(std::nullptr_t nullPointer = nullptr);
       
       /**************************************************************/
       /*!
         \brief
-          Constructs this GenericComponentArray from a shared pointer. 
+          Constructs this ComponentArrayDeepPtr from a shared pointer. 
           The shared pointer is stored internally (wrapped).
 
         \param ptr
           The shared pointer to wrap.
       */
       /**************************************************************/
-      GenericComponentArray(std::shared_ptr<ComponentArray> ptr);
+      ComponentArrayDeepPtr(std::shared_ptr<ComponentArray> ptr);
 
       /**************************************************************/
       /*!
@@ -358,7 +358,7 @@ namespace Barrage
           The generic component array to deep copy.
       */
       /**************************************************************/
-      GenericComponentArray(const GenericComponentArray& other);
+      ComponentArrayDeepPtr(const ComponentArrayDeepPtr& other);
 
       /**************************************************************/
       /*!
@@ -370,7 +370,7 @@ namespace Barrage
           The component array pointer to deep copy.
       */
       /**************************************************************/
-      GenericComponentArray& operator=(const GenericComponentArray& other);
+      ComponentArrayDeepPtr& operator=(const ComponentArrayDeepPtr& other);
 
       /**************************************************************/
       /*!
@@ -382,7 +382,7 @@ namespace Barrage
           The component array pointer to move.
       */
       /**************************************************************/
-      GenericComponentArray(GenericComponentArray&& other) noexcept;
+      ComponentArrayDeepPtr(ComponentArrayDeepPtr&& other) noexcept;
 
       /**************************************************************/
       /*!
@@ -394,7 +394,7 @@ namespace Barrage
           The component array pointer to move.
       */
       /**************************************************************/
-      GenericComponentArray& operator=(GenericComponentArray&& other) noexcept;
+      ComponentArrayDeepPtr& operator=(ComponentArrayDeepPtr&& other) noexcept;
 
       /**************************************************************/
       /*!
@@ -430,7 +430,7 @@ namespace Barrage
       std::shared_ptr<ComponentArray> ptr_;
   };
 
-  using ComponentArrayMap = std::map<std::string, GenericComponentArray>;
+  using ComponentArrayMap = std::map<std::string, ComponentArrayDeepPtr>;
 }
 
 #include "ComponentArray.tpp"
