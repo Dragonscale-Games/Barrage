@@ -583,7 +583,7 @@ namespace Barrage
 
   void DataWidget::SpawnRuleListWidget(DataObject& object)
   {
-    if (!ImGui::TreeNode("Spawn rules"))
+    if (!ImGui::TreeNode(object.GetName().c_str()))
     {
       return;
     }

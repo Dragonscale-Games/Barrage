@@ -4,15 +4,26 @@
         {
             "Key": "Bullet Pool",
             "Value": {
-                "capacity": 100000,
+                "capacity": 1000,
                 "componentArrayNames": [
                     "ColorTint",
+                    "Destructible",
                     "Position",
                     "Rotation",
                     "Scale",
-                    "TextureUV"
+                    "TextureUV",
+                    "Velocity"
                 ],
                 "components": {
+                    "BoundaryBox": {
+                        "xMin": 0.0,
+                        "xMax": 1920.0,
+                        "yMin": 0.0,
+                        "yMax": 1080.0
+                    },
+                    "CircleCollider": {
+                        "radius": 8.0
+                    },
                     "Sprite": {
                         "texture": "TestBullet",
                         "layer": 0
@@ -27,41 +38,123 @@
                             "componentArrays": {
                                 "ColorTint": {
                                     "red": 0.0,
-                                    "green": 0.0,
-                                    "blue": 0.0,
+                                    "green": 0.1360001564025879,
+                                    "blue": 1.0,
                                     "alpha": 1.0
                                 },
+                                "Destructible": {},
                                 "Position": {
                                     "x": 960.0,
                                     "y": 540.0
                                 },
                                 "Rotation": {
                                     "angle": {
-                                        "value": 0.0
+                                        "value": -0.0
                                     }
                                 },
                                 "Scale": {
-                                    "w": 10.0,
-                                    "h": 10.0
+                                    "w": 16.0,
+                                    "h": 16.0
                                 },
                                 "TextureUV": {
                                     "uMin": 0.0,
                                     "vMin": 0.0,
                                     "uSize": 1.0,
                                     "vSize": 1.0
+                                },
+                                "Velocity": {
+                                    "vx": 6.0,
+                                    "vy": 0.0
                                 }
                             }
                         }
                     }
                 ],
                 "startingObjects": [],
-                "tags": []
+                "tags": [
+                    "Bullet"
+                ]
+            }
+        },
+        {
+            "Key": "Bullet Pool 2",
+            "Value": {
+                "capacity": 1000,
+                "componentArrayNames": [
+                    "ColorTint",
+                    "Destructible",
+                    "Position",
+                    "Rotation",
+                    "Scale",
+                    "TextureUV",
+                    "Velocity"
+                ],
+                "components": {
+                    "BoundaryBox": {
+                        "xMin": 0.0,
+                        "xMax": 1920.0,
+                        "yMin": 0.0,
+                        "yMax": 1080.0
+                    },
+                    "CircleCollider": {
+                        "radius": 8.0
+                    },
+                    "Sprite": {
+                        "texture": "TestBullet",
+                        "layer": 0
+                    }
+                },
+                "name": "Bullet Pool 2",
+                "spawnArchetypes": [
+                    {
+                        "Key": "Bullet Object",
+                        "Value": {
+                            "name": "Bullet Object",
+                            "componentArrays": {
+                                "ColorTint": {
+                                    "red": 0.0,
+                                    "green": 0.0,
+                                    "blue": 0.0,
+                                    "alpha": 1.0
+                                },
+                                "Destructible": {},
+                                "Position": {
+                                    "x": 960.0,
+                                    "y": 540.0
+                                },
+                                "Rotation": {
+                                    "angle": {
+                                        "value": -0.0
+                                    }
+                                },
+                                "Scale": {
+                                    "w": 32.0,
+                                    "h": 32.0
+                                },
+                                "TextureUV": {
+                                    "uMin": 0.0,
+                                    "vMin": 0.0,
+                                    "uSize": 1.0,
+                                    "vSize": 1.0
+                                },
+                                "Velocity": {
+                                    "vx": 6.0,
+                                    "vy": 0.0
+                                }
+                            }
+                        }
+                    }
+                ],
+                "startingObjects": [],
+                "tags": [
+                    "Bullet"
+                ]
             }
         },
         {
             "Key": "Spawner Pool",
             "Value": {
-                "capacity": 1,
+                "capacity": 2,
                 "componentArrayNames": [
                     "Position",
                     "SpawnTimer"
@@ -76,8 +169,13 @@
                                     "automaticSpawns": [
                                         {
                                             "spawnType": "Test Spawn Type",
-                                            "ticksPerSpawn": 10,
+                                            "ticksPerSpawn": 23,
                                             "delay": 0
+                                        },
+                                        {
+                                            "spawnType": "Test Spawn Type 2",
+                                            "ticksPerSpawn": 180,
+                                            "delay": 120
                                         }
                                     ]
                                 }
@@ -89,31 +187,41 @@
                                 "Value": {
                                     "spawnLayers": [
                                         {
-                                            "numGroups": 10,
+                                            "numGroups": 2,
                                             "sizeRules": [],
                                             "valueRules": [
                                                 {
                                                     "Name": "MatchPosition"
                                                 },
                                                 {
-                                                    "Name": "RandomOffset",
+                                                    "Name": "OffsetGlobal",
                                                     "Data": {
-                                                        "xVariance": 50.0,
-                                                        "yVariance": 50.0
+                                                        "base": {
+                                                            "x": -59.0,
+                                                            "y": 0.0
+                                                        },
+                                                        "delta": {
+                                                            "x": 58.0,
+                                                            "y": 0.0
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "Name": "SetDirection",
+                                                    "Data": {
+                                                        "angle": {
+                                                            "value": -1.8151425123214722
+                                                        }
                                                     }
                                                 }
                                             ]
                                         },
                                         {
-                                            "numGroups": 5,
+                                            "numGroups": 2,
                                             "sizeRules": [],
                                             "valueRules": [
                                                 {
-                                                    "Name": "RandomOffset",
-                                                    "Data": {
-                                                        "xVariance": 960.0,
-                                                        "yVariance": 540.0
-                                                    }
+                                                    "Name": "Mirror"
                                                 }
                                             ]
                                         }
@@ -121,21 +229,95 @@
                                     "destinationPool": "Bullet Pool",
                                     "spawnArchetype": "Bullet Object"
                                 }
+                            },
+                            {
+                                "Key": "Test Spawn Type 2",
+                                "Value": {
+                                    "spawnLayers": [
+                                        {
+                                            "numGroups": 1,
+                                            "sizeRules": [],
+                                            "valueRules": [
+                                                {
+                                                    "Name": "MatchPosition"
+                                                },
+                                                {
+                                                    "Name": "SetDirection",
+                                                    "Data": {
+                                                        "angle": {
+                                                            "value": -1.5707963705062867
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "numGroups": 3,
+                                            "sizeRules": [],
+                                            "valueRules": [
+                                                {
+                                                    "Name": "IncrementSpeed",
+                                                    "Data": {
+                                                        "base": 2.0,
+                                                        "delta": 1.0
+                                                    }
+                                                },
+                                                {
+                                                    "Name": "OffsetGlobal",
+                                                    "Data": {
+                                                        "base": {
+                                                            "x": 70.0,
+                                                            "y": 0.0
+                                                        },
+                                                        "delta": {
+                                                            "x": -27.0,
+                                                            "y": 0.0
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "numGroups": 2,
+                                            "sizeRules": [],
+                                            "valueRules": [
+                                                {
+                                                    "Name": "Mirror"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "destinationPool": "Bullet Pool 2",
+                                    "spawnArchetype": "Bullet Object"
+                                }
                             }
                         ]
                     }
                 },
                 "name": "Spawner Pool",
-              "spawnArchetypes": [],
+                "spawnArchetypes": [],
                 "startingObjects": [
+                    {
+                        "Key": "Object",
+                        "Value": {
+                            "name": "Object",
+                            "componentArrays": {
+                                "Position": {
+                                    "x": 1372.0,
+                                    "y": 979.0
+                                },
+                                "SpawnTimer": {}
+                            }
+                        }
+                    },
                     {
                         "Key": "Spawner Object",
                         "Value": {
                             "name": "Spawner Object",
                             "componentArrays": {
                                 "Position": {
-                                    "x": 960.0,
-                                    "y": 540.0
+                                    "x": 604.0,
+                                    "y": 988.0
                                 },
                                 "SpawnTimer": {}
                             }

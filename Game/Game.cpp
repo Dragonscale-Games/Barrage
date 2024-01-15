@@ -13,18 +13,6 @@
 #include "stdafx.h"
 #include "Game.hpp"
 
-#include "Systems/Draw/DrawSystem.hpp"
-#include "Objects/Components/ComponentFactory.hpp"
-#include "Objects/Spawning/SpawnRuleFactory.hpp"
-#include "Components/Sprite/Sprite.hpp"
-#include "Components/CircleCollider/CircleCollider.hpp"
-#include "Components/BoundaryBox/BoundaryBox.hpp"
-#include "Components/Spawner/Spawner.hpp"
-#include "ComponentArrays/Position/PositionArray.hpp"
-#include "SpawnRules/Position/PositionRules.hpp"
-
-#include <iostream>
-
 namespace Barrage
 {
   Game::Game() :

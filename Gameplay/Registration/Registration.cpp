@@ -29,7 +29,25 @@
 #include "Components/Spawner/Spawner.hpp"
 #include "Components/Sprite/Sprite.hpp"
 
-#include "SpawnRules/Position/PositionRules.hpp"
+#include "SpawnRules/Direction/Random/SpawnRandomDirection.hpp"
+#include "SpawnRules/Direction/Rotate/SpawnRotateDirection.hpp"
+#include "SpawnRules/Direction/Set/SpawnSetDirection.hpp"
+
+#include "SpawnRules/Miscellaneous/Mirror/SpawnMirror.hpp"
+#include "SpawnRules/Miscellaneous/Ring/SpawnRing.hpp"
+#include "SpawnRules/Miscellaneous/SpacedFan/SpawnSpacedFan.hpp"
+#include "SpawnRules/Miscellaneous/SpanFan/SpawnSpanFan.hpp"
+
+#include "SpawnRules/Position/Match/SpawnMatchPosition.hpp"
+#include "SpawnRules/Position/OffsetGlobal/SpawnOffsetGlobal.hpp"
+#include "SpawnRules/Position/OffsetLocal/SpawnOffsetLocal.hpp"
+#include "SpawnRules/Position/RandomBoxOffset/SpawnRandomBoxOffset.hpp"
+#include "SpawnRules/Position/RandomCircleOffset/SpawnRandomCircleOffset.hpp"
+#include "SpawnRules/Position/RotateOrigin/SpawnRotateOrigin.hpp"
+#include "SpawnRules/Position/ScaleOrigin/SpawnScaleOrigin.hpp"
+
+#include "SpawnRules/Speed/Increment/SpawnIncrementSpeed.hpp"
+#include "SpawnRules/Speed/Random/SpawnRandomSpeed.hpp"
 
 #include "Systems/Collision/CollisionSystem.hpp"
 #include "Systems/Creation/CreationSystem.hpp"
@@ -58,8 +76,25 @@ namespace Barrage
     RegisterComponent<Sprite>("Sprite");
     RegisterComponent<Spawner>("Spawner");
     
+    RegisterSpawnRule<Spawn::RandomDirection>("RandomDirection");
+    RegisterSpawnRule<Spawn::RotateDirection>("RotateDirection");
+    RegisterSpawnRule<Spawn::SetDirection>("SetDirection");
+
+    RegisterSpawnRule<Spawn::Mirror>("Mirror");
+    RegisterSpawnRule<Spawn::Ring>("Ring");
+    RegisterSpawnRule<Spawn::SpacedFan>("SpacedFan");
+    RegisterSpawnRule<Spawn::SpanFan>("SpanFan");
+
     RegisterSpawnRule<Spawn::MatchPosition>("MatchPosition");
-    RegisterSpawnRule<Spawn::RandomOffset>("RandomOffset");
+    RegisterSpawnRule<Spawn::OffsetGlobal>("OffsetGlobal");
+    RegisterSpawnRule<Spawn::OffsetLocal>("OffsetLocal");
+    RegisterSpawnRule<Spawn::RandomBoxOffset>("RandomBoxOffset");
+    RegisterSpawnRule<Spawn::RandomCircleOffset>("RandomCircleOffset");
+    RegisterSpawnRule<Spawn::RotateOrigin>("RotateOrigin");
+    RegisterSpawnRule<Spawn::ScaleOrigin>("ScaleOrigin");
+
+    RegisterSpawnRule<Spawn::IncrementSpeed>("IncrementSpeed");
+    RegisterSpawnRule<Spawn::RandomSpeed>("RandomSpeed");
 
     RegisterSystem<CollisionSystem>("CollisionSystem");
     RegisterSystem<CreationSystem>("CreationSystem");
@@ -100,11 +135,13 @@ namespace Barrage
     Spawner::Reflect();
     Sprite::Reflect();
 
-    rttr::registration::class_<Spawn::RandomOffsetData>("RandomOffsetData")
-      .constructor<>() (rttr::policy::ctor::as_object)
-      .property("xVariance", &Spawn::RandomOffsetData::xVariance_)
-      .property("yVariance", &Spawn::RandomOffsetData::yVariance_)
-      ;
+    Spawn::RotateDirection::Reflect();
+    Spawn::SetDirection::Reflect();
+
+    Spawn::OffsetGlobal::Reflect();
+    Spawn::RandomBoxOffset::Reflect();
+
+    Spawn::IncrementSpeed::Reflect();
   }
 
   void ObjectManager::Draw()

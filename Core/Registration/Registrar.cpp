@@ -20,6 +20,8 @@
 #include <rttr/variant.h>
 #include <rttr/registration.h>
 
+#include "glm/glm.hpp"
+
 namespace Barrage
 {
   std::vector<std::string> Registrar::systemUpdateOrder_ = std::vector<std::string>();
@@ -81,6 +83,12 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("Spaces", &Entry::spaces_)
       .property("Textures", &Entry::textures_)
+      ;
+
+    rttr::registration::class_<glm::vec2>("glm::vec2")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("x", &glm::vec2::x)
+      .property("y", &glm::vec2::y)
       ;
   }
 

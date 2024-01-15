@@ -167,6 +167,17 @@ namespace Barrage
       /**************************************************************/
       virtual bool HasArray();
 
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the stage of the pipeline the spawn rule runs in.
+
+        \return
+          Returns the stage of the spawn rule.
+      */
+      /**************************************************************/
+      virtual SpawnRuleStage GetStage();
+
     protected:
       /**************************************************************/
       /*!

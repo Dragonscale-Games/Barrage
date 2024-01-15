@@ -64,6 +64,11 @@ namespace Barrage
     return false;
   }
 
+  SpawnRuleStage SpawnRule::GetStage()
+  {
+    return SpawnRuleStage::VALUE_RULE;
+  }
+
   void SpawnRule::Execute(SpawnRuleInfo& info)
   {
     UNREFERENCED(info);
