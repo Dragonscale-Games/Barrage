@@ -50,30 +50,25 @@ add_library(Gameplay STATIC
 	"Components/Sprite/Sprite.cpp" 
     
 	"SpawnRules/Direction/Random/SpawnRandomDirection.cpp" 
-	"SpawnRules/Direction/Rotate/SpawnRotateDirection.cpp"
 	"SpawnRules/Direction/Set/SpawnSetDirection.cpp"
 
+	"SpawnRules/Miscellaneous/Fan/SpawnFan.cpp" 
+	"SpawnRules/Miscellaneous/Mirror/SpawnMirror.cpp"
 	"SpawnRules/Miscellaneous/Ring/SpawnRing.cpp" 
-	"SpawnRules/Miscellaneous/SpacedFan/SpawnSpacedFan.cpp" 
-	"SpawnRules/Miscellaneous/SpanFan/SpawnSpanFan.cpp"
 
 	"SpawnRules/Position/Match/SpawnMatchPosition.cpp"
-	"SpawnRules/Position/OffsetGlobal/SpawnOffsetGlobal.cpp" 
-	"SpawnRules/Position/OffsetLocal/SpawnOffsetLocal.cpp" 
+	"SpawnRules/Position/Offset/SpawnOffsetPosition.cpp" 
 	"SpawnRules/Position/RandomBoxOffset/SpawnRandomBoxOffset.cpp" 
-	"SpawnRules/Position/RandomCircleOffset/SpawnRandomCircleOffset.cpp"
-	"SpawnRules/Position/RotateOrigin/SpawnRotateOrigin.cpp" 
-	"SpawnRules/Position/ScaleOrigin/SpawnScaleOrigin.cpp"
 
-	"SpawnRules/Speed/Increment/SpawnIncrementSpeed.cpp"
 	"SpawnRules/Speed/Random/SpawnRandomSpeed.cpp"
+	"SpawnRules/Speed/Set/SpawnSetSpeed.cpp"
 
 	"Systems/Collision/CollisionSystem.cpp"
 	"Systems/Creation/CreationSystem.cpp"
 	"Systems/Destruction/DestructionSystem.cpp"
 	"Systems/Draw/DrawSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
-	"Systems/Spawn/SpawnSystem.cpp"  "SpawnRules/Miscellaneous/Mirror/SpawnMirror.cpp")
+	"Systems/Spawn/SpawnSystem.cpp")
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

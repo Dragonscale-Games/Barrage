@@ -9,6 +9,8 @@
    Applies a random direction to a spawned object.
 
    Requirements:
+   -Position (source)
+   -Position (destination)
    -Velocity (destination)
  */
  /* ======================================================================== */
@@ -16,9 +18,9 @@
 #include <stdafx.h>
 #include "SpawnRandomDirection.hpp"
 #include "Random/Random.hpp"
+#include "ComponentArrays/Position/PositionArray.hpp"
 #include "ComponentArrays/Velocity/VelocityArray.hpp"
 #include "Spaces/Space.hpp"
-#include "glm/glm.hpp"
 
 namespace Barrage
 {
@@ -34,22 +36,25 @@ namespace Barrage
     void RandomDirection::Execute(SpawnRuleInfo& info)
     {
       Random& rng = info.space_.GetRNG();
+      PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
       VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
 
       for (unsigned group = 0; group < info.groupInfo_.numGroups_; ++group)
       {
         float angle = 3.1415926f * rng.RangeFloat(0, 2.0f);
+        float cos_angle = glm::cos(angle);
+        float sin_angle = glm::sin(angle);
 
         for (unsigned layerCopy = 0; layerCopy < info.groupInfo_.numLayerCopies_; ++layerCopy)
         {
           for (unsigned object = 0; object < info.groupInfo_.numObjectsPerGroup_; ++object)
           {
             unsigned dest_index = CalculateDestinationIndex(info, object, group, layerCopy);
-            Velocity& velocity = dest_velocities.Data(dest_index);
-            float speed = glm::length(glm::vec2(velocity.vx_, velocity.vy_));
-
-            velocity.vx_ = speed * glm::cos(angle);
-            velocity.vy_ = speed * glm::sin(angle);
+            Position& dest_position = dest_positions.Data(dest_index);
+            Velocity& dest_velocity = dest_velocities.Data(dest_index);
+            
+            dest_position.Rotate(cos_angle, sin_angle);
+            dest_velocity.Rotate(cos_angle, sin_angle);
           }
         }
       }

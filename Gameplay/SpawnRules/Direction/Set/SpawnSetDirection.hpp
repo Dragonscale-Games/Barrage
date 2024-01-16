@@ -28,10 +28,10 @@ namespace Barrage
     struct SetDirectionData
     {
       Radian angle_;
-      float xDirection_; // precomputed, should not be edited manually
-      float yDirection_; // precomputed, should not be edited manually
+      float cosineAngle_; // precomputed, should not be edited manually
+      float sinAngle_;    // precomputed, should not be edited manually
 
-      inline SetDirectionData() : angle_(0.0f), xDirection_(1.0f), yDirection_(0.0f) {};
+      inline SetDirectionData() : angle_(0.0f), cosineAngle_(1.0f), sinAngle_(0.0f) {};
     };
     
     class SetDirection : public SpawnRuleT<SetDirectionData>

@@ -72,7 +72,7 @@ namespace Barrage
       CreateObjectsUnsafe(spawnArchetype, numObjects);
 
       ApplyValueSpawnRules(space, sourcePool, spawnType);
-      ApplySizeSpawnRules(space, sourcePool, spawnType);
+      ApplyCountSpawnRules(space, sourcePool, spawnType);
 
       numQueuedObjects_ += numObjects;
 
@@ -144,7 +144,7 @@ namespace Barrage
     }
   }
 
-  void Pool::ApplySizeSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType)
+  void Pool::ApplyCountSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType)
   {
     unsigned startIndex = GetSpawnIndex();
 
@@ -152,7 +152,7 @@ namespace Barrage
     {
       SpawnLayer& spawnLayer = *it;
 
-      for (auto jt = spawnLayer.sizeRules_.begin(); jt != spawnLayer.sizeRules_.end(); ++jt)
+      for (auto jt = spawnLayer.countRules_.begin(); jt != spawnLayer.countRules_.end(); ++jt)
       {
         SpawnRuleDeepPtr& spawnRule = *jt;
 

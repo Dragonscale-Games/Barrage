@@ -21,8 +21,8 @@ namespace Barrage
   SpawnLayer::SpawnLayer() :
     baseNumGroups_(1),
     groupInfoArray_(),
-    sizeRules_(),
-    valueRules_()
+    valueRules_(),
+    countRules_()
   {
   }
 
@@ -47,7 +47,7 @@ namespace Barrage
       }
     }
 
-    for (auto it = sizeRules_.begin(); it != sizeRules_.end(); ++it)
+    for (auto it = countRules_.begin(); it != countRules_.end(); ++it)
     {
       SpawnRuleDeepPtr& spawnRule = *it;
 
@@ -69,7 +69,7 @@ namespace Barrage
       groupInfoArray_.Data(i) = GroupInfo(baseNumGroups_);
     }
     
-    for (auto it = sizeRules_.begin(); it != sizeRules_.end(); ++it)
+    for (auto it = countRules_.begin(); it != countRules_.end(); ++it)
     {
       SpawnRuleDeepPtr& spawnRule = *it;
     

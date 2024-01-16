@@ -215,7 +215,7 @@ namespace Barrage
 
       void ApplyValueSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType);
 
-      void ApplySizeSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType);
+      void ApplyCountSpawnRules(Space& space, Pool& sourcePool, SpawnType& spawnType);
 
     public:
       ComponentMap components_;            //!< Holds shared components and their names

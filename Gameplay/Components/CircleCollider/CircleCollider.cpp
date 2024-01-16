@@ -15,7 +15,7 @@
 namespace Barrage
 {
   CircleCollider::CircleCollider() : 
-    radius_(50.0f) 
+    radius_(32.0f) 
   {
   }
 

@@ -1,7 +1,6 @@
-#pragma once
 /* ======================================================================== */
 /*!
- * \file            SpawnIncrementSpeed.cpp
+ * \file            SpawnSetSpeed.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -10,12 +9,12 @@
 
 
    Requirements:
-
+   - Velocity (destination)
  */
  /* ======================================================================== */
 
 #include <stdafx.h>
-#include "SpawnIncrementSpeed.hpp"
+#include "SpawnSetSpeed.hpp"
 #include "Objects/Pools/Pool.hpp"
 #include "glm/glm.hpp"
 
@@ -23,14 +22,14 @@ namespace Barrage
 {
   namespace Spawn
   {
-    IncrementSpeed::IncrementSpeed() : SpawnRuleT<IncrementSpeedData>("IncrementSpeed") {}
+    SetSpeed::SetSpeed() : SpawnRuleT<SetSpeedData>("SetSpeed") {}
 
-    std::shared_ptr<SpawnRule> IncrementSpeed::Clone() const
+    std::shared_ptr<SpawnRule> SetSpeed::Clone() const
     {
-      return std::make_shared<IncrementSpeed>(*this);
+      return std::make_shared<SetSpeed>(*this);
     }
 
-    void IncrementSpeed::Execute(SpawnRuleInfo& info)
+    void SetSpeed::Execute(SpawnRuleInfo& info)
     {
       VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
 
@@ -45,23 +44,28 @@ namespace Barrage
             unsigned dest_index = CalculateDestinationIndex(info, object, group, layerCopy);
             Velocity& dest_velocity = dest_velocities.Data(dest_index);
             
-            glm::vec2 velocity(dest_velocity.vx_, dest_velocity.vy_);
-            glm::vec2 direction = glm::normalize(velocity);
-            velocity = speed * direction;
-
-            dest_velocity.vx_ = velocity.x;
-            dest_velocity.vy_ = velocity.y;
+            dest_velocity.SetSpeed(speed);
           }
         }
       }
     }
 
-    void IncrementSpeed::Reflect()
+    void SetSpeed::SetRTTRValue(const rttr::variant& value)
     {
-      rttr::registration::class_<Spawn::IncrementSpeedData>("IncrementSpeedData")
+      SpawnRuleT<SetSpeedData>::SetRTTRValue(value);
+
+      if (data_.base_ < MINIMUM_SPEED)
+      {
+        data_.base_ = MINIMUM_SPEED;
+      }
+    }
+
+    void SetSpeed::Reflect()
+    {
+      rttr::registration::class_<Spawn::SetSpeedData>("SetSpeedData")
         .constructor<>() (rttr::policy::ctor::as_object)
-        .property("base", &Spawn::IncrementSpeedData::base_)
-        .property("delta", &Spawn::IncrementSpeedData::delta_)
+        .property("base", &Spawn::SetSpeedData::base_)
+        .property("delta", &Spawn::SetSpeedData::delta_)
         ;
     }
   }

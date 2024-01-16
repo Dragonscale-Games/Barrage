@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            SpawnSpacedFan.hpp
+ * \file            SpawnOffsetPosition.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -14,28 +14,39 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef SpawnSpacedFan_BARRAGE_H
-#define SpawnSpacedFan_BARRAGE_H
+#ifndef SpawnOffsetPosition_BARRAGE_H
+#define SpawnOffsetPosition_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Spawning/SpawnRule.hpp"
+#include "glm/glm.hpp"
 
 namespace Barrage
 {
   namespace Spawn
   {
-    class SpacedFan : public SpawnRule
+    struct OffsetPositionData
     {
-    public:
-      SpacedFan();
+      glm::vec2 base_;
+      glm::vec2 delta_;
 
-      std::shared_ptr<SpawnRule> Clone() const override;
+      inline OffsetPositionData() : base_(0.0f), delta_(0.0f) {};
+    };
+    
+    class OffsetPosition : public SpawnRuleT<OffsetPositionData>
+    {
+      public:
+        OffsetPosition();
 
-      void Execute(SpawnRuleInfo& info) override;
+        std::shared_ptr<SpawnRule> Clone() const override;
+
+        void Execute(SpawnRuleInfo& info) override;
+
+        static void Reflect();
     };
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // SpawnSpacedFan_BARRAGE_H
+#endif // SpawnOffsetPosition_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

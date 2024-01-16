@@ -39,7 +39,7 @@ namespace Barrage
     rttr::registration::class_<SpawnLayer>("SpawnLayer")
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("numGroups", &SpawnLayer::baseNumGroups_)
-      .property("sizeRules", &SpawnLayer::sizeRules_)
+      .property("sizeRules", &SpawnLayer::countRules_)
       .property("valueRules", &SpawnLayer::valueRules_)
       ;
     

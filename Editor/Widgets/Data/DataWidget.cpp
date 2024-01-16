@@ -651,9 +651,9 @@ namespace Barrage
 
           // Draw a horizontal line
           ImGui::GetWindowDrawList()->AddLine(
-            ImVec2(widgetPos.x, widgetPos.y - 9.0f),               // Start point (a bit above the Text widget)
+            ImVec2(widgetPos.x, widgetPos.y - 9.0f),               // Start point 
             ImVec2(widgetPos.x + ImGui::GetContentRegionAvail().x - buttonWidth - 150.0f, widgetPos.y - 9.0f),  // End point
-            IM_COL32(255, 0, 0, 255),  // Color (red in this example)
+            IM_COL32(255, 0, 0, 255),  // Color 
             2.0f                       // Line thickness
           );
 

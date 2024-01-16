@@ -1,4 +1,4 @@
-#pragma once
+ 
 /* ======================================================================== */
 /*!
  * \file            SpawnMatchPosition.cpp
@@ -44,7 +44,8 @@ namespace Barrage
             unsigned destIndex = CalculateDestinationIndex(info, object, group, layerCopy);
             Position& destPosition = destPositions.Data(destIndex);
 
-            destPosition = sourcePosition;
+            destPosition.x_ += sourcePosition.x_;
+            destPosition.y_ += sourcePosition.y_;
           }
         }
       }

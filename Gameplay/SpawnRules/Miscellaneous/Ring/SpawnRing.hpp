@@ -26,12 +26,12 @@ namespace Barrage
   {
     class Ring : public SpawnRule
     {
-    public:
-      Ring();
+      public:
+        Ring();
 
-      std::shared_ptr<SpawnRule> Clone() const override;
+        std::shared_ptr<SpawnRule> Clone() const override;
 
-      void Execute(SpawnRuleInfo& info) override;
+        void Execute(SpawnRuleInfo& info) override;
     };
   }
 }

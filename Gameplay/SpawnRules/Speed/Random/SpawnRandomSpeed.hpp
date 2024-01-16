@@ -33,7 +33,7 @@ namespace Barrage
       inline RandomSpeedData() : minSpeed_(MINIMUM_SPEED), maxSpeed_(MINIMUM_SPEED) {};
     };
     
-    class RandomSpeed : public SpawnRule
+    class RandomSpeed : public SpawnRuleT<RandomSpeedData>
     {
       public:
         RandomSpeed();
@@ -41,6 +41,10 @@ namespace Barrage
         std::shared_ptr<SpawnRule> Clone() const override;
 
         void Execute(SpawnRuleInfo& info) override;
+
+        void SetRTTRValue(const rttr::variant& value) override;
+
+        static void Reflect();
     };
   }
 }

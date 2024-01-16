@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            SpawnRandomCircleOffset.hpp
+ * \file            SpawnSetSpeed.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -9,33 +9,46 @@
 
 
    Requirements:
-
+   - Velocity (destination)
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef SpawnRandomCircleOffset_BARRAGE_H
-#define SpawnRandomCircleOffset_BARRAGE_H
+#ifndef SpawnSetSpeed_BARRAGE_H
+#define SpawnSetSpeed_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Spawning/SpawnRule.hpp"
+#include "ComponentArrays/Velocity/VelocityArray.hpp"
 
 namespace Barrage
 {
   namespace Spawn
   {
-    class RandomCircleOffset : public SpawnRule
+    struct SetSpeedData
     {
-    public:
-      RandomCircleOffset();
+      float base_;
+      float delta_;
 
-      std::shared_ptr<SpawnRule> Clone() const override;
+      inline SetSpeedData() : base_(MINIMUM_SPEED), delta_(0.0f) {};
+    };
+    
+    class SetSpeed : public SpawnRuleT<SetSpeedData>
+    {
+      public:
+        SetSpeed();
 
-      void Execute(SpawnRuleInfo& info) override;
+        std::shared_ptr<SpawnRule> Clone() const override;
+
+        void Execute(SpawnRuleInfo& info) override;
+
+        void SetRTTRValue(const rttr::variant& value) override;
+
+        static void Reflect();
     };
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // SpawnRandomCircleOffset_BARRAGE_H
+#endif // SpawnSetSpeed_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

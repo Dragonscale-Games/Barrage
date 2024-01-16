@@ -63,7 +63,7 @@ namespace Barrage
 
   enum class SpawnRuleStage
   {
-    SIZE_RULE,
+    COUNT_RULE,
     VALUE_RULE
   };
 

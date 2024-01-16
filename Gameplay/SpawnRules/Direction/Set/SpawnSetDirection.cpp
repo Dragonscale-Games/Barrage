@@ -1,4 +1,4 @@
-#pragma once
+ 
 /* ======================================================================== */
 /*!
  * \file            SpawnSetDirection.cpp
@@ -8,16 +8,17 @@
 
  * \brief
 
-
    Requirements:
-
+   -Position (source)
+   -Position (destination)
+   -Velocity (destination)
  */
  /* ======================================================================== */
 
 #include <stdafx.h>
 #include "SpawnSetDirection.hpp"
 #include "Objects/Pools/Pool.hpp"
-#include "glm/glm.hpp"
+#include "ComponentArrays/Position/PositionArray.hpp"
 #include "ComponentArrays/Velocity/VelocityArray.hpp"
 
 namespace Barrage
@@ -33,6 +34,7 @@ namespace Barrage
 
     void SetDirection::Execute(SpawnRuleInfo& info)
     {
+      PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
       VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
 
       for (unsigned layerCopy = 0; layerCopy < info.groupInfo_.numLayerCopies_; ++layerCopy)
@@ -42,11 +44,11 @@ namespace Barrage
           for (unsigned object = 0; object < info.groupInfo_.numObjectsPerGroup_; ++object)
           {
             unsigned dest_index = CalculateDestinationIndex(info, object, group, layerCopy);
-            Velocity& velocity = dest_velocities.Data(dest_index);
-            float speed = glm::length(glm::vec2(velocity.vx_, velocity.vy_));
+            Position& dest_position = dest_positions.Data(dest_index);
+            Velocity& dest_velocity = dest_velocities.Data(dest_index);
 
-            velocity.vx_ = speed * data_.xDirection_;
-            velocity.vy_ = speed * data_.yDirection_;
+            dest_position.Rotate(data_.cosineAngle_, data_.sinAngle_);
+            dest_velocity.Rotate(data_.cosineAngle_, data_.sinAngle_);
           }
         }
       }
@@ -56,8 +58,8 @@ namespace Barrage
     {
       SpawnRuleT<SetDirectionData>::SetRTTRValue(value);
 
-      data_.xDirection_ = glm::cos(data_.angle_.value_);
-      data_.yDirection_ = glm::sin(data_.angle_.value_);
+      data_.cosineAngle_ = glm::cos(data_.angle_.value_);
+      data_.sinAngle_ = glm::sin(data_.angle_.value_);
     }
 
     void SetDirection::Reflect()
