@@ -76,7 +76,7 @@
         {
             "Key": "Spawner Pool",
             "Value": {
-                "capacity": 100,
+                "capacity": 1,
                 "componentArrayNames": [
                     "Position",
                     "SpawnTimer"
@@ -91,7 +91,7 @@
                                     "automaticSpawns": [
                                         {
                                             "spawnType": "LoLK Star Spawn",
-                                            "ticksPerSpawn": 1,
+                                            "ticksPerSpawn": 0,
                                             "delay": 0
                                         }
                                     ]
@@ -116,6 +116,9 @@
                                                 },
                                                 {
                                                     "Name": "RandomDirection"
+                                                },
+                                                {
+                                                    "Name": "MatchPosition"
                                                 }
                                             ]
                                         }
@@ -137,7 +140,7 @@
                             "componentArrays": {
                                 "Position": {
                                     "x": 0.0,
-                                    "y": 0.0
+                                    "y": 260.0
                                 },
                                 "SpawnTimer": {}
                             }
