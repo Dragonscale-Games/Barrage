@@ -47,7 +47,8 @@ namespace Barrage
     data_(),
     gui_(),
 
-    repeatTimer_(0)
+    repeatTimer_(0),
+    timeQueryID_(0)
   {
   }
   
@@ -239,6 +240,8 @@ namespace Barrage
       LogWidget::Clear();
       data_.openProjectModal_ = true;
     }
+
+    glGenQueries(1, &timeQueryID_);
   }
 
   void Editor::Update()
@@ -288,12 +291,19 @@ namespace Barrage
 
     HandleKeyboard();
 
+    glBeginQuery(GL_TIME_ELAPSED, timeQueryID_);
     engine_.Graphics().GetFramebuffer().BindFramebuffer();
     engine_.Graphics().ClearBackground();
     engine_.Spaces().Draw();
     engine_.Graphics().GetFramebuffer().UnbindFramebuffer();
+    glEndQuery(GL_TIME_ELAPSED);
     gui_.DrawWidgets();
     engine_.Window().SwapBuffers();
+
+    GLuint64 drawTimeNanoseconds;
+    glGetQueryObjectui64v(timeQueryID_, GL_QUERY_RESULT, &drawTimeNanoseconds);
+    long long drawSample = static_cast<long long>(drawTimeNanoseconds / 1000);
+    PerformanceWidget::AddDrawSample(drawSample);
 
     if (engine_.Window().IsClosed())
     {
@@ -312,6 +322,8 @@ namespace Barrage
 
   void Editor::Shutdown()
   {
+    glDeleteQueries(1, &timeQueryID_);
+    
     gui_.Shutdown();
 
     engine_.Shutdown();

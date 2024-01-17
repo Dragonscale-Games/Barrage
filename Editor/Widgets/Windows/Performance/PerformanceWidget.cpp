@@ -69,6 +69,11 @@ namespace Barrage
     {
       maxDrawSample_ = 0;
     }
+
+    ImGui::Spacing();
+    ImGui::Spacing();
+
+    ImGui::Text("Frame budget: 8333");
     ImGui::End();
   }
 

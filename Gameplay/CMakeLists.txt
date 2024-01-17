@@ -55,6 +55,7 @@ add_library(Gameplay STATIC
 	"SpawnRules/Miscellaneous/Fan/SpawnFan.cpp" 
 	"SpawnRules/Miscellaneous/Mirror/SpawnMirror.cpp"
 	"SpawnRules/Miscellaneous/Ring/SpawnRing.cpp" 
+	"SpawnRules/Miscellaneous/Spiral/SpawnSpiral.cpp"
 
 	"SpawnRules/Position/Match/SpawnMatchPosition.cpp"
 	"SpawnRules/Position/Offset/SpawnOffsetPosition.cpp" 
@@ -68,7 +69,7 @@ add_library(Gameplay STATIC
 	"Systems/Destruction/DestructionSystem.cpp"
 	"Systems/Draw/DrawSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
-	"Systems/Spawn/SpawnSystem.cpp")
+	"Systems/Spawn/SpawnSystem.cpp"  "SpawnRules/Count/Increment/SpawnIncrementCount.cpp")
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

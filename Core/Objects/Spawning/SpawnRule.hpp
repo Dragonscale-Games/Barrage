@@ -280,14 +280,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Base class requires virtual destructor.
-      */
-      /**************************************************************/
-      virtual ~SpawnRuleWithArray() = default;
-
-      /**************************************************************/
-      /*!
-        \brief
           Sets the number of elements in this spawn rule's data
           array.
 

@@ -53,6 +53,12 @@ namespace Barrage
   }
 
   template <typename T, typename A>
+  std::shared_ptr<SpawnRule> SpawnRuleTA<T, A>::Clone() const
+  {
+    return std::make_shared<SpawnRuleTA<T, A>>(*this);
+  }
+
+  template <typename T, typename A>
   rttr::variant SpawnRuleTA<T, A>::GetRTTRValue()
   {
     rttr::variant value = data_;

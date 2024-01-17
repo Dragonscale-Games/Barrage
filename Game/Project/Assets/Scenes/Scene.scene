@@ -4,7 +4,7 @@
         {
             "Key": "Bullet Pool",
             "Value": {
-                "capacity": 1000,
+                "capacity": 800000,
                 "componentArrayNames": [
                     "ColorTint",
                     "Destructible",
@@ -26,7 +26,7 @@
                     },
                     "Sprite": {
                         "texture": "TestBullet",
-                        "layer": 0
+                        "layer": 2
                     }
                 },
                 "name": "Bullet Pool",
@@ -76,22 +76,22 @@
         {
             "Key": "Spawner Pool",
             "Value": {
-                "capacity": 2,
+                "capacity": 100,
                 "componentArrayNames": [
                     "Position",
                     "SpawnTimer"
                 ],
                 "components": {
                     "Spawner": {
-                        "currentPattern": "Test Pattern",
+                        "currentPattern": "LoLK Stars",
                         "patterns": [
                             {
-                                "Key": "Test Pattern",
+                                "Key": "LoLK Stars",
                                 "Value": {
                                     "automaticSpawns": [
                                         {
-                                            "spawnType": "Test Spawn Type",
-                                            "ticksPerSpawn": 120,
+                                            "spawnType": "LoLK Star Spawn",
+                                            "ticksPerSpawn": 1,
                                             "delay": 0
                                         }
                                     ]
@@ -100,65 +100,18 @@
                         ],
                         "spawnTypes": [
                             {
-                                "Key": "Test Spawn Type",
+                                "Key": "LoLK Star Spawn",
                                 "Value": {
                                     "spawnLayers": [
                                         {
-                                            "numGroups": 4,
+                                            "numGroups": 1000,
                                             "sizeRules": [],
                                             "valueRules": [
                                                 {
                                                     "Name": "SetSpeed",
                                                     "Data": {
-                                                        "base": 2.0,
-                                                        "delta": 0.5
-                                                    }
-                                                },
-                                                {
-                                                    "Name": "Fan",
-                                                    "Data": {
-                                                        "spacing": {
-                                                            "value": -0.04363323375582695
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    "Name": "SetDirection",
-                                                    "Data": {
-                                                        "angle": {
-                                                            "value": 0.0872664675116539
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "numGroups": 2,
-                                            "sizeRules": [],
-                                            "valueRules": [
-                                                {
-                                                    "Name": "Mirror"
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "numGroups": 10,
-                                            "sizeRules": [],
-                                            "valueRules": [
-                                                {
-                                                    "Name": "Ring"
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "numGroups": 1,
-                                            "sizeRules": [],
-                                            "valueRules": [
-                                                {
-                                                    "Name": "RandomBoxOffset",
-                                                    "Data": {
-                                                        "xVariance": 300.0,
-                                                        "yVariance": 200.0
+                                                        "base": 1.0,
+                                                        "delta": 0.0
                                                     }
                                                 },
                                                 {
@@ -178,9 +131,9 @@
                 "spawnArchetypes": [],
                 "startingObjects": [
                     {
-                        "Key": "Spawner Object",
+                        "Key": "Object",
                         "Value": {
-                            "name": "Spawner Object",
+                            "name": "Object",
                             "componentArrays": {
                                 "Position": {
                                     "x": 0.0,
@@ -191,7 +144,9 @@
                         }
                     }
                 ],
-                "tags": []
+                "tags": [
+                    "Bullet"
+                ]
             }
         }
     ]

@@ -112,6 +112,7 @@ namespace Barrage
       GUI gui_;                   //!< Contains all widgets/user controls
 
       long long repeatTimer_;
+      GLuint timeQueryID_;
 
       static Editor* instance_;
 

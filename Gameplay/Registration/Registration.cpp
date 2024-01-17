@@ -29,12 +29,15 @@
 #include "Components/Spawner/Spawner.hpp"
 #include "Components/Sprite/Sprite.hpp"
 
+#include "SpawnRules/Count/Increment/SpawnIncrementCount.hpp"
+
 #include "SpawnRules/Direction/Random/SpawnRandomDirection.hpp"
 #include "SpawnRules/Direction/Set/SpawnSetDirection.hpp"
 
 #include "SpawnRules/Miscellaneous/Fan/SpawnFan.hpp"
 #include "SpawnRules/Miscellaneous/Mirror/SpawnMirror.hpp"
 #include "SpawnRules/Miscellaneous/Ring/SpawnRing.hpp"
+#include "SpawnRules/Miscellaneous/Spiral/SpawnSpiral.hpp"
 
 #include "SpawnRules/Position/Match/SpawnMatchPosition.hpp"
 #include "SpawnRules/Position/Offset/SpawnOffsetPosition.hpp"
@@ -70,12 +73,15 @@ namespace Barrage
     RegisterComponent<Sprite>("Sprite");
     RegisterComponent<Spawner>("Spawner");
     
+    RegisterSpawnRule<Spawn::IncrementCount>("IncrementCount");
+
     RegisterSpawnRule<Spawn::RandomDirection>("RandomDirection");
     RegisterSpawnRule<Spawn::SetDirection>("SetDirection");
 
     RegisterSpawnRule<Spawn::Fan>("Fan");
     RegisterSpawnRule<Spawn::Mirror>("Mirror");
     RegisterSpawnRule<Spawn::Ring>("Ring");
+    RegisterSpawnRule<Spawn::Spiral>("Spiral");
 
     RegisterSpawnRule<Spawn::MatchPosition>("MatchPosition");
     RegisterSpawnRule<Spawn::OffsetPosition>("OffsetPosition");
@@ -123,9 +129,12 @@ namespace Barrage
     Spawner::Reflect();
     Sprite::Reflect();
 
+    Spawn::IncrementCount::Reflect();
+
     Spawn::SetDirection::Reflect();
 
     Spawn::Fan::Reflect();
+    Spawn::Spiral::Reflect();
 
     Spawn::OffsetPosition::Reflect();
     Spawn::RandomBoxOffset::Reflect();
