@@ -30,7 +30,12 @@ namespace Barrage
 
     void IncrementCount::Execute(SpawnRuleInfo& info)
     {
-      info.groupInfo_.numGroups_ += data_.amount_;
+      unsigned new_count = info.groupInfo_.numGroups_ + data_.amount_;
+      
+      if (new_count <= data_.max_)
+      {
+        info.groupInfo_.numGroups_ = new_count;
+      }
     }
 
     SpawnRuleStage IncrementCount::GetStage()
@@ -43,6 +48,7 @@ namespace Barrage
       rttr::registration::class_<Spawn::IncrementCountData>("IncrementCountData")
         .constructor<>() (rttr::policy::ctor::as_object)
         .property("amount", &Spawn::IncrementCountData::amount_)
+        .property("max", &Spawn::IncrementCountData::max_)
         ;
     }
   }

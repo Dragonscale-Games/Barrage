@@ -36,6 +36,7 @@ add_library(Gameplay STATIC
     "ComponentArrays/AngularSpeed/AngularSpeedArray.cpp" 
 	"ComponentArrays/ColorTint/ColorTintArray.cpp" 
 	"ComponentArrays/Destructible/DestructibleArray.cpp" 
+	"ComponentArrays/Lifetime/LifetimeArray.cpp"
 	"ComponentArrays/Position/PositionArray.cpp" 
 	"ComponentArrays/Rotation/RotationArray.cpp" 
 	"ComponentArrays/Scale/ScaleArray.cpp" 
@@ -49,6 +50,10 @@ add_library(Gameplay STATIC
 	"Components/Spawner/Spawner.cpp" 
 	"Components/Sprite/Sprite.cpp" 
     
+	"SpawnRules/Count/Increment/SpawnIncrementCount.cpp"
+
+	"SpawnRules/Direction/Aimed/SpawnAimedDirection.cpp"
+	"SpawnRules/Direction/Match/SpawnMatchDirection.cpp"
 	"SpawnRules/Direction/Random/SpawnRandomDirection.cpp" 
 	"SpawnRules/Direction/Set/SpawnSetDirection.cpp"
 
@@ -68,8 +73,9 @@ add_library(Gameplay STATIC
 	"Systems/Creation/CreationSystem.cpp"
 	"Systems/Destruction/DestructionSystem.cpp"
 	"Systems/Draw/DrawSystem.cpp"
+	"Systems/Lifetime/LifetimeSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
-	"Systems/Spawn/SpawnSystem.cpp"  "SpawnRules/Count/Increment/SpawnIncrementCount.cpp")
+	"Systems/Spawn/SpawnSystem.cpp")
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

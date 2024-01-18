@@ -30,9 +30,13 @@ namespace Barrage
 
     Velocity();
 
+    Velocity(float vx, float vy);
+
     void Rotate(float cosAngle, float sinAngle);
 
     void SetSpeed(float speed);
+
+    float GetAngle();
 
     static void Reflect();
   };

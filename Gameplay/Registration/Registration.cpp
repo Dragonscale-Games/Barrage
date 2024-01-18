@@ -16,6 +16,7 @@
 #include "ComponentArrays/AngularSpeed/AngularSpeedArray.hpp"
 #include "ComponentArrays/ColorTint/ColorTintArray.hpp"
 #include "ComponentArrays/Destructible/DestructibleArray.hpp"
+#include "ComponentArrays/Lifetime/LifetimeArray.hpp"
 #include "ComponentArrays/Position/PositionArray.hpp"
 #include "ComponentArrays/Rotation/RotationArray.hpp"
 #include "ComponentArrays/Scale/ScaleArray.hpp"
@@ -31,6 +32,8 @@
 
 #include "SpawnRules/Count/Increment/SpawnIncrementCount.hpp"
 
+#include "SpawnRules/Direction/Aimed/SpawnAimedDirection.hpp"
+#include "SpawnRules/Direction/Match/SpawnMatchDirection.hpp"
 #include "SpawnRules/Direction/Random/SpawnRandomDirection.hpp"
 #include "SpawnRules/Direction/Set/SpawnSetDirection.hpp"
 
@@ -50,6 +53,7 @@
 #include "Systems/Creation/CreationSystem.hpp"
 #include "Systems/Destruction/DestructionSystem.hpp"
 #include "Systems/Draw/DrawSystem.hpp"
+#include "Systems/Lifetime/LifetimeSystem.hpp"
 #include "Systems/Movement/MovementSystem.hpp"
 #include "Systems/Spawn/SpawnSystem.hpp"
 
@@ -60,6 +64,7 @@ namespace Barrage
     RegisterComponentArray<AngularSpeed>("AngularSpeed");
     RegisterComponentArray<ColorTint>("ColorTint");
     RegisterComponentArray<Destructible>("Destructible");
+    RegisterComponentArray<Lifetime>("Lifetime");
     RegisterComponentArray<Position>("Position");
     RegisterComponentArray<Rotation>("Rotation");
     RegisterComponentArray<Scale>("Scale");
@@ -75,6 +80,8 @@ namespace Barrage
     
     RegisterSpawnRule<Spawn::IncrementCount>("IncrementCount");
 
+    RegisterSpawnRule<Spawn::AimedDirection>("AimedDirection");
+    RegisterSpawnRule<Spawn::MatchDirection>("MatchDirection");
     RegisterSpawnRule<Spawn::RandomDirection>("RandomDirection");
     RegisterSpawnRule<Spawn::SetDirection>("SetDirection");
 
@@ -94,6 +101,7 @@ namespace Barrage
     RegisterSystem<CreationSystem>("CreationSystem");
     RegisterSystem<DestructionSystem>("DestructionSystem");
     RegisterSystem<DrawSystem>("DrawSystem");
+    RegisterSystem<LifetimeSystem>("LifetimeSystem");
     RegisterSystem<MovementSystem>("MovementSystem");
     RegisterSystem<SpawnSystem>("SpawnSystem");
     
@@ -103,6 +111,7 @@ namespace Barrage
 
     update_order.push_back("CreationSystem");
     update_order.push_back("DestructionSystem");
+    update_order.push_back("LifetimeSystem");
     update_order.push_back("MovementSystem");
     update_order.push_back("SpawnSystem");
     update_order.push_back("CreationSystem");
@@ -116,6 +125,7 @@ namespace Barrage
     AngularSpeed::Reflect();
     ColorTintReflect();
     DestructibleReflect();
+    Lifetime::Reflect();
     PositionReflect();
     RotationReflect();
     ScaleReflect();

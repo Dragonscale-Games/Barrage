@@ -21,6 +21,17 @@ namespace Barrage
   {
   }
 
+  Velocity::Velocity(float vx, float vy) :
+    vx_(vx),
+    vy_(vy)
+  {
+    if (glm::length(glm::vec2(vx, vy)) < MINIMUM_SPEED)
+    {
+      vx_ = 0.0f;
+      vy_ = -MINIMUM_SPEED;
+    }
+  }
+
   void Velocity::Rotate(float cosAngle, float sinAngle)
   {
     glm::vec2 rvel(vx_, vy_);
@@ -40,6 +51,11 @@ namespace Barrage
 
     vx_ = velocity.x;
     vy_ = velocity.y;
+  }
+
+  float Velocity::GetAngle()
+  {
+    return glm::atan(-vx_, -vy_);
   }
 
   void Velocity::Reflect()

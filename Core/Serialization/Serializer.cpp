@@ -113,6 +113,10 @@ namespace Barrage
     {
       value = propertyVariant.get_value<size_t>();
     }
+    else if (propertyType == rttr::type::get<long long>())
+    {
+      value = propertyVariant.get_value<long long>();
+    }
     else if (propertyType == rttr::type::get<std::string>())
     {
       const std::string text = propertyVariant.get_value<std::string>();
@@ -175,6 +179,10 @@ namespace Barrage
     else if (propertyType == rttr::type::get<std::string>())
     {
       property = std::string(value.GetString());
+    }
+    else if (propertyType == rttr::type::get<long long>())
+    {
+      property = value.Get<long long>();
     }
     else
     {
