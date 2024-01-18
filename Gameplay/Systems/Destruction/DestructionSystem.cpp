@@ -30,8 +30,8 @@ namespace Barrage
     poolTypes_[BASIC_DESTRUCTIBLE_POOLS] = basic_destructible_type;
 
     PoolType destructible_spawner_type;
-    destructible_spawner_type.AddComponentArray("Destructible");
     destructible_spawner_type.AddComponent("Spawner");
+    destructible_spawner_type.AddComponentArray("Destructible");
     poolTypes_[DESTRUCTIBLE_SPAWNER_POOLS] = destructible_spawner_type;
   }
   

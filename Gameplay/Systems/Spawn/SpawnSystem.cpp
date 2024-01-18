@@ -24,6 +24,7 @@ namespace Barrage
 {
   static const std::string SPAWNER_POOLS("Spawner Pools");
   static const std::string SPAWN_TIMER_POOLS("Spawn Timer Pools");
+  static const std::string SPAWNER_WITH_TIMER_POOLS("Spawner With Timer Pools");
   static const std::string VELOCITY_POOLS("Velocity Pools");
   
   SpawnSystem::SpawnSystem() :
@@ -31,12 +32,16 @@ namespace Barrage
   {
     PoolType spawner_type;
     spawner_type.AddComponent("Spawner");
-    spawner_type.AddComponentArray("SpawnTimer");
     poolTypes_[SPAWNER_POOLS] = spawner_type;
 
     PoolType spawn_timer_type;
     spawn_timer_type.AddComponentArray("SpawnTimer");
     poolTypes_[SPAWN_TIMER_POOLS] = spawn_timer_type;
+
+    PoolType spawner_with_timer_type;
+    spawner_with_timer_type.AddComponent("Spawner");
+    spawner_with_timer_type.AddComponentArray("SpawnTimer");
+    poolTypes_[SPAWNER_WITH_TIMER_POOLS] = spawner_with_timer_type;
 
     PoolType velocity_type;
     velocity_type.AddComponentArray("Velocity");
@@ -54,6 +59,7 @@ namespace Barrage
         if (it->first == SPAWNER_POOLS)
         {
           LinkAndValidateSpawns(space, pool);
+          continue; // we don't need to store these pools
         }
         else if (it->first == VELOCITY_POOLS)
         {
@@ -68,7 +74,7 @@ namespace Barrage
 
   void SpawnSystem::Update()
   {
-    UpdatePoolGroup(SPAWNER_POOLS, Spawn);
+    UpdatePoolGroup(SPAWNER_WITH_TIMER_POOLS, Spawn);
     UpdatePoolGroup(SPAWN_TIMER_POOLS, UpdateSpawnTimers);
   }
 
@@ -203,8 +209,7 @@ namespace Barrage
 
       if (glm::length(glm::vec2(velocity.vx_, velocity.vy_)) < MINIMUM_SPEED)
       {
-        velocity.vx_ = MINIMUM_SPEED;
-        velocity.vy_ = 0.0f;
+        velocity = Velocity();
       }
     }
   }

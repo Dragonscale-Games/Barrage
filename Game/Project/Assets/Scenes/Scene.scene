@@ -4,7 +4,7 @@
         {
             "Key": "Bullet Pool",
             "Value": {
-                "capacity": 1000,
+                "capacity": 10000,
                 "componentArrayNames": [
                     "ColorTint",
                     "Destructible",
@@ -24,6 +24,39 @@
                     "CircleCollider": {
                         "radius": 8.0
                     },
+                    "Spawner": {
+                        "currentPattern": "",
+                        "patterns": [
+                            {
+                                "Key": "Eagle Arrows",
+                                "Value": {
+                                    "automaticSpawns": [
+                                        {
+                                            "spawnType": "Eagle Arrow Spawn",
+                                            "ticksPerSpawn": 0,
+                                            "delay": 120
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "spawnTypes": [
+                            {
+                                "Key": "Eagle Arrow Spawn",
+                                "Value": {
+                                    "spawnLayers": [
+                                        {
+                                            "numGroups": 1,
+                                            "sizeRules": [],
+                                            "valueRules": []
+                                        }
+                                    ],
+                                    "destinationPool": "Bullet Pool 2",
+                                    "spawnArchetype": "Bullet Object"
+                                }
+                            }
+                        ]
+                    },
                     "Sprite": {
                         "texture": "TestBullet",
                         "layer": 0
@@ -38,8 +71,8 @@
                             "componentArrays": {
                                 "ColorTint": {
                                     "red": 1.0,
-                                    "green": 0.0,
-                                    "blue": 0.8159999847412109,
+                                    "green": 1.0,
+                                    "blue": 1.0,
                                     "alpha": 1.0
                                 },
                                 "Destructible": {},
@@ -53,8 +86,8 @@
                                     }
                                 },
                                 "Scale": {
-                                    "w": 32.0,
-                                    "h": 32.0
+                                    "w": 64.0,
+                                    "h": 64.0
                                 },
                                 "TextureUV": {
                                     "uMin": 0.0,
@@ -91,7 +124,7 @@
                                     "automaticSpawns": [
                                         {
                                             "spawnType": "Test Spawn Type",
-                                            "ticksPerSpawn": 60,
+                                            "ticksPerSpawn": 30,
                                             "delay": 0
                                         }
                                     ]
@@ -104,65 +137,18 @@
                                 "Value": {
                                     "spawnLayers": [
                                         {
-                                            "numGroups": 4,
+                                            "numGroups": 1,
                                             "sizeRules": [],
                                             "valueRules": [
                                                 {
                                                     "Name": "SetSpeed",
                                                     "Data": {
                                                         "base": 2.0,
-                                                        "delta": 0.5
+                                                        "delta": 0.0
                                                     }
                                                 },
-                                                {
-                                                    "Name": "Fan",
-                                                    "Data": {
-                                                        "spacing": {
-                                                            "value": -0.04363323375582695
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    "Name": "SetDirection",
-                                                    "Data": {
-                                                        "angle": {
-                                                            "value": 0.0872664675116539
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "numGroups": 2,
-                                            "sizeRules": [],
-                                            "valueRules": [
-                                                {
-                                                    "Name": "Mirror"
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "numGroups": 10,
-                                            "sizeRules": [],
-                                            "valueRules": [
                                                 {
                                                     "Name": "Ring"
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "numGroups": 1,
-                                            "sizeRules": [],
-                                            "valueRules": [
-                                                {
-                                                    "Name": "RandomBoxOffset",
-                                                    "Data": {
-                                                        "xVariance": 300.0,
-                                                        "yVariance": 200.0
-                                                    }
-                                                },
-                                                {
-                                                    "Name": "RandomDirection"
                                                 }
                                             ]
                                         }
