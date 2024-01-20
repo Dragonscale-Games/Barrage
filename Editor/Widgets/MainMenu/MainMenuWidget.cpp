@@ -69,7 +69,7 @@ namespace Barrage
           LogWidget::AddEntry("Could not build game. (Error saving project before build.)");
         }
       }
-
+#ifdef _WIN64
       ImGui::Spacing();
 
       if (ImGui::MenuItem("Build and run"))
@@ -83,7 +83,7 @@ namespace Barrage
           LogWidget::AddEntry("Could not build game. (Error saving project before build.)");
         }
       }
-
+#endif
       ImGui::Spacing();
       ImGui::Separator();
       ImGui::Spacing();

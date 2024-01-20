@@ -45,6 +45,10 @@ add_library(BarrageCore STATIC
 
   "Audio/AudioManager.cpp"
 
+  "BehaviorTrees/BehaviorTree.cpp" 
+  "BehaviorTrees/BehaviorNode.cpp" 
+  "BehaviorTrees/BehaviorNodeFactory.cpp"
+
   "Entry/Entry.cpp"  
 
   "Framerate/FramerateController.cpp"
@@ -63,8 +67,10 @@ add_library(BarrageCore STATIC
   "Objects/Components/ComponentFactory.cpp"
   "Objects/Pools/Pool.cpp" 
   "Objects/Pools/PoolType.cpp" 
+  "Objects/Spawning/SpawnLayer.cpp"
   "Objects/Spawning/SpawnRule.cpp" 
   "Objects/Spawning/SpawnRuleFactory.cpp"
+  "Objects/Spawning/SpawnType.cpp"
   "Objects/Systems/System.cpp" 
   "Objects/Systems/SystemFactory.cpp" 
   "Objects/Systems/SystemManager.cpp" 
@@ -87,7 +93,7 @@ add_library(BarrageCore STATIC
   "Spaces/Space.cpp" 
   "Spaces/SpaceManager.cpp" 
 
-  "Window/WindowManager.cpp"   "Objects/Spawning/SpawnType.cpp" "Objects/Spawning/SpawnLayer.cpp")
+  "Window/WindowManager.cpp")
 
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)

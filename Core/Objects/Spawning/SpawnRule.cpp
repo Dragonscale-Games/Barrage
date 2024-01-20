@@ -113,7 +113,10 @@ namespace Barrage
 
   SpawnRuleDeepPtr& SpawnRuleDeepPtr::operator=(const SpawnRuleDeepPtr& other)
   {
-    ptr_ = other ? other->Clone() : nullptr;
+    if (this != &other) // Prevent self-assignment
+    {
+      ptr_ = other ? other->Clone() : nullptr;
+    }
 
     return *this;
   }

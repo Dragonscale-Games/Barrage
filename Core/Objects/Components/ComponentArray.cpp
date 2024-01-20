@@ -45,8 +45,11 @@ namespace Barrage
 
   ComponentArrayDeepPtr& ComponentArrayDeepPtr::operator=(const ComponentArrayDeepPtr& other)
   {
-    ptr_ = other ? other->Clone() : nullptr;
-
+    if (this != &other) // Prevent self-assignment
+    {
+      ptr_ = other ? other->Clone() : nullptr;
+    }
+    
     return *this;
   }
 

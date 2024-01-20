@@ -86,7 +86,7 @@ namespace Barrage
           The type of spawn rule to allocate.
 
         \return
-          Returns a shared pointer to the newly allocated spawn rule.
+          Returns a pointer to the newly allocated spawn rule.
       */
       /**************************************************************/
       template <typename T>
