@@ -20,9 +20,9 @@ namespace Barrage
   template <typename T>
   BehaviorNodeT<T>::BehaviorNodeT(
     const std::string& name, 
-    unsigned maxChildren
+    BehaviorNodeType type
   ) : 
-    BehaviorNode(name, maxChildren), 
+    BehaviorNode(name, type), 
     data_()
   {
   }
@@ -55,9 +55,9 @@ namespace Barrage
   template <typename T, typename A>
   BehaviorNodeTA<T, A>::BehaviorNodeTA(
     const std::string& name, 
-    unsigned maxChildren
+    BehaviorNodeType type
   ) : 
-    BehaviorNodeWithArray(name, maxChildren),
+    BehaviorNodeWithArray(name, type),
     data_(), 
     dataArray_()
   {

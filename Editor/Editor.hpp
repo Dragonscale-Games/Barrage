@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Engine.hpp"
-#include "Data/EditorData.hpp"
+#include "EditorData.hpp"
 #include "GUI/GUI.hpp"
 #include "Commands/CommandQueue.hpp"
 

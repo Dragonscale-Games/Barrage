@@ -69,4 +69,9 @@ namespace Barrage
   {
     return static_cast<bool>(ptr_);
   }
+
+  std::shared_ptr<Component> ComponentDeepPtr::Get()
+  {
+    return ptr_;
+  }
 }

@@ -22,6 +22,7 @@
 #include <stdafx.h>
 #include <string>
 #include "Serializer.hpp"
+#include <stdexcept>
 
 #include <string_view>
 
@@ -30,12 +31,14 @@
 #include <rttr/variant.h>
 #include <rapidjson/document.h>
 
+#include "Objects/Behavior/BehaviorTree.hpp"
 #include "Objects/Components/Component.hpp"
 #include "Objects/Components/ComponentArray.hpp"
 #include "Objects/Spawning/SpawnRule.hpp"
 
 #include "Utilities/Utilities.hpp"
 
+#include "Objects/Behavior/BehaviorNodeFactory.hpp"
 #include "Objects/Spawning/SpawnRuleFactory.hpp"
 #include "Objects/Components/ComponentFactory.hpp"
 
@@ -281,6 +284,47 @@ namespace Barrage
         value.PushBack(currentString, allocator);
       }
     }
+    else if (type == rttr::type::get<BehaviorNodeRecipeDeepPtr>())
+    {
+      const BehaviorNodeRecipeDeepPtr& nodeRecipe = object.get_value<BehaviorNodeRecipeDeepPtr>();
+
+      value.SetObject();
+
+      if (!nodeRecipe || !nodeRecipe->node_)
+      {
+        rapidjson::Value nullValue;
+        nullValue.SetNull();
+
+        value.AddMember("Empty", nullValue, allocator);
+      }
+      else
+      {
+        rapidjson::Value nameValue = Serialize(nodeRecipe->node_->GetName(), allocator);
+        value.AddMember("Name", nameValue, allocator);
+        
+        rttr::variant dataVariant = nodeRecipe->node_->GetRTTRValue();
+        
+        if (dataVariant.is_valid())
+        {
+          rapidjson::Value dataValue = Serialize(dataVariant, allocator);
+          value.AddMember("Data", dataValue, allocator);
+        }
+        
+        if (!nodeRecipe->children_.empty())
+        {
+          rapidjson::Value childrenArrayValue;
+          childrenArrayValue.SetArray();
+        
+          for (auto it = nodeRecipe->children_.begin(); it != nodeRecipe->children_.end(); ++it)
+          {
+            rapidjson::Value childNodeValue = Serialize(*it, allocator);
+            childrenArrayValue.PushBack(childNodeValue, allocator);
+          }
+        
+          value.AddMember("Children", childrenArrayValue, allocator);
+        }
+      }
+    }
     else if (type.is_sequential_container())
     {
       const rttr::variant_sequential_view& asArray = unwrappedObject.create_sequential_view();
@@ -468,6 +512,58 @@ namespace Barrage
       }
 
       object = newStringSet;
+    }
+    else if (type == rttr::type::get<BehaviorNodeRecipeDeepPtr>())
+    {
+      if (data.HasMember("Name") && data["Name"].IsString())
+      {
+        std::string behaviorNodeName(data["Name"].GetString());
+        BehaviorNodeDeepPtr behaviorNode = BehaviorNodeFactory::CreateBehaviorNode(behaviorNodeName);
+
+        if (behaviorNode)
+        {
+          if (data.HasMember("Data") && data["Data"].IsObject())
+          {
+            rttr::variant behaviorNodeData = behaviorNode->GetRTTRValue();
+
+            if (behaviorNodeData.is_valid())
+            {
+              Deserialize(behaviorNodeData, data["Data"], behaviorNodeData.get_type());
+              behaviorNode->SetRTTRValue(behaviorNodeData);
+            }
+          }
+
+          BehaviorNodeRecipeDeepPtr behaviorNodeRecipe(std::make_shared<BehaviorNodeRecipe>(behaviorNode));
+
+          if (data.HasMember("Children") && data["Children"].IsArray())
+          {
+            const rapidjson::GenericArray<true, rapidjson::Value> childrenArray = data["Children"].GetArray();
+            size_t arraySize = childrenArray.Size();
+
+            for (uint32_t i = 0; i < arraySize; ++i)
+            {
+              BehaviorNodeRecipeDeepPtr childNodeRecipe;
+
+              Deserialize(childNodeRecipe, childrenArray[i]);
+
+              if (childNodeRecipe)
+              {
+                behaviorNodeRecipe->children_.push_back(childNodeRecipe);
+              }
+            }
+          }
+
+          object = behaviorNodeRecipe;
+        }
+        else
+        {
+          object = BehaviorNodeRecipeDeepPtr(nullptr);
+        }
+      }
+      else
+      {
+        object = BehaviorNodeRecipeDeepPtr(nullptr);
+      }
     }
     else if (type.is_sequential_container())
     {

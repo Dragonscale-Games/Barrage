@@ -258,6 +258,9 @@ namespace Barrage
       /**************************************************************/
       operator bool() const noexcept;
 
+
+      std::shared_ptr<Component> Get();
+
     private:
       std::shared_ptr<Component> ptr_;
   };

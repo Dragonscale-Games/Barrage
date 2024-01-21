@@ -13,6 +13,7 @@
 #include "stdafx.h"
 #include "Registrar.hpp"
 
+#include "Objects/Behavior/BehaviorTree.hpp"
 #include "Scenes/Scene.hpp"
 #include "Entry/Entry.hpp"
 
@@ -89,6 +90,11 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("x", &glm::vec2::x)
       .property("y", &glm::vec2::y)
+      ;
+
+    rttr::registration::class_<BehaviorTree>("BehaviorTree")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("recipe", &BehaviorTree::recipe_)
       ;
   }
 

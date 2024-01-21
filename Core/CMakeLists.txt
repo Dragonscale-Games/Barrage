@@ -45,10 +45,6 @@ add_library(BarrageCore STATIC
 
   "Audio/AudioManager.cpp"
 
-  "BehaviorTrees/BehaviorTree.cpp" 
-  "BehaviorTrees/BehaviorNode.cpp" 
-  "BehaviorTrees/BehaviorNodeFactory.cpp"
-
   "Entry/Entry.cpp"  
 
   "Framerate/FramerateController.cpp"
@@ -59,21 +55,30 @@ add_library(BarrageCore STATIC
 
   "Memory/MemoryDebugger.cpp" 
 
-  "Objects/ObjectManager.cpp"
   "Objects/Archetypes/ObjectArchetype.cpp" 
   "Objects/Archetypes/PoolArchetype.cpp" 
+
+  "Objects/Behavior/BehaviorTree.cpp" 
+  "Objects/Behavior/BehaviorNode.cpp" 
+  "Objects/Behavior/BehaviorNodeFactory.cpp"
+
   "Objects/Components/Component.cpp" 
   "Objects/Components/ComponentArray.cpp" 
   "Objects/Components/ComponentFactory.cpp"
+
   "Objects/Pools/Pool.cpp" 
   "Objects/Pools/PoolType.cpp" 
+
   "Objects/Spawning/SpawnLayer.cpp"
   "Objects/Spawning/SpawnRule.cpp" 
   "Objects/Spawning/SpawnRuleFactory.cpp"
   "Objects/Spawning/SpawnType.cpp"
+
   "Objects/Systems/System.cpp" 
   "Objects/Systems/SystemFactory.cpp" 
   "Objects/Systems/SystemManager.cpp" 
+
+  "Objects/ObjectManager.cpp"
 
   "Random/Random.cpp"
 

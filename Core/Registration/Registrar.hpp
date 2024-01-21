@@ -85,6 +85,21 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Registers a behavior node for use in the engine.
+
+        \tparam T
+          The type of the behavior node.
+
+        \param name
+          The name of the behavior node.
+      */
+      /**************************************************************/
+      template <typename T>
+      static void RegisterBehaviorNode(const std::string& name);
+
+      /**************************************************************/
+      /*!
+        \brief
           Registers a component for use in the engine.
 
         \tparam T

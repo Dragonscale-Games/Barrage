@@ -33,6 +33,11 @@
 add_library(Gameplay STATIC 
 	"Registration/Registration.cpp"
 
+	"Behavior/Composite/Sequence/BehaviorSequence.cpp" 
+	"Behavior/Composite/Selector/BehaviorSelector.cpp"
+	"Behavior/Decorator/Wait/BehaviorWait.cpp" 
+	"Behavior/Decorator/Loop/BehaviorLoop.cpp" 
+
     "ComponentArrays/AngularSpeed/AngularSpeedArray.cpp" 
 	"ComponentArrays/ColorTint/ColorTintArray.cpp" 
 	"ComponentArrays/Destructible/DestructibleArray.cpp" 
@@ -44,6 +49,7 @@ add_library(Gameplay STATIC
 	"ComponentArrays/TextureUV/TextureUVArray.cpp" 
 	"ComponentArrays/Velocity/VelocityArray.cpp" 
 
+	"Components/Behavior/Behavior.cpp"
 	"Components/BoundaryBox/BoundaryBox.cpp" 
 	"Components/CircleCollider/CircleCollider.cpp" 
 	"Components/Player/Player.cpp" 
@@ -69,13 +75,14 @@ add_library(Gameplay STATIC
 	"SpawnRules/Speed/Random/SpawnRandomSpeed.cpp"
 	"SpawnRules/Speed/Set/SpawnSetSpeed.cpp"
 
+	"Systems/Behavior/BehaviorSystem.cpp"
 	"Systems/Collision/CollisionSystem.cpp"
 	"Systems/Creation/CreationSystem.cpp"
 	"Systems/Destruction/DestructionSystem.cpp"
 	"Systems/Draw/DrawSystem.cpp"
 	"Systems/Lifetime/LifetimeSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
-	"Systems/Spawn/SpawnSystem.cpp")
+	"Systems/Spawn/SpawnSystem.cpp" )
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

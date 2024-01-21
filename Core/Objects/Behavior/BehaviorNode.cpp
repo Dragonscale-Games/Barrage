@@ -15,10 +15,46 @@
 
 namespace Barrage
 {
-  BehaviorNode::BehaviorNode(const std::string& name, unsigned maxChildren) :
-    parentIndex_(0),
-    maxChildren_(maxChildren),
+  BehaviorState::State BehaviorState::GetState()
+  {
+    return state_;
+  }
+
+  unsigned BehaviorState::GetNextNodeIndex()
+  {
+    return nextNodeIndex_;
+  }
+  
+  BehaviorState BehaviorState::Running()
+  {
+    return BehaviorState(State::Running);
+  }
+
+  BehaviorState BehaviorState::Transfer(unsigned nextNodeIndex)
+  {
+    return BehaviorState(State::Transfer, nextNodeIndex);
+  }
+
+  BehaviorState BehaviorState::Success()
+  {
+    return BehaviorState(State::Success);
+  }
+
+  BehaviorState BehaviorState::Failure()
+  {
+    return BehaviorState(State::Failure);
+  }
+
+  BehaviorState::BehaviorState(State state, unsigned nextNodeIndex) :
+    state_(state),
+    nextNodeIndex_(nextNodeIndex)
+  {
+  }
+
+  BehaviorNode::BehaviorNode(const std::string& name, BehaviorNodeType type) :
+    parentIndex_(BEHAVIOR_END),
     childIndices_(),
+    type_(type),
     name_(name)
   {
   }
@@ -28,28 +64,50 @@ namespace Barrage
     return name_;
   }
 
-  unsigned BehaviorNode::GetParentIndex() const
+  int BehaviorNode::GetParentIndex() const
   {
     return parentIndex_;
   }
 
-  unsigned BehaviorNode::GetMaxChildren() const
+  BehaviorNodeType BehaviorNode::GetType() const
   {
-    return maxChildren_;
+    return type_;
   }
 
-  void BehaviorNode::SetParentIndex(unsigned index)
+  const std::vector<int>& BehaviorNode::GetChildIndices() const
+  {
+    return childIndices_;
+  }
+
+  void BehaviorNode::SetParentIndex(int index)
   {
     parentIndex_ = index;
+  }
+
+  void BehaviorNode::AddChildIndex(int index)
+  {
+    childIndices_.push_back(index);
+  }
+
+  void BehaviorNode::OnBegin(BehaviorNodeInfo& info)
+  {
+    UNREFERENCED(info);
   }
 
   BehaviorState BehaviorNode::Execute(BehaviorNodeInfo& info)
   {
     UNREFERENCED(info);
 
-    return BehaviorState::Success;
+    return BehaviorState::Running();
   }
-  
+
+  void BehaviorNode::OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childIndex)
+  {
+    UNREFERENCED(info);
+    UNREFERENCED(result);
+    UNREFERENCED(childIndex);
+  }
+
   rttr::variant BehaviorNode::GetRTTRValue()
   {
     return rttr::variant();
@@ -66,10 +124,10 @@ namespace Barrage
   }
 
   BehaviorNodeWithArray::BehaviorNodeWithArray(
-    const std::string& name, 
-    unsigned maxChildren
-  ) : 
-    BehaviorNode(name, maxChildren)
+    const std::string& name,
+    BehaviorNodeType type
+  ) :
+    BehaviorNode(name, type)
   {
   }
 

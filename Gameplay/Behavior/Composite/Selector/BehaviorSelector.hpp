@@ -1,39 +1,36 @@
 /* ======================================================================== */
 /*!
- * \file            BehaviorTree.hpp
+ * \file            BehaviorSelector.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-     
+
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef BehaviorTree_BARRAGE_H
-#define BehaviorTree_BARRAGE_H
+#ifndef BehaviorSelector_BARRAGE_H
+#define BehaviorSelector_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "BehaviorNode.hpp"
-#include "Objects/Components/ComponentArray.hpp"
+#include "Objects/Behavior/BehaviorNode.hpp"
 
 namespace Barrage
 {
-  class BehaviorTree
+  namespace Behavior
   {
-    public:
-      BehaviorTree();
+    class Selector : public BehaviorNode
+    {
+      public:
+        Selector();
 
-      void SetCapacity(unsigned capacity);
-
-      void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex);
-
-    public:
-      BehaviorNodeList tree_;
-  };
+        std::shared_ptr<BehaviorNode> Clone() const override;
+    };
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // BehaviorTree_BARRAGE_H
+#endif // BehaviorSelector_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

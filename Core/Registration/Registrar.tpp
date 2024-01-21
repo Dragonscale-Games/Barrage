@@ -15,12 +15,19 @@
 #define Registrar_BARRAGE_T
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "Objects/Behavior/BehaviorNodeFactory.hpp"
 #include "Objects/Components/ComponentFactory.hpp"
 #include "Objects/Spawning/SpawnRuleFactory.hpp"
 #include "Objects/Systems/SystemFactory.hpp"
 
 namespace Barrage
 {
+  template <typename T>
+  void Registrar::RegisterBehaviorNode(const std::string& name)
+  {
+    BehaviorNodeFactory::RegisterBehaviorNode<T>(name);
+  }
+  
   template <typename T>
   void Registrar::RegisterComponent(const std::string& componentName)
   {

@@ -61,7 +61,7 @@ add_executable(Editor
 "Commands/Rename/SpawnArchetype/RenameSpawnArchetype.cpp" 
 "Commands/Rename/Pool/RenamePool.cpp" 
 
-"Data/EditorData.cpp"
+"EditorData.cpp"
 
 "GUI/GUI.cpp" 
 

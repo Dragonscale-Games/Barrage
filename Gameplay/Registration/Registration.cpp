@@ -13,6 +13,11 @@
 #include "Registration/Registrar.hpp"
 #include "Objects/ObjectManager.hpp"
 
+#include "Behavior/Composite/Selector/BehaviorSelector.hpp"
+#include "Behavior/Composite/Sequence/BehaviorSequence.hpp"
+#include "Behavior/Decorator/Loop/BehaviorLoop.hpp"
+#include "Behavior/Decorator/Wait/BehaviorWait.hpp"
+
 #include "ComponentArrays/AngularSpeed/AngularSpeedArray.hpp"
 #include "ComponentArrays/ColorTint/ColorTintArray.hpp"
 #include "ComponentArrays/Destructible/DestructibleArray.hpp"
@@ -24,6 +29,7 @@
 #include "ComponentArrays/TextureUV/TextureUVArray.hpp"
 #include "ComponentArrays/Velocity/VelocityArray.hpp"
 
+#include "Components/Behavior/Behavior.hpp"
 #include "Components/BoundaryBox/BoundaryBox.hpp"
 #include "Components/CircleCollider/CircleCollider.hpp"
 #include "Components/Player/Player.hpp"
@@ -61,6 +67,11 @@ namespace Barrage
 {
   void Registrar::GameplayRegistration()
   {
+    RegisterBehaviorNode<Behavior::Selector>("Selector");
+    RegisterBehaviorNode<Behavior::Sequence>("Sequence");
+    RegisterBehaviorNode<Behavior::Loop>("Loop");
+    RegisterBehaviorNode<Behavior::Wait>("Wait");
+    
     RegisterComponentArray<AngularSpeed>("AngularSpeed");
     RegisterComponentArray<ColorTint>("ColorTint");
     RegisterComponentArray<Destructible>("Destructible");
@@ -72,6 +83,7 @@ namespace Barrage
     RegisterComponentArray<TextureUV>("TextureUV");
     RegisterComponentArray<Velocity>("Velocity");
 
+    RegisterComponent<BehaviorTree>("BehaviorTree");
     RegisterComponent<BoundaryBox>("BoundaryBox");
     RegisterComponent<CircleCollider>("CircleCollider");
     RegisterComponent<Player>("Player");
@@ -122,6 +134,8 @@ namespace Barrage
 
   void Registrar::GameplayReflection()
   {
+    Behavior::Wait::Reflect();
+    
     AngularSpeed::Reflect();
     ColorTintReflect();
     DestructibleReflect();
