@@ -33,10 +33,14 @@
 add_library(Gameplay STATIC 
 	"Registration/Registration.cpp"
 
+	"Behavior/Action/Debug/BehaviorDebug.cpp"
+
 	"Behavior/Composite/Sequence/BehaviorSequence.cpp" 
 	"Behavior/Composite/Selector/BehaviorSelector.cpp"
-	"Behavior/Decorator/Wait/BehaviorWait.cpp" 
+
 	"Behavior/Decorator/Loop/BehaviorLoop.cpp" 
+	"Behavior/Decorator/Repeat/BehaviorRepeat.cpp"
+	"Behavior/Decorator/Wait/BehaviorWait.cpp" 
 
     "ComponentArrays/AngularSpeed/AngularSpeedArray.cpp" 
 	"ComponentArrays/ColorTint/ColorTintArray.cpp" 
@@ -82,7 +86,7 @@ add_library(Gameplay STATIC
 	"Systems/Draw/DrawSystem.cpp"
 	"Systems/Lifetime/LifetimeSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
-	"Systems/Spawn/SpawnSystem.cpp" )
+	"Systems/Spawn/SpawnSystem.cpp"   )
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

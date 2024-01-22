@@ -20,10 +20,12 @@
 #include <rttr/variant.h>
 #include <unordered_map>
 #include <imgui/imgui.h>
+#include "Objects/Behavior/BehaviorTree.hpp"
 
 namespace Barrage
 {
   typedef std::unordered_map<ImGuiID, rttr::variant> IdVariantMap;
+  typedef std::unordered_map<ImGuiID, std::string> IdStringMap;
   
   //! Allows user to edit the values of an RTTR-registered object
   class DataWidget
@@ -149,6 +151,10 @@ namespace Barrage
 
       static void AngleWidget(DataObject& object);
 
+      static bool BehaviorNodeHelper(DataObject& treeObject, BehaviorNodeRecipeDeepPtr& nodePtr, size_t id);
+
+      static void BehaviorTreeWidget(DataObject& object);
+
       static void ColorWidget(DataObject& object);
 
       static void SpawnRuleListWidget(DataObject& object);
@@ -168,6 +174,8 @@ namespace Barrage
     private:
       static DataWidgetFunctionMap widgetFunctions_;
       static IdVariantMap keyEditorMap_;
+      static IdStringMap spawnRuleAddMap_;
+      static IdStringMap behaviorNodeAddMap_;
       static bool initialized_;
   };
 }

@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            BehaviorSequence.hpp
+ * \file            BehaviorDebug.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -11,8 +11,8 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef BehaviorSequence_BARRAGE_H
-#define BehaviorSequence_BARRAGE_H
+#ifndef BehaviorDebug_BARRAGE_H
+#define BehaviorDebug_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Behavior/BehaviorNode.hpp"
@@ -21,25 +21,28 @@ namespace Barrage
 {
   namespace Behavior
   {
-    class Sequence : public BehaviorNode
+    struct DebugData
+    {
+      std::string text_;
+      bool succeeds_;
+
+      DebugData();
+    };
+    
+    class Debug : public BehaviorNodeT<DebugData>
     {
       public:
-        Sequence();
+        Debug();
 
         std::shared_ptr<BehaviorNode> Clone() const override;
 
-        void OnBegin(BehaviorNodeInfo& info) override;
-
         BehaviorState Execute(BehaviorNodeInfo& info) override;
 
-        void OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childIndex) override;
-
-      private:
-        static BehaviorState result_;
+        static void Reflect();
     };
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // BehaviorSequence_BARRAGE_H
+#endif // BehaviorDebug_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

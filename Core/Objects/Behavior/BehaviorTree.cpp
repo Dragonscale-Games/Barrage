@@ -13,11 +13,14 @@
 #include "stdafx.h"
 #include "BehaviorTree.hpp"
 
+#include <iostream>
+
 namespace Barrage
 {
   BehaviorTree::BehaviorTree() :
     tree_(),
-    recipe_()
+    recipe_(),
+    nodeIndices_()
   {
   }
 
@@ -65,9 +68,21 @@ namespace Barrage
     }
   }
 
-  int BehaviorTree::Execute(BehaviorNodeInfo& info, int nodeIndex)
+  void BehaviorTree::Execute(Space& space, Pool& pool)
   {
-    if (nodeIndex <= BEHAVIOR_END || nodeIndex >= tree_.size() || tree_.size() == 0)
+    unsigned activeObjects = pool.ActiveObjectCount();
+
+    for (unsigned i = 0; i < activeObjects; ++i)
+    {
+      BehaviorNodeInfo info(tree_, space, pool, i);
+
+      nodeIndices_.Data(i) = ExecuteObject(info, nodeIndices_.Data(i));
+    }
+  }
+
+  int BehaviorTree::ExecuteObject(BehaviorNodeInfo& info, int nodeIndex)
+  {
+    if (nodeIndex <= BEHAVIOR_END || nodeIndex >= static_cast<int>(tree_.size()) || tree_.size() == 0)
     {
       return BEHAVIOR_END;
     }
@@ -127,6 +142,13 @@ namespace Barrage
         behaviorNodePtr->SetCapacity(capacity);
       }
     }
+
+    nodeIndices_.SetCapacity(capacity);
+
+    for (unsigned i = 0; i < capacity; ++i)
+    {
+      nodeIndices_.Data(i) = BEHAVIOR_BEGIN;
+    }
   }
 
   void BehaviorTree::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex)
@@ -143,6 +165,13 @@ namespace Barrage
 
         behaviorNodePtr->HandleDestructions(destructionArray, writeIndex, endIndex);
       }
+    }
+
+    unsigned numAliveObjects = nodeIndices_.HandleDestructions(destructionArray, writeIndex, endIndex);
+
+    for (unsigned i = numAliveObjects; i < endIndex; ++i)
+    {
+      nodeIndices_.Data(i) = BEHAVIOR_BEGIN;
     }
   }
 
@@ -186,6 +215,8 @@ namespace Barrage
       behaviorTree.PrintRecipeNode(os, behaviorTree.recipe_, 0);
     }
     
+    os << std::endl;
+
     os << "Tree:" << std::endl;
     os << "------" << std::endl;
 
@@ -194,6 +225,8 @@ namespace Barrage
       behaviorTree.PrintTreeNode(os, behaviorTree.tree_.at(0), 0);
     }
     
+    os << std::endl;
+
     return os;
   }
 

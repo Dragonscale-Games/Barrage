@@ -19,6 +19,7 @@
 #include "ComponentArrays/Rotation/RotationArray.hpp"
 #include "Components/Sprite/Sprite.hpp"
 #include "Objects/Spawning/SpawnRuleFactory.hpp"
+#include "Objects/Behavior/BehaviorNodeFactory.hpp"
 #include <algorithm>
 
 namespace Barrage
@@ -58,6 +59,8 @@ namespace Barrage
   
   DataWidget::DataWidgetFunctionMap DataWidget::widgetFunctions_ = DataWidget::DataWidgetFunctionMap();
   IdVariantMap DataWidget::keyEditorMap_ = IdVariantMap();
+  IdStringMap DataWidget::spawnRuleAddMap_ = IdStringMap();
+  IdStringMap DataWidget::behaviorNodeAddMap_ = IdStringMap();
   bool DataWidget::initialized_ = false;
   
   void DataWidget::Use(DataObject& object, bool treeNode)
@@ -390,6 +393,7 @@ namespace Barrage
     AddDataWidget<unsigned long long>(UnsignedLongLongWidget);
     AddDataWidget<std::string>(StringWidget);
     AddDataWidget<Radian>(AngleWidget);
+    AddDataWidget<BehaviorTree>(BehaviorTreeWidget);
     AddDataWidget<ColorTint>(ColorWidget);
     AddDataWidget<SpawnRuleList>(SpawnRuleListWidget);
     AddDataWidget<Sprite>(SpriteWidget);
@@ -571,6 +575,225 @@ namespace Barrage
     }
   }
 
+  bool DataWidget::BehaviorNodeHelper(DataObject& treeObject, BehaviorNodeRecipeDeepPtr& nodePtr, size_t id)
+  {
+    if (!nodePtr->node_)
+    {
+      LogWidget::AddEntry("Empty behavior node pointer encountered.");
+      return true;
+    }
+
+    float buttonWidth = ImGui::CalcTextSize("X").x + ImGui::GetStyle().FramePadding.x * 2.0f;
+
+    ImGui::PushID(id);
+    ImGui::Spacing();
+    ImGui::Spacing();
+    ImGui::BeginGroup();
+    ImGui::PushItemWidth(-buttonWidth - 150.0f);
+    ImGui::BeginGroup();
+    ImGui::Text(nodePtr->node_->GetName().c_str());
+    ImGui::Spacing();
+    rttr::variant nodeVariant = nodePtr->node_->GetRTTRValue();
+
+    if (nodeVariant.is_valid())
+    {
+      DataObject nodeObject(nodePtr->node_->GetName(), nodeVariant);
+
+      DataWidget::Use(nodeObject);
+
+      if (nodeObject.ValueWasSet() && !treeObject.ValueWasSet())
+      {
+        nodePtr->node_->SetRTTRValue(nodeObject.value_);
+        treeObject.valueWasSet_ = true;
+
+        if (nodeObject.ChainUndoEnabled())
+        {
+          treeObject.SetChainUndo(true);
+        }
+      }
+
+      ImGui::Spacing();
+    }
+
+    BehaviorNodeType behaviorNodeType = nodePtr->node_->GetType();
+
+    float padding = 6.0f;
+
+    if (behaviorNodeType != BehaviorNodeType::Action)
+    {
+      size_t numChildren = nodePtr->children_.size();
+
+      ImGui::Indent(2.0f * padding);
+
+      for (size_t i = 0; i < numChildren; ++i)
+      {
+        if (BehaviorNodeHelper(treeObject, nodePtr->children_.at(i), i) && !treeObject.ValueWasSet())
+        {
+          nodePtr->children_.erase(nodePtr->children_.begin() + i);
+          treeObject.valueWasSet_ = true;
+          break;
+        }
+
+        ImGui::Spacing();
+      }
+
+      ImGui::Unindent(2.0f * padding);
+
+      if (behaviorNodeType == BehaviorNodeType::Composite ||
+        (behaviorNodeType == BehaviorNodeType::Decorator && numChildren == 0) ||
+        (behaviorNodeType == BehaviorNodeType::Parallel && numChildren < MAX_PARALLEL_NODE_CHILDREN))
+      {
+        ImGuiID currentId = ImGui::GetID("Map");
+
+        if (behaviorNodeAddMap_.count(currentId))
+        {
+          std::string& selectedBehaviorNode = behaviorNodeAddMap_.at(currentId);
+          const StringSet& behaviorNodeNames = BehaviorNodeFactory::GetBehaviorNodeNames();
+
+          if (ImGui::BeginCombo("##newBehaviorNode", selectedBehaviorNode.c_str()))
+          {
+            for (auto& behaviorNodeName : behaviorNodeNames)
+            {
+              if (ImGui::Selectable(behaviorNodeName.c_str(), behaviorNodeName == selectedBehaviorNode))
+              {
+                selectedBehaviorNode = behaviorNodeName;
+              }
+            }
+            ImGui::EndCombo();
+          }
+
+          ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.6f, 1.0f));
+          ImGui::Text("Select behavior node to add.");
+          ImGui::PopStyleColor();
+
+          if (ImGui::Button("Confirm") && !treeObject.ValueWasSet())
+          {
+            BehaviorNodeDeepPtr newBehaviorNode = BehaviorNodeFactory::CreateBehaviorNode(selectedBehaviorNode);
+
+            if (newBehaviorNode)
+            {
+              newBehaviorNode->SetRTTRValue(newBehaviorNode->GetRTTRValue());
+              nodePtr->children_.push_back(BehaviorNodeRecipeDeepPtr(std::make_shared<BehaviorNodeRecipe>(newBehaviorNode)));
+              behaviorNodeAddMap_.erase(currentId);
+              treeObject.valueWasSet_ = true;
+            }
+          }
+          ImGui::SameLine();
+          if (ImGui::Button("Cancel"))
+          {
+            behaviorNodeAddMap_.erase(currentId);
+          }
+        }
+        else if (ImGui::Button("Add child node"))
+        {
+          behaviorNodeAddMap_[currentId];
+        }
+      }
+    }
+
+    ImGui::EndGroup();
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    if (ImGui::Button("X"))
+    {
+      ImGui::EndGroup();
+      ImGui::PopID();
+      return true;
+    }
+
+    ImGui::EndGroup();
+
+    ImVec2 itemRectMin = ImGui::GetItemRectMin();
+    ImVec2 itemRectMax = ImGui::GetItemRectMax();
+    
+    itemRectMin.x -= padding;
+    itemRectMin.y -= padding;
+    itemRectMax.x += padding;
+    itemRectMax.y += padding;
+    
+    ImDrawList* drawList = ImGui::GetWindowDrawList();
+    drawList->AddRect(itemRectMin, itemRectMax, IM_COL32(150, 150, 150, 100));
+
+    ImGui::Spacing();
+
+    ImGui::PopID();
+
+    return false;
+  }
+
+  void DataWidget::BehaviorTreeWidget(DataObject& object)
+  {
+    BehaviorTree behaviorTree = object.GetValue<BehaviorTree>();
+
+    if (behaviorTree.recipe_)
+    {
+      float padding = 6.0f;
+
+      ImGui::Indent(padding);
+
+      if (BehaviorNodeHelper(object, behaviorTree.recipe_, 0) && !object.ValueWasSet())
+      {
+        behaviorTree.recipe_ = BehaviorNodeRecipeDeepPtr();
+        object.valueWasSet_ = true;
+      }
+
+      ImGui::Unindent(padding);
+    }
+    else
+    {
+      ImGuiID currentId = ImGui::GetID("Map");
+
+      if (behaviorNodeAddMap_.count(currentId))
+      {
+        std::string& selectedBehaviorNode = behaviorNodeAddMap_.at(currentId);
+        const StringSet& behaviorNodeNames = BehaviorNodeFactory::GetBehaviorNodeNames();
+
+        if (ImGui::BeginCombo("##newBehaviorNode", selectedBehaviorNode.c_str()))
+        {
+          for (auto& behaviorNodeName : behaviorNodeNames)
+          {
+            if (ImGui::Selectable(behaviorNodeName.c_str(), behaviorNodeName == selectedBehaviorNode))
+            {
+              selectedBehaviorNode = behaviorNodeName;
+            }
+          }
+          ImGui::EndCombo();
+        }
+
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.6f, 1.0f));
+        ImGui::Text("Select behavior node to add.");
+        ImGui::PopStyleColor();
+
+        if (ImGui::Button("Confirm") && !object.ValueWasSet())
+        {
+          BehaviorNodeDeepPtr newBehaviorNode = BehaviorNodeFactory::CreateBehaviorNode(selectedBehaviorNode);
+
+          if (newBehaviorNode)
+          {
+            newBehaviorNode->SetRTTRValue(newBehaviorNode->GetRTTRValue());
+            behaviorTree.recipe_ = BehaviorNodeRecipeDeepPtr(std::make_shared<BehaviorNodeRecipe>(newBehaviorNode));
+            behaviorNodeAddMap_.erase(currentId);
+            object.valueWasSet_ = true;
+          }
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel"))
+        {
+          behaviorNodeAddMap_.erase(currentId);
+        }
+      }
+      else if (ImGui::Button("Add root node"))
+      {
+        behaviorNodeAddMap_[currentId];
+      }
+    }
+
+    if (object.valueWasSet_)
+    {
+      object.SetValue(behaviorTree);
+    }
+  }
+
   void DataWidget::ColorWidget(DataObject& object)
   {
     ColorTint value = object.GetValue<ColorTint>();
@@ -722,12 +945,11 @@ namespace Barrage
 
     ImGui::Spacing();
 
-    static bool addingNewSpawnRule = false;
+    ImGuiID currentId = ImGui::GetID("Map");
 
-    if (addingNewSpawnRule)
+    if (spawnRuleAddMap_.count(currentId))
     {
-      static std::string selectedSpawnRule;
-
+      std::string& selectedSpawnRule = spawnRuleAddMap_.at(currentId);
       const StringSet& spawnRuleNames = SpawnRuleFactory::GetSpawnRuleNames();
 
       if (ImGui::BeginCombo("##newSpawnRule", selectedSpawnRule.c_str()))
@@ -755,15 +977,13 @@ namespace Barrage
           newSpawnRule->SetRTTRValue(newSpawnRule->GetRTTRValue());
           spawnRuleList.push_back(newSpawnRule);
           object.SetValue(spawnRuleList);
-          selectedSpawnRule.clear();
-          addingNewSpawnRule = false;
+          spawnRuleAddMap_.erase(currentId);
         }
       }
       ImGui::SameLine();
       if (ImGui::Button("Cancel") && !object.valueWasSet_)
       {
-        selectedSpawnRule.clear();
-        addingNewSpawnRule = false;
+        spawnRuleAddMap_.erase(currentId);
       }
     }
     else 
@@ -772,7 +992,7 @@ namespace Barrage
       
       if (ImGui::Button("Add new") && !object.valueWasSet_)
       {
-        addingNewSpawnRule = true;
+        spawnRuleAddMap_[currentId];
       }
       ImGui::SameLine();
       float remainingSpace = ImGui::GetContentRegionAvail().x;

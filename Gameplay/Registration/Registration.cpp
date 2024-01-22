@@ -13,9 +13,13 @@
 #include "Registration/Registrar.hpp"
 #include "Objects/ObjectManager.hpp"
 
+#include "Behavior/Action/Debug/BehaviorDebug.hpp"
+
 #include "Behavior/Composite/Selector/BehaviorSelector.hpp"
 #include "Behavior/Composite/Sequence/BehaviorSequence.hpp"
+
 #include "Behavior/Decorator/Loop/BehaviorLoop.hpp"
+#include "Behavior/Decorator/Repeat/BehaviorRepeat.hpp"
 #include "Behavior/Decorator/Wait/BehaviorWait.hpp"
 
 #include "ComponentArrays/AngularSpeed/AngularSpeedArray.hpp"
@@ -55,6 +59,7 @@
 #include "SpawnRules/Speed/Random/SpawnRandomSpeed.hpp"
 #include "SpawnRules/Speed/Set/SpawnSetSpeed.hpp"
 
+#include "Systems/Behavior/BehaviorSystem.hpp"
 #include "Systems/Collision/CollisionSystem.hpp"
 #include "Systems/Creation/CreationSystem.hpp"
 #include "Systems/Destruction/DestructionSystem.hpp"
@@ -67,9 +72,13 @@ namespace Barrage
 {
   void Registrar::GameplayRegistration()
   {
+    RegisterBehaviorNode<Behavior::Debug>("Debug");
+    
     RegisterBehaviorNode<Behavior::Selector>("Selector");
     RegisterBehaviorNode<Behavior::Sequence>("Sequence");
+
     RegisterBehaviorNode<Behavior::Loop>("Loop");
+    RegisterBehaviorNode<Behavior::Repeat>("Repeat");
     RegisterBehaviorNode<Behavior::Wait>("Wait");
     
     RegisterComponentArray<AngularSpeed>("AngularSpeed");
@@ -109,6 +118,7 @@ namespace Barrage
     RegisterSpawnRule<Spawn::RandomSpeed>("RandomSpeed");
     RegisterSpawnRule<Spawn::SetSpeed>("SetSpeed");
 
+    RegisterSystem<BehaviorSystem>("BehaviorSystem");
     RegisterSystem<CollisionSystem>("CollisionSystem");
     RegisterSystem<CreationSystem>("CreationSystem");
     RegisterSystem<DestructionSystem>("DestructionSystem");
@@ -121,6 +131,7 @@ namespace Barrage
 
     std::vector<std::string> update_order;
 
+    update_order.push_back("BehaviorSystem");
     update_order.push_back("CreationSystem");
     update_order.push_back("DestructionSystem");
     update_order.push_back("LifetimeSystem");
@@ -134,6 +145,8 @@ namespace Barrage
 
   void Registrar::GameplayReflection()
   {
+    Behavior::Debug::Reflect();
+    
     Behavior::Wait::Reflect();
     
     AngularSpeed::Reflect();

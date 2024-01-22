@@ -57,11 +57,14 @@ namespace Barrage
 
   using BehaviorNodeList = std::vector<BehaviorNodeDeepPtr>;
 
+  constexpr size_t MAX_PARALLEL_NODE_CHILDREN = 4;
+
   enum class BehaviorNodeType
   {
     Action,
     Composite,
     Decorator,
+    Parallel
   };
 
   class BehaviorState
@@ -149,7 +152,7 @@ namespace Barrage
 
       virtual bool HasArray();
 
-    private:
+    protected:
       int parentIndex_;
       std::vector<int> childIndices_;
       BehaviorNodeType type_;

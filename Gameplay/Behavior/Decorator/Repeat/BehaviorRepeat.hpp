@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            BehaviorSequence.hpp
+ * \file            BehaviorRepeat.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -11,8 +11,8 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef BehaviorSequence_BARRAGE_H
-#define BehaviorSequence_BARRAGE_H
+#ifndef BehaviorRepeat_BARRAGE_H
+#define BehaviorRepeat_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Behavior/BehaviorNode.hpp"
@@ -21,25 +21,16 @@ namespace Barrage
 {
   namespace Behavior
   {
-    class Sequence : public BehaviorNode
+    class Repeat : public BehaviorNode
     {
       public:
-        Sequence();
+        Repeat();
 
         std::shared_ptr<BehaviorNode> Clone() const override;
-
-        void OnBegin(BehaviorNodeInfo& info) override;
-
-        BehaviorState Execute(BehaviorNodeInfo& info) override;
-
-        void OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childIndex) override;
-
-      private:
-        static BehaviorState result_;
     };
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // BehaviorSequence_BARRAGE_H
+#endif // BehaviorRepeat_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

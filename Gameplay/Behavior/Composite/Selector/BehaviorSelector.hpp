@@ -27,6 +27,15 @@ namespace Barrage
         Selector();
 
         std::shared_ptr<BehaviorNode> Clone() const override;
+
+        void OnBegin(BehaviorNodeInfo& info) override;
+
+        BehaviorState Execute(BehaviorNodeInfo& info) override;
+
+        void OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childIndex) override;
+
+      private:
+        static BehaviorState result_;
     };
   }
 }

@@ -46,6 +46,18 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          The Behavior Tree component stores per-object data, so it
+          needs to update this data on object destruction.
+
+        \param pool
+          The pool to update.
+      */
+      /**************************************************************/
+      static void UpdateBehaviorPools(Space& space, Pool& pool);
+      
+      /**************************************************************/
+      /*!
+        \brief
           In spawn rules that store an array of per-spawner data,
           this function updates the elements of the array to match
           the positions of still-alive spawners when some spawners

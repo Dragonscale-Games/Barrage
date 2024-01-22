@@ -66,8 +66,7 @@ namespace Barrage
 
       void BuildTree();
 
-      // returns index of currently active node
-      int Execute(BehaviorNodeInfo& info, int nodeIndex);
+      void Execute(Space& space, Pool& pool);
 
       void SetCapacity(unsigned capacity);
 
@@ -80,10 +79,15 @@ namespace Barrage
       void PrintTreeNode(std::ostream& os, const BehaviorNodeDeepPtr& treeNode, unsigned level) const;
 
       friend std::ostream& operator<<(std::ostream& os, const BehaviorTree& behaviorTree);
+    
+    private:
+      // returns index of currently active node
+      int ExecuteObject(BehaviorNodeInfo& info, int nodeIndex);
 
     public:
       BehaviorNodeList tree_;
       BehaviorNodeRecipeDeepPtr recipe_;
+      ComponentArrayT<int> nodeIndices_;
   };
 }
 
