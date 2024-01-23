@@ -18,8 +18,8 @@ namespace Barrage
 {
   InputManager::InputManager() :
     window_(nullptr),
-    keyTriggers_(MAX_KEY_VALUE - MIN_KEY_VALUE + 1, false),
-    keyReleases_(MAX_KEY_VALUE - MIN_KEY_VALUE + 1, false)
+    keyTriggers_(MAX_KEY_VALUE - MIN_KEY_VALUE + 1, 0),
+    keyReleases_(MAX_KEY_VALUE - MIN_KEY_VALUE + 1, 0)
   {
   }
 
@@ -35,8 +35,8 @@ namespace Barrage
 
   void InputManager::Reset()
   {
-    std::fill(keyTriggers_.begin(), keyTriggers_.end(), false);
-    std::fill(keyReleases_.begin(), keyReleases_.end(), false);
+    std::fill(keyTriggers_.begin(), keyTriggers_.end(), 0);
+    std::fill(keyReleases_.begin(), keyReleases_.end(), 0);
   }
 
   void InputManager::Shutdown()
@@ -50,17 +50,17 @@ namespace Barrage
     }
   }
 
-  bool InputManager::KeyTriggered(KEY key) const
+  bool InputManager::KeyTriggered(int key) const
   {
     if (!KeyIsValid(key))
     {
-      return false;
+      return 0;
     }
     
     return keyTriggers_[static_cast<long long>(key - MIN_KEY_VALUE)];
   }
 
-  bool InputManager::KeyIsDown(KEY key) const
+  bool InputManager::KeyIsDown(int key) const
   {
     if (!KeyIsValid(key))
     {
@@ -70,22 +70,22 @@ namespace Barrage
     return glfwGetKey(window_, key) == GLFW_PRESS;
   }
 
-  bool InputManager::KeyReleased(KEY key) const
+  bool InputManager::KeyReleased(int key) const
   {
     if (!KeyIsValid(key))
     {
-      return false;
+      return 0;
     }
     
     return keyReleases_[static_cast<long long>(key - MIN_KEY_VALUE)];
   }
 
-  bool InputManager::KeyIsValid(KEY key)
+  bool InputManager::KeyIsValid(int key)
   {
     return key >= MIN_KEY_VALUE && key <= MAX_KEY_VALUE;
   }
 
-  void InputManager::KeyCallback(GLFWwindow* window, KEY key, int scancode, int action, int mods)
+  void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
   {
     UNREFERENCED(window);
     UNREFERENCED(scancode);

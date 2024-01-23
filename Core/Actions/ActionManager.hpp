@@ -26,8 +26,28 @@
 
 namespace Barrage
 {
-  typedef uint32_t ACTION;
-  typedef std::unordered_map <ACTION, KEY> ActionKeyUmap;
+  struct ActionInfo
+  {
+    int key_;
+    bool isDown_;
+    bool triggered_;
+    bool released_;
+
+    ActionInfo();
+  };
+
+  struct ReplayState
+  {
+    uint32_t tick_;
+    unsigned char action_;
+    bool isDown_;
+    bool triggered_;
+    bool released_;
+
+    ReplayState(uint32_t tick, unsigned char action, ActionInfo info);
+  };
+
+  using ActionInfoUmap = std::unordered_map<unsigned char, ActionInfo>;
 
   //! Turns inputs into game actions and handles game recording/replaying
   class ActionManager
@@ -40,15 +60,9 @@ namespace Barrage
         Replay
       };
 
-      struct StateChange
-      {
-        uint32_t tick_;
-        uint32_t action_;
-      };
-
       ActionManager();
 
-      void MapActionKey(ACTION action, KEY key);
+      void MapActionKey(unsigned char action, int key);
 
       void SetMode(Mode newMode);
 
@@ -56,11 +70,11 @@ namespace Barrage
 
       void Update();
 
-      bool ActionTriggered(ACTION action) const;
+      bool ActionTriggered(unsigned char action) const;
 
-      bool ActionIsDown(ACTION action) const;
+      bool ActionIsDown(unsigned char action) const;
 
-      bool ActionReleased(ACTION action) const;
+      bool ActionReleased(unsigned char action) const;
 
     private:
       void GetNormalInput();
@@ -68,13 +82,11 @@ namespace Barrage
       void GetReplayInput();
 
     private:
+      ActionInfoUmap actionInfoMap_;
       uint32_t currentTick_;
       Mode mode_;
-      std::vector<bool> previousState_;
-      std::vector<bool> currentState_;
-      std::vector<StateChange> replayData_;
+      std::vector<ReplayState> replayData_;
       size_t replayPos_;
-      ActionKeyUmap actionKeyMap_;
   };
 }
 

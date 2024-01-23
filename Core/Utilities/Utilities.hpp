@@ -23,6 +23,9 @@ namespace Barrage
 {
   using StringSet = std::set<std::string>;
   
+  constexpr unsigned char CHAR_TRUE = 1;
+  constexpr unsigned char CHAR_FALSE = 0;
+
   struct Radian
   {
     float value_;

@@ -585,7 +585,7 @@ namespace Barrage
 
     float buttonWidth = ImGui::CalcTextSize("X").x + ImGui::GetStyle().FramePadding.x * 2.0f;
 
-    ImGui::PushID(id);
+    ImGui::PushID(static_cast<int>(id));
     ImGui::Spacing();
     ImGui::Spacing();
     ImGui::BeginGroup();

@@ -12,6 +12,7 @@
 
 #include "stdafx.h"
 #include "SpaceManager.hpp"
+#include "Engine.hpp"
 
 namespace Barrage
 {
@@ -26,6 +27,8 @@ namespace Barrage
     {
       spaces_.at(*it).Update();
     }
+
+    Engine::Get().Input().Reset();
   }
 
   void SpaceManager::Draw()

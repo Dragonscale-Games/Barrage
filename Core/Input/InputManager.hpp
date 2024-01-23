@@ -23,8 +23,6 @@
 
 namespace Barrage
 {
-  using KEY = int;
-  
   //! Handles input events from GLFW. 
   class InputManager
 	{
@@ -56,8 +54,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Resets the states of key triggers and releases to prepare
-          for a new frame.
+          Resets the states of key triggers and releases.
       */
       /**************************************************************/
       void Reset();
@@ -74,18 +71,18 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Returns true if the given key was pressed this frame
-          and returns false otherwise.
+          Returns true if the given key has been pressed since the
+          last call to Reset().
 
         \param key
           The GLFW key to test.
 
         \return
-          Returns true if the key was pressed this frame and
-          returns false otherwise.
+          Returns true if the given key has been pressed since the
+          last call to Reset().
       */
       /**************************************************************/
-      bool KeyTriggered(KEY key) const;
+      bool KeyTriggered(int key) const;
 
       /**************************************************************/
       /*!
@@ -94,30 +91,30 @@ namespace Barrage
           false otherwise.
 
         \param key
-          The key to test. Use the key names from KeyMap.hpp.
+          The GLFW key to test.
 
         \return
           Returns true if the key is currently down and returns false
           otherwise.
       */
       /**************************************************************/
-      bool KeyIsDown(KEY key) const;
+      bool KeyIsDown(int key) const;
 
       /**************************************************************/
       /*!
         \brief
-          Returns true if the given key was released this frame
-          and returns false otherwise.
+          Returns true if the given key was released since the last
+          call to Reset().
 
         \param key
           The GLFW key to test.
 
         \return
-          Returns true if the key was released this frame and
-          returns false otherwise.
+          Returns true if the given key was released since the last
+          call to Reset().
       */
       /**************************************************************/
-      bool KeyReleased(KEY key) const;
+      bool KeyReleased(int key) const;
 
     private:
       /**************************************************************/
@@ -134,7 +131,7 @@ namespace Barrage
           otherwise.
       */
       /**************************************************************/
-      static bool KeyIsValid(KEY key);
+      static bool KeyIsValid(int key);
       
       /**************************************************************/
       /*!
@@ -160,13 +157,13 @@ namespace Barrage
           Unused in this function.
       */
       /**************************************************************/
-      static void KeyCallback(GLFWwindow* window, KEY key, int scancode, int action, int mods);
+      static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
     private:
       GLFWwindow* window_; //!< Handle to the game window
 
-      std::vector<bool> keyTriggers_; //!< Sparse vector containing which keys have been triggered since last input update
-      std::vector<bool> keyReleases_; //!< Sparse vector containing which keys have been released since last input update
+      std::vector<bool> keyTriggers_; //!< Contains which keys have been triggered since last call to Reset()
+      std::vector<bool> keyReleases_; //!< Contains which keys have been released since last call to Reset()
 	};
 }
 
