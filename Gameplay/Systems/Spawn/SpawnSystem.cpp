@@ -22,6 +22,7 @@
 
 namespace Barrage
 {
+  static const std::string ALL_POOLS("All Pools");
   static const std::string SPAWNER_POOLS("Spawner Pools");
   static const std::string SPAWN_TIMER_POOLS("Spawn Timer Pools");
   static const std::string SPAWNER_WITH_TIMER_POOLS("Spawner With Timer Pools");
@@ -30,6 +31,9 @@ namespace Barrage
   SpawnSystem::SpawnSystem() :
     System()
   {
+    PoolType all_pool_type;
+    poolTypes_[ALL_POOLS] = all_pool_type;
+    
     PoolType spawner_type;
     spawner_type.AddComponent("Spawner");
     poolTypes_[SPAWNER_POOLS] = spawner_type;
@@ -74,11 +78,12 @@ namespace Barrage
 
   void SpawnSystem::Update()
   {
-    UpdatePoolGroup(SPAWNER_WITH_TIMER_POOLS, Spawn);
+    UpdatePoolGroup(SPAWNER_WITH_TIMER_POOLS, UpdateAutomaticSpawns);
     UpdatePoolGroup(SPAWN_TIMER_POOLS, UpdateSpawnTimers);
+    UpdatePoolGroup(ALL_POOLS, SpawnObjects);
   }
 
-  void SpawnSystem::Spawn(Space& space, Pool& pool)
+  void SpawnSystem::UpdateAutomaticSpawns(Space& space, Pool& pool)
   {
     Spawner& spawner = pool.GetComponent<Spawner>("Spawner").Data();
     SpawnTimerArray& spawnTimerArray = pool.GetComponentArray<SpawnTimer>("SpawnTimer");
@@ -119,6 +124,11 @@ namespace Barrage
     {
       spawnTimerArray.Data(i).ticks_++;
     }
+  }
+
+  void SpawnSystem::SpawnObjects(Space& space, Pool& pool)
+  {
+    pool.SpawnObjects();
   }
 
   void SpawnSystem::LinkAndValidateSpawns(Space& space, Pool* pool)

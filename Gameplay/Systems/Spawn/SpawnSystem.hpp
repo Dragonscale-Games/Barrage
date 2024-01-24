@@ -49,9 +49,11 @@ namespace Barrage
       void Update() override;
 
     private:
-      static void Spawn(Space& space, Pool& pool);
+      static void UpdateAutomaticSpawns(Space& space, Pool& pool);
 
       static void UpdateSpawnTimers(Space& space, Pool& pool);
+
+      static void SpawnObjects(Space& space, Pool& pool);
 
       void LinkAndValidateSpawns(Space& space, Pool* pool);
 

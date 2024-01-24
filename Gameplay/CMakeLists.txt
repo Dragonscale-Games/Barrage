@@ -81,7 +81,7 @@ add_library(Gameplay STATIC
 
 	"Systems/Behavior/BehaviorSystem.cpp"
 	"Systems/Collision/CollisionSystem.cpp"
-	"Systems/Creation/CreationSystem.cpp"
+	
 	"Systems/Destruction/DestructionSystem.cpp"
 	"Systems/Draw/DrawSystem.cpp"
 	"Systems/Lifetime/LifetimeSystem.cpp"

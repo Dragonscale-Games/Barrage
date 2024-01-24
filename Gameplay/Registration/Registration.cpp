@@ -61,7 +61,6 @@
 
 #include "Systems/Behavior/BehaviorSystem.hpp"
 #include "Systems/Collision/CollisionSystem.hpp"
-#include "Systems/Creation/CreationSystem.hpp"
 #include "Systems/Destruction/DestructionSystem.hpp"
 #include "Systems/Draw/DrawSystem.hpp"
 #include "Systems/Lifetime/LifetimeSystem.hpp"
@@ -120,7 +119,6 @@ namespace Barrage
 
     RegisterSystem<BehaviorSystem>("BehaviorSystem");
     RegisterSystem<CollisionSystem>("CollisionSystem");
-    RegisterSystem<CreationSystem>("CreationSystem");
     RegisterSystem<DestructionSystem>("DestructionSystem");
     RegisterSystem<DrawSystem>("DrawSystem");
     RegisterSystem<LifetimeSystem>("LifetimeSystem");
@@ -132,12 +130,10 @@ namespace Barrage
     std::vector<std::string> update_order;
 
     update_order.push_back("BehaviorSystem");
-    update_order.push_back("CreationSystem");
     update_order.push_back("DestructionSystem");
     update_order.push_back("LifetimeSystem");
     update_order.push_back("MovementSystem");
     update_order.push_back("SpawnSystem");
-    update_order.push_back("CreationSystem");
     update_order.push_back("CollisionSystem");
 
     SetSystemUpdateOrder(update_order);
