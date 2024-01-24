@@ -57,6 +57,11 @@ namespace Barrage
     engine_.Input().Reset();
     engine_.Window().PollEvents();
 
+    if (engine_.Input().KeyTriggered(GLFW_KEY_ESCAPE))
+    {
+      engine_.Window().SetWindowed();
+    }
+
     unsigned numTicks = engine_.Frames().ConsumeTicks();
     for (unsigned i = 0; i < numTicks; ++i)
     {
@@ -69,11 +74,6 @@ namespace Barrage
     engine_.Graphics().GetFramebuffer().UnbindFramebuffer();
     engine_.Graphics().DrawFsq();
     engine_.Window().SwapBuffers();
-
-    if (engine_.Input().KeyTriggered(GLFW_KEY_ESCAPE))
-    {
-      engine_.Window().SetWindowed();
-    }
 
     if (engine_.Window().IsClosed())
     {

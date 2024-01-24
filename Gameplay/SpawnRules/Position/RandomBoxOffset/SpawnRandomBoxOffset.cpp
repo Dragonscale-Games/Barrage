@@ -33,7 +33,7 @@ namespace Barrage
 
     void RandomBoxOffset::Execute(SpawnRuleInfo& info)
     {
-      Random& rng = info.space_.GetRNG();
+      Random& rng = info.space_.RNG();
       PositionArray& destPositions = info.destinationPool_.GetComponentArray<Position>("Position");
 
       for (unsigned group = 0; group < info.groupInfo_.numGroups_; ++group)

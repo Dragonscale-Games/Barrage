@@ -35,12 +35,12 @@ namespace Barrage
 
     void AimedDirection::Execute(SpawnRuleInfo& info)
     {
-      if (info.space_.GetObjectManager().pools_.count("Player Pool") == 0)
+      if (info.space_.Objects().pools_.count("Player Pool") == 0)
       {
         return;
       }
       
-      Pool& player_pool = info.space_.GetObjectManager().pools_.at("Player Pool");
+      Pool& player_pool = info.space_.Objects().pools_.at("Player Pool");
 
       if (player_pool.ActiveObjectCount() == 0)
       {

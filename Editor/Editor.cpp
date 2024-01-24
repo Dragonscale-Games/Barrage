@@ -275,7 +275,7 @@ namespace Barrage
       Space* editorSpace = engine_.Spaces().GetSpace(data_.editorSpace_);
 
       editorSpace->SetScene(data_.selectedScene_);
-      editorSpace->GetRNG().SetSeed(0xC0FFEEC0FFEE);
+      editorSpace->RNG().SetSeed(0xC0FFEEC0FFEE);
 
       for (unsigned i = 0; i < data_.gameTick_; ++i)
       {

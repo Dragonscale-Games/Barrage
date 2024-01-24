@@ -31,7 +31,7 @@ namespace Barrage
 
     void RandomSpeed::Execute(SpawnRuleInfo& info)
     {
-      Random& rng = info.space_.GetRNG();
+      Random& rng = info.space_.RNG();
       VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
 
       for (unsigned group = 0; group < info.groupInfo_.numGroups_; ++group)

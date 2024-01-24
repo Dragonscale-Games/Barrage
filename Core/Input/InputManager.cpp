@@ -35,8 +35,8 @@ namespace Barrage
 
   void InputManager::Reset()
   {
-    std::fill(keyTriggers_.begin(), keyTriggers_.end(), 0);
-    std::fill(keyReleases_.begin(), keyReleases_.end(), 0);
+    std::fill(keyTriggers_.begin(), keyTriggers_.end(), false);
+    std::fill(keyReleases_.begin(), keyReleases_.end(), false);
   }
 
   void InputManager::Shutdown()

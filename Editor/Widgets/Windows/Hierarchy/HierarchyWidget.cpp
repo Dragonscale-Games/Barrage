@@ -89,7 +89,7 @@ namespace Barrage
 
       if (space)
       {
-        Pool& pool = space->GetObjectManager().pools_.at(poolName);
+        Pool& pool = space->Objects().pools_.at(poolName);
 
         poolCapacityLabel = "(" + std::to_string(pool.ActiveObjectCount()) + "/" + std::to_string(poolArchetype.capacity_) + ")";
       }

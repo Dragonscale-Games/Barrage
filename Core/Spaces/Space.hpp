@@ -38,11 +38,11 @@ namespace Barrage
 
       void Draw();
 
-      ActionManager& GetActionManager();
+      ActionManager& Actions();
 
-      ObjectManager& GetObjectManager();
+      ObjectManager& Objects();
 
-      Random& GetRNG();
+      Random& RNG();
 
       void SetScene(const std::string& name);
 

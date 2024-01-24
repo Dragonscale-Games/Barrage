@@ -54,17 +54,17 @@ namespace Barrage
     }
   }
 
-  ActionManager& Space::GetActionManager()
+  ActionManager& Space::Actions()
   {
     return actionManager_;
   }
 
-  ObjectManager& Space::GetObjectManager()
+  ObjectManager& Space::Objects()
   {
     return objectManager_;
   }
 
-  Random& Space::GetRNG()
+  Random& Space::RNG()
   {
     return rng_;
   }

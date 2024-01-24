@@ -104,7 +104,7 @@ namespace Barrage
         }
       }
 
-      Pool& destinationPool = space.GetObjectManager().pools_.at(spawnType.destinationPool_);
+      Pool& destinationPool = space.Objects().pools_.at(spawnType.destinationPool_);
       destinationPool.QueueSpawns(space, pool, spawnType);
     }
   }
@@ -123,7 +123,7 @@ namespace Barrage
 
   void SpawnSystem::LinkAndValidateSpawns(Space& space, Pool* pool)
   {
-    ObjectManager& objectManager = space.GetObjectManager();
+    ObjectManager& objectManager = space.Objects();
     Spawner& spawner = pool->GetComponent<Spawner>("Spawner").Data();
 
     //

@@ -35,7 +35,7 @@ namespace Barrage
 
     void RandomDirection::Execute(SpawnRuleInfo& info)
     {
-      Random& rng = info.space_.GetRNG();
+      Random& rng = info.space_.RNG();
       PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
       VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
 
