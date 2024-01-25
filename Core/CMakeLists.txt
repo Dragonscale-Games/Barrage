@@ -53,6 +53,8 @@ add_library(BarrageCore STATIC
 
   "Logger/Logger.cpp" 
 
+  "Math/Curves/BezierCurve.cpp"
+
   "Memory/MemoryDebugger.cpp" 
 
   "Objects/Archetypes/ObjectArchetype.cpp" 

@@ -47,6 +47,8 @@ namespace Barrage
       static void UpdateBasicMovement(Space& space, Pool& pool);
 
       static void UpdateBasicRotation(Space& space, Pool& pool);
+
+      static void UpdateMovement(Space& space, Pool& pool);
   };
 }
 

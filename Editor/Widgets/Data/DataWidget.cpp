@@ -528,9 +528,19 @@ namespace Barrage
 
   void DataWidget::UnsignedLongLongWidget(DataObject& object)
   {
-    std::string text = object.GetName();
-    text += " (unsigned long long)";
-    ImGui::Text(text.c_str());
+    unsigned long long value = object.GetValue<unsigned long long>();
+
+    bool fieldChanged = ImGui::DragScalar(object.GetName().c_str(), ImGuiDataType_U64, &value);
+
+    if (ImGui::IsItemActive())
+    {
+      object.SetChainUndo(true);
+    }
+
+    if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
+    {
+      object.SetValue(value);
+    }
   }
 
   void DataWidget::StringWidget(DataObject& object)

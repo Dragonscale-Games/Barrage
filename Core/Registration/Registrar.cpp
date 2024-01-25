@@ -16,6 +16,7 @@
 #include "Objects/Behavior/BehaviorTree.hpp"
 #include "Scenes/Scene.hpp"
 #include "Entry/Entry.hpp"
+#include "Math/Curves/BezierCurve.hpp"
 
 #include <string>
 #include <rttr/variant.h>
@@ -95,6 +96,15 @@ namespace Barrage
     rttr::registration::class_<BehaviorTree>("BehaviorTree")
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("recipe", &BehaviorTree::recipe_)
+      ;
+
+    rttr::registration::class_<BezierCurve>("BezierCurve")
+      .constructor<>() (rttr::policy::ctor::as_object)
+      .property("p0", &BezierCurve::GetP0, &BezierCurve::SetP0)
+      .property("p1", &BezierCurve::GetP1, &BezierCurve::SetP1)
+      .property("p2", &BezierCurve::GetP2, &BezierCurve::SetP2)
+      .property("p3", &BezierCurve::GetP3, &BezierCurve::SetP3)
+      .property("numSegments", &BezierCurve::GetNumSegments, &BezierCurve::SetNumSegments)
       ;
   }
 

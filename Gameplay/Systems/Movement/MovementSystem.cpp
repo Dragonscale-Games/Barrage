@@ -21,6 +21,7 @@
 #include "ComponentArrays/AngularSpeed/AngularSpeedArray.hpp"
 #include "ComponentArrays/Position/PositionArray.hpp"
 #include "ComponentArrays/Rotation/RotationArray.hpp"
+#include "Components/Movement/Movement.hpp"
 
 namespace Barrage
 {
@@ -47,10 +48,16 @@ namespace Barrage
     bounded_player_type.AddComponent("BoundaryBox");
     bounded_player_type.AddComponent("Player");
     poolTypes_["Bounded Player Pools"] = bounded_player_type;
+
+    PoolType movement_type;
+    movement_type.AddComponent("Movement");
+    movement_type.AddComponentArray("Position");
+    poolTypes_["Movement Pools"] = movement_type;
   }
 
   void MovementSystem::Update()
   {
+    UpdatePoolGroup("Movement Pools", UpdateMovement);
     UpdatePoolGroup("Player Pools", UpdatePlayerMovement);
     UpdatePoolGroup("Basic Movement Pools", UpdateBasicMovement);
     UpdatePoolGroup("Basic Rotation Pools", UpdateBasicRotation);
@@ -153,5 +160,20 @@ namespace Barrage
       rotation_array.Data(i).angle_.value_ += angular_speed_array.Data(i).w_.value_;
       rotation_array.Data(i).angle_.value_ = ClampWrapped(rotation_array.Data(i).angle_.value_, 0.0f, 2.0f * 3.141592f);
     }
+  }
+
+  void MovementSystem::UpdateMovement(Space& space, Pool& pool)
+  {
+    Movement& movement = pool.GetComponent<Movement>("Movement").Data();
+    PositionArray& position_array = pool.GetComponentArray<Position>("Position");
+
+    unsigned num_objects = pool.ActiveObjectCount();
+
+    for (unsigned i = 0; i < num_objects; ++i)
+    {
+      position_array.Data(i) = movement.curve_.GetPosition(movement.currentTicks_ / movement.numTicks_);
+    }
+
+    movement.currentTicks_ += 1.0;
   }
 }

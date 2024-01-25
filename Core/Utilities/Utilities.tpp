@@ -44,9 +44,9 @@ namespace Barrage
   }
 
   template <typename T>
-  T Lerp(T min, T max, float lerpFactor)
+  T Lerp(T min, T max, double lerpFactor)
   {
-    lerpFactor = Clamp(lerpFactor, 0.0f, 1.0f);
+    lerpFactor = Clamp(lerpFactor, 0.0, 1.0);
 
     return min + static_cast<T>((max - min) * lerpFactor);
   }
