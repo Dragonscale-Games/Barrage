@@ -25,8 +25,6 @@ namespace Barrage
   {
     public:
       BezierCurve curve_;
-      double currentTicks_;
-      double numTicks_;
 
       Movement();
 

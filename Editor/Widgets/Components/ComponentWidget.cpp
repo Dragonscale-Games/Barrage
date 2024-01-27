@@ -21,9 +21,9 @@ namespace Barrage
 {
   void ComponentWidget::Use(const std::string& componentName, ComponentDeepPtr& component)
   {
-    ImGui::PushID(componentName.data());
+    ImGui::PushID(componentName.c_str());
 
-    bool headerOpen = ImGui::CollapsingHeader(componentName.data());
+    bool headerOpen = ImGui::CollapsingHeader(componentName.c_str());
 
     if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
     {
@@ -33,7 +33,7 @@ namespace Barrage
     if (headerOpen)
     {
       rttr::variant value = component->GetRTTRValue();
-      DataWidget::DataObject object(componentName.data(), value);
+      DataWidget::DataObject object(componentName.c_str(), value);
       
       ImGui::Spacing();
       DataWidget::Use(object);

@@ -15,6 +15,7 @@
 
 #include "Widgets/Components/ComponentArrayWidget.hpp"
 #include "Widgets/Components/ComponentWidget.hpp"
+#include "Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.hpp"
 
 #include "Widgets/Data/DataWidget.hpp"
 
@@ -138,6 +139,36 @@ namespace Barrage
       }
 
       ImGui::PopID();
+    }
+    else
+    {
+      ImGui::Separator();
+      ImGui::Spacing();
+      ImGui::Text("Object: (none selected)");
+      ImGui::Spacing();
+      ImGui::Separator();
+      ImGui::Spacing();
+      
+      for (auto& componentArrayName : poolArchetype.componentArrayNames_)
+      {
+        ImGui::PushID(componentArrayName.c_str());
+
+        bool headerOpen = ImGui::CollapsingHeader(componentArrayName.c_str());
+
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+        {
+          ImGui::OpenPopup("Component Array Popup");
+        }
+
+        if (headerOpen)
+        {
+          ImGui::Text("(no object selected)");
+        }
+
+        ComponentArrayPopupWidget::Use("Component Array Popup", componentArrayName);
+
+        ImGui::PopID();
+      }
     }
 
     ImGui::End();

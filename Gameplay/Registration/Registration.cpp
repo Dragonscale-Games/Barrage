@@ -53,7 +53,6 @@
 #include "SpawnRules/Miscellaneous/Ring/SpawnRing.hpp"
 #include "SpawnRules/Miscellaneous/Spiral/SpawnSpiral.hpp"
 
-#include "SpawnRules/Position/MatchControlPoints.hpp"
 #include "SpawnRules/Position/Match/SpawnMatchPosition.hpp"
 #include "SpawnRules/Position/Offset/SpawnOffsetPosition.hpp"
 #include "SpawnRules/Position/RandomBoxOffset/SpawnRandomBoxOffset.hpp"
@@ -113,8 +112,6 @@ namespace Barrage
     RegisterSpawnRule<Spawn::Ring>("Ring");
     RegisterSpawnRule<Spawn::Spiral>("Spiral");
 
-    RegisterSpawnRule<Spawn::MatchControlPoints>("MatchControlPoints");
-    RegisterSpawnRule<Spawn::MatchPathing>("MatchPathing");
     RegisterSpawnRule<Spawn::MatchPosition>("MatchPosition");
     RegisterSpawnRule<Spawn::OffsetPosition>("OffsetPosition");
     RegisterSpawnRule<Spawn::RandomBoxOffset>("RandomBoxOffset");

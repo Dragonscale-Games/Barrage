@@ -56,6 +56,7 @@ add_library(Gameplay STATIC
 	"Components/Behavior/Behavior.cpp"
 	"Components/BoundaryBox/BoundaryBox.cpp" 
 	"Components/CircleCollider/CircleCollider.cpp" 
+	"Components/Movement/Movement.cpp"
 	"Components/Player/Player.cpp" 
 	"Components/Spawner/Spawner.cpp" 
 	"Components/Sprite/Sprite.cpp" 
@@ -86,7 +87,7 @@ add_library(Gameplay STATIC
 	"Systems/Draw/DrawSystem.cpp"
 	"Systems/Lifetime/LifetimeSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
-	"Systems/Spawn/SpawnSystem.cpp"    "Components/Movement/Movement.cpp" "SpawnRules/Position/MatchControlPoints.cpp")
+	"Systems/Spawn/SpawnSystem.cpp"     )
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
