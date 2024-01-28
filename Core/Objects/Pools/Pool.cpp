@@ -28,6 +28,11 @@ namespace Barrage
     capacity_(archetype.capacity_),
     name_(archetype.name_)
   {
+    for (auto& component : components_)
+    {
+      component.second->SetCapacity(capacity_);
+    }
+    
     for (const auto& componentArrayName : archetype.componentArrayNames_)
     {
       ComponentArrayDeepPtr componentArray = ComponentFactory::AllocateComponentArray(componentArrayName, capacity_);
@@ -64,7 +69,7 @@ namespace Barrage
   {
     spawnType.FinalizeGroupInfo();
     
-    unsigned numObjects = spawnType.CalculateSpawnSize(GetAvailableSlots());
+    unsigned numObjects = spawnType.FinalizeSpawnSize(GetAvailableSlots());
 
     if (numObjects != 0)
     {

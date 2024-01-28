@@ -18,12 +18,19 @@
 #include <string>
 #include <memory>
 #include <map>
-#include <unordered_map>
 #include <rttr/variant.h>
 #include <rttr/registration.h>
 
 namespace Barrage
 {
+  //!< Keeps track of whether an object is marked for destruction
+  struct Destructible
+  {
+    bool destroyed_; //!< true if marked for destruction
+
+    inline Destructible() : destroyed_(false) {}
+  };
+  
   //! Base  component class that all components should inherit from
   class Component
   {
@@ -58,6 +65,40 @@ namespace Barrage
       */
       /**************************************************************/
       virtual void CopyToThis(const Component& other) = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the maximum number of objects for any per-object data
+          on the component.
+
+        \param capacity
+          The new capacity to set.
+      */
+      /**************************************************************/
+      virtual void SetCapacity(unsigned capacity) = 0;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Handles destructions for any per-object data in the 
+          component.
+
+        \param destructionArray
+          Array of bools denoting whether an object at a given index
+          is destroyed (true) or alive (false).
+
+        \param writeIndex
+          The index of the first dead object.
+
+        \param endIndex
+          One past the index of the last object that could be alive.
+
+        \return
+          Returns the number of alive objects.
+      */
+      /**************************************************************/
+      virtual void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex) = 0;
 
       /**************************************************************/
       /*!
@@ -116,6 +157,43 @@ namespace Barrage
       */
       /**************************************************************/
       void CopyToThis(const Component& other) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the maximum number of objects for any per-object data
+          on the component. Default implementation does nothing; this
+          should be specialized if the component has any per-object
+          data.
+
+        \param capacity
+          The new capacity to set.
+      */
+      /**************************************************************/
+      void SetCapacity(unsigned capacity) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Handles destructions for any per-object data in the
+          component. Default implementation does nothing; must be
+          specialized if component has per-object data.
+
+        \param destructionArray
+          Array of bools denoting whether an object at a given index
+          is destroyed (true) or alive (false).
+
+        \param writeIndex
+          The index of the first dead object.
+
+        \param endIndex
+          One past the index of the last object that could be alive.
+
+        \return
+          Returns the number of alive objects.
+      */
+      /**************************************************************/
+      void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex) override;
 
       /**************************************************************/
       /*!

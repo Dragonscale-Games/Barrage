@@ -38,6 +38,21 @@ namespace Barrage
   }
 
   template <typename T>
+  void ComponentT<T>::SetCapacity([[maybe_unused]] unsigned capacity)
+  {
+    // intentionally empty, should be specialized in component classes that have per-object data
+  }
+
+  template <typename T>
+  void ComponentT<T>::HandleDestructions(
+    [[maybe_unused]] const Destructible* destructionArray,
+    [[maybe_unused]] unsigned writeIndex,
+    [[maybe_unused]] unsigned endIndex)
+  {
+    // intentionally empty, should be specialized in component classes that have per-object data
+  }
+
+  template <typename T>
   T& ComponentT<T>::Data()
   {
     return data_;

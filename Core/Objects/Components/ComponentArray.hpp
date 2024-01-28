@@ -18,22 +18,10 @@
 #define ComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-#include <memory>
-#include <map>
-#include <rttr/variant.h>
-#include <rttr/registration.h>
+#include "Component.hpp"
 
 namespace Barrage
 {
-  //!< Keeps track of whether an object is marked for destruction
-  struct Destructible
-  {
-    bool destroyed_; //!< true if marked for destruction
-
-    inline Destructible() : destroyed_(false) {}
-  };
-  
   //! Base component array class that all component arrays inherit from
   class ComponentArray
   {
@@ -201,18 +189,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Reallocates the data array with a new capacity.
-          Note: Sets all values to default values.
-
-        \param capacity
-          The new capacity to set.
-      */
-      /**************************************************************/
-      void SetCapacity(unsigned capacity);
-
-      /**************************************************************/
-      /*!
-        \brief
           Creates a component that's a deep copy of this component.
 
         \return
@@ -242,6 +218,18 @@ namespace Barrage
       */
       /**************************************************************/
       void CopyToThis(const ComponentArray& source, unsigned sourceIndex, unsigned recipientIndex) override;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Reallocates the data array with a new capacity.
+          Note: Sets all values to default values.
+
+        \param capacity
+          The new capacity to set.
+      */
+      /**************************************************************/
+      void SetCapacity(unsigned capacity);
 
       /**************************************************************/
       /*!

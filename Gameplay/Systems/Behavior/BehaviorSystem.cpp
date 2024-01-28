@@ -36,8 +36,6 @@ namespace Barrage
       if (pool_type.MatchesPool(pool))
       {
         BehaviorTree& behaviorTree = pool->GetComponent<BehaviorTree>("BehaviorTree").Data();
-
-        behaviorTree.SetCapacity(pool->GetCapacity());
         behaviorTree.BuildTree();
 
         poolGroups_[it->first].push_back(pool);

@@ -30,7 +30,7 @@ namespace Barrage
 
       void FinalizeGroupInfo();
 
-      unsigned CalculateSpawnSize(unsigned maxSpawns);
+      unsigned FinalizeSpawnSize(unsigned maxSpawns);
 
       void SetCapacity(unsigned capacity);
 

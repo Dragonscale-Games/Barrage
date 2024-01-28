@@ -60,14 +60,6 @@ namespace Barrage
   }
 
   template <typename T>
-  void ComponentArrayT<T>::SetCapacity(unsigned capacity)
-  {
-    capacity_ = capacity;
-    delete[] data_;
-    data_ = new T[capacity_];
-  }
-
-  template <typename T>
   std::shared_ptr<ComponentArray> ComponentArrayT<T>::Clone() const
   {
     return std::make_shared<ComponentArrayT<T>>(*this);
@@ -79,6 +71,14 @@ namespace Barrage
     const ComponentArrayT<T>& source_derived = static_cast<const ComponentArrayT<T>&>(source);
 
     data_[recipientIndex] = source_derived.data_[sourceIndex];
+  }
+
+  template <typename T>
+  void ComponentArrayT<T>::SetCapacity(unsigned capacity)
+  {
+    capacity_ = capacity;
+    delete[] data_;
+    data_ = new T[capacity_];
   }
 
   template <typename T>

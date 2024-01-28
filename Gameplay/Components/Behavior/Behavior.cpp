@@ -15,5 +15,15 @@
 
 namespace Barrage
 {
+  template <>
+  void ComponentT<BehaviorTree>::SetCapacity(unsigned capacity)
+  {
+    data_.SetCapacity(capacity);
+  }
 
+  template <>
+  void ComponentT<BehaviorTree>::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex)
+  {
+    data_.HandleDestructions(destructionArray, writeIndex, endIndex);
+  }
 }

@@ -59,6 +59,12 @@ namespace Barrage
   };
 
   typedef ComponentT<Spawner> SpawnerComponent;
+
+  template <>
+  void ComponentT<Spawner>::SetCapacity(unsigned capacity);
+
+  template <>
+  void ComponentT<Spawner>::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

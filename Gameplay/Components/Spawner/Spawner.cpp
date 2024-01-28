@@ -69,4 +69,26 @@ namespace Barrage
       .property("spawnTypes", &Spawner::spawnTypes_)
       ;
   }
+
+  template <>
+  void ComponentT<Spawner>::SetCapacity(unsigned capacity)
+  {
+    for (auto it = data_.spawnTypes_.begin(); it != data_.spawnTypes_.end(); ++it)
+    {
+      SpawnType& spawnType = it->second;
+
+      spawnType.SetCapacity(capacity);
+    }
+  }
+
+  template <>
+  void ComponentT<Spawner>::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex)
+  {
+    for (auto it = data_.spawnTypes_.begin(); it != data_.spawnTypes_.end(); ++it)
+    {
+      SpawnType& spawnType = it->second;
+
+      spawnType.HandleDestructions(destructionArray, writeIndex, endIndex);
+    }
+  }
 }

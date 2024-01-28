@@ -22,6 +22,12 @@
 namespace Barrage
 {
   typedef Barrage::ComponentT<BehaviorTree> BehaviorTreeComponent;
+
+  template <>
+  void ComponentT<BehaviorTree>::SetCapacity(unsigned capacity);
+
+  template <>
+  void ComponentT<BehaviorTree>::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

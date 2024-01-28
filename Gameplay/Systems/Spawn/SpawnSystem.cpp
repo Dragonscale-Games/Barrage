@@ -162,12 +162,6 @@ namespace Barrage
         continue;
       }
 
-      // preallocate source index array
-      spawnType.sourceIndices_.reserve(destinationPool.GetCapacity());
-
-      // allocate spawn type to match pool capacity
-      spawnType.SetCapacity(pool->GetCapacity());
-
       ++it;
     }
 

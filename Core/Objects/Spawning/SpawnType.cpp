@@ -81,7 +81,7 @@ namespace Barrage
     }
   }
 
-  unsigned SpawnType::CalculateSpawnSize(unsigned maxSpawns)
+  unsigned SpawnType::FinalizeSpawnSize(unsigned maxSpawns)
   {
     unsigned totalSpawns = 0;
     
@@ -112,6 +112,8 @@ namespace Barrage
 
   void SpawnType::SetCapacity(unsigned capacity)
   {
+    sourceIndices_.reserve(capacity);
+    
     for (auto it = spawnLayers_.begin(); it != spawnLayers_.end(); ++it)
     {
       SpawnLayer& spawnLayer = *it;
