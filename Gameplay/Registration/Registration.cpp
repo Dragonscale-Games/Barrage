@@ -29,7 +29,6 @@
 #include "ComponentArrays/Position/PositionArray.hpp"
 #include "ComponentArrays/Rotation/RotationArray.hpp"
 #include "ComponentArrays/Scale/ScaleArray.hpp"
-#include "ComponentArrays/SpawnTimer/SpawnTimerArray.hpp"
 #include "ComponentArrays/TextureUV/TextureUVArray.hpp"
 #include "ComponentArrays/Velocity/VelocityArray.hpp"
 
@@ -88,7 +87,6 @@ namespace Barrage
     RegisterComponentArray<Position>("Position");
     RegisterComponentArray<Rotation>("Rotation");
     RegisterComponentArray<Scale>("Scale");
-    RegisterComponentArray<SpawnTimer>("SpawnTimer");
     RegisterComponentArray<TextureUV>("TextureUV");
     RegisterComponentArray<Velocity>("Velocity");
 
@@ -153,7 +151,6 @@ namespace Barrage
     PositionReflect();
     RotationReflect();
     ScaleReflect();
-    SpawnTimer::Reflect();
     TextureUVReflect();
     Velocity::Reflect();
 

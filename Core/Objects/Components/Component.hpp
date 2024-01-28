@@ -15,22 +15,10 @@
 #define Component_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <string>
-#include <memory>
-#include <map>
-#include <rttr/variant.h>
-#include <rttr/registration.h>
+#include "ComponentArray.hpp"
 
 namespace Barrage
 {
-  //!< Keeps track of whether an object is marked for destruction
-  struct Destructible
-  {
-    bool destroyed_; //!< true if marked for destruction
-
-    inline Destructible() : destroyed_(false) {}
-  };
-  
   //! Base  component class that all components should inherit from
   class Component
   {

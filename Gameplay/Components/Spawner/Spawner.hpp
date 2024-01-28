@@ -49,9 +49,10 @@ namespace Barrage
   class Spawner
   {
     public:
-      std::string currentPattern_; //!< The current pattern being used by the spawner
-      PatternMap patterns_;        //!< The patterns available to use
-      SpawnTypeMap spawnTypes_;    //!< The spawn types available to use
+      std::string currentPattern_;            //!< The current pattern being used by the spawner
+      PatternMap patterns_;                   //!< The patterns available to use
+      SpawnTypeMap spawnTypes_;               //!< The spawn types available to use
+      ComponentArrayT<unsigned> spawnTimers_; //!< Per-object spawn timers
 
       Spawner();
 

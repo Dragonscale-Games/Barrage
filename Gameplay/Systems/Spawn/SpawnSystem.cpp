@@ -14,7 +14,6 @@
 #include "SpawnSystem.hpp"
 #include <Objects/Systems/SystemManager.hpp>
 #include "Components/Spawner/Spawner.hpp"
-#include "ComponentArrays/SpawnTimer/SpawnTimerArray.hpp"
 #include "ComponentArrays/Velocity/VelocityArray.hpp"
 #include "Spaces/Space.hpp"
 #include <algorithm>
@@ -24,8 +23,6 @@ namespace Barrage
 {
   static const std::string ALL_POOLS("All Pools");
   static const std::string SPAWNER_POOLS("Spawner Pools");
-  static const std::string SPAWN_TIMER_POOLS("Spawn Timer Pools");
-  static const std::string SPAWNER_WITH_TIMER_POOLS("Spawner With Timer Pools");
   static const std::string VELOCITY_POOLS("Velocity Pools");
   
   SpawnSystem::SpawnSystem() :
@@ -37,15 +34,6 @@ namespace Barrage
     PoolType spawner_type;
     spawner_type.AddComponent("Spawner");
     poolTypes_[SPAWNER_POOLS] = spawner_type;
-
-    PoolType spawn_timer_type;
-    spawn_timer_type.AddComponentArray("SpawnTimer");
-    poolTypes_[SPAWN_TIMER_POOLS] = spawn_timer_type;
-
-    PoolType spawner_with_timer_type;
-    spawner_with_timer_type.AddComponent("Spawner");
-    spawner_with_timer_type.AddComponentArray("SpawnTimer");
-    poolTypes_[SPAWNER_WITH_TIMER_POOLS] = spawner_with_timer_type;
 
     PoolType velocity_type;
     velocity_type.AddComponentArray("Velocity");
@@ -63,7 +51,6 @@ namespace Barrage
         if (it->first == SPAWNER_POOLS)
         {
           LinkAndValidateSpawns(space, pool);
-          continue; // we don't need to store these pools
         }
         else if (it->first == VELOCITY_POOLS)
         {
@@ -78,15 +65,14 @@ namespace Barrage
 
   void SpawnSystem::Update()
   {
-    UpdatePoolGroup(SPAWNER_WITH_TIMER_POOLS, UpdateAutomaticSpawns);
-    UpdatePoolGroup(SPAWN_TIMER_POOLS, UpdateSpawnTimers);
+    UpdatePoolGroup(SPAWNER_POOLS, UpdateAutomaticSpawns);
+    UpdatePoolGroup(SPAWNER_POOLS, UpdateSpawnTimers);
     UpdatePoolGroup(ALL_POOLS, SpawnObjects);
   }
 
   void SpawnSystem::UpdateAutomaticSpawns(Space& space, Pool& pool)
   {
     Spawner& spawner = pool.GetComponent<Spawner>("Spawner").Data();
-    SpawnTimerArray& spawnTimerArray = pool.GetComponentArray<SpawnTimer>("SpawnTimer");
     SpawnPattern& currentPattern = spawner.patterns_.at(spawner.currentPattern_);
     std::vector<AutomaticSpawn>& automaticSpawns = currentPattern.automaticSpawns_;
     unsigned numObjects = pool.ActiveObjectCount();
@@ -97,7 +83,7 @@ namespace Barrage
       
       for (unsigned i = 0; i < numObjects; ++i)
       {
-        const unsigned currentTick = spawnTimerArray.Data(i).ticks_;
+        const unsigned currentTick = spawner.spawnTimers_.Data(i);
 
         if (it->ticksPerSpawn_ && currentTick >= it->delay_ && (currentTick - it->delay_) % it->ticksPerSpawn_ == 0)
         {
@@ -116,13 +102,13 @@ namespace Barrage
 
   void SpawnSystem::UpdateSpawnTimers(Space& space, Pool& pool)
   {
-    SpawnTimerArray& spawnTimerArray = pool.GetComponentArray<SpawnTimer>("SpawnTimer");
+    Spawner& spawner = pool.GetComponent<Spawner>("Spawner").Data();
 
     unsigned numObjects = pool.ActiveObjectCount();
 
     for (unsigned i = 0; i < numObjects; ++i)
     {
-      spawnTimerArray.Data(i).ticks_++;
+      spawner.spawnTimers_.Data(i)++;
     }
   }
 

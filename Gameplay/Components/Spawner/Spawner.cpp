@@ -30,7 +30,8 @@ namespace Barrage
   Spawner::Spawner() : 
     currentPattern_(), 
     patterns_(), 
-    spawnTypes_()
+    spawnTypes_(),
+    spawnTimers_()
   {
   }
 
@@ -73,6 +74,13 @@ namespace Barrage
   template <>
   void ComponentT<Spawner>::SetCapacity(unsigned capacity)
   {
+    data_.spawnTimers_.SetCapacity(capacity);
+
+    for (unsigned i = 0; i < capacity; ++i)
+    {
+      data_.spawnTimers_.Data(i) = 0;
+    }
+    
     for (auto it = data_.spawnTypes_.begin(); it != data_.spawnTypes_.end(); ++it)
     {
       SpawnType& spawnType = it->second;
@@ -84,6 +92,13 @@ namespace Barrage
   template <>
   void ComponentT<Spawner>::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex)
   {
+    unsigned numAliveObjects = data_.spawnTimers_.HandleDestructions(destructionArray, writeIndex, endIndex);
+
+    for (unsigned i = numAliveObjects; i < endIndex; ++i)
+    {
+      data_.spawnTimers_.Data(i) = 0;
+    }
+    
     for (auto it = data_.spawnTypes_.begin(); it != data_.spawnTypes_.end(); ++it)
     {
       SpawnType& spawnType = it->second;

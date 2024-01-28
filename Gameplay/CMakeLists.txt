@@ -49,7 +49,6 @@ add_library(Gameplay STATIC
 	"ComponentArrays/Position/PositionArray.cpp" 
 	"ComponentArrays/Rotation/RotationArray.cpp" 
 	"ComponentArrays/Scale/ScaleArray.cpp" 
-	"ComponentArrays/SpawnTimer/SpawnTimerArray.cpp" 
 	"ComponentArrays/TextureUV/TextureUVArray.cpp" 
 	"ComponentArrays/Velocity/VelocityArray.cpp" 
 
