@@ -131,10 +131,9 @@ namespace Barrage
 
     std::vector<std::string> update_order;
 
-    update_order.push_back("BehaviorSystem");
+    update_order.push_back("MovementSystem");
     update_order.push_back("DestructionSystem");
     update_order.push_back("LifetimeSystem");
-    update_order.push_back("MovementSystem");
     update_order.push_back("SpawnSystem");
     update_order.push_back("CollisionSystem");
 
