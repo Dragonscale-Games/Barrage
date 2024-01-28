@@ -25,37 +25,42 @@
 
 namespace Barrage
 {
+  static const std::string BASIC_MOVEMENT_POOLS("Basic Movement Pools");
+  static const std::string BASIC_ROTATION_POOLS("Basic Rotation Pools");
+  static const std::string PLAYER_POOLS("Player Pools");
+  static const std::string BOUNDED_PLAYER_POOLS("Bounded Player Pools");
+  
   MovementSystem::MovementSystem() :
     System()
   {
     PoolType basic_movement_type;
     basic_movement_type.AddComponentArray("Position");
     basic_movement_type.AddComponentArray("Velocity");
-    poolTypes_["Basic Movement Pools"] = basic_movement_type;
+    poolTypes_[BASIC_MOVEMENT_POOLS] = basic_movement_type;
 
     PoolType basic_rotation_type;
     basic_rotation_type.AddComponentArray("Rotation");
     basic_rotation_type.AddComponentArray("AngularSpeed");
-    poolTypes_["Basic Rotation Pools"] = basic_rotation_type;
+    poolTypes_[BASIC_ROTATION_POOLS] = basic_rotation_type;
 
     PoolType player_type;
     player_type.AddComponentArray("Velocity");
     player_type.AddComponent("Player");
-    poolTypes_["Player Pools"] = player_type;
+    poolTypes_[PLAYER_POOLS] = player_type;
 
     PoolType bounded_player_type;
     bounded_player_type.AddComponentArray("Position");
     bounded_player_type.AddComponent("BoundaryBox");
     bounded_player_type.AddComponent("Player");
-    poolTypes_["Bounded Player Pools"] = bounded_player_type;
+    poolTypes_[BOUNDED_PLAYER_POOLS] = bounded_player_type;
   }
 
   void MovementSystem::Update()
   {
-    UpdatePoolGroup("Player Pools", UpdatePlayerMovement);
-    UpdatePoolGroup("Basic Movement Pools", UpdateBasicMovement);
-    UpdatePoolGroup("Basic Rotation Pools", UpdateBasicRotation);
-    UpdatePoolGroup("Bounded Player Pools", UpdatePlayerBounds);
+    UpdatePoolGroup(PLAYER_POOLS, UpdatePlayerMovement);
+    UpdatePoolGroup(BASIC_MOVEMENT_POOLS, UpdateBasicMovement);
+    UpdatePoolGroup(BASIC_ROTATION_POOLS, UpdateBasicRotation);
+    UpdatePoolGroup(BOUNDED_PLAYER_POOLS, UpdatePlayerBounds);
   }
 
   void MovementSystem::UpdatePlayerMovement(Space& space, Pool& pool)

@@ -24,6 +24,10 @@
 
 namespace Barrage
 {
+  static const std::string CIRCLE_BULLET_POOLS("Circle Bullet Pools");
+  static const std::string BOUNDED_BULLET_POOLS("Bounded Bullet Pools");
+  static const std::string CIRCLE_PLAYER_POOLS("Circle Player Pools");
+  
   CollisionSystem::CollisionSystem() :
     System()
   {
@@ -32,28 +36,28 @@ namespace Barrage
     circle_bullet_type.AddComponentArray("Position");
     circle_bullet_type.AddComponentArray("Destructible");
     circle_bullet_type.AddTag("Bullet");
-    poolTypes_["Circle Bullet Pools"] = circle_bullet_type;
+    poolTypes_[CIRCLE_BULLET_POOLS] = circle_bullet_type;
 
     PoolType bounded_bullet_type;
     bounded_bullet_type.AddComponentArray("Position");
     bounded_bullet_type.AddComponent("BoundaryBox");
     bounded_bullet_type.AddComponentArray("Destructible");
     bounded_bullet_type.AddTag("Bullet");
-    poolTypes_["Bounded Bullet Pools"] = bounded_bullet_type;
+    poolTypes_[BOUNDED_BULLET_POOLS] = bounded_bullet_type;
 
     PoolType circle_player_type;
     circle_player_type.AddComponent("CircleCollider");
     circle_player_type.AddComponentArray("Position");
     circle_player_type.AddComponent("Player");
-    poolTypes_["Circle Player Pools"] = circle_player_type;
+    poolTypes_[CIRCLE_PLAYER_POOLS] = circle_player_type;
   }
 
   void CollisionSystem::Update()
   {
-    UpdatePoolGroup("Bounded Bullet Pools", UpdateBoundedBullets);
-    UpdateInteraction("Circle Player Pools", "Circle Bullet Pools", UpdatePlayerBulletCollisions);
-    UpdateInteraction("Circle Player Pools", "Circle Bullet Pools", ClearBulletsOnPlayerHit);
-    UpdatePoolGroup("Circle Player Pools", ResetPlayerHit);
+    UpdatePoolGroup(BOUNDED_BULLET_POOLS, UpdateBoundedBullets);
+    UpdateInteraction(CIRCLE_PLAYER_POOLS, CIRCLE_BULLET_POOLS, UpdatePlayerBulletCollisions);
+    UpdateInteraction(CIRCLE_PLAYER_POOLS, CIRCLE_BULLET_POOLS, ClearBulletsOnPlayerHit);
+    UpdatePoolGroup(CIRCLE_PLAYER_POOLS, ResetPlayerHit);
   }
 
   void CollisionSystem::UpdateBoundedBullets(Space& space, Pool& pool)

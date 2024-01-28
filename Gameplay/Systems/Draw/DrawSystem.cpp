@@ -24,6 +24,8 @@
 
 namespace Barrage
 {
+  static const std::string BASIC_2D_SPRITE_POOLS("Basic 2D Sprite Pools");
+  
   DrawSystem::DrawSystem() :
     System(),
     drawPools_()
@@ -35,14 +37,14 @@ namespace Barrage
     basic_sprite_type.AddComponentArray("Rotation");
     basic_sprite_type.AddComponentArray("TextureUV");
     basic_sprite_type.AddComponent("Sprite");
-    poolTypes_["Basic 2D Sprite Pools"] = basic_sprite_type;
+    poolTypes_[BASIC_2D_SPRITE_POOLS] = basic_sprite_type;
   }
   
   void DrawSystem::Subscribe(Space& space, Pool* pool)
   {
     UNREFERENCED(space);
     
-    if (poolTypes_["Basic 2D Sprite Pools"].MatchesPool(pool))
+    if (poolTypes_[BASIC_2D_SPRITE_POOLS].MatchesPool(pool))
     {
       Sprite& pool_sprite = pool->GetComponent<Sprite>("Sprite").Data();
       
