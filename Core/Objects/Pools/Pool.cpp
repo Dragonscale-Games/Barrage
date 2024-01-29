@@ -35,7 +35,7 @@ namespace Barrage
     
     for (const auto& componentArrayName : archetype.componentArrayNames_)
     {
-      ComponentArrayDeepPtr componentArray = ComponentFactory::AllocateComponentArray(componentArrayName, capacity_);
+      DeepPtr<ComponentArray> componentArray = ComponentFactory::AllocateComponentArray(componentArrayName, capacity_);
 
       // TODO: Log/throw something if these conditions aren't met
       if (componentArray && componentArrays_.count(componentArrayName) == 0)
@@ -122,8 +122,8 @@ namespace Barrage
     
     for (auto it = componentArrays_.begin(); it != componentArrays_.end(); ++it)
     {
-      ComponentArrayDeepPtr& destination_array = it->second;
-      const ComponentArrayDeepPtr& source_component = archetype.componentArrays_.at(it->first);
+      DeepPtr<ComponentArray>& destination_array = it->second;
+      const DeepPtr<ComponentArray>& source_component = archetype.componentArrays_.at(it->first);
 
       for (unsigned i = 0; i < numObjects; ++i)
       {
@@ -142,7 +142,7 @@ namespace Barrage
 
       for (auto jt = spawnLayer.valueRules_.begin(); jt != spawnLayer.valueRules_.end(); ++jt)
       {
-        SpawnRuleDeepPtr& spawnRule = *jt;
+        DeepPtr<SpawnRule>& spawnRule = *jt;
 
         spawnRule->ExecuteFull(sourcePool, *this, space, startIndex, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
       }
@@ -159,7 +159,7 @@ namespace Barrage
 
       for (auto jt = spawnLayer.countRules_.begin(); jt != spawnLayer.countRules_.end(); ++jt)
       {
-        SpawnRuleDeepPtr& spawnRule = *jt;
+        DeepPtr<SpawnRule>& spawnRule = *jt;
 
         spawnRule->ExecuteFull(sourcePool, *this, space, startIndex, spawnType.sourceIndices_, spawnLayer.groupInfoArray_);
       }

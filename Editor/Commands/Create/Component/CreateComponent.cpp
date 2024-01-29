@@ -43,7 +43,7 @@ namespace Barrage
       return false;
     }
 
-    ComponentDeepPtr component = ComponentFactory::AllocateComponent(componentName_);
+    DeepPtr<Component> component = ComponentFactory::AllocateComponent(componentName_);
 
     if (!component)
     {
@@ -68,7 +68,7 @@ namespace Barrage
     Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
     PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    ComponentDeepPtr component = ComponentFactory::AllocateComponent(componentName_);
+    DeepPtr<Component> component = ComponentFactory::AllocateComponent(componentName_);
     poolArchetype.components_.emplace(componentName_, component);
   }
 }

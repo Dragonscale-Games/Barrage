@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Pools/Pool.hpp"
+#include "Utilities/DeepPtr.hpp"
 
 #include <string>
 #include <memory>
@@ -28,34 +29,7 @@ namespace Barrage
   
   class BehaviorNode;
 
-  class BehaviorNodeDeepPtr
-  {
-    public:
-      BehaviorNodeDeepPtr(std::nullptr_t nullPointer = nullptr);
-
-      BehaviorNodeDeepPtr(std::shared_ptr<BehaviorNode> ptr);
-
-      BehaviorNodeDeepPtr(const BehaviorNodeDeepPtr& other);
-
-      BehaviorNodeDeepPtr& operator=(const BehaviorNodeDeepPtr& other);
-
-      BehaviorNodeDeepPtr(BehaviorNodeDeepPtr&& other) noexcept;
-
-      BehaviorNodeDeepPtr& operator=(BehaviorNodeDeepPtr&& other) noexcept;
-
-      BehaviorNode* operator->() const;
-
-      BehaviorNode& operator*() const;
-
-      operator bool() const noexcept;
-
-      std::shared_ptr<BehaviorNode> Get();
-
-    private:
-      std::shared_ptr<BehaviorNode> ptr_;
-  };
-
-  using BehaviorNodeList = std::vector<BehaviorNodeDeepPtr>;
+  using BehaviorNodeList = std::vector<DeepPtr<BehaviorNode>>;
 
   constexpr size_t MAX_PARALLEL_NODE_CHILDREN = 4;
 

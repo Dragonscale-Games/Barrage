@@ -63,7 +63,7 @@ namespace Barrage
       return false;
     }
 
-    ComponentArrayDeepPtr& componentArray = objectArchetype.componentArrays_.at(componentArrayName_);
+    DeepPtr<ComponentArray>& componentArray = objectArchetype.componentArrays_.at(componentArrayName_);
 
     if (componentArray->GetCapacity() == 0)
     {
@@ -83,7 +83,7 @@ namespace Barrage
     ObjectArchetype& objectArchetype = isSpawnArchetype_ ?
       poolArchetype.spawnArchetypes_.at(objectName_) :
       poolArchetype.startingObjects_.at(objectName_);
-    ComponentArrayDeepPtr& componentArray = objectArchetype.componentArrays_.at(componentArrayName_);
+    DeepPtr<ComponentArray>& componentArray = objectArchetype.componentArrays_.at(componentArrayName_);
 
     componentArray->SetRTTRValue(oldValue_, 0);
   }
@@ -95,7 +95,7 @@ namespace Barrage
     ObjectArchetype& objectArchetype = isSpawnArchetype_ ?
       poolArchetype.spawnArchetypes_.at(objectName_) :
       poolArchetype.startingObjects_.at(objectName_);
-    ComponentArrayDeepPtr& componentArray = objectArchetype.componentArrays_.at(componentArrayName_);
+    DeepPtr<ComponentArray>& componentArray = objectArchetype.componentArrays_.at(componentArrayName_);
 
     componentArray->SetRTTRValue(newValue_, 0);
   }

@@ -151,7 +151,7 @@ namespace Barrage
 
       static void AngleWidget(DataObject& object);
 
-      static bool BehaviorNodeHelper(DataObject& treeObject, BehaviorNodeRecipeDeepPtr& nodePtr, size_t id);
+      static bool BehaviorNodeHelper(DataObject& treeObject, DeepPtr<BehaviorNodeRecipe>& nodePtr, size_t id);
 
       static void BehaviorTreeWidget(DataObject& object);
 

@@ -22,64 +22,9 @@ namespace Barrage
     capacity_(capacity)
   {
   }
-  
+
   unsigned ComponentArray::GetCapacity()
   {
     return capacity_;
-  }
-  
-  ComponentArrayDeepPtr::ComponentArrayDeepPtr(std::nullptr_t) :
-    ptr_(nullptr)
-  {
-  }
-
-  ComponentArrayDeepPtr::ComponentArrayDeepPtr(std::shared_ptr<ComponentArray> ptr) :
-    ptr_(ptr)
-  {
-  }
-
-  ComponentArrayDeepPtr::ComponentArrayDeepPtr(const ComponentArrayDeepPtr& other) :
-    ptr_(other ? other->Clone() : nullptr)
-  {
-  }
-
-  ComponentArrayDeepPtr& ComponentArrayDeepPtr::operator=(const ComponentArrayDeepPtr& other)
-  {
-    if (this != &other) // Prevent self-assignment
-    {
-      ptr_ = other ? other->Clone() : nullptr;
-    }
-    
-    return *this;
-  }
-
-  ComponentArrayDeepPtr::ComponentArrayDeepPtr(ComponentArrayDeepPtr&& other) noexcept :
-    ptr_(std::move(other.ptr_))
-  {
-  }
-
-  ComponentArrayDeepPtr& ComponentArrayDeepPtr::operator=(ComponentArrayDeepPtr&& other) noexcept
-  {
-    if (this != &other) // Prevent self-assignment
-    {
-      ptr_ = std::move(other.ptr_);
-    }
-
-    return *this;
-  }
-
-  ComponentArray* ComponentArrayDeepPtr::operator->() const
-  {
-    return ptr_.operator->();
-  }
-
-  ComponentArray& ComponentArrayDeepPtr::operator*() const
-  {
-    return *ptr_;
-  }
-
-  ComponentArrayDeepPtr::operator bool() const noexcept
-  {
-    return static_cast<bool>(ptr_);
   }
 }

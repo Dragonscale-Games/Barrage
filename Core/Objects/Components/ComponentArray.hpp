@@ -18,6 +18,8 @@
 #define ComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "Utilities/DeepPtr.hpp"
+
 #include <string>
 #include <memory>
 #include <map>
@@ -321,116 +323,7 @@ namespace Barrage
       T* data_;
   };
 
-  class ComponentArrayDeepPtr
-  {
-    public:
-      /**************************************************************/
-      /*!
-        \brief
-          Default/conversion constructor. Wraps a nullptr.
-
-        \param nullPointer
-          Dummy parameter. Allows default parameter conversion like:
-            Foo(ComponentArrayDeepPtr pointer = nullptr)
-      */
-      /**************************************************************/
-      ComponentArrayDeepPtr(std::nullptr_t nullPointer = nullptr);
-      
-      /**************************************************************/
-      /*!
-        \brief
-          Constructs this ComponentArrayDeepPtr from a shared pointer. 
-          The shared pointer is stored internally (wrapped).
-
-        \param ptr
-          The shared pointer to wrap.
-      */
-      /**************************************************************/
-      ComponentArrayDeepPtr(std::shared_ptr<ComponentArray> ptr);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Copy constructor for deep copying a component array
-          pointer.
-
-        \param other
-          The generic component array to deep copy.
-      */
-      /**************************************************************/
-      ComponentArrayDeepPtr(const ComponentArrayDeepPtr& other);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Copy assignment operator for deep copying a component
-          array pointer.
-
-        \param other
-          The component array pointer to deep copy.
-      */
-      /**************************************************************/
-      ComponentArrayDeepPtr& operator=(const ComponentArrayDeepPtr& other);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Move constructor. Transfers ownership of the managed
-          object from the source component array pointer.
-
-        \param other
-          The component array pointer to move.
-      */
-      /**************************************************************/
-      ComponentArrayDeepPtr(ComponentArrayDeepPtr&& other) noexcept;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Move assignment operator. Transfers ownership of the
-          managed object from the source component array pointer.
-
-        \param other
-          The component array pointer to move.
-      */
-      /**************************************************************/
-      ComponentArrayDeepPtr& operator=(ComponentArrayDeepPtr&& other) noexcept;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Arrow operator overload.
-
-        \return
-          Returns the underlying component array as a pointer.
-      */
-      /**************************************************************/
-      ComponentArray* operator->() const;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Star operator overload.
-
-        \return
-          Returns the underlying component array as a reference.
-      */
-      /**************************************************************/
-      ComponentArray& operator*() const;
-
-      /**************************************************************/
-      /*!
-        \brief
-          Bool conversion operator. Allows easy nullptr checks.
-      */
-      /**************************************************************/
-      operator bool() const noexcept;
-
-    private:
-      std::shared_ptr<ComponentArray> ptr_;
-  };
-
-  using ComponentArrayMap = std::map<std::string, ComponentArrayDeepPtr>;
+  using ComponentArrayMap = std::map<std::string, DeepPtr<ComponentArray>>;
 }
 
 #include "ComponentArray.tpp"

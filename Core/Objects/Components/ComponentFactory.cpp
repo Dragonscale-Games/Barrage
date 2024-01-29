@@ -28,7 +28,7 @@ namespace Barrage
     tagNames_.insert(tag);
   }
 
-  ComponentDeepPtr ComponentFactory::AllocateComponent(const std::string& name, ComponentDeepPtr initializer)
+  DeepPtr<Component> ComponentFactory::AllocateComponent(const std::string& name, DeepPtr<Component> initializer)
   {
     if (componentFactoryMethodMap_.count(name))
     {
@@ -41,7 +41,7 @@ namespace Barrage
     }
   }
 
-  ComponentArrayDeepPtr ComponentFactory::AllocateComponentArray(const std::string& name, unsigned capacity)
+  DeepPtr<ComponentArray> ComponentFactory::AllocateComponentArray(const std::string& name, unsigned capacity)
   {
     if (componentArrayFactoryMethodMap_.count(name))
     {

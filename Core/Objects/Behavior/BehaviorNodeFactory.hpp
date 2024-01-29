@@ -20,7 +20,7 @@
 
 namespace Barrage
 {
-  using BehaviorNodeFactoryMethod = BehaviorNodeDeepPtr(*)();
+  using BehaviorNodeFactoryMethod = DeepPtr<BehaviorNode>(*)();
   using BehaviorNodeFactoryMethodMap = std::map<std::string, BehaviorNodeFactoryMethod>;
 
   //! Responsible for allocating new behavior nodes
@@ -58,7 +58,7 @@ namespace Barrage
           behavior node has been registered, otherwise returns nullptr.
       */
       /**************************************************************/
-      static BehaviorNodeDeepPtr CreateBehaviorNode(const std::string& name);
+      static DeepPtr<BehaviorNode> CreateBehaviorNode(const std::string& name);
 
       /**************************************************************/
       /*!
@@ -90,7 +90,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      static BehaviorNodeDeepPtr AllocateBehaviorNode();
+      static DeepPtr<BehaviorNode> AllocateBehaviorNode();
 
     private:
       static BehaviorNodeFactoryMethodMap behaviorNodeFactoryMethodMap_; //!< Maps names of behavior nodes to their allocation functions

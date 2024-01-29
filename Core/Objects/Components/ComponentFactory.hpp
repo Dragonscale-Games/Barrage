@@ -23,8 +23,8 @@ namespace Barrage
 {
   class ComponentFactory;
 
-  using ComponentFactoryMethod = ComponentDeepPtr(*)(ComponentDeepPtr);
-  using ComponentArrayFactoryMethod = ComponentArrayDeepPtr(*)(unsigned);
+  using ComponentFactoryMethod = DeepPtr<Component>(*)(DeepPtr<Component>);
+  using ComponentArrayFactoryMethod = DeepPtr<ComponentArray>(*)(unsigned);
 
   using ComponentFactoryMethodMap = std::map<std::string, ComponentFactoryMethod>;
   using ComponentArrayFactoryMethodMap = std::map<std::string, ComponentArrayFactoryMethod>;
@@ -97,7 +97,7 @@ namespace Barrage
           nullptr.
       */
       /**************************************************************/
-      static ComponentDeepPtr AllocateComponent(const std::string& name, ComponentDeepPtr initializer = nullptr);
+      static DeepPtr<Component> AllocateComponent(const std::string& name, DeepPtr<Component> initializer = nullptr);
 
       /**************************************************************/
       /*!
@@ -119,7 +119,7 @@ namespace Barrage
           nullptr.
       */
       /**************************************************************/
-      static ComponentArrayDeepPtr AllocateComponentArray(const std::string& name, unsigned capacity);
+      static DeepPtr<ComponentArray> AllocateComponentArray(const std::string& name, unsigned capacity);
 
       /**************************************************************/
       /*!
@@ -178,7 +178,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      static ComponentDeepPtr AllocateComponent(ComponentDeepPtr initializer);
+      static DeepPtr<Component> AllocateComponent(DeepPtr<Component> initializer);
 
       /**************************************************************/
       /*!
@@ -197,7 +197,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      static ComponentArrayDeepPtr AllocateComponentArray(unsigned capacity);
+      static DeepPtr<ComponentArray> AllocateComponentArray(unsigned capacity);
 
     private:
       static ComponentFactoryMethodMap componentFactoryMethodMap_;           //!< Maps names of shared components to their allocation functions

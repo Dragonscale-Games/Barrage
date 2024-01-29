@@ -42,7 +42,7 @@ namespace Barrage
           false otherwise.
       */
       /**************************************************************/
-      static void Use(const std::string& componentName, ComponentDeepPtr& component);
+      static void Use(const std::string& componentName, DeepPtr<Component>& component);
   };
 }
 

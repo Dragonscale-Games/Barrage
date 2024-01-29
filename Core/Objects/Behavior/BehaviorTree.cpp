@@ -17,6 +17,17 @@
 
 namespace Barrage
 {
+  BehaviorNodeRecipe::BehaviorNodeRecipe(DeepPtr<BehaviorNode> node) : 
+    node_(node), 
+    children_()
+  {
+  }
+  
+  std::shared_ptr<BehaviorNodeRecipe> BehaviorNodeRecipe::Clone() const
+  {
+    return std::make_shared<BehaviorNodeRecipe>(*this);
+  }
+
   BehaviorTree::BehaviorTree() :
     tree_(),
     recipe_(),
@@ -34,7 +45,7 @@ namespace Barrage
     tree_.clear();
 
     // node, parent index
-    std::vector<std::pair<BehaviorNodeRecipeDeepPtr*, int>> nodeRecipes;
+    std::vector<std::pair<DeepPtr<BehaviorNodeRecipe>*, int>> nodeRecipes;
 
     // start with root node
     nodeRecipes.push_back(std::make_pair(&recipe_, BEHAVIOR_END));
@@ -42,8 +53,8 @@ namespace Barrage
     // nodeRecipes will grow as children are added later
     for (size_t i = 0; i < nodeRecipes.size(); ++i)
     {
-      std::pair<BehaviorNodeRecipeDeepPtr*, int> recipePair = nodeRecipes.at(i);
-      BehaviorNodeRecipeDeepPtr& nodeRecipe = *recipePair.first;
+      std::pair<DeepPtr<BehaviorNodeRecipe>*, int> recipePair = nodeRecipes.at(i);
+      DeepPtr<BehaviorNodeRecipe>& nodeRecipe = *recipePair.first;
       int parentIndex = recipePair.second;
       int currentIndex = static_cast<int>(i);
 
@@ -62,7 +73,7 @@ namespace Barrage
       // add recipes of children to queue for processing
       for (auto it = nodeRecipe->children_.begin(); it != nodeRecipe->children_.end(); ++it)
       {
-        BehaviorNodeRecipeDeepPtr* childRecipePtr = &(*it);
+        DeepPtr<BehaviorNodeRecipe>* childRecipePtr = &(*it);
         nodeRecipes.push_back(std::make_pair(childRecipePtr, currentIndex));
       }
     }
@@ -133,7 +144,7 @@ namespace Barrage
 
     for (auto it = tree_.begin(); it != tree_.end(); ++it)
     {
-      BehaviorNodeDeepPtr& behaviorNode = *it;
+      DeepPtr<BehaviorNode>& behaviorNode = *it;
 
       if (behaviorNode->HasArray())
       {
@@ -157,7 +168,7 @@ namespace Barrage
 
     for (auto it = tree_.begin(); it != tree_.end(); ++it)
     {
-      BehaviorNodeDeepPtr& behaviorNode = *it;
+      DeepPtr<BehaviorNode>& behaviorNode = *it;
 
       if (behaviorNode->HasArray())
       {
@@ -185,7 +196,7 @@ namespace Barrage
     os << name << std::endl;
   }
 
-  void BehaviorTree::PrintRecipeNode(std::ostream& os, const BehaviorNodeRecipeDeepPtr& recipeNode, unsigned level) const
+  void BehaviorTree::PrintRecipeNode(std::ostream& os, const DeepPtr<BehaviorNodeRecipe>& recipeNode, unsigned level) const
   {
     PrintNode(os, recipeNode->node_->GetName(), level);
 
@@ -195,7 +206,7 @@ namespace Barrage
     }
   }
 
-  void BehaviorTree::PrintTreeNode(std::ostream& os, const BehaviorNodeDeepPtr& treeNode, unsigned level) const
+  void BehaviorTree::PrintTreeNode(std::ostream& os, const DeepPtr<BehaviorNode>& treeNode, unsigned level) const
   {
     PrintNode(os, treeNode->GetName(), level);
 
@@ -205,16 +216,16 @@ namespace Barrage
     }
   }
 
-  std::ostream& operator<<(std::ostream& os, const BehaviorTree& behaviorTree) 
+  std::ostream& operator<<(std::ostream& os, const BehaviorTree& behaviorTree)
   {
     os << "Recipe:" << std::endl;
     os << "--------" << std::endl;
-    
+
     if (behaviorTree.recipe_)
     {
       behaviorTree.PrintRecipeNode(os, behaviorTree.recipe_, 0);
     }
-    
+
     os << std::endl;
 
     os << "Tree:" << std::endl;
@@ -224,69 +235,9 @@ namespace Barrage
     {
       behaviorTree.PrintTreeNode(os, behaviorTree.tree_.at(0), 0);
     }
-    
+
     os << std::endl;
 
     return os;
-  }
-
-  BehaviorNodeRecipeDeepPtr::BehaviorNodeRecipeDeepPtr(std::nullptr_t) :
-    ptr_(nullptr)
-  {
-  }
-
-  BehaviorNodeRecipeDeepPtr::BehaviorNodeRecipeDeepPtr(std::shared_ptr<BehaviorNodeRecipe> ptr) :
-    ptr_(ptr)
-  {
-  }
-
-  BehaviorNodeRecipeDeepPtr::BehaviorNodeRecipeDeepPtr(const BehaviorNodeRecipeDeepPtr& other) :
-    ptr_(other ? std::make_shared<BehaviorNodeRecipe>(*other.Get()) : nullptr)
-  {
-  }
-
-  BehaviorNodeRecipeDeepPtr& BehaviorNodeRecipeDeepPtr::operator=(const BehaviorNodeRecipeDeepPtr& other)
-  {
-    if (this != &other) // Prevent self-assignment
-    {
-      ptr_ = other ? std::make_shared<BehaviorNodeRecipe>(*other.Get()) : nullptr;
-    }
-
-    return *this;
-  }
-
-  BehaviorNodeRecipeDeepPtr::BehaviorNodeRecipeDeepPtr(BehaviorNodeRecipeDeepPtr&& other) noexcept :
-    ptr_(std::move(other.ptr_))
-  {
-  }
-
-  BehaviorNodeRecipeDeepPtr& BehaviorNodeRecipeDeepPtr::operator=(BehaviorNodeRecipeDeepPtr&& other) noexcept
-  {
-    if (this != &other) // Prevent self-assignment
-    {
-      ptr_ = std::move(other.ptr_);
-    }
-
-    return *this;
-  }
-
-  BehaviorNodeRecipe* BehaviorNodeRecipeDeepPtr::operator->() const
-  {
-    return ptr_.operator->();
-  }
-
-  BehaviorNodeRecipe& BehaviorNodeRecipeDeepPtr::operator*() const
-  {
-    return *ptr_;
-  }
-
-  BehaviorNodeRecipeDeepPtr::operator bool() const noexcept
-  {
-    return static_cast<bool>(ptr_);
-  }
-
-  std::shared_ptr<BehaviorNodeRecipe> BehaviorNodeRecipeDeepPtr::Get() const
-  {
-    return ptr_;
   }
 }

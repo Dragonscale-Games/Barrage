@@ -254,7 +254,7 @@ namespace Barrage
 
       for (auto it = spawnRuleList.begin(); it != spawnRuleList.end(); ++it)
       {
-        const SpawnRuleDeepPtr& spawnRule = *it;
+        const DeepPtr<SpawnRule>& spawnRule = *it;
 
         rapidjson::Value spawnRuleValue;
         spawnRuleValue.SetObject();
@@ -284,9 +284,9 @@ namespace Barrage
         value.PushBack(currentString, allocator);
       }
     }
-    else if (type == rttr::type::get<BehaviorNodeRecipeDeepPtr>())
+    else if (type == rttr::type::get<DeepPtr<BehaviorNodeRecipe>>())
     {
-      const BehaviorNodeRecipeDeepPtr& nodeRecipe = object.get_value<BehaviorNodeRecipeDeepPtr>();
+      const DeepPtr<BehaviorNodeRecipe>& nodeRecipe = object.get_value<DeepPtr<BehaviorNodeRecipe>>();
 
       value.SetObject();
 
@@ -412,7 +412,7 @@ namespace Barrage
       {
         std::string name = it->name.GetString();
       
-        ComponentDeepPtr component = ComponentFactory::AllocateComponent(name);
+        DeepPtr<Component> component = ComponentFactory::AllocateComponent(name);
       
         if (component)
         {
@@ -439,7 +439,7 @@ namespace Barrage
       {
         std::string name = it->name.GetString();
 
-        ComponentArrayDeepPtr componentArray = ComponentFactory::AllocateComponentArray(name, 1);
+        DeepPtr<ComponentArray> componentArray = ComponentFactory::AllocateComponentArray(name, 1);
 
         if (componentArray)
         {
@@ -471,7 +471,7 @@ namespace Barrage
       
         if (element.HasMember("Name") && element["Name"].IsString())
         {
-          SpawnRuleDeepPtr newSpawnRule = SpawnRuleFactory::CreateSpawnRule(element["Name"].GetString());
+          DeepPtr<SpawnRule> newSpawnRule = SpawnRuleFactory::CreateSpawnRule(element["Name"].GetString());
       
           if (newSpawnRule)
           {
@@ -513,12 +513,12 @@ namespace Barrage
 
       object = newStringSet;
     }
-    else if (type == rttr::type::get<BehaviorNodeRecipeDeepPtr>())
+    else if (type == rttr::type::get<DeepPtr<BehaviorNodeRecipe>>())
     {
       if (data.HasMember("Name") && data["Name"].IsString())
       {
         std::string behaviorNodeName(data["Name"].GetString());
-        BehaviorNodeDeepPtr behaviorNode = BehaviorNodeFactory::CreateBehaviorNode(behaviorNodeName);
+        DeepPtr<BehaviorNode> behaviorNode = BehaviorNodeFactory::CreateBehaviorNode(behaviorNodeName);
 
         if (behaviorNode)
         {
@@ -533,7 +533,7 @@ namespace Barrage
             }
           }
 
-          BehaviorNodeRecipeDeepPtr behaviorNodeRecipe(std::make_shared<BehaviorNodeRecipe>(behaviorNode));
+          DeepPtr<BehaviorNodeRecipe> behaviorNodeRecipe(std::make_shared<BehaviorNodeRecipe>(behaviorNode));
 
           if (data.HasMember("Children") && data["Children"].IsArray())
           {
@@ -542,7 +542,7 @@ namespace Barrage
 
             for (uint32_t i = 0; i < arraySize; ++i)
             {
-              BehaviorNodeRecipeDeepPtr childNodeRecipe;
+              DeepPtr<BehaviorNodeRecipe> childNodeRecipe;
 
               Deserialize(childNodeRecipe, childrenArray[i]);
 
@@ -557,12 +557,12 @@ namespace Barrage
         }
         else
         {
-          object = BehaviorNodeRecipeDeepPtr(nullptr);
+          object = DeepPtr<BehaviorNodeRecipe>(nullptr);
         }
       }
       else
       {
-        object = BehaviorNodeRecipeDeepPtr(nullptr);
+        object = DeepPtr<BehaviorNodeRecipe>(nullptr);
       }
     }
     else if (type.is_sequential_container())

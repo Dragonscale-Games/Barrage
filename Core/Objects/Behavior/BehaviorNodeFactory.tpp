@@ -32,9 +32,9 @@ namespace Barrage
   }
 
   template <typename T>
-  BehaviorNodeDeepPtr BehaviorNodeFactory::AllocateBehaviorNode()
+  DeepPtr<BehaviorNode> BehaviorNodeFactory::AllocateBehaviorNode()
   {
-    return BehaviorNodeDeepPtr(std::make_shared<T>());
+    return DeepPtr<BehaviorNode>(std::make_shared<T>());
   }
 }
 

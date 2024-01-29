@@ -20,7 +20,7 @@
 
 namespace Barrage
 {
-  using SpawnRuleFactoryMethod = SpawnRuleDeepPtr(*)();
+  using SpawnRuleFactoryMethod = DeepPtr<SpawnRule>(*)();
   using SpawnRuleFactoryMethodMap = std::map<std::string, SpawnRuleFactoryMethod>;
 
   //! Responsible for allocating new spawn rules
@@ -58,7 +58,7 @@ namespace Barrage
           spawn rule has been registered, otherwise returns nullptr.
       */
       /**************************************************************/
-      static SpawnRuleDeepPtr CreateSpawnRule(const std::string& name);
+      static DeepPtr<SpawnRule> CreateSpawnRule(const std::string& name);
 
       /**************************************************************/
       /*!
@@ -90,7 +90,7 @@ namespace Barrage
       */
       /**************************************************************/
       template <typename T>
-      static SpawnRuleDeepPtr AllocateSpawnRule();
+      static DeepPtr<SpawnRule> AllocateSpawnRule();
 
     private:
       static SpawnRuleFactoryMethodMap spawnRuleFactoryMethodMap_; //!< Maps names of spawn rules to their allocation functions

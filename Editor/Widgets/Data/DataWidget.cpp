@@ -585,7 +585,7 @@ namespace Barrage
     }
   }
 
-  bool DataWidget::BehaviorNodeHelper(DataObject& treeObject, BehaviorNodeRecipeDeepPtr& nodePtr, size_t id)
+  bool DataWidget::BehaviorNodeHelper(DataObject& treeObject, DeepPtr<BehaviorNodeRecipe>& nodePtr, size_t id)
   {
     if (!nodePtr->node_)
     {
@@ -678,12 +678,12 @@ namespace Barrage
 
           if (ImGui::Button("Confirm") && !treeObject.ValueWasSet())
           {
-            BehaviorNodeDeepPtr newBehaviorNode = BehaviorNodeFactory::CreateBehaviorNode(selectedBehaviorNode);
+            DeepPtr<BehaviorNode> newBehaviorNode = BehaviorNodeFactory::CreateBehaviorNode(selectedBehaviorNode);
 
             if (newBehaviorNode)
             {
               newBehaviorNode->SetRTTRValue(newBehaviorNode->GetRTTRValue());
-              nodePtr->children_.push_back(BehaviorNodeRecipeDeepPtr(std::make_shared<BehaviorNodeRecipe>(newBehaviorNode)));
+              nodePtr->children_.push_back(DeepPtr<BehaviorNodeRecipe>(std::make_shared<BehaviorNodeRecipe>(newBehaviorNode)));
               behaviorNodeAddMap_.erase(currentId);
               treeObject.valueWasSet_ = true;
             }
@@ -743,7 +743,7 @@ namespace Barrage
 
       if (BehaviorNodeHelper(object, behaviorTree.recipe_, 0) && !object.ValueWasSet())
       {
-        behaviorTree.recipe_ = BehaviorNodeRecipeDeepPtr();
+        behaviorTree.recipe_ = DeepPtr<BehaviorNodeRecipe>();
         object.valueWasSet_ = true;
       }
 
@@ -776,12 +776,12 @@ namespace Barrage
 
         if (ImGui::Button("Confirm") && !object.ValueWasSet())
         {
-          BehaviorNodeDeepPtr newBehaviorNode = BehaviorNodeFactory::CreateBehaviorNode(selectedBehaviorNode);
+          DeepPtr<BehaviorNode> newBehaviorNode = BehaviorNodeFactory::CreateBehaviorNode(selectedBehaviorNode);
 
           if (newBehaviorNode)
           {
             newBehaviorNode->SetRTTRValue(newBehaviorNode->GetRTTRValue());
-            behaviorTree.recipe_ = BehaviorNodeRecipeDeepPtr(std::make_shared<BehaviorNodeRecipe>(newBehaviorNode));
+            behaviorTree.recipe_ = DeepPtr<BehaviorNodeRecipe>(std::make_shared<BehaviorNodeRecipe>(newBehaviorNode));
             behaviorNodeAddMap_.erase(currentId);
             object.valueWasSet_ = true;
           }
@@ -838,7 +838,7 @@ namespace Barrage
 
     for (size_t i = 0; i < listSize; ++i)
     {
-      SpawnRuleDeepPtr& spawnRule = spawnRuleList[i];
+      DeepPtr<SpawnRule>& spawnRule = spawnRuleList[i];
 
       ImGui::PushID(static_cast<int>(i));
       
@@ -863,7 +863,7 @@ namespace Barrage
       
         if (dataObject.ValueWasSet())
         {
-          SpawnRuleDeepPtr newSpawnRule = SpawnRuleFactory::CreateSpawnRule(spawnRule->GetName());
+          DeepPtr<SpawnRule> newSpawnRule = SpawnRuleFactory::CreateSpawnRule(spawnRule->GetName());
           newSpawnRule->SetRTTRValue(dataVariant);
           spawnRuleList[i] = newSpawnRule;
           object.SetValue(spawnRuleList);
@@ -980,7 +980,7 @@ namespace Barrage
       
       if (ImGui::Button("Confirm") && !object.valueWasSet_)
       {
-        SpawnRuleDeepPtr newSpawnRule = SpawnRuleFactory::CreateSpawnRule(selectedSpawnRule);
+        DeepPtr<SpawnRule> newSpawnRule = SpawnRuleFactory::CreateSpawnRule(selectedSpawnRule);
 
         if (newSpawnRule)
         {

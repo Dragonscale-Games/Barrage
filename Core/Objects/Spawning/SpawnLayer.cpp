@@ -37,11 +37,11 @@ namespace Barrage
 
     for (auto it = valueRules_.begin(); it != valueRules_.end(); ++it)
     {
-      SpawnRuleDeepPtr& spawnRule = *it;
+      DeepPtr<SpawnRule>& spawnRule = *it;
 
       if (spawnRule->HasArray())
       {
-        std::shared_ptr<SpawnRuleWithArray> spawnRulePtr = std::static_pointer_cast<SpawnRuleWithArray>(spawnRule.Get());
+        std::shared_ptr<SpawnRuleWithArray> spawnRulePtr = std::dynamic_pointer_cast<SpawnRuleWithArray>(spawnRule.Get());
 
         spawnRulePtr->SetCapacity(capacity);
       }
@@ -49,11 +49,11 @@ namespace Barrage
 
     for (auto it = countRules_.begin(); it != countRules_.end(); ++it)
     {
-      SpawnRuleDeepPtr& spawnRule = *it;
+      DeepPtr<SpawnRule>& spawnRule = *it;
 
       if (spawnRule->HasArray())
       {
-        std::shared_ptr<SpawnRuleWithArray> spawnRulePtr = std::static_pointer_cast<SpawnRuleWithArray>(spawnRule.Get());
+        std::shared_ptr<SpawnRuleWithArray> spawnRulePtr = std::dynamic_pointer_cast<SpawnRuleWithArray>(spawnRule.Get());
 
         spawnRulePtr->SetCapacity(capacity);
       }
@@ -71,7 +71,7 @@ namespace Barrage
     
     for (auto it = countRules_.begin(); it != countRules_.end(); ++it)
     {
-      SpawnRuleDeepPtr& spawnRule = *it;
+      DeepPtr<SpawnRule>& spawnRule = *it;
     
       if (spawnRule->HasArray())
       {
@@ -83,7 +83,7 @@ namespace Barrage
     
     for (auto it = valueRules_.begin(); it != valueRules_.end(); ++it)
     {
-      SpawnRuleDeepPtr& spawnRule = *it;
+      DeepPtr<SpawnRule>& spawnRule = *it;
     
       if (spawnRule->HasArray())
       {

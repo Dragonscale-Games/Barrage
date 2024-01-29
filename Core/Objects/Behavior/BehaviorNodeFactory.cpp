@@ -18,7 +18,7 @@ namespace Barrage
   BehaviorNodeFactoryMethodMap BehaviorNodeFactory::behaviorNodeFactoryMethodMap_ = BehaviorNodeFactoryMethodMap();
   StringSet BehaviorNodeFactory::behaviorNodeNames_ = StringSet();
 
-  BehaviorNodeDeepPtr BehaviorNodeFactory::CreateBehaviorNode(const std::string& name)
+  DeepPtr<BehaviorNode> BehaviorNodeFactory::CreateBehaviorNode(const std::string& name)
   {
     if (behaviorNodeFactoryMethodMap_.count(name))
     {

@@ -19,7 +19,7 @@
 
 namespace Barrage
 {
-  void ComponentArrayWidget::Use(const std::string& componentName, ComponentArrayDeepPtr& componentArray)
+  void ComponentArrayWidget::Use(const std::string& componentName, DeepPtr<ComponentArray>& componentArray)
   {
     ImGui::PushID(componentName.c_str());
 

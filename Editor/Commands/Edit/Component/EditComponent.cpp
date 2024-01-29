@@ -46,7 +46,7 @@ namespace Barrage
       return false;
     }
 
-    ComponentDeepPtr& component = poolArchetype.components_.at(componentName_);
+    DeepPtr<Component>& component = poolArchetype.components_.at(componentName_);
 
     oldValue_ = component->GetRTTRValue();
     component->SetRTTRValue(newValue_);
@@ -58,7 +58,7 @@ namespace Barrage
   {
     Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
     PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
-    ComponentDeepPtr& component = poolArchetype.components_.at(componentName_);
+    DeepPtr<Component>& component = poolArchetype.components_.at(componentName_);
 
     component->SetRTTRValue(oldValue_);
   }
@@ -67,7 +67,7 @@ namespace Barrage
   {
     Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
     PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
-    ComponentDeepPtr& component = poolArchetype.components_.at(componentName_);
+    DeepPtr<Component>& component = poolArchetype.components_.at(componentName_);
 
     component->SetRTTRValue(newValue_);
   }

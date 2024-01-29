@@ -86,7 +86,7 @@ namespace Barrage
     for (auto it = objects.begin(); it != objects.end(); ++it)
     {
       ObjectArchetype& objectArchetype = it->second;
-      ComponentArrayDeepPtr componentArray = ComponentFactory::AllocateComponentArray(componentArrayName_, 1);
+      DeepPtr<ComponentArray> componentArray = ComponentFactory::AllocateComponentArray(componentArrayName_, 1);
 
       if (!componentArray)
       {

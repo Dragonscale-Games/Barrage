@@ -32,9 +32,9 @@ namespace Barrage
   }
 
   template <typename T>
-  SpawnRuleDeepPtr SpawnRuleFactory::AllocateSpawnRule()
+  DeepPtr<SpawnRule> SpawnRuleFactory::AllocateSpawnRule()
   {
-    return SpawnRuleDeepPtr(std::make_shared<T>());
+    return DeepPtr<SpawnRule>(std::make_shared<T>());
   }
 }
 

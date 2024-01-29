@@ -78,7 +78,7 @@ namespace Barrage
       std::string poolName_;
       std::string componentName_;
 
-      ComponentDeepPtr undoComponent_;
+      DeepPtr<Component> undoComponent_;
   };
 }
 
