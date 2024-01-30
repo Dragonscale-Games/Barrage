@@ -17,22 +17,43 @@ namespace Barrage
   namespace Behavior
   {
     WaitData::WaitData() :
-      ticks_(0)
+      numTicks_(120)
     {
     }
     
-    Wait::Wait() : BehaviorNodeT<WaitData>("Wait", BehaviorNodeType::Decorator) {};
+    WaitArrayElement::WaitArrayElement() :
+      elapsedTicks_(0)
+    {
+    }
+
+    Wait::Wait() : BehaviorNodeTA<WaitData, WaitArrayElement>("Wait", BehaviorNodeType::Action) {};
 
     std::shared_ptr<BehaviorNode> Wait::Clone() const
     {
       return std::make_shared<Wait>(*this);
     }
 
+    BehaviorState Wait::Execute(BehaviorNodeInfo& info)
+    {
+      unsigned& elapsedTicks = dataArray_.Data(info.objectIndex_).elapsedTicks_;
+
+      elapsedTicks++;
+
+      if (elapsedTicks <= data_.numTicks_)
+      {
+        return BehaviorState::Running();
+      }
+      else
+      {
+        return BehaviorState::Success();
+      }
+    }
+
     void Wait::Reflect()
     {
       rttr::registration::class_<Behavior::WaitData>("WaitData")
         .constructor<>() (rttr::policy::ctor::as_object)
-        .property("ticks", &Behavior::WaitData::ticks_)
+        .property("numTicks", &Behavior::WaitData::numTicks_)
         ;
     }
   }

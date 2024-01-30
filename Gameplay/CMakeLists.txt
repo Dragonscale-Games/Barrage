@@ -34,13 +34,20 @@ add_library(Gameplay STATIC
 	"Registration/Registration.cpp"
 
 	"Behavior/Action/Debug/BehaviorDebug.cpp"
+	"Behavior/Action/Wait/BehaviorWait.cpp" 
 
 	"Behavior/Composite/Sequence/BehaviorSequence.cpp" 
 	"Behavior/Composite/Selector/BehaviorSelector.cpp"
 
-	"Behavior/Decorator/Loop/BehaviorLoop.cpp" 
+	"Behavior/Decorator/AlwaysSucceed/BehaviorAlwaysSucceed.cpp" 
+	"Behavior/Decorator/AlwaysFail/BehaviorAlwaysFail.cpp" 
+	"Behavior/Decorator/Invert/BehaviorInvert.cpp" 
+	"Behavior/Decorator/LoopOnFailure/BehaviorLoopOnFailure.cpp" 
+	"Behavior/Decorator/LoopOnSuccess/BehaviorLoopOnSuccess.cpp"
 	"Behavior/Decorator/Repeat/BehaviorRepeat.cpp"
-	"Behavior/Decorator/Wait/BehaviorWait.cpp" 
+
+	"Behavior/Parallel/Selector/BehaviorParallelSelector.cpp" 
+	"Behavior/Parallel/Sequence/BehaviorParallelSequence.cpp" 
 
     "ComponentArrays/AngularSpeed/AngularSpeedArray.cpp" 
 	"ComponentArrays/ColorTint/ColorTintArray.cpp" 

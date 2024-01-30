@@ -17,6 +17,7 @@
 
 #include "Objects/Pools/Pool.hpp"
 #include "Utilities/DeepPtr.hpp"
+#include "ParallelNode.hpp"
 
 #include <string>
 #include <memory>
@@ -26,12 +27,11 @@ namespace Barrage
 {
   constexpr int BEHAVIOR_BEGIN = -1;
   constexpr int BEHAVIOR_END = -2;
-  
+
   class BehaviorNode;
+  class BehaviorTree;
 
   using BehaviorNodeList = std::vector<DeepPtr<BehaviorNode>>;
-
-  constexpr size_t MAX_PARALLEL_NODE_CHILDREN = 4;
 
   enum class BehaviorNodeType
   {
@@ -52,7 +52,7 @@ namespace Barrage
         Failure
       };
       
-      State GetState();
+      State Get();
 
       unsigned GetNextNodeIndex();
 
@@ -74,13 +74,13 @@ namespace Barrage
 
   struct BehaviorNodeInfo
   {
-    BehaviorNodeList& tree_;
+    BehaviorTree& tree_;
     Space& space_;
     Pool& pool_;
     unsigned objectIndex_;
 
     inline BehaviorNodeInfo(
-      BehaviorNodeList& tree,
+      BehaviorTree& tree,
       Space& space,
       Pool& pool,
       unsigned objectIndex
@@ -118,7 +118,7 @@ namespace Barrage
 
       virtual BehaviorState Execute(BehaviorNodeInfo& info);
 
-      virtual void OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childIndex);
+      virtual void OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childNodeIndex);
 
       virtual rttr::variant GetRTTRValue();
 
@@ -131,6 +131,8 @@ namespace Barrage
       std::vector<int> childIndices_;
       BehaviorNodeType type_;
       std::string name_;
+
+      static BehaviorState result_;
   };
 
   template <typename T>

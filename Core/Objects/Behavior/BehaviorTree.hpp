@@ -41,6 +41,10 @@ namespace Barrage
 
       void Execute(Space& space, Pool& pool);
 
+      int ExecuteNode(BehaviorNodeInfo& info, int nodeIndex);
+
+      void OnBeginNode(BehaviorNodeInfo& info, int nodeIndex);
+
       void SetCapacity(unsigned capacity);
 
       void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex);
@@ -52,10 +56,6 @@ namespace Barrage
       void PrintTreeNode(std::ostream& os, const DeepPtr<BehaviorNode>& treeNode, unsigned level) const;
 
       friend std::ostream& operator<<(std::ostream& os, const BehaviorTree& behaviorTree);
-    
-    private:
-      // returns index of currently active node
-      int ExecuteObject(BehaviorNodeInfo& info, int nodeIndex);
 
     public:
       BehaviorNodeList tree_;

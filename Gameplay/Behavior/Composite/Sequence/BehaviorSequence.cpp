@@ -16,8 +16,6 @@ namespace Barrage
 {
   namespace Behavior
   {
-    BehaviorState Sequence::result_ = BehaviorState::Success();
-    
     Sequence::Sequence() : BehaviorNode("Sequence", BehaviorNodeType::Composite) {};
 
     std::shared_ptr<BehaviorNode> Sequence::Clone() const
@@ -42,7 +40,7 @@ namespace Barrage
       return result_;
     }
 
-    void Sequence::OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childIndex)
+    void Sequence::OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childNodeIndex)
     {
       if (result == BehaviorState::State::Failure)
       {
@@ -52,9 +50,10 @@ namespace Barrage
       
       size_t numChildren = childIndices_.size();
 
+      // pay attention to indices
       for (size_t i = 1; i < numChildren; ++i)
       {
-        if (childIndices_[i - 1] == childIndex)
+        if (childIndices_[i - 1] == childNodeIndex)
         {
           result_ = BehaviorState::Transfer(childIndices_[i]);
           return;

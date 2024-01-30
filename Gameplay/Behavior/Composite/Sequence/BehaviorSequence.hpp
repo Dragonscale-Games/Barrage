@@ -32,10 +32,7 @@ namespace Barrage
 
         BehaviorState Execute(BehaviorNodeInfo& info) override;
 
-        void OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childIndex) override;
-
-      private:
-        static BehaviorState result_;
+        void OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childNodeIndex) override;
     };
   }
 }

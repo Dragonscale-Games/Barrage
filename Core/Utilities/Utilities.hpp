@@ -34,6 +34,13 @@ namespace Barrage
     inline Radian(float value) : value_(value) {};
   };
   
+  struct Dummy
+  {
+    bool dummyValue_;
+
+    inline Dummy() : dummyValue_(false) {};
+  };
+
   /**************************************************************/
   /*!
     \brief

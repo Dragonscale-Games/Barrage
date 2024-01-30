@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            BehaviorSelector.hpp
+ * \file            BehaviorParallelSequence.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -11,32 +11,31 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef BehaviorSelector_BARRAGE_H
-#define BehaviorSelector_BARRAGE_H
+#ifndef BehaviorParallelSequence_BARRAGE_H
+#define BehaviorParallelSequence_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Behavior/BehaviorNode.hpp"
+#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
   namespace Behavior
   {
-    class Selector : public BehaviorNode
+    class ParallelSequence : public BehaviorNodeTA<Dummy, ParallelNodeArrayElement>
     {
       public:
-        Selector();
+        ParallelSequence();
 
         std::shared_ptr<BehaviorNode> Clone() const override;
 
         void OnBegin(BehaviorNodeInfo& info) override;
 
         BehaviorState Execute(BehaviorNodeInfo& info) override;
-
-        void OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childNodeIndex) override;
     };
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // BehaviorSelector_BARRAGE_H
+#endif // BehaviorParallelSequence_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

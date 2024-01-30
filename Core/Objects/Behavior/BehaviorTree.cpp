@@ -85,17 +85,17 @@ namespace Barrage
 
     for (unsigned i = 0; i < activeObjects; ++i)
     {
-      BehaviorNodeInfo info(tree_, space, pool, i);
+      BehaviorNodeInfo info(*this, space, pool, i);
 
-      nodeIndices_.Data(i) = ExecuteObject(info, nodeIndices_.Data(i));
+      nodeIndices_.Data(i) = ExecuteNode(info, nodeIndices_.Data(i));
     }
   }
 
-  int BehaviorTree::ExecuteObject(BehaviorNodeInfo& info, int nodeIndex)
+  int BehaviorTree::ExecuteNode(BehaviorNodeInfo& info, int nodeIndex)
   {
     if (nodeIndex <= BEHAVIOR_END || nodeIndex >= static_cast<int>(tree_.size()) || tree_.size() == 0)
     {
-      return BEHAVIOR_END;
+      return nodeIndex;
     }
     
     if (nodeIndex == BEHAVIOR_BEGIN)
@@ -106,9 +106,9 @@ namespace Barrage
     
     BehaviorState behaviorState = tree_.at(nodeIndex)->Execute(info);
     
-    while (behaviorState.GetState() != BehaviorState::State::Running)
+    while (behaviorState.Get() != BehaviorState::State::Running)
     {
-      switch (behaviorState.GetState())
+      switch (behaviorState.Get())
       {
         case BehaviorState::State::Transfer:
           nodeIndex = behaviorState.GetNextNodeIndex();
@@ -119,15 +119,26 @@ namespace Barrage
           [[fallthrough]];
         case BehaviorState::State::Failure:
         {
-          int childIndex = nodeIndex;
+          int childNodeIndex = nodeIndex;
           nodeIndex = tree_.at(nodeIndex)->GetParentIndex();
 
-          if (nodeIndex == BEHAVIOR_END)
+          if (nodeIndex <= BEHAVIOR_END)
           {
             return BEHAVIOR_END;
           }
+          else if (tree_.at(nodeIndex)->GetType() == BehaviorNodeType::Parallel)
+          {
+            if (behaviorState.Get() == BehaviorState::State::Success)
+            {
+              return PARALLEL_CHILD_SUCCESS;
+            }
+            else
+            {
+              return PARALLEL_CHILD_FAILURE;
+            }
+          }
 
-          tree_.at(nodeIndex)->OnChildFinish(info, behaviorState.GetState(), childIndex);
+          tree_.at(nodeIndex)->OnChildFinish(info, behaviorState.Get(), childNodeIndex);
           break;
         }
       }
@@ -136,6 +147,16 @@ namespace Barrage
     }
 
     return nodeIndex;
+  }
+
+  void BehaviorTree::OnBeginNode(BehaviorNodeInfo& info, int nodeIndex)
+  {
+    if (nodeIndex < 0 || nodeIndex >= tree_.size())
+    {
+      return;
+    }
+    
+    tree_.at(nodeIndex)->OnBegin(info);
   }
 
   void BehaviorTree::SetCapacity(unsigned capacity)

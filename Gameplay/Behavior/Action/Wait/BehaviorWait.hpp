@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            BehaviorSelector.hpp
+ * \file            BehaviorWait.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -11,8 +11,8 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef BehaviorSelector_BARRAGE_H
-#define BehaviorSelector_BARRAGE_H
+#ifndef BehaviorWait_BARRAGE_H
+#define BehaviorWait_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Behavior/BehaviorNode.hpp"
@@ -21,22 +21,34 @@ namespace Barrage
 {
   namespace Behavior
   {
-    class Selector : public BehaviorNode
+    struct WaitData
+    {
+      unsigned numTicks_;
+
+      WaitData();
+    };
+    
+    struct WaitArrayElement
+    {
+      unsigned elapsedTicks_;
+
+      WaitArrayElement();
+    };
+
+    class Wait : public BehaviorNodeTA<WaitData, WaitArrayElement>
     {
       public:
-        Selector();
+        Wait();
 
         std::shared_ptr<BehaviorNode> Clone() const override;
 
-        void OnBegin(BehaviorNodeInfo& info) override;
-
         BehaviorState Execute(BehaviorNodeInfo& info) override;
 
-        void OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childNodeIndex) override;
+        static void Reflect();
     };
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // BehaviorSelector_BARRAGE_H
+#endif // BehaviorWait_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

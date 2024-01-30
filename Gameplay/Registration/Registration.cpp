@@ -14,13 +14,20 @@
 #include "Objects/ObjectManager.hpp"
 
 #include "Behavior/Action/Debug/BehaviorDebug.hpp"
+#include "Behavior/Action/Wait/BehaviorWait.hpp"
 
 #include "Behavior/Composite/Selector/BehaviorSelector.hpp"
 #include "Behavior/Composite/Sequence/BehaviorSequence.hpp"
 
-#include "Behavior/Decorator/Loop/BehaviorLoop.hpp"
+#include "Behavior/Decorator/AlwaysFail/BehaviorAlwaysFail.hpp"
+#include "Behavior/Decorator/AlwaysSucceed/BehaviorAlwaysSucceed.hpp"
+#include "Behavior/Decorator/Invert/BehaviorInvert.hpp"
+#include "Behavior/Decorator/LoopOnSuccess/BehaviorLoopOnSuccess.hpp"
+#include "Behavior/Decorator/LoopOnFailure/BehaviorLoopOnFailure.hpp"
 #include "Behavior/Decorator/Repeat/BehaviorRepeat.hpp"
-#include "Behavior/Decorator/Wait/BehaviorWait.hpp"
+
+#include "Behavior/Parallel/Selector/BehaviorParallelSelector.hpp"
+#include "Behavior/Parallel/Sequence/BehaviorParallelSequence.hpp"
 
 #include "ComponentArrays/AngularSpeed/AngularSpeedArray.hpp"
 #include "ComponentArrays/ColorTint/ColorTintArray.hpp"
@@ -72,14 +79,21 @@ namespace Barrage
   void Registrar::GameplayRegistration()
   {
     RegisterBehaviorNode<Behavior::Debug>("Debug");
+    RegisterBehaviorNode<Behavior::Wait>("Wait");
     
     RegisterBehaviorNode<Behavior::Selector>("Selector");
     RegisterBehaviorNode<Behavior::Sequence>("Sequence");
 
-    RegisterBehaviorNode<Behavior::Loop>("Loop");
+    RegisterBehaviorNode<Behavior::AlwaysFail>("AlwaysFail");
+    RegisterBehaviorNode<Behavior::AlwaysSucceed>("AlwaysSucceed");
+    RegisterBehaviorNode<Behavior::Invert>("Invert");
+    RegisterBehaviorNode<Behavior::LoopOnFailure>("LoopOnFailure");
+    RegisterBehaviorNode<Behavior::LoopOnSuccess>("LoopOnSuccess");
     RegisterBehaviorNode<Behavior::Repeat>("Repeat");
-    RegisterBehaviorNode<Behavior::Wait>("Wait");
     
+    RegisterBehaviorNode<Behavior::ParallelSelector>("ParallelSelector");
+    RegisterBehaviorNode<Behavior::ParallelSequence>("ParallelSequence");
+
     RegisterComponentArray<AngularSpeed>("AngularSpeed");
     RegisterComponentArray<ColorTint>("ColorTint");
     RegisterComponentArray<Destructible>("Destructible");
@@ -129,6 +143,7 @@ namespace Barrage
 
     std::vector<std::string> update_order;
 
+    update_order.push_back("BehaviorSystem");
     update_order.push_back("MovementSystem");
     update_order.push_back("DestructionSystem");
     update_order.push_back("LifetimeSystem");
@@ -141,9 +156,10 @@ namespace Barrage
   void Registrar::GameplayReflection()
   {
     Behavior::Debug::Reflect();
-    
     Behavior::Wait::Reflect();
     
+    Behavior::Repeat::Reflect();
+
     AngularSpeed::Reflect();
     ColorTintReflect();
     DestructibleReflect();

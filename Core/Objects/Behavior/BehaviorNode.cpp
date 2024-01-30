@@ -15,7 +15,7 @@
 
 namespace Barrage
 {
-  BehaviorState::State BehaviorState::GetState()
+  BehaviorState::State BehaviorState::Get()
   {
     return state_;
   }
@@ -50,6 +50,8 @@ namespace Barrage
     nextNodeIndex_(nextNodeIndex)
   {
   }
+
+  BehaviorState BehaviorNode::result_ = BehaviorState::Success();
 
   BehaviorNode::BehaviorNode(const std::string& name, BehaviorNodeType type) :
     parentIndex_(BEHAVIOR_END),
@@ -101,11 +103,11 @@ namespace Barrage
     return BehaviorState::Running();
   }
 
-  void BehaviorNode::OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childIndex)
+  void BehaviorNode::OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childNodeIndex)
   {
     UNREFERENCED(info);
     UNREFERENCED(result);
-    UNREFERENCED(childIndex);
+    UNREFERENCED(childNodeIndex);
   }
 
   rttr::variant BehaviorNode::GetRTTRValue()

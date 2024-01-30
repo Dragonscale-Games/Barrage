@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            BehaviorWait.hpp
+ * \file            BehaviorLoopOnFailure.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -11,8 +11,8 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef BehaviorWait_BARRAGE_H
-#define BehaviorWait_BARRAGE_H
+#ifndef BehaviorLoopOnFailure_BARRAGE_H
+#define BehaviorLoopOnFailure_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Behavior/BehaviorNode.hpp"
@@ -21,25 +21,22 @@ namespace Barrage
 {
   namespace Behavior
   {
-    struct WaitData
-    {
-      unsigned ticks_;
-
-      WaitData();
-    };
-    
-    class Wait : public BehaviorNodeT<WaitData>
+    class LoopOnFailure : public BehaviorNode
     {
       public:
-        Wait();
+        LoopOnFailure();
 
         std::shared_ptr<BehaviorNode> Clone() const override;
 
-        static void Reflect();
+        void OnBegin(BehaviorNodeInfo& info) override;
+
+        BehaviorState Execute(BehaviorNodeInfo& info) override;
+
+        void OnChildFinish(BehaviorNodeInfo& info, BehaviorState::State result, int childNodeIndex) override;
     };
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // BehaviorWait_BARRAGE_H
+#endif // BehaviorLoopOnFailure_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

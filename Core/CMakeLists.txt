@@ -63,7 +63,7 @@ add_library(BarrageCore STATIC
   "Objects/Behavior/BehaviorTree.cpp" 
   "Objects/Behavior/BehaviorNode.cpp" 
   "Objects/Behavior/BehaviorNodeFactory.cpp"
-
+  "Objects/Behavior/ParallelNode.cpp"
    
   "Objects/Components/ComponentArray.cpp" 
   "Objects/Components/ComponentFactory.cpp"
@@ -100,7 +100,7 @@ add_library(BarrageCore STATIC
   "Spaces/Space.cpp" 
   "Spaces/SpaceManager.cpp" 
 
-  "Window/WindowManager.cpp" )
+  "Window/WindowManager.cpp"  )
 
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)

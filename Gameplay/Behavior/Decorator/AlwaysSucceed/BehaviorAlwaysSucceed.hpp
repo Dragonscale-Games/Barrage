@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            BehaviorSelector.hpp
+ * \file            BehaviorAlwaysSucceed.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -11,8 +11,8 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef BehaviorSelector_BARRAGE_H
-#define BehaviorSelector_BARRAGE_H
+#ifndef BehaviorAlwaysSucceed_BARRAGE_H
+#define BehaviorAlwaysSucceed_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Behavior/BehaviorNode.hpp"
@@ -21,10 +21,10 @@ namespace Barrage
 {
   namespace Behavior
   {
-    class Selector : public BehaviorNode
+    class AlwaysSucceed : public BehaviorNode
     {
       public:
-        Selector();
+        AlwaysSucceed();
 
         std::shared_ptr<BehaviorNode> Clone() const override;
 
@@ -38,5 +38,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // BehaviorSelector_BARRAGE_H
+#endif // BehaviorAlwaysSucceed_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

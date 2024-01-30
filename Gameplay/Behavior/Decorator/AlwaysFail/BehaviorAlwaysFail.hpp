@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            BehaviorSelector.hpp
+ * \file            BehaviorAlwaysFail.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -11,8 +11,8 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef BehaviorSelector_BARRAGE_H
-#define BehaviorSelector_BARRAGE_H
+#ifndef BehaviorAlwaysFail_BARRAGE_H
+#define BehaviorAlwaysFail_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Behavior/BehaviorNode.hpp"
@@ -21,10 +21,10 @@ namespace Barrage
 {
   namespace Behavior
   {
-    class Selector : public BehaviorNode
+    class AlwaysFail : public BehaviorNode
     {
       public:
-        Selector();
+        AlwaysFail();
 
         std::shared_ptr<BehaviorNode> Clone() const override;
 
@@ -38,5 +38,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // BehaviorSelector_BARRAGE_H
+#endif // BehaviorAlwaysFail_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

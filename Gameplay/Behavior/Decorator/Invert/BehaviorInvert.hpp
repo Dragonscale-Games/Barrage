@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            BehaviorSelector.hpp
+ * \file            BehaviorInvert.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -11,8 +11,8 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef BehaviorSelector_BARRAGE_H
-#define BehaviorSelector_BARRAGE_H
+#ifndef BehaviorInvert_BARRAGE_H
+#define BehaviorInvert_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Behavior/BehaviorNode.hpp"
@@ -21,10 +21,10 @@ namespace Barrage
 {
   namespace Behavior
   {
-    class Selector : public BehaviorNode
+    class Invert : public BehaviorNode
     {
       public:
-        Selector();
+        Invert();
 
         std::shared_ptr<BehaviorNode> Clone() const override;
 
@@ -38,5 +38,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // BehaviorSelector_BARRAGE_H
+#endif // BehaviorInvert_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
