@@ -275,20 +275,6 @@
                     "Velocity"
                 ],
                 "components": {
-                    "BehaviorTree": {
-                        "recipe": {
-                            "Name": "Sequence",
-                            "Children": [
-                                {
-                                    "Name": "Debug",
-                                    "Data": {
-                                        "text": "One",
-                                        "succeeds": true
-                                    }
-                                }
-                            ]
-                        }
-                    },
                     "BoundaryBox": {
                         "xMin": -480.0,
                         "xMax": 480.0,
@@ -320,7 +306,7 @@
                                     "alpha": 1.0
                                 },
                                 "Position": {
-                                    "x": 0.0,
+                                    "x": 304.0,
                                     "y": -414.0
                                 },
                                 "Rotation": {
