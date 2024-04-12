@@ -157,7 +157,9 @@ namespace Barrage
 
       static void ColorWidget(DataObject& object);
 
-      static void SpawnRuleListWidget(DataObject& object);
+      static bool SpawnRuleListHelper(DataObject& layerObject, SpawnRuleList& spawnRuleList, int id);
+
+      static void SpawnLayerWidget(DataObject& object);
                  
       static void SpriteWidget(DataObject& object);
 

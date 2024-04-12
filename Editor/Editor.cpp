@@ -251,6 +251,8 @@ namespace Barrage
     engine_.Input().Reset();
     engine_.Window().PollEvents();
 
+    HandleKeyboard();
+
     unsigned numTicks = engine_.Frames().ConsumeTicks();
 
     TimePoint beginT;
@@ -288,8 +290,6 @@ namespace Barrage
     gui_.StartWidgets();
     UseWidgets();
     gui_.EndWidgets();
-
-    HandleKeyboard();
 
     glBeginQuery(GL_TIME_ELAPSED, timeQueryID_);
     engine_.Graphics().GetFramebuffer().BindFramebuffer();
