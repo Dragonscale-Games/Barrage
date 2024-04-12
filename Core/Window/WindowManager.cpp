@@ -6,19 +6,14 @@
  * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
- * Defines the windowing system used by the engine.
- * This does not create the rendering context for the window,
- * that is the renderer's job.
+    Manages the game window.
  */
  /* ======================================================================== */
 
-//  ===========================================================================
-// Includes
-//  ===========================================================================
-#include <stdafx.h>
-#include <stdexcept>
-
+#include "stdafx.h"
 #include "WindowManager.hpp"
+
+#include <stdexcept>
 
 namespace Barrage
 {
@@ -144,17 +139,5 @@ namespace Barrage
   GLFWwindow* WindowManager::GetWindowHandle()
   {
     return window_;
-  }
-
-  void WindowManager::SetFramebufferSizeCallback(GLFWframebuffersizefun function)
-  {
-    assert(window_);
-    glfwSetFramebufferSizeCallback(window_, function);
-  }
-
-  void WindowManager::SetUserPointer(void* data)
-  {
-    assert(window_);
-    glfwSetWindowUserPointer(window_, data);
   }
 }

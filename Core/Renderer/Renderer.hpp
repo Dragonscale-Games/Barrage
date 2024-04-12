@@ -15,16 +15,16 @@
 #define Renderer_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <glm/glm.hpp>
-#include <string>
-#include <vector>
-#include <memory>
-
 #include "Framebuffers/Framebuffer.hpp"
 #include "Shaders/Shader.hpp"
 #include "Textures/TextureManager.hpp"
-
 #include "RendererTypes.hpp"
+
+#include <glm/glm.hpp>
+
+#include <string>
+#include <vector>
+#include <memory>
 
 namespace Barrage
 {

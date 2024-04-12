@@ -30,26 +30,70 @@
 # Date:         6/7/23
 # =====================================================================================================================
 
-add_library(Gameplay STATIC
+add_library(Gameplay STATIC 
 	"Registration/Registration.cpp"
-	
-	
-	
-	"SpawnFunctions/Miscellaneous/MiscellaneousRules.cpp"
-	
+
+	"Behavior/Action/Debug/BehaviorDebug.cpp"
+	"Behavior/Action/Wait/BehaviorWait.cpp" 
+
+	"Behavior/Composite/Sequence/BehaviorSequence.cpp" 
+	"Behavior/Composite/Selector/BehaviorSelector.cpp"
+
+	"Behavior/Decorator/AlwaysSucceed/BehaviorAlwaysSucceed.cpp" 
+	"Behavior/Decorator/AlwaysFail/BehaviorAlwaysFail.cpp" 
+	"Behavior/Decorator/Invert/BehaviorInvert.cpp" 
+	"Behavior/Decorator/LoopOnFailure/BehaviorLoopOnFailure.cpp" 
+	"Behavior/Decorator/LoopOnSuccess/BehaviorLoopOnSuccess.cpp"
+	"Behavior/Decorator/Repeat/BehaviorRepeat.cpp"
+
+	"Behavior/Parallel/Selector/BehaviorParallelSelector.cpp" 
+	"Behavior/Parallel/Sequence/BehaviorParallelSequence.cpp" 
+
+    "ComponentArrays/AngularSpeed/AngularSpeedArray.cpp" 
+	"ComponentArrays/ColorTint/ColorTintArray.cpp" 
+	"ComponentArrays/Destructible/DestructibleArray.cpp" 
+	"ComponentArrays/Lifetime/LifetimeArray.cpp"
+	"ComponentArrays/Position/PositionArray.cpp" 
+	"ComponentArrays/Rotation/RotationArray.cpp" 
+	"ComponentArrays/Scale/ScaleArray.cpp" 
+	"ComponentArrays/TextureUV/TextureUVArray.cpp" 
+	"ComponentArrays/Velocity/VelocityArray.cpp" 
+
+	"Components/Behavior/Behavior.cpp"
+	"Components/BoundaryBox/BoundaryBox.cpp" 
+	"Components/CircleCollider/CircleCollider.cpp" 
+	"Components/Movement/Movement.cpp"
+	"Components/Player/Player.cpp" 
+	"Components/Spawner/Spawner.cpp" 
+	"Components/Sprite/Sprite.cpp" 
+    
+	"SpawnRules/Count/Increment/SpawnIncrementCount.cpp"
+
+	"SpawnRules/Direction/Aimed/SpawnAimedDirection.cpp"
+	"SpawnRules/Direction/Match/SpawnMatchDirection.cpp"
+	"SpawnRules/Direction/Random/SpawnRandomDirection.cpp" 
+	"SpawnRules/Direction/Set/SpawnSetDirection.cpp"
+
+	"SpawnRules/Miscellaneous/Fan/SpawnFan.cpp" 
+	"SpawnRules/Miscellaneous/Mirror/SpawnMirror.cpp"
+	"SpawnRules/Miscellaneous/Ring/SpawnRing.cpp" 
+	"SpawnRules/Miscellaneous/Spiral/SpawnSpiral.cpp"
+
+	"SpawnRules/Position/Match/SpawnMatchPosition.cpp"
+	"SpawnRules/Position/Offset/SpawnOffsetPosition.cpp" 
+	"SpawnRules/Position/RandomBoxOffset/SpawnRandomBoxOffset.cpp" 
+
+	"SpawnRules/Speed/Random/SpawnRandomSpeed.cpp"
+	"SpawnRules/Speed/Set/SpawnSetSpeed.cpp"
+
+	"Systems/Behavior/BehaviorSystem.cpp"
 	"Systems/Collision/CollisionSystem.cpp"
-	"Systems/Creation/CreationSystem.cpp"
+	
 	"Systems/Destruction/DestructionSystem.cpp"
 	"Systems/Draw/DrawSystem.cpp"
+	"Systems/Lifetime/LifetimeSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
-	"Systems/Spawn/SpawnSystem.cpp"
- "SpawnFunctions/Direction/DirectionRules.cpp" 
- "SpawnFunctions/Position/PositionRules.cpp" 
- "Registration/RTTR/RttrRegistration.cpp" 
- "SpawnFunctions/Speed/SpeedRules.cpp" 
- "Registration/RTTR/ComponentArrays/RttrComponentArrays.cpp" 
- "Registration/RTTR/Components/RttrComponents.cpp" 
- "Registration/RTTR/SpawnRules/RttrSpawnRules.cpp")
+	"Systems/Spawn/SpawnSystem.cpp"     )
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

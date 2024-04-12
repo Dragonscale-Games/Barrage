@@ -11,69 +11,64 @@
  /* ======================================================================== */
 
 #include "CreateComponent.hpp"
-#include <Editor.hpp>
+#include "Editor.hpp"
+#include "Objects/Components/ComponentFactory.hpp"
 
 namespace Barrage
 {
   CreateComponent::CreateComponent(
     const std::string& sceneName,
     const std::string& poolName,
-    const std::string_view& componentName) :
+    const std::string& componentName) :
     Command("Added " + std::string(componentName) + " to " + poolName + "."),
     sceneName_(sceneName),
     poolName_(poolName),
-    componentName_(componentName),
-    redoComponent_(nullptr)
+    componentName_(componentName)
   {
-  }
-
-  CreateComponent::~CreateComponent()
-  {
-    delete redoComponent_;
   }
 
   bool CreateComponent::Execute()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    if (scene == nullptr)
+    if (scene == nullptr || scene->poolArchetypes_.count(poolName_) == 0)
     {
       return false;
     }
 
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    if (poolArchetype == nullptr || poolArchetype->HasComponent(componentName_))
+    if (poolArchetype.components_.count(componentName_))
     {
       return false;
     }
 
-    Component* component = ComponentAllocator::AllocateComponent(componentName_);
+    DeepPtr<Component> component = ComponentFactory::AllocateComponent(componentName_);
 
-    if (component == nullptr)
+    if (!component)
     {
       return false;
     }
 
-    poolArchetype->AddComponent(componentName_, component);
+    poolArchetype.components_.emplace(componentName_, component);
 
     return true;
   }
 
   void CreateComponent::Undo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    redoComponent_ = poolArchetype->ExtractComponent(componentName_);
+    poolArchetype.components_.erase(componentName_);
   }
 
   void CreateComponent::Redo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    poolArchetype->AddComponent(componentName_, redoComponent_);
-    redoComponent_ = nullptr;
+    DeepPtr<Component> component = ComponentFactory::AllocateComponent(componentName_);
+    poolArchetype.components_.emplace(componentName_, component);
   }
 }

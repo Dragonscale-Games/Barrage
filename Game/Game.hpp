@@ -6,7 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Standard game loop for Barrage Engine.
+   Standard game loop for Barrage.
  */
  /* ======================================================================== */
 
@@ -15,11 +15,11 @@
 #define Game_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Engine/Engine.hpp>
+#include "Engine.hpp"
 
 namespace Barrage
 {
-  //! Standard game loop for Barrage Engine
+  //! Standard game loop for Barrage
   class Game
   {
     public:
@@ -64,17 +64,8 @@ namespace Barrage
       /**************************************************************/
       void Shutdown();
 
-      /**************************************************************/
-      /*!
-        \brief
-          Uses the entry file to set up the initial state of the 
-          game.
-      */
-      /**************************************************************/
-      void ParseEntryFile();
-
     private:
-      Engine engine_;  //!< Barrage engine
+      Engine engine_;
       bool isRunning_; //!< Keeps track of whether game is running
   };
 }

@@ -16,11 +16,10 @@
 #define InputManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "KeyMap.hpp"
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
 
 #include <vector>
-
-struct GLFWwindow;
 
 namespace Barrage
 {
@@ -28,6 +27,9 @@ namespace Barrage
   class InputManager
 	{
     public:   
+      static const int MIN_KEY_VALUE = GLFW_KEY_UNKNOWN;
+      static const int MAX_KEY_VALUE = GLFW_KEY_LAST;
+      
       /**************************************************************/
       /*!
         \brief
@@ -40,7 +42,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Initializes the game state manager. Sets the window, sets
+          Initializes the input manager. Sets the window, sets
           up any glfw input callbacks, and initializes the key vectors.
 
         \param window
@@ -52,10 +54,10 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Calls glfwPollEvents and updates the key vectors.
+          Resets the states of key triggers and releases.
       */
       /**************************************************************/
-      void Update();
+      void Reset();
 
       /**************************************************************/
       /*!
@@ -69,18 +71,18 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Returns true if the given key was first pressed this frame
-          and returns false otherwise.
+          Returns true if the given key has been pressed since the
+          last call to Reset().
 
         \param key
-          The key to test. Use the key names from KeyMap.hpp.
+          The GLFW key to test.
 
         \return
-          Returns true if the key was first pressed this frame and
-          returns false otherwise.
+          Returns true if the given key has been pressed since the
+          last call to Reset().
       */
       /**************************************************************/
-      bool KeyTriggered(KEY key) const;
+      bool KeyTriggered(int key) const;
 
       /**************************************************************/
       /*!
@@ -89,32 +91,48 @@ namespace Barrage
           false otherwise.
 
         \param key
-          The key to test. Use the key names from KeyMap.hpp.
+          The GLFW key to test.
 
         \return
           Returns true if the key is currently down and returns false
           otherwise.
       */
       /**************************************************************/
-      bool KeyIsDown(KEY key) const;
+      bool KeyIsDown(int key) const;
 
       /**************************************************************/
       /*!
         \brief
-          Returns true if the given key was first released this frame
-          and returns false otherwise.
+          Returns true if the given key was released since the last
+          call to Reset().
 
         \param key
-          The key to test. Use the key names from KeyMap.hpp.
+          The GLFW key to test.
 
         \return
-          Returns true if the key was first released this frame and
-          returns false otherwise.
+          Returns true if the given key was released since the last
+          call to Reset().
       */
       /**************************************************************/
-      bool KeyReleased(KEY key) const;
+      bool KeyReleased(int key) const;
 
     private:
+      /**************************************************************/
+      /*!
+        \brief
+          Checks whether the provided key is valid. Usually used to
+          avoid out-of-bounds array access.
+
+        \param key
+          The keyboard key to check.
+
+        \return
+          Returns true if the key is a valid keycode and false
+          otherwise.
+      */
+      /**************************************************************/
+      static bool KeyIsValid(int key);
+      
       /**************************************************************/
       /*!
         \brief
@@ -142,13 +160,10 @@ namespace Barrage
       static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
     private:
-      static InputManager* manager_;
-      
       GLFWwindow* window_; //!< Handle to the game window
 
-      std::vector<bool> keysPrev_; //!< Sparse vector containing key states from previous frame
-      std::vector<bool> keysCurr_; //!< Sparse vector containing key states from current frame
-      std::vector<bool> keysBuff_; //!< Sparse vector containing key states being modified in realtime by keyboard callbacks
+      std::vector<bool> keyTriggers_; //!< Contains which keys have been triggered since last call to Reset()
+      std::vector<bool> keyReleases_; //!< Contains which keys have been released since last call to Reset()
 	};
 }
 

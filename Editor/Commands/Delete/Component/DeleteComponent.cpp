@@ -11,15 +11,15 @@
  /* ======================================================================== */
 
 #include "DeleteComponent.hpp"
-#include <Editor.hpp>
+#include "Editor.hpp"
 
 namespace Barrage
 {
   DeleteComponent::DeleteComponent(
     const std::string& sceneName,
     const std::string& poolName,
-    const std::string_view& componentName) :
-    Command("Removed " + std::string(componentName) + " from " + poolName + "."),
+    const std::string& componentName) :
+    Command("Removed " + componentName + " from " + poolName + "."),
     sceneName_(sceneName),
     poolName_(poolName),
     componentName_(componentName),
@@ -27,46 +27,43 @@ namespace Barrage
   {
   }
 
-  DeleteComponent::~DeleteComponent()
-  {
-    delete undoComponent_;
-  }
-
   bool DeleteComponent::Execute()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    if (scene == nullptr)
+    if (scene == nullptr || scene->poolArchetypes_.count(poolName_) == 0)
     {
       return false;
     }
 
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    if (poolArchetype == nullptr || !poolArchetype->HasComponent(componentName_))
+    if (poolArchetype.components_.count(componentName_) == 0)
     {
       return false;
     }
 
-    undoComponent_ = poolArchetype->ExtractComponent(componentName_);
+    undoComponent_ = poolArchetype.components_.at(componentName_);
+    poolArchetype.components_.erase(componentName_);
 
     return true;
   }
 
   void DeleteComponent::Undo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
     
-    poolArchetype->AddComponent(componentName_, undoComponent_);
+    poolArchetype.components_.emplace(componentName_, undoComponent_);
     undoComponent_ = nullptr;
   }
 
   void DeleteComponent::Redo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
     
-    undoComponent_ = poolArchetype->ExtractComponent(componentName_);
+    undoComponent_ = poolArchetype.components_.at(componentName_);
+    poolArchetype.components_.erase(componentName_);
   }
 }

@@ -16,8 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
-#include <Objects/Components/BaseClasses/Component.hpp>
-#include <string_view>
+#include <Objects/Components/Component.hpp>
 
 namespace Barrage
 {
@@ -40,15 +39,7 @@ namespace Barrage
       CreateComponent(
         const std::string& sceneName, 
         const std::string& poolName, 
-        const std::string_view& componentName);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Deallocates resources.
-      */
-      /**************************************************************/
-      ~CreateComponent();
+        const std::string& componentName);
 
     private:
       /**************************************************************/
@@ -82,9 +73,7 @@ namespace Barrage
     private: 
       std::string sceneName_;
       std::string poolName_;      
-      std::string_view componentName_;
-
-      Component* redoComponent_;
+      std::string componentName_;
   };
 }
 

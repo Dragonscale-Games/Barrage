@@ -6,7 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here>
+   Handles game object movement.
  */
  /* ======================================================================== */
 
@@ -15,38 +15,38 @@
 #define MovementSystem_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Systems/BaseSystem.hpp"
+#include "Objects/Systems/System.hpp"
 
 namespace Barrage
 {
-  //! <class description>
-  class MovementSystem : public Barrage::System
+  //! Handles game object movement
+  class MovementSystem : public System
   {
-  public:
-    /**************************************************************/
-    /*!
-      \brief
-        Initializes system.
-    */
-    /**************************************************************/
-    MovementSystem();
+    public:
+      /**************************************************************/
+      /*!
+        \brief
+          Initializes system.
+      */
+      /**************************************************************/
+      MovementSystem();
 
-    /**************************************************************/
-    /*!
-       \brief
-         Updates movement system.
-    */
-    /**************************************************************/
-    void Update() override;
+      /**************************************************************/
+      /*!
+         \brief
+           Updates movement system.
+      */
+      /**************************************************************/
+      void Update() override;
 
-  private:
-    static void UpdatePlayerMovement(Barrage::Pool* pool);
+    private:
+      static void UpdatePlayerMovement(Space& space, Pool& pool);
 
-    static void UpdatePlayerBounds(Barrage::Pool* pool);
+      static void UpdatePlayerBounds(Space& space, Pool& pool);
 
-    static void UpdateBasicMovement(Barrage::Pool* pool);
+      static void UpdateBasicMovement(Space& space, Pool& pool);
 
-    static void UpdateBasicRotation(Barrage::Pool* pool);
+      static void UpdateBasicRotation(Space& space, Pool& pool);
   };
 }
 

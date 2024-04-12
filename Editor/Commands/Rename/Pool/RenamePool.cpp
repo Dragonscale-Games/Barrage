@@ -28,23 +28,25 @@ namespace Barrage
 
   bool RenamePool::Execute()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+
+    if (scene == nullptr || scene->poolArchetypes_.count(poolName_) == 0)
+    {
+      return false;
+    }
+
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
     
-    if (scene == nullptr)
+    if (scene->poolArchetypes_.count(newName_))
     {
       return false;
     }
     
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    poolArchetype.name_ = newName_;
+    scene->poolArchetypes_.emplace(newName_, poolArchetype);
+    scene->poolArchetypes_.erase(poolName_);
     
-    if (poolArchetype == nullptr || scene->HasPool(newName_))
-    {
-      return false;
-    }
-    
-    poolArchetype->SetName(newName_);
-    
-    EditorData& editorData = Editor::Instance->Data();
+    EditorData& editorData = Editor::Get().Data();
     if (editorData.selectedPool_ == poolName_)
     {
       editorData.selectedPool_ = newName_;
@@ -55,12 +57,14 @@ namespace Barrage
 
   void RenamePool::Undo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(newName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(newName_);
 
-    poolArchetype->SetName(poolName_);
+    poolArchetype.name_ = poolName_;
+    scene->poolArchetypes_.emplace(poolName_, poolArchetype);
+    scene->poolArchetypes_.erase(newName_);
 
-    EditorData& editorData = Editor::Instance->Data();
+    EditorData& editorData = Editor::Get().Data();
     if (editorData.selectedPool_ == newName_)
     {
       editorData.selectedPool_ = poolName_;
@@ -69,12 +73,14 @@ namespace Barrage
 
   void RenamePool::Redo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    poolArchetype->SetName(newName_);
+    poolArchetype.name_ = newName_;
+    scene->poolArchetypes_.emplace(newName_, poolArchetype);
+    scene->poolArchetypes_.erase(poolName_);
 
-    EditorData& editorData = Editor::Instance->Data();
+    EditorData& editorData = Editor::Get().Data();
     if (editorData.selectedPool_ == poolName_)
     {
       editorData.selectedPool_ = newName_;

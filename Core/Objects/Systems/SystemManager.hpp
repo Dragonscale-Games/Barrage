@@ -6,75 +6,41 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
+   In charge of holding systems and calling their update functions.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef SystemManager_BARRAGE_H
 #define SystemManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "BaseSystem.hpp"
-
-#include <string>
-#include <unordered_map>
-#include <vector>
+#include "System.hpp"
 
 namespace Barrage
 {
   //! Maps system names to systems
-  typedef std::unordered_map<std::string_view, System*> SystemUmap;
+  typedef std::map<std::string, std::shared_ptr<System>> SystemMap;
 
-  //! <class description>
+  //! Holds systems and calls their update functions
   class SystemManager
-	{
-    public:   
+  {
+    public:
       /**************************************************************/
       /*!
         \brief
           Default constructor.
+
+        \param space
+          The space the system manager lives in.
       */
       /**************************************************************/
-      SystemManager();
+      SystemManager(Space& space);
 
-      /**************************************************************/
-      /*!
-        \brief
-          Deletes all systems registered to the system manager.
-      */
-      /**************************************************************/
-      ~SystemManager();
-
-      /**************************************************************/
-      /*!
-        \brief
-          Instantiates a system and adds it to the system manager's
-          collection of systems (the system map). Also appends the
-          system's name to the update order list.
-
-        \tparam T
-          The type of the system to register.
-
-        \param systemName
-          The name the user would like to be assigned to the system.
-      */
-      /**************************************************************/
-      template <typename T>
-      void RegisterSystem(const std::string_view& systemName);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Sets the order that the systems will be updated in. The user
-          provides a list of system names, and systems will be updated
-          in the order of the names on the list.
-
-        \param updateOrderList
-          An ordered list of system names.
-      */
-      /**************************************************************/
-      void SetUpdateOrder(const std::vector<std::string_view>& updateOrderList);
+      SystemManager(const SystemManager&) = delete;
+      SystemManager& operator=(const SystemManager&) = delete;
+      SystemManager(SystemManager&&) = delete;
+      SystemManager& operator=(SystemManager&&) = delete;
 
       /**************************************************************/
       /*!
@@ -96,7 +62,7 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Updates each system, carrying out system functions on all 
+          Updates each system, carrying out system functions on all
           object pools subscribed to the systems.
       */
       /**************************************************************/
@@ -108,22 +74,11 @@ namespace Barrage
           Gets the system with the given name.
 
         \return
-          Returns a pointer to the requested system, or nullptr if 
+          Returns a pointer to the requested system, or nullptr if
           the system is not registered.
       */
       /**************************************************************/
-      System* GetSystem(const std::string_view& name);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Gets the list of all registered systems.
-
-        \return
-          Returns the list of all registered systems.
-      */
-      /**************************************************************/
-      std::vector<std::string_view> GetRegisteredSystemNames();
+      std::shared_ptr<System> GetSystem(const std::string& name);
 
       /**************************************************************/
       /*!
@@ -136,18 +91,27 @@ namespace Barrage
           they're updating.
       */
       /**************************************************************/
-      std::vector<std::string_view> GetSystemUpdateOrder();
+      const std::vector<std::string>& GetSystemUpdateOrder() const;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Sets the order that the systems will be updated in. The user
+          provides a list of system names, and systems will be updated
+          in the order of the names on the list.
+
+        \param updateOrderList
+          An ordered list of system names.
+      */
+      /**************************************************************/
+      void SetUpdateOrder(const std::vector<std::string>& updateOrderList);
 
     private:
-      SystemUmap systems_;                             //!< The collection of registered systems
-      std::vector<std::string_view> systemNames_;     //!< The names of all registered systems
-      std::vector<std::string_view> updateOrderList_; //!< The order the systems will update in
-
-    friend class ObjectManager;
-	};
+      Space& space_;                             //!< The space the system manager lives in
+      SystemMap systems_;                        //!< The collection of registered systems
+      std::vector<std::string> updateOrderList_; //!< The order the systems will update in
+  };
 }
-
-#include "SystemManager.tpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif // SystemManager_BARRAGE_H

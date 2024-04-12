@@ -10,10 +10,12 @@
  */
  /* ======================================================================== */
 
+#include "stdafx.h"
 #include "Texture.hpp"
 
 #include <stb_image/stb_image.h>
 #include <glad/gl.h>
+
 #include <stdexcept>
 
 namespace Barrage

@@ -10,6 +10,7 @@
  */
  /* ======================================================================== */
 
+#include "stdafx.h"
 #include "Framebuffer.hpp"
 
 #include <stdexcept>

@@ -16,8 +16,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
-#include <Objects/Archetypes/PoolArchetype/PoolArchetype.hpp>
-#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>
+#include <Objects/Archetypes/PoolArchetype.hpp>
+#include <Objects/Archetypes/ObjectArchetype.hpp>
 
 namespace Barrage
 {
@@ -38,8 +38,6 @@ namespace Barrage
       */
       /**************************************************************/
       DeletePool(const std::string& sceneName, const std::string& poolName);
-
-      ~DeletePool();
 
     private:
       /**************************************************************/
@@ -77,8 +75,7 @@ namespace Barrage
       std::string sceneName_;
       std::string poolName_;
 
-      unsigned undoIndex_;
-      PoolArchetype* undoPoolArchetype_;
+      PoolArchetype undoPoolArchetype_;
   };
 }
 

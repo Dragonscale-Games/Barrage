@@ -18,19 +18,13 @@ namespace Barrage
   CreatePool::CreatePool(const std::string& sceneName) :
     Command("New pool created."),
     sceneName_(sceneName),
-    poolName_(),
-    redoArchetype_(nullptr)
+    poolName_()
   {
-  }
- 
-  CreatePool::~CreatePool()
-  {
-    delete redoArchetype_;
   }
 
   bool CreatePool::Execute()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
     if (scene == nullptr)
     {
@@ -50,30 +44,27 @@ namespace Barrage
 
       counter++;
 
-    } while (scene->GetPoolArchetype(poolName_));
+    } while (scene->poolArchetypes_.count(poolName_));
 
-    scene->AddPoolArchetype(new PoolArchetype(poolName_, 1));
+    scene->poolArchetypes_.emplace(poolName_, PoolArchetype(poolName_, 1));
 
     return true;
   }
 
   void CreatePool::Undo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    scene->poolArchetypes_.erase(poolName_);
 
-    redoArchetype_ = scene->ExtractPoolArchetype(poolName_);
-
-    if (Editor::Instance->Data().selectedPool_ == poolName_)
+    if (Editor::Get().Data().selectedPool_ == poolName_)
     {
-      Editor::Instance->Data().selectedPool_ = std::string();
+      Editor::Get().Data().selectedPool_ = std::string();
     }
   }
 
   void CreatePool::Redo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-
-    scene->AddPoolArchetype(redoArchetype_);
-    redoArchetype_ = nullptr;
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    scene->poolArchetypes_.emplace(poolName_, PoolArchetype(poolName_, 1));
   }
 }

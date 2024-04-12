@@ -10,32 +10,25 @@
  */
  /* ======================================================================== */
 
+#include "stdafx.h"
+#include "Registration/Registrar.hpp"
 #include "Editor.hpp"
 
-#include <rttr/registration.h>
-#include <Serialization/ComponentRefl.hpp>
 #include <string>
+#include <rttr/registration.h>
+
+using namespace Barrage;
 
 RTTR_REGISTRATION
 {
-  // Reflect all the core Barrage objects.
-  Barrage::ReflectBarrageCore();
+  Registrar::Reflection();
 }
 
 int main(int argc, char* argv[])
 {
-  std::string project_path;
-  
-  if (argc > 1)
-  {
-    project_path = argv[1];
-  }
-  
-  Barrage::Editor* editor = new Barrage::Editor;
+  std::unique_ptr<Editor> editor = std::make_unique<Editor>();
 
-  editor->Run(project_path);
-
-  delete editor;
+  editor->Run();
 
   return 0;
 }

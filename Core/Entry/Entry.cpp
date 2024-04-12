@@ -25,7 +25,7 @@ namespace Barrage
     scene_("Invalid")
   {
   }
-  
+
   Entry::SpaceEntry::SpaceEntry(const std::string& name, const std::string& scene) :
     name_(name),
     scene_(scene)

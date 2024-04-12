@@ -75,7 +75,6 @@ namespace Barrage
     private:
       std::string sceneName_;
       std::string poolName_;
-      std::string objectName_;
       std::string newName_;
   };
 }

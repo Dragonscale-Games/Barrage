@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <imgui/imgui.h>
-#include <string_view>
+#include <string>
 
 namespace Barrage
 {
@@ -37,7 +37,7 @@ namespace Barrage
           The name of the component being modified.
       */
       /**************************************************************/
-      static void Use(const char* strId, const std::string_view& componentName);
+      static void Use(const char* strId, const std::string& componentName);
   };
 }
 

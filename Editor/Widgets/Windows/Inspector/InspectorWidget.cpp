@@ -11,56 +11,51 @@
  /* ======================================================================== */
 
 #include "InspectorWidget.hpp"
-#include "Widgets/Components/ComponentArray/ComponentArrayWidget.hpp"
-#include "Widgets/Components/Component/ComponentWidget.hpp"
 #include "Editor.hpp"
-#include <string>
+
+#include "Widgets/Components/ComponentArrayWidget.hpp"
+#include "Widgets/Components/ComponentWidget.hpp"
+#include "Widgets/Popups/ComponentArray/ComponentArrayPopupWidget.hpp"
+
 #include "Widgets/Data/DataWidget.hpp"
+
 #include "Commands/Delete/Tag/DeleteTag.hpp"
 #include "Commands/Edit/Capacity/EditCapacity.hpp"
-#include "Widgets/Windows/Log/LogWidget.hpp"
 
 namespace Barrage
 {
-  ImVec2 InspectorWidget::size_ = ImVec2(0.0f, 0.0f);
-  
   void InspectorWidget::Use()
   {
     ImGui::Begin("Inspector", nullptr, ImGuiWindowFlags_NoMove);
 
-    size_ = ImGui::GetWindowSize();
-
-    if (Editor::Instance->Data().selectedScene_.empty() || Editor::Instance->Data().selectedPool_.empty())
+    if (Editor::Get().Data().selectedScene_.empty() || Editor::Get().Data().selectedPool_.empty())
     {
       ImGui::End();
       return;
     }
 
-    Scene* scene = Engine::Instance->Scenes().GetScene(Editor::Instance->Data().selectedScene_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(Editor::Instance->Data().selectedPool_);
+    Scene* scene = Engine::Get().Scenes().GetScene(Editor::Get().Data().selectedScene_);
 
-    if (poolArchetype == nullptr)
+    if (scene == nullptr || scene->poolArchetypes_.count(Editor::Get().Data().selectedPool_) == 0)
     {
       ImGui::End();
       return;
     }
+
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(Editor::Get().Data().selectedPool_);
 
     ImGui::Separator();
     ImGui::Spacing();
     ImGui::Text("Pool:");
     ImGui::SameLine();
-    ImGui::Text(Editor::Instance->Data().selectedPool_.c_str());
+    ImGui::Text(Editor::Get().Data().selectedPool_.c_str());
     ImGui::Spacing();
     ImGui::Separator();
     ImGui::Spacing();
 
-    ImGui::PushID(Editor::Instance->Data().selectedPool_.c_str());
+    ImGui::PushID(Editor::Get().Data().selectedPool_.c_str());
 
-    //DataWidget::Use(poolArchetype->capacity_, "capacity");
-
-    //ImGui::Spacing();
-
-    unsigned old_capacity_value = poolArchetype->GetCapacity();
+    unsigned old_capacity_value = poolArchetype.capacity_;
     rttr::variant capacity_value = old_capacity_value;
     DataWidget::DataObject capacity_object("Capacity", capacity_value);
 
@@ -72,40 +67,28 @@ namespace Barrage
     {
       unsigned new_value = capacity_object.GetValue<unsigned>();
 
-      if (new_value < 1)
-      {
-        new_value = 1;
-        LogWidget::AddEntry("Capacity cannot go lower than 1.");
-      }
-      else if (new_value < poolArchetype->GetStartingObjects().size())
-      {
-        new_value = static_cast<unsigned>(poolArchetype->GetStartingObjects().size());
-        LogWidget::AddEntry("Capacity cannot go lower than number of objects in pool.");
-      }
-      
-      EditorData& editorData = Editor::Instance->Data();
-      EditCapacity* capacity_command = new EditCapacity(
+      EditorData& editorData = Editor::Get().Data();
+      Editor::Get().Command().Send(std::make_shared<EditCapacity>(
         editorData.selectedScene_,
         editorData.selectedPool_,
         new_value,
-        capacity_object.ChainUndoEnabled());
-      Editor::Instance->Command().Send(capacity_command);
+        capacity_object.ChainUndoEnabled()
+      ));
     }
 
     if (ImGui::CollapsingHeader("Tags"))
     {
-      const std::vector<std::string_view> tags = poolArchetype->GetTags();
-      for (const std::string_view& tag : tags)
+      StringSet& tags = poolArchetype.tags_;
+      for (const std::string& tag : tags)
       {
         ImGui::PushID(tag.data());
         if (ImGui::Button("X"))
         {
-          EditorData& editorData = Editor::Instance->Data();
-          DeleteTag* command = new DeleteTag(
+          EditorData& editorData = Editor::Get().Data();
+          Editor::Get().Command().Send(std::make_shared<DeleteTag>(
             editorData.selectedScene_,
             editorData.selectedPool_,
-            tag);
-          Editor::Instance->Command().Send(command);
+            tag));
         }
         ImGui::SameLine();
         ImGui::Text(tag.data());
@@ -114,52 +97,80 @@ namespace Barrage
 
       if (ImGui::Button("Add tag"))
       {
-        Editor::Instance->Data().openTagModal_ = true;
+        Editor::Get().Data().openTagModal_ = true;
       }
     }
 
-    const ComponentUmap& sharedComponents = poolArchetype->GetComponents();
-    for (auto& sharedComponent : sharedComponents)
+    ComponentMap& components = poolArchetype.components_;
+    for (auto& component : components)
     {
-      ComponentWidget::Use(sharedComponent.first, sharedComponent.second);
+      ComponentWidget::Use(component.first, component.second);
     }
 
     ImGui::Text(" ");
 
     ImGui::PopID();
 
-    if (!Editor::Instance->Data().selectedObject_.empty())
+    bool objectSelected = !Editor::Get().Data().selectedStartingObject_.empty() || !Editor::Get().Data().selectedSpawnArchetype_.empty();
+    
+    if (objectSelected)
     {
-      ObjectArchetype* objectArchetype = poolArchetype->GetObjectArchetype(Editor::Instance->Data().selectedObject_);
+      bool isSpawnArchetype = !Editor::Get().Data().selectedSpawnArchetype_.empty();
+      ObjectArchetype& objectArchetype = isSpawnArchetype ? 
+        poolArchetype.spawnArchetypes_.at(Editor::Get().Data().selectedSpawnArchetype_) : 
+        poolArchetype.startingObjects_.at(Editor::Get().Data().selectedStartingObject_);
 
-      if (objectArchetype)
+
+      ImGui::Separator();
+      ImGui::Spacing();
+      ImGui::Text("Object:");
+      ImGui::SameLine();
+      ImGui::Text(objectArchetype.name_.c_str());
+      ImGui::Spacing();
+      ImGui::Separator();
+      ImGui::Spacing();
+
+      ImGui::PushID(objectArchetype.name_.c_str());
+
+      ComponentArrayMap& componentArrays = objectArchetype.componentArrays_;
+      for (auto& componentArray : componentArrays)
       {
-        ImGui::Separator();
-        ImGui::Spacing();
-        ImGui::Text("Object:");
-        ImGui::SameLine();
-        ImGui::Text(Editor::Instance->Data().selectedObject_.c_str());
-        ImGui::Spacing();
-        ImGui::Separator();
-        ImGui::Spacing();
+        ComponentArrayWidget::Use(componentArray.first, componentArray.second);
+      }
 
-        ImGui::PushID(Editor::Instance->Data().selectedObject_.c_str());
-        
-        const ComponentArrayUmap& componentArrays = objectArchetype->GetComponentArrays();
-        for (auto& componentArray : componentArrays)
+      ImGui::PopID();
+    }
+    else
+    {
+      ImGui::Separator();
+      ImGui::Spacing();
+      ImGui::Text("Object: (none selected)");
+      ImGui::Spacing();
+      ImGui::Separator();
+      ImGui::Spacing();
+      
+      for (auto& componentArrayName : poolArchetype.componentArrayNames_)
+      {
+        ImGui::PushID(componentArrayName.c_str());
+
+        bool headerOpen = ImGui::CollapsingHeader(componentArrayName.c_str());
+
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
         {
-          ComponentArrayWidget::Use(componentArray.first, componentArray.second);
+          ImGui::OpenPopup("Component Array Popup");
         }
+
+        if (headerOpen)
+        {
+          ImGui::Text("(no object selected)");
+        }
+
+        ComponentArrayPopupWidget::Use("Component Array Popup", componentArrayName);
 
         ImGui::PopID();
       }
     }
 
     ImGui::End();
-  }
-
-  ImVec2 InspectorWidget::GetSize()
-  {
-    return size_;
   }
 }

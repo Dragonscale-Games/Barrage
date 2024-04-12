@@ -32,8 +32,7 @@
 
 add_executable(Game
 "main.cpp"
-"Game.cpp"
-)
+ "Game.cpp")
 target_link_libraries(Game PUBLIC BarrageCore Gameplay)
 
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

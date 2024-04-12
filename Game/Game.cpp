@@ -10,17 +10,14 @@
  */
  /* ======================================================================== */
 
+#include "stdafx.h"
 #include "Game.hpp"
-
-#include <cstdio>
-#include "rapidjson/filereadstream.h"
-#include <iostream>
 
 namespace Barrage
 {
   Game::Game() :
     engine_(),
-    isRunning_()
+    isRunning_(false)
   {
   }
 
@@ -51,28 +48,22 @@ namespace Barrage
 
     Entry entry = Entry::LoadFromFile("./Assets/entry.json");
     engine_.SetUpGame(entry);
-    
-    std::vector<std::string> spaceNames = engine_.Spaces().GetSpaceNames();
-
-    for (auto it = spaceNames.begin(); it != spaceNames.end(); ++it)
-    {
-      std::cout << "Found space: " << *it << std::endl;
-    }
-
-    if (spaceNames.empty())
-    {
-      std::cout << "No spaces found." << std::endl;
-    }
   }
 
   void Game::Update()
   {
     engine_.Frames().StartFrame();
+    
+    engine_.Input().Reset();
+    engine_.Window().PollEvents();
 
-    engine_.Input().Update();
+    if (engine_.Input().KeyTriggered(GLFW_KEY_ESCAPE))
+    {
+      engine_.Window().SetWindowed();
+    }
 
-    unsigned num_ticks = engine_.Frames().ConsumeTicks();
-    for (unsigned i = 0; i < num_ticks; ++i)
+    unsigned numTicks = engine_.Frames().ConsumeTicks();
+    for (unsigned i = 0; i < numTicks; ++i)
     {
       engine_.Spaces().Update();
     }
@@ -84,17 +75,12 @@ namespace Barrage
     engine_.Graphics().DrawFsq();
     engine_.Window().SwapBuffers();
 
-    if (engine_.Input().KeyTriggered(KEY_ESCAPE))
-    {
-      engine_.Window().SetWindowed();
-    }
-
     if (engine_.Window().IsClosed())
     {
       isRunning_ = false;
     }
 
-    engine_.Frames().EndFrame();
+    engine_.Frames().EndFrame(!engine_.Window().IsFocused());
   }
 
   void Game::Shutdown()

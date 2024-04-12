@@ -17,7 +17,7 @@
 
 namespace Barrage
 {
-  void ComponentArrayPopupWidget::Use(const char* strId, const std::string_view& componentArrayName)
+  void ComponentArrayPopupWidget::Use(const char* strId, const std::string& componentArrayName)
   {
     if (!ImGui::BeginPopup(strId))
     {
@@ -26,8 +26,8 @@ namespace Barrage
 
     if (ImGui::Selectable("Remove"))
     {
-      EditorData& editorData = Editor::Instance->Data();
-      Editor::Instance->Command().Send(new DeleteComponentArray(editorData.selectedScene_, editorData.selectedPool_, componentArrayName));
+      EditorData& editorData = Editor::Get().Data();
+      Editor::Get().Command().Send(std::make_shared<DeleteComponentArray>(editorData.selectedScene_, editorData.selectedPool_, componentArrayName));
     }
 
     ImGui::EndPopup();

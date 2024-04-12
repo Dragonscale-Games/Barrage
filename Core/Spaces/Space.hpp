@@ -9,7 +9,7 @@
    A space is a collection of scenes and game objects. Each space represents
    a unique simulation.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef Space_BARRAGE_H
@@ -22,22 +22,27 @@
 #include <Scenes/Scene.hpp>
 
 namespace Barrage
-{  
+{
   //! A collection of scenes and game objects
   class Space
-	{
-    public:   
+  {
+    public:
       Space();
+
+      Space(const Space&) = delete;
+      Space& operator=(const Space&) = delete;
+      Space(Space&&) = delete;
+      Space& operator=(Space&&) = delete;
 
       void Update();
 
       void Draw();
 
-      ActionManager& GetActionManager();
+      ActionManager& Actions();
 
-      ObjectManager& GetObjectManager();
+      ObjectManager& Objects();
 
-      Random& GetRNG();
+      Random& RNG();
 
       void SetScene(const std::string& name);
 
@@ -48,7 +53,7 @@ namespace Barrage
       void AllowSceneChangesDuringUpdate(bool allow);
 
       bool IsPaused() const;
-      
+
       bool IsVisible() const;
 
     private:
@@ -60,7 +65,9 @@ namespace Barrage
       bool allowSceneChangesDuringUpdate_;
       bool isUpdating_;
       std::string queuedScene_;
-	};
+  };
+
+  using SpaceMap = std::map<std::string, Space>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

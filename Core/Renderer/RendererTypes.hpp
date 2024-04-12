@@ -10,12 +10,13 @@
  */
  /* ======================================================================== */
 
- ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #ifndef RendererTypes_BARRAGE_H
 #define RendererTypes_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Utilities/Utilities.hpp"
+#include "glm/glm.hpp"
 
 namespace Barrage
 {
@@ -24,12 +25,25 @@ namespace Barrage
     float x_;
     float y_;
 
-    inline Position() : x_(960.0f), y_(540.0f) {}
+    inline Position() : x_(0.0f), y_(0.0f) {}
+
+    inline Position(float x, float y) : x_(x), y_(y) {}
+
+    inline void Rotate(float cosAngle, float sinAngle)
+    {
+      glm::vec2 rpos(x_, y_);
+
+      rpos.x =  x_ * cosAngle + y_ * sinAngle;
+      rpos.y = -x_ * sinAngle + y_ * cosAngle;
+
+      x_ = rpos.x;
+      y_ = rpos.y;
+    }
   };
 
   struct Rotation
   {
-    RADIAN angle_;
+    Radian angle_;
 
     inline Rotation() : angle_(0.0f) {}
   };
@@ -39,7 +53,7 @@ namespace Barrage
     float w_;
     float h_;
 
-    inline Scale() : w_(100.0f), h_(100.0f) {}
+    inline Scale() : w_(64.0f), h_(64.0f) {}
   };
 
   struct ColorTint

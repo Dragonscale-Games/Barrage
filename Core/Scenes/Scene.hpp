@@ -10,16 +10,12 @@
  */
  /* ======================================================================== */
 
- ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #ifndef Scene_BARRAGE_H
 #define Scene_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Objects/Archetypes/PoolArchetype/PoolArchetype.hpp>
-
-#include <unordered_map>
-#include <string>
-#include "Serialization/Serializer.hpp"
+#include <Objects/Archetypes/PoolArchetype.hpp>
 
 namespace Barrage
 {
@@ -27,49 +23,26 @@ namespace Barrage
   class Scene
   {
     public:
+      Scene();
+
       Scene(const std::string& name);
-
-      Scene(const rapidjson::Value& data);
-
-      Scene(const Scene& other);
-
-      Scene& operator=(const Scene& other);
-
-      ~Scene();
-
-      bool HasPool(const std::string& name);
 
       void SetName(const std::string& name);
 
       const std::string& GetName();
 
-      PoolArchetype* GetPoolArchetype(const std::string& name);
+      PoolArchetypeMap& GetPoolArchetypes();
 
-      const std::vector<PoolArchetype*>& GetPoolArchetypes();
+      static bool SaveToFile(const Scene& scene, const std::string& path);
 
-      void AddPoolArchetype(PoolArchetype* archetype, unsigned* index = nullptr);
+      static Scene LoadFromFile(const std::string& path);
 
-      PoolArchetype* ExtractPoolArchetype(const std::string& name, unsigned* index = nullptr);
-
-      rapidjson::Value Serialize(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
-
-      static bool SaveToFile(Scene* scene, const std::string& path);
-
-      static Scene* LoadFromFile(const std::string& path);
-
-    private:
-      void CopyPoolArchetypes(const std::vector<PoolArchetype*>& other);
-
-      void DeletePoolArchetypes();
-
-      rapidjson::Value SerializePoolArchetypes(rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
-
-      void DeserializePoolArchetypes(const rapidjson::Value& data);
-
-    private:
+    public:
       std::string name_;
-      std::vector<PoolArchetype*> poolArchetypes_;
+      PoolArchetypeMap poolArchetypes_;
   };
+
+  using SceneMap = std::map<std::string, Scene>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

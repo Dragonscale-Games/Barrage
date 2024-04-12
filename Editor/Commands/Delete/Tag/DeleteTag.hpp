@@ -16,7 +16,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
-#include <string_view>
 
 namespace Barrage
 {
@@ -42,7 +41,7 @@ namespace Barrage
       DeleteTag(
         const std::string& sceneName,
         const std::string& poolName,
-        const std::string_view& tag);
+        const std::string& tag);
 
     private:
       /**************************************************************/
@@ -76,9 +75,7 @@ namespace Barrage
     private:
       std::string sceneName_;
       std::string poolName_;
-      std::string_view tag_;
-
-      unsigned undoIndex_;
+      std::string tag_;
   };
 }
 

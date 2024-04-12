@@ -19,14 +19,16 @@ namespace Barrage
     const std::string& sceneName,
     const std::string& poolName,
     const std::string& objectName,
-    const std::string_view& componentArrayName,
+    const std::string& componentArrayName,
+    bool isSpawnArchetype,
     const rttr::variant& newValue,
     bool chainUndo) :
-    Command("Value changed. (" + std::string(componentArrayName.data()) + ")", chainUndo),
+    Command("Value changed. (" + componentArrayName + ")", chainUndo),
     sceneName_(sceneName),
     poolName_(poolName),
-    componentArrayName_(componentArrayName),
     objectName_(objectName),
+    componentArrayName_(componentArrayName),
+    isSpawnArchetype_(isSpawnArchetype),
     newValue_(newValue),
     oldValue_()
   {
@@ -34,30 +36,36 @@ namespace Barrage
 
   bool EditComponentArray::Execute()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    if (scene == nullptr)
+    if (scene == nullptr || scene->poolArchetypes_.count(poolName_) == 0)
     {
       return false;
     }
 
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    if (poolArchetype == nullptr)
+    if (isSpawnArchetype_ && poolArchetype.spawnArchetypes_.count(objectName_) == 0)
+    {
+      return false;
+    }
+    else if (!isSpawnArchetype_ && poolArchetype.startingObjects_.count(objectName_) == 0)
     {
       return false;
     }
 
-    ObjectArchetype* objectArchetype = poolArchetype->GetObjectArchetype(objectName_);
-
-    if (objectArchetype == nullptr)
-    {
-      return false;
-    }
+    ObjectArchetype& objectArchetype = isSpawnArchetype_ ? 
+      poolArchetype.spawnArchetypes_.at(objectName_) : 
+      poolArchetype.startingObjects_.at(objectName_);
     
-    ComponentArray* componentArray = objectArchetype->GetComponentArray(componentArrayName_);
+    if (objectArchetype.componentArrays_.count(componentArrayName_) == 0)
+    {
+      return false;
+    }
 
-    if (componentArray == nullptr)
+    DeepPtr<ComponentArray>& componentArray = objectArchetype.componentArrays_.at(componentArrayName_);
+
+    if (componentArray->GetCapacity() == 0)
     {
       return false;
     }
@@ -70,20 +78,24 @@ namespace Barrage
 
   void EditComponentArray::Undo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
-    ObjectArchetype* objectArchetype = poolArchetype->GetObjectArchetype(objectName_);
-    ComponentArray* componentArray = objectArchetype->GetComponentArray(componentArrayName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
+    ObjectArchetype& objectArchetype = isSpawnArchetype_ ?
+      poolArchetype.spawnArchetypes_.at(objectName_) :
+      poolArchetype.startingObjects_.at(objectName_);
+    DeepPtr<ComponentArray>& componentArray = objectArchetype.componentArrays_.at(componentArrayName_);
 
     componentArray->SetRTTRValue(oldValue_, 0);
   }
 
   void EditComponentArray::Redo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
-    ObjectArchetype* objectArchetype = poolArchetype->GetObjectArchetype(objectName_);
-    ComponentArray* componentArray = objectArchetype->GetComponentArray(componentArrayName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
+    ObjectArchetype& objectArchetype = isSpawnArchetype_ ?
+      poolArchetype.spawnArchetypes_.at(objectName_) :
+      poolArchetype.startingObjects_.at(objectName_);
+    DeepPtr<ComponentArray>& componentArray = objectArchetype.componentArrays_.at(componentArrayName_);
 
     componentArray->SetRTTRValue(newValue_, 0);
   }

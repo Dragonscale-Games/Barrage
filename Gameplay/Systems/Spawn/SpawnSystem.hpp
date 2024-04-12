@@ -15,12 +15,12 @@
 #define SpawnSystem_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Objects/Systems/BaseSystem.hpp>
+#include <Objects/Systems/System.hpp>
 
 namespace Barrage
 {
 	//! Tells bullets when to spawn
-  class SpawnSystem : public Barrage::System
+  class SpawnSystem : public System
 	{
     public:   
       /**************************************************************/
@@ -38,7 +38,7 @@ namespace Barrage
           are legal.
       */
       /**************************************************************/
-      void Subscribe(Pool* pool) override;
+      void Subscribe(Space& space, Pool* pool) override;
 
       /**************************************************************/
       /*!
@@ -49,11 +49,13 @@ namespace Barrage
       void Update() override;
 
     private:
-      static void Spawn(Pool* pool);
+      static void UpdateAutomaticSpawns(Space& space, Pool& pool);
 
-      static void UpdateSpawnTimers(Pool* pool);
+      static void UpdateSpawnTimers(Space& space, Pool& pool);
 
-      void LinkAndValidateSpawns(Pool* pool);
+      static void SpawnObjects(Space& space, Pool& pool);
+
+      void LinkAndValidateSpawns(Space& space, Pool* pool);
 
       void MakeSpawnVelocitiesNonZero(Pool* pool);
 	};

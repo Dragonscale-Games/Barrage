@@ -10,98 +10,194 @@
  */
  /* ======================================================================== */
 
-#include <Objects/ObjectManager.hpp>
+#include "Registration/Registrar.hpp"
+#include "Objects/ObjectManager.hpp"
 
-#include <Entry/Entry.hpp>
+#include "Behavior/Action/Debug/BehaviorDebug.hpp"
+#include "Behavior/Action/Wait/BehaviorWait.hpp"
 
-#include "ComponentArrays/AngularSpeedArray.hpp"
-#include "ComponentArrays/ColorTintArray.hpp"
-#include "ComponentArrays/DestructibleArray.hpp"
-#include "ComponentArrays/PositionArray.hpp"
-#include "ComponentArrays/RotationArray.hpp"
-#include "ComponentArrays/ScaleArray.hpp"
-#include "ComponentArrays/SpawnTimerArray.hpp"
-#include "ComponentArrays/TextureUVArray.hpp"
-#include "ComponentArrays/VelocityArray.hpp"
+#include "Behavior/Composite/Selector/BehaviorSelector.hpp"
+#include "Behavior/Composite/Sequence/BehaviorSequence.hpp"
 
-#include "Components/BoundaryBox.hpp"
-#include "Components/CircleCollider.hpp"
-#include "Components/Player.hpp"
-#include "Components/Spawner.hpp"
-#include "Components/Sprite.hpp"
+#include "Behavior/Decorator/AlwaysFail/BehaviorAlwaysFail.hpp"
+#include "Behavior/Decorator/AlwaysSucceed/BehaviorAlwaysSucceed.hpp"
+#include "Behavior/Decorator/Invert/BehaviorInvert.hpp"
+#include "Behavior/Decorator/LoopOnSuccess/BehaviorLoopOnSuccess.hpp"
+#include "Behavior/Decorator/LoopOnFailure/BehaviorLoopOnFailure.hpp"
+#include "Behavior/Decorator/Repeat/BehaviorRepeat.hpp"
 
-#include "Systems/Creation/CreationSystem.hpp"
-#include "Systems/Destruction/DestructionSystem.hpp"
+#include "Behavior/Parallel/Selector/BehaviorParallelSelector.hpp"
+#include "Behavior/Parallel/Sequence/BehaviorParallelSequence.hpp"
+
+#include "ComponentArrays/AngularSpeed/AngularSpeedArray.hpp"
+#include "ComponentArrays/ColorTint/ColorTintArray.hpp"
+#include "ComponentArrays/Destructible/DestructibleArray.hpp"
+#include "ComponentArrays/Lifetime/LifetimeArray.hpp"
+#include "ComponentArrays/Position/PositionArray.hpp"
+#include "ComponentArrays/Rotation/RotationArray.hpp"
+#include "ComponentArrays/Scale/ScaleArray.hpp"
+#include "ComponentArrays/TextureUV/TextureUVArray.hpp"
+#include "ComponentArrays/Velocity/VelocityArray.hpp"
+
+#include "Components/Behavior/Behavior.hpp"
+#include "Components/BoundaryBox/BoundaryBox.hpp"
+#include "Components/CircleCollider/CircleCollider.hpp"
+#include "Components/Movement/Movement.hpp"
+#include "Components/Player/Player.hpp"
+#include "Components/Spawner/Spawner.hpp"
+#include "Components/Sprite/Sprite.hpp"
+
+#include "SpawnRules/Count/Increment/SpawnIncrementCount.hpp"
+
+#include "SpawnRules/Direction/Aimed/SpawnAimedDirection.hpp"
+#include "SpawnRules/Direction/Match/SpawnMatchDirection.hpp"
+#include "SpawnRules/Direction/Random/SpawnRandomDirection.hpp"
+#include "SpawnRules/Direction/Set/SpawnSetDirection.hpp"
+
+#include "SpawnRules/Miscellaneous/Fan/SpawnFan.hpp"
+#include "SpawnRules/Miscellaneous/Mirror/SpawnMirror.hpp"
+#include "SpawnRules/Miscellaneous/Ring/SpawnRing.hpp"
+#include "SpawnRules/Miscellaneous/Spiral/SpawnSpiral.hpp"
+
+#include "SpawnRules/Position/Match/SpawnMatchPosition.hpp"
+#include "SpawnRules/Position/Offset/SpawnOffsetPosition.hpp"
+#include "SpawnRules/Position/RandomBoxOffset/SpawnRandomBoxOffset.hpp"
+
+#include "SpawnRules/Speed/Random/SpawnRandomSpeed.hpp"
+#include "SpawnRules/Speed/Set/SpawnSetSpeed.hpp"
+
+#include "Systems/Behavior/BehaviorSystem.hpp"
 #include "Systems/Collision/CollisionSystem.hpp"
+#include "Systems/Destruction/DestructionSystem.hpp"
+#include "Systems/Draw/DrawSystem.hpp"
+#include "Systems/Lifetime/LifetimeSystem.hpp"
 #include "Systems/Movement/MovementSystem.hpp"
 #include "Systems/Spawn/SpawnSystem.hpp"
 
-#include "SpawnFunctions/Direction/DirectionRules.hpp"
-#include "SpawnFunctions/Miscellaneous/MiscellaneousRules.hpp"
-#include "SpawnFunctions/Position/PositionRules.hpp"
-#include "SpawnFunctions/Speed/SpeedRules.hpp"
-
 namespace Barrage
 {
-  void ObjectManager::RegisterCustomComponents()
+  void Registrar::GameplayRegistration()
   {
+    RegisterBehaviorNode<Behavior::Debug>("Debug");
+    RegisterBehaviorNode<Behavior::Wait>("Wait");
+    
+    RegisterBehaviorNode<Behavior::Selector>("Selector");
+    RegisterBehaviorNode<Behavior::Sequence>("Sequence");
+
+    RegisterBehaviorNode<Behavior::AlwaysFail>("AlwaysFail");
+    RegisterBehaviorNode<Behavior::AlwaysSucceed>("AlwaysSucceed");
+    RegisterBehaviorNode<Behavior::Invert>("Invert");
+    RegisterBehaviorNode<Behavior::LoopOnFailure>("LoopOnFailure");
+    RegisterBehaviorNode<Behavior::LoopOnSuccess>("LoopOnSuccess");
+    RegisterBehaviorNode<Behavior::Repeat>("Repeat");
+    
+    RegisterBehaviorNode<Behavior::ParallelSelector>("ParallelSelector");
+    RegisterBehaviorNode<Behavior::ParallelSequence>("ParallelSequence");
+
     RegisterComponentArray<AngularSpeed>("AngularSpeed");
     RegisterComponentArray<ColorTint>("ColorTint");
     RegisterComponentArray<Destructible>("Destructible");
+    RegisterComponentArray<Lifetime>("Lifetime");
     RegisterComponentArray<Position>("Position");
     RegisterComponentArray<Rotation>("Rotation");
     RegisterComponentArray<Scale>("Scale");
-    RegisterComponentArray<SpawnTimer>("SpawnTimer");
     RegisterComponentArray<TextureUV>("TextureUV");
     RegisterComponentArray<Velocity>("Velocity");
 
+    RegisterComponent<BehaviorTree>("BehaviorTree");
     RegisterComponent<BoundaryBox>("BoundaryBox");
     RegisterComponent<CircleCollider>("CircleCollider");
+    RegisterComponent<Movement>("Movement");
     RegisterComponent<Player>("Player");
-    RegisterComponent<Spawner>("Spawner");
     RegisterComponent<Sprite>("Sprite");
+    RegisterComponent<Spawner>("Spawner");
+    
+    RegisterSpawnRule<Spawn::IncrementCount>("IncrementCount");
 
-    ComponentAllocator::RegisterTag("Bullet");
-  }
-
-  void ObjectManager::RegisterCustomSystems()
-  {
-    RegisterSystem<CollisionSystem>("CollisionSystem");
-    RegisterSystem<CreationSystem>("CreationSystem");
-    RegisterSystem<DestructionSystem>("DestructionSystem");
-    // Draw system is registered automatically by engine
-    RegisterSystem<MovementSystem>("MovementSystem");
-    RegisterSystem<SpawnSystem>("SpawnSystem");
-  }
-
-  void ObjectManager::RegisterCustomSpawnFunctions()
-  {
+    RegisterSpawnRule<Spawn::AimedDirection>("AimedDirection");
+    RegisterSpawnRule<Spawn::MatchDirection>("MatchDirection");
     RegisterSpawnRule<Spawn::RandomDirection>("RandomDirection");
-    RegisterSpawnRule<Spawn::RotateDirection>("RotateDirection");
     RegisterSpawnRule<Spawn::SetDirection>("SetDirection");
+
+    RegisterSpawnRule<Spawn::Fan>("Fan");
+    RegisterSpawnRule<Spawn::Mirror>("Mirror");
+    RegisterSpawnRule<Spawn::Ring>("Ring");
     RegisterSpawnRule<Spawn::Spiral>("Spiral");
 
-    RegisterSpawnRule<Spawn::SpawnRing>("SpawnRing");
-    RegisterSpawnRule<Spawn::MirrorAcrossAxis>("MirrorAcrossAxis");
-
     RegisterSpawnRule<Spawn::MatchPosition>("MatchPosition");
-    RegisterSpawnRule<Spawn::Offset>("Offset");
-    RegisterSpawnRule<Spawn::RandomOffset>("RandomOffset");
+    RegisterSpawnRule<Spawn::OffsetPosition>("OffsetPosition");
+    RegisterSpawnRule<Spawn::RandomBoxOffset>("RandomBoxOffset");
 
     RegisterSpawnRule<Spawn::RandomSpeed>("RandomSpeed");
-  }
+    RegisterSpawnRule<Spawn::SetSpeed>("SetSpeed");
 
-  void ObjectManager::SetSystemUpdateOrder()
-  {
-    std::vector<std::string_view> update_order;
+    RegisterSystem<BehaviorSystem>("BehaviorSystem");
+    RegisterSystem<CollisionSystem>("CollisionSystem");
+    RegisterSystem<DestructionSystem>("DestructionSystem");
+    RegisterSystem<DrawSystem>("DrawSystem");
+    RegisterSystem<LifetimeSystem>("LifetimeSystem");
+    RegisterSystem<MovementSystem>("MovementSystem");
+    RegisterSystem<SpawnSystem>("SpawnSystem");
+    
+    RegisterTag("Bullet");
 
-    update_order.push_back("CreationSystem");
-    update_order.push_back("DestructionSystem");
+    std::vector<std::string> update_order;
+
+    update_order.push_back("BehaviorSystem");
     update_order.push_back("MovementSystem");
+    update_order.push_back("DestructionSystem");
+    update_order.push_back("LifetimeSystem");
     update_order.push_back("SpawnSystem");
-    update_order.push_back("CreationSystem");
     update_order.push_back("CollisionSystem");
 
     SetSystemUpdateOrder(update_order);
+  }
+
+  void Registrar::GameplayReflection()
+  {
+    Behavior::Debug::Reflect();
+    Behavior::Wait::Reflect();
+    
+    Behavior::Repeat::Reflect();
+
+    AngularSpeed::Reflect();
+    ColorTintReflect();
+    DestructibleReflect();
+    Lifetime::Reflect();
+    PositionReflect();
+    RotationReflect();
+    ScaleReflect();
+    TextureUVReflect();
+    Velocity::Reflect();
+
+    BoundaryBox::Reflect();
+    CircleCollider::Reflect();
+    Movement::Reflect();
+    Player::Reflect();
+    Spawner::Reflect();
+    Sprite::Reflect();
+
+    Spawn::IncrementCount::Reflect();
+
+    Spawn::SetDirection::Reflect();
+
+    Spawn::Fan::Reflect();
+    Spawn::Spiral::Reflect();
+
+    Spawn::OffsetPosition::Reflect();
+    Spawn::RandomBoxOffset::Reflect();
+
+    Spawn::RandomSpeed::Reflect();
+    Spawn::SetSpeed::Reflect();
+  }
+
+  void ObjectManager::Draw()
+  {
+    std::shared_ptr<DrawSystem> drawSystem = std::dynamic_pointer_cast<DrawSystem>(systemManager_.GetSystem("DrawSystem"));
+    
+    if (drawSystem)
+    {
+      drawSystem->Draw();
+    }
   }
 }

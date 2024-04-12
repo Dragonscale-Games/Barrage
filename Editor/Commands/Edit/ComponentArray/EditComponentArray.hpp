@@ -6,7 +6,7 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   Edits the value of a component array in an object archetype.
+   Edits the value of a component array in a starting object.
  */
  /* ======================================================================== */
 
@@ -17,7 +17,6 @@
 
 #include <Commands/Command.hpp>
 #include <rttr/variant.h>
-#include <string_view>
 
 namespace Barrage
 {
@@ -37,10 +36,14 @@ namespace Barrage
           The pool archetype containing the relevant object.
 
         \param objectName
-          The object archetype with the component array to edit.
+          The object with the component array to edit.
 
         \param componentArrayName
           The name of the component array to edit.
+
+        \param isSpawnArchetype
+          True if the object being edited is a spawn archetype,
+          false if it's a starting object.
 
         \param newValue
           The new value to write to the component array.
@@ -53,7 +56,8 @@ namespace Barrage
         const std::string& sceneName,
         const std::string& poolName,
         const std::string& objectName,
-        const std::string_view& componentArrayName,
+        const std::string& componentArrayName,
+        bool isSpawnArchetype,
         const rttr::variant& newValue,
         bool chainUndo);
 
@@ -90,7 +94,8 @@ namespace Barrage
       std::string sceneName_;
       std::string poolName_;
       std::string objectName_;
-      std::string_view componentArrayName_;
+      std::string componentArrayName_;
+      bool isSpawnArchetype_;
 
       rttr::variant newValue_;
       rttr::variant oldValue_;
@@ -98,5 +103,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // EditComponentArray_BARRAGE_H
+#endif // EditStartingObjectComponentArray_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

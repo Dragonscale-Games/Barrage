@@ -10,6 +10,7 @@
  */
  /* ======================================================================== */
 
+#include "stdafx.h"
 #include "AudioManager.hpp"
 
 namespace Barrage

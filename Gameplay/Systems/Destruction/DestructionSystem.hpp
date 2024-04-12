@@ -17,7 +17,8 @@
 #define DestructionSystem_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Systems/BaseSystem.hpp"
+#include "Objects/Systems/System.hpp"
+#include "ComponentArrays/Destructible/DestructibleArray.hpp"
 
 namespace Barrage
 {
@@ -45,20 +46,6 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          In spawn rules that store an array of per-spawner data,
-          this function updates the elements of the array to match
-          the positions of still-alive spawners when some spawners
-          have been destroyed.
-
-        \param pool
-          The pool to update.
-      */
-      /**************************************************************/
-      static void UpdateSpawnRules(Pool* pool);
-      
-      /**************************************************************/
-      /*!
-        \brief
           Destroys all objects marked for destruction in a pool, 
           retaining the relative order between alive objects. Indices 
           for alive objects may be changed.
@@ -67,7 +54,7 @@ namespace Barrage
           The pool to update.
       */
       /**************************************************************/
-      static void DestroyObjects(Pool* pool);
+      static void DestroyObjects(Space& space, Pool& pool);
 
       /**************************************************************/
       /*!
@@ -86,7 +73,7 @@ namespace Barrage
           (or one past the end of the array if none exist).
       */
       /**************************************************************/
-      static unsigned GetFirstDeadObjectIndex(const bool* destructiblesArray, unsigned numElements);
+      static unsigned GetFirstDeadObjectIndex(DestructibleArray& destructiblesArray, unsigned numElements);
 	};
 }
 

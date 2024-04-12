@@ -12,48 +12,31 @@
 /* ======================================================================== */
 
 #include "stdafx.h"
-
 #include "InputManager.hpp"
-
-#include <glad/gl.h>
-//#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <algorithm>
 
 namespace Barrage
 {
-  InputManager* InputManager::manager_ = nullptr;
-
   InputManager::InputManager() :
     window_(nullptr),
-    keysPrev_(),
-    keysCurr_(),
-    keysBuff_()
+    keyTriggers_(MAX_KEY_VALUE - MIN_KEY_VALUE + 1, 0),
+    keyReleases_(MAX_KEY_VALUE - MIN_KEY_VALUE + 1, 0)
   {
   }
 
   void InputManager::Initialize(GLFWwindow* window)
   {
-    // if the input manager isn't initialized and the input window is valid...
     if (!window_ && window)
     {
-      // correctly size vectors and fill them with false
-      keysPrev_.assign(MAX_KEY_VALUE + 2, false);
-      keysCurr_.assign(MAX_KEY_VALUE + 2, false);
-      keysBuff_.assign(MAX_KEY_VALUE + 2, false);
-      
       window_ = window;
-      manager_ = this;
-      glfwSetKeyCallback(window, KeyCallback);
+      glfwSetWindowUserPointer(window_, this);
+      glfwSetKeyCallback(window_, KeyCallback);
     }
   }
 
-  void InputManager::Update()
+  void InputManager::Reset()
   {
-    glfwPollEvents();
-    
-    keysPrev_ = keysCurr_;
-    keysCurr_ = keysBuff_;
+    std::fill(keyTriggers_.begin(), keyTriggers_.end(), false);
+    std::fill(keyReleases_.begin(), keyReleases_.end(), false);
   }
 
   void InputManager::Shutdown()
@@ -62,24 +45,44 @@ namespace Barrage
     if (window_)
     {
       glfwSetKeyCallback(window_, nullptr);
-      manager_ = nullptr;
+      glfwSetWindowUserPointer(window_, nullptr);
       window_ = nullptr;
     }
   }
 
-  bool InputManager::KeyTriggered(KEY key) const
+  bool InputManager::KeyTriggered(int key) const
   {
-    return keysCurr_[static_cast<long long>(key) + 1] && !keysPrev_[static_cast<long long>(key) + 1];
+    if (!KeyIsValid(key))
+    {
+      return 0;
+    }
+    
+    return keyTriggers_[static_cast<long long>(key - MIN_KEY_VALUE)];
   }
 
-  bool InputManager::KeyIsDown(KEY key) const
+  bool InputManager::KeyIsDown(int key) const
   {
-    return keysCurr_[static_cast<long long>(key) + 1];
+    if (!KeyIsValid(key))
+    {
+      return false;
+    }
+
+    return glfwGetKey(window_, key) == GLFW_PRESS;
   }
 
-  bool InputManager::KeyReleased(KEY key) const
+  bool InputManager::KeyReleased(int key) const
   {
-    return !keysCurr_[static_cast<long long>(key) + 1] && keysPrev_[static_cast<long long>(key) + 1];
+    if (!KeyIsValid(key))
+    {
+      return 0;
+    }
+    
+    return keyReleases_[static_cast<long long>(key - MIN_KEY_VALUE)];
+  }
+
+  bool InputManager::KeyIsValid(int key)
+  {
+    return key >= MIN_KEY_VALUE && key <= MAX_KEY_VALUE;
   }
 
   void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -88,14 +91,21 @@ namespace Barrage
     UNREFERENCED(scancode);
     UNREFERENCED(mods);
 
+    InputManager* manager = reinterpret_cast<InputManager*>(glfwGetWindowUserPointer(window));
+
+    if (!KeyIsValid(key) || manager == nullptr)
+    {
+      return;
+    }
+
     switch (action)
     {
       case GLFW_PRESS:
-        manager_->keysBuff_[static_cast<long long>(key) + 1] = true;
+        manager->keyTriggers_[static_cast<long long>(key - MIN_KEY_VALUE)] = true;
         break;
 
       case GLFW_RELEASE:
-        manager_->keysBuff_[static_cast<long long>(key) + 1] = false;
+        manager->keyReleases_[static_cast<long long>(key - MIN_KEY_VALUE)] = true;
         break;
     }
   }

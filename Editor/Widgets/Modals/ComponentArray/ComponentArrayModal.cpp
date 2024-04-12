@@ -12,7 +12,7 @@
  /* ======================================================================== */
 
 #include "ComponentArrayModal.hpp"
-#include <Objects/Components/ComponentAllocator.hpp>
+#include <Objects/Components/ComponentFactory.hpp>
 #include <Editor.hpp>
 #include <Commands/Create/ComponentArray/CreateComponentArray.hpp>
 
@@ -25,17 +25,17 @@ namespace Barrage
       return;
     }
 
-    auto& componentArrayNames = ComponentAllocator::GetComponentArrayNames();
-    EditorData& editorData = Editor::Instance->Data();
+    auto& componentArrayNames = ComponentFactory::GetComponentArrayNames();
+    EditorData& editorData = Editor::Get().Data();
 
     if (componentArrayNames.size())
     {
       ImGui::Text("Select a component array to add:");
       ImGui::Spacing();
 
-      std::string_view previewString;
+      std::string previewString;
 
-      if (Editor::Instance->Data().selectedComponentArray_.empty())
+      if (Editor::Get().Data().selectedComponentArray_.empty())
       {
         previewString = " ";
       }
@@ -45,11 +45,11 @@ namespace Barrage
       }
 
       ImGui::PushItemWidth(240.0f);
-      if (ImGui::BeginCombo("##ComponentArrayModalSelector", previewString.data()))
+      if (ImGui::BeginCombo("##ComponentArrayModalSelector", previewString.c_str()))
       {
         for (auto& componentArrayName : componentArrayNames)
         {
-          if (ImGui::Selectable(componentArrayName.data(), componentArrayName == editorData.selectedComponentArray_))
+          if (ImGui::Selectable(componentArrayName.c_str(), componentArrayName == editorData.selectedComponentArray_))
           {
             editorData.selectedComponentArray_ = componentArrayName;
           }
@@ -63,7 +63,7 @@ namespace Barrage
 
       if (ImGui::Button("Add", ImVec2(120.0f, 0.0f)))
       {
-        Editor::Instance->Command().Send(new CreateComponentArray(editorData.selectedScene_, editorData.selectedPool_, editorData.selectedComponentArray_));
+        Editor::Get().Command().Send(std::make_shared<CreateComponentArray>(editorData.selectedScene_, editorData.selectedPool_, editorData.selectedComponentArray_));
         ImGui::CloseCurrentPopup();
       }
       ImGui::SameLine();

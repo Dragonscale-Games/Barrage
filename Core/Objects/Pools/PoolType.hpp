@@ -23,74 +23,74 @@
 
 namespace Barrage
 {
-	//! A combination of names and tags that define a pool type
+  //! A combination of names and tags that define a pool type
   class PoolType
-	{
-    public:   
-      /**************************************************************/
-      /*!
-        \brief
-          Default constructor.
-      */
-      /**************************************************************/
-      PoolType();
+  {
+  public:
+    /**************************************************************/
+    /*!
+      \brief
+        Default constructor.
+    */
+    /**************************************************************/
+    PoolType();
 
-      /**************************************************************/
-      /*!
-        \brief
-          Adds a tag to the pool type.
+    /**************************************************************/
+    /*!
+      \brief
+        Adds a tag to the pool type.
 
-        \param tag
-          The tag to add.
-      */
-      /**************************************************************/
-      void AddTag(const std::string_view& tag);
+      \param tag
+        The tag to add.
+    */
+    /**************************************************************/
+    void AddTag(const std::string& tag);
 
-      /**************************************************************/
-      /*!
-        \brief
-          Adds a component to the pool type.
+    /**************************************************************/
+    /*!
+      \brief
+        Adds a component to the pool type.
 
-        \param name
-          The name of the C++ class used in the component. This
-          should match the name passed to RegisterComponent<>();
-      */
-      /**************************************************************/
-      void AddComponent(const std::string_view& name);
+      \param name
+        The name of the C++ class used in the component. This
+        should match the name passed to RegisterComponent<>();
+    */
+    /**************************************************************/
+    void AddComponent(const std::string& name);
 
-      /**************************************************************/
-      /*!
-        \brief
-          Adds a component array to the pool type.
+    /**************************************************************/
+    /*!
+      \brief
+        Adds a component array to the pool type.
 
-        \param name
-          The name of the C++ class used in the component array. This
-          should match the name passed to RegisterComponentArray<>();
-      */
-      /**************************************************************/
-      void AddComponentArray(const std::string_view& name);
+      \param name
+        The name of the C++ class used in the component array. This
+        should match the name passed to RegisterComponentArray<>();
+    */
+    /**************************************************************/
+    void AddComponentArray(const std::string& name);
 
-      /**************************************************************/
-      /*!
-        \brief
-          Checks if a pool has at least the tags and components that
-          correspond to the pool type.
+    /**************************************************************/
+    /*!
+      \brief
+        Checks if a pool has at least the tags and components that
+        correspond to the pool type.
 
-        \param pool
-          The pool to examine.
+      \param pool
+        The pool to examine.
 
-        \return
-          Returns true if the pool has every component and tag named
-          in the pool type.
-      */
-      /**************************************************************/
-      bool MatchesPool(Pool* pool);
+      \return
+        Returns true if the pool has every component and tag named
+        in the pool type.
+    */
+    /**************************************************************/
+    bool MatchesPool(Pool* pool);
 
-    private:
-      std::vector<std::string_view> tags_;                //!< The tags of the pool type
-      std::vector<std::string_view> componentNames_;      //!< The components of the pool type
-      std::vector<std::string_view> componentArrayNames_; //!< The component arrays of the pool type
-	};
+  private:
+    std::vector<std::string> tags_;                //!< The tags of the pool type
+    std::vector<std::string> componentNames_;      //!< The components of the pool type
+    std::vector<std::string> componentArrayNames_; //!< The component arrays of the pool type
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

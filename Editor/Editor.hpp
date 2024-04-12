@@ -8,38 +8,49 @@
  * \brief
     Editor for Barrage Engine. Allows the user to create bullet hell games.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef Editor_BARRAGE_H
 #define Editor_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Engine/Engine.hpp>
+#include "Engine.hpp"
 #include "EditorData.hpp"
 #include "GUI/GUI.hpp"
 #include "Commands/CommandQueue.hpp"
-
-#include <string>
-#include <string_view>
 
 #include "Widgets/Windows/Log/LogWidget.hpp"
 
 namespace Barrage
 {
-	//! Editor for Barrage Engine
+  //! Editor for Barrage Engine
   class Editor
-	{
-    public:   
-      static Editor* Instance;
-      
+  {
+    public:
       /**************************************************************/
       /*!
         \brief
-          Default constructor.
+          Private constructor for singleton class.
       */
       /**************************************************************/
       Editor();
+      
+      Editor(Editor const&) = delete;
+      Editor(Editor&&) = delete;
+      Editor& operator=(Editor const&) = delete;
+      Editor& operator=(Editor&&) = delete;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the instance of the (singleton) editor.
+
+        \return
+          Returns a reference to the editor instance.
+      */
+      /**************************************************************/
+      static Editor& Get();
 
       /**************************************************************/
       /*!
@@ -96,12 +107,14 @@ namespace Barrage
 
     private:
       Engine engine_;             //!< Barrage game engine
-      GUI gui_;                   //!< Contains all widgets/user controls
-      EditorData data_;           //!< Public settings and data for the editor
       CommandQueue commandQueue_; //!< Allows commands to be sent and processed
+      EditorData data_;           //!< Public settings and data for the editor
+      GUI gui_;                   //!< Contains all widgets/user controls
 
       long long repeatTimer_;
       GLuint timeQueryID_;
+
+      static Editor* instance_;
 
       /**************************************************************/
       /*!
@@ -144,7 +157,7 @@ namespace Barrage
       void HandleKeyboard();
 
       bool OpenProjectInternal(const std::string& path);
-	};
+  };
 }
 
 ////////////////////////////////////////////////////////////////////////////////

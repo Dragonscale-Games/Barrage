@@ -6,68 +6,57 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
-
+   Manages all game spaces.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 #include "stdafx.h"
 #include "SpaceManager.hpp"
+#include "Engine.hpp"
 
 namespace Barrage
 {
   SpaceManager::SpaceManager() :
-    spaces_(),
-    updateOrder_()
+    spaces_()
   {
-  }
-
-  SpaceManager::~SpaceManager()
-  {
-    for (auto it = spaces_.begin(); it != spaces_.end(); ++it)
-    {
-      delete it->second;
-    }
   }
 
   void SpaceManager::Update()
   {
     for (auto it = updateOrder_.begin(); it != updateOrder_.end(); ++it)
     {
-      spaces_[*it]->Update();
+      spaces_.at(*it).Update();
     }
+
+    Engine::Get().Input().Reset();
   }
 
   void SpaceManager::Draw()
   {
     for (auto it = updateOrder_.rbegin(); it != updateOrder_.rend(); ++it)
     {
-      spaces_[*it]->Draw();
+      spaces_.at(*it).Draw();
     }
   }
 
-  void SpaceManager::AddSpace(const std::string& name, Space* space)
+  void SpaceManager::AddSpace(const std::string& name)
   {
     if (spaces_.find(name) == spaces_.end())
     {
-      spaces_[name] = space;
+      spaces_[name];
       updateOrder_.push_front(name);
-    }
-    else
-    {
-      delete space;
     }
   }
 
   Space* SpaceManager::GetSpace(const std::string& name)
   {
-    if (spaces_.find(name) == spaces_.end())
+    if (spaces_.count(name))
     {
-      return nullptr;
+      return &spaces_.at(name);
     }
     else
     {
-      return spaces_.at(name);
+      return nullptr;
     }
   }
 
@@ -75,19 +64,7 @@ namespace Barrage
   {
     if (spaces_.find(name) != spaces_.end())
     {
-      spaces_[name]->SetPaused(isPaused);
+      spaces_.at(name).SetPaused(isPaused);
     }
-  }
-
-  std::vector<std::string> SpaceManager::GetSpaceNames()
-  {
-    std::vector<std::string> spaceNames;
-
-    for (auto it = spaces_.begin(); it != spaces_.end(); ++it)
-    {
-      spaceNames.push_back(it->first);
-    }
-
-    return spaceNames;
   }
 }

@@ -32,8 +32,6 @@ namespace Barrage
       /**************************************************************/
       static void Use();
 
-      static ImVec2 GetSize();
-
       /**************************************************************/
       /*!
         \brief
@@ -69,7 +67,6 @@ namespace Barrage
       static ImGuiTextFilter filter_;
       static ImVector<int> lineOffsets_;
       static bool scrollToBottom_;
-      static ImVec2 size_;
   };
 }
 

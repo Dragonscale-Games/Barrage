@@ -6,53 +6,57 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
+   <put description here>
 
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 #include "stdafx.h"
 
 #include "Editor.hpp"
-#include <Engine/Engine.hpp>
-
-#include "Widgets/Windows/Hierarchy/HierarchyWidget.hpp"
-#include "Widgets/Windows/Inspector/InspectorWidget.hpp"
-#include "Widgets/MainMenu/MainMenuWidget.hpp"
-#include "Widgets/Windows/Game/GameWidget.hpp"
-#include "Widgets/Windows/Timeline/TimelineWidget.hpp"
-#include "Widgets/Windows/Performance/PerformanceWidget.hpp"
 
 #include <Widgets/Modals/Component/ComponentModal.hpp>
 #include <Widgets/Modals/ComponentArray/ComponentArrayModal.hpp>
-#include <Widgets/Modals/Tag/TagModal.hpp>
+#include "Widgets/Modals/Project/ProjectModal.hpp"
 #include <Widgets/Modals/Rename/RenameModal.hpp>
-#include <Widgets/Modals/Project/ProjectModal.hpp>
-#include <Widgets/Modals/SaveProject/SaveProjectModal.hpp>
+#include "Widgets/Modals/SaveProject/SaveProjectModal.hpp"
+#include <Widgets/Modals/Tag/TagModal.hpp>
 
-#include <unordered_set>
-#include <chrono>
-#include <iostream>
-#include <fstream>
+#include "Widgets/Windows/Game/GameWidget.hpp"
+#include "Widgets/Windows/Hierarchy/HierarchyWidget.hpp"
+#include "Widgets/Windows/Inspector/InspectorWidget.hpp"
+#include "Widgets/Windows/Log/LogWidget.hpp"
+#include "Widgets/Windows/Performance/PerformanceWidget.hpp"
+#include "Widgets/Windows/Timeline/TimelineWidget.hpp"
+
+#include "Widgets/MainMenu/MainMenuWidget.hpp"
+
+#include <nfd.h>
 #include <filesystem>
-#include "nfd.h"
+#include <fstream>
 
 #include <Windows.h>
 
 namespace Barrage
 {
-  Editor* Editor::Instance = nullptr;
+  Editor* Editor::instance_ = nullptr;
   
   Editor::Editor() :
     engine_(),
-    gui_(),
+    commandQueue_(),
     data_(),
+    gui_(),
 
     repeatTimer_(0),
     timeQueryID_(0)
   {
   }
-
+  
+  Editor& Editor::Get()
+  {
+    return *instance_;
+  }
+  
   void Editor::Run(const std::string& projectPath)
   {
     if (!data_.isRunning_)
@@ -72,19 +76,19 @@ namespace Barrage
     }
   }
 
-  GUI& Editor::Gui()
+  CommandQueue& Editor::Command()
   {
-    return gui_;
+    return commandQueue_;
   }
-
+  
   EditorData& Editor::Data()
   {
     return data_;
   }
 
-  CommandQueue& Editor::Command()
+  GUI& Editor::Gui()
   {
-    return commandQueue_;
+    return gui_;
   }
 
   bool Editor::CreateProject(const std::string& name)
@@ -100,7 +104,7 @@ namespace Barrage
 
     std::string directory(raw_path);
     free(raw_path);
-    
+
     std::string project_folder_path = directory + "/" + name;
 
     if (std::filesystem::exists(project_folder_path))
@@ -159,7 +163,7 @@ namespace Barrage
 
     Scene untitled_scene("Scene");
 
-    if (!Scene::SaveToFile(&untitled_scene, project_folder_path + "/Assets/Scenes/Scene.scene"))
+    if (!Scene::SaveToFile(untitled_scene, project_folder_path + "/Assets/Scenes/Scene.scene"))
     {
       LogWidget::AddEntry("Could not create new project. (Could not create first scene.)");
       std::filesystem::remove_all(project_folder_path);
@@ -192,20 +196,22 @@ namespace Barrage
     std::string file_path(raw_path);
     free(raw_path);
 
-    return Editor::Instance->OpenProjectInternal(file_path);
+    return OpenProjectInternal(file_path);
   }
 
   bool Editor::SaveProject(const std::string& directory)
   {
     std::string scenePath = directory + "/Assets/Scenes/Scene.scene";
-    
+
     if (!std::filesystem::exists(scenePath))
     {
       LogWidget::AddEntry("Could not save project. (No scene file.)");
       return false;
     }
 
-    if (!Scene::SaveToFile(engine_.Scenes().GetScene("Scene"), scenePath))
+    Scene* scene = engine_.Scenes().GetScene("Scene");
+
+    if (scene == nullptr || !Scene::SaveToFile(*scene, scenePath))
     {
       LogWidget::AddEntry("Could not save project. (Could not save scene.)");
       return false;
@@ -219,17 +225,16 @@ namespace Barrage
 
   void Editor::Initialize(const std::string& projectPath)
   {
-    Instance = this;
+    instance_ = this;
     engine_.Initialize();
     gui_.Initialize(engine_.Window().GetWindowHandle());
     engine_.Window().Maximize();
     engine_.Frames().SetVsync(true);
-    
-    Space* editor_space = new Space;
-    editor_space->AllowSceneChangesDuringUpdate(false);
-    engine_.Spaces().AddSpace("Editor Space", editor_space);
-    data_.selectedSpace_ = "Editor Space";
-    
+
+    engine_.Spaces().AddSpace(data_.editorSpace_);
+    Space* editorSpace = engine_.Spaces().GetSpace(data_.editorSpace_);
+    editorSpace->AllowSceneChangesDuringUpdate(false);
+
     if (!OpenProjectInternal(projectPath))
     {
       LogWidget::Clear();
@@ -240,10 +245,13 @@ namespace Barrage
   }
 
   void Editor::Update()
-  { 
+  {
     engine_.Frames().StartFrame();
-    
-    engine_.Input().Update();
+
+    engine_.Input().Reset();
+    engine_.Window().PollEvents();
+
+    HandleKeyboard();
 
     unsigned numTicks = engine_.Frames().ConsumeTicks();
 
@@ -266,11 +274,10 @@ namespace Barrage
 
     if (data_.sceneIsDirty_)
     {
-      //beginT = std::chrono::high_resolution_clock::now();
-      Space* selectedSpace = engine_.Spaces().GetSpace(data_.selectedSpace_);
-      
-      selectedSpace->SetScene(data_.selectedScene_);
-      selectedSpace->GetRNG().SetSeed(0xC0FFEEC0FFEE);
+      Space* editorSpace = engine_.Spaces().GetSpace(data_.editorSpace_);
+
+      editorSpace->SetScene(data_.selectedScene_);
+      editorSpace->RNG().SetSeed(0xC0FFEEC0FFEE);
 
       for (unsigned i = 0; i < data_.gameTick_; ++i)
       {
@@ -278,24 +285,11 @@ namespace Barrage
       }
 
       data_.sceneIsDirty_ = false;
-      
-      //endT = std::chrono::high_resolution_clock::now();
-      //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
-      //std::cout << "Scene set time: " << duration.count() << " microseconds" << std::endl;
     }
 
-    // duration = std::chrono::duration_cast<std::chrono::microseconds>(endT - beginT);
-
     gui_.StartWidgets();
-    /*ImGui::Begin("Time Test");
-    ImGui::Text("Frame time (microseconds): ");
-    ImGui::SameLine();
-    ImGui::Text(numTicks ? std::to_string(duration.count()).c_str() : "0");
-    ImGui::End();*/
     UseWidgets();
     gui_.EndWidgets();
-
-    HandleKeyboard();
 
     glBeginQuery(GL_TIME_ELAPSED, timeQueryID_);
     engine_.Graphics().GetFramebuffer().BindFramebuffer();
@@ -323,15 +317,17 @@ namespace Barrage
       data_.openSaveProjectModal_ = true;
     }
 
-    engine_.Frames().EndFrame();
+    engine_.Frames().EndFrame(!engine_.Window().IsFocused());
   }
 
   void Editor::Shutdown()
   {
-    gui_.Shutdown();
+    glDeleteQueries(1, &timeQueryID_);
     
+    gui_.Shutdown();
+
     engine_.Shutdown();
-    Instance = nullptr;
+    instance_ = nullptr;
   }
 
   void Editor::UseWidgets()
@@ -386,56 +382,16 @@ namespace Barrage
     RenameModal::Use("Rename", data_.renameCallback_);
     ProjectModal::Use("Project");
     SaveProjectModal::Use("Save Project");
-
-    /*Barrage::GfxDraw2D& drawing = engine_.Drawing();
-    Barrage::WindowManager& windowing = engine_.Windowing();
-
-    WindowManager::WindowData window_settings = windowing.GetSettings();
-    glm::ivec2 dimensions(0, 0);
-    glm::ivec2 origin(0, 0);
-
-    float x = window_settings.width_ - HierarchyWidget::GetSize().x - InspectorWidget::GetSize().x;
-    float y = window_settings.height_ - LogWidget::GetSize().y - MainMenuWidget::GetSize().y;
-
-    float adjusted_x = x;
-    float adjusted_y = y;
-
-    if (y != 0.0f && x / y > 16.0f / 9.0f)
-    {
-      adjusted_x = y * 16.0f / 9.0f;
-    }
-    else if (x != 0.0f && y / x > 9.0f / 16.0f)
-    {
-      adjusted_y = x * 9.0f / 16.0f;
-    }
-
-    dimensions.x = static_cast<int>(adjusted_x);
-    dimensions.y = static_cast<int>(adjusted_y);
-
-    if (dimensions.x <= 0)
-    {
-      dimensions.x = 1;
-    }
-
-    if (dimensions.y <= 0)
-    {
-      dimensions.y = 1;
-    }
-
-    origin.x = static_cast<int>(HierarchyWidget::GetSize().x + (x - adjusted_x) / 2.0f);
-    origin.y = static_cast<int>(LogWidget::GetSize().y + (y - adjusted_y) / 2.0f);
-
-    drawing.SetViewportSpace(dimensions, origin);*/
   }
 
   void Editor::HandleKeyboard()
   {
     long long bigDelayMicroseconds = 500000;
     long long smallDelayMicroseconds = 100000;
-    
-    if (engine_.Input().KeyIsDown(KEY_CTRL_LEFT) && engine_.Input().KeyIsDown(KEY_Z))
+
+    if (engine_.Input().KeyIsDown(GLFW_KEY_LEFT_CONTROL) && engine_.Input().KeyIsDown(GLFW_KEY_Z))
     {
-      if (engine_.Input().KeyTriggered(KEY_Z))
+      if (engine_.Input().KeyTriggered(GLFW_KEY_Z))
       {
         commandQueue_.Undo();
         repeatTimer_ = bigDelayMicroseconds;
@@ -450,9 +406,9 @@ namespace Barrage
         repeatTimer_ -= engine_.Frames().DT();
       }
     }
-    else if (engine_.Input().KeyIsDown(KEY_CTRL_LEFT) && engine_.Input().KeyIsDown(KEY_Y))
+    else if (engine_.Input().KeyIsDown(GLFW_KEY_LEFT_CONTROL) && engine_.Input().KeyIsDown(GLFW_KEY_Y))
     {
-      if (engine_.Input().KeyTriggered(KEY_Y))
+      if (engine_.Input().KeyTriggered(GLFW_KEY_Y))
       {
         commandQueue_.Redo();
         repeatTimer_ = bigDelayMicroseconds;
@@ -468,12 +424,12 @@ namespace Barrage
       }
     }
 
-    if (engine_.Input().KeyTriggered(KEY_F5))
+    if (engine_.Input().KeyTriggered(GLFW_KEY_F5))
     {
       BuildGame(true);
     }
 
-    if (engine_.Input().KeyTriggered(KEY_ESCAPE) && data_.gamePlaying_)
+    if (engine_.Input().KeyTriggered(GLFW_KEY_ESCAPE) && data_.gamePlaying_)
     {
       data_.gamePlaying_ = false;
       data_.sceneIsDirty_ = true;
@@ -499,9 +455,9 @@ namespace Barrage
     std::string projectName(filePath.stem().string());
     std::string projectDirectory(filePath.parent_path().string());
 
-    Scene* scene = Scene::LoadFromFile(projectDirectory + "/Assets/Scenes/Scene.scene");
-
-    if (scene == nullptr)
+    Scene scene = Scene::LoadFromFile(projectDirectory + "/Assets/Scenes/Scene.scene");
+    std::string sceneName = scene.GetName();
+    if (sceneName == "<untitled>")
     {
       LogWidget::AddEntry("Could not open project. (No scene file.)");
       return false;
@@ -512,9 +468,9 @@ namespace Barrage
     engine_.Graphics().Textures().SetTextureDirectory(textureDirectory.string());
     engine_.Graphics().Textures().Clear();
     engine_.Scenes().Clear();
-    engine_.Scenes().AddScene(scene);
-    data_.selectedScene_ = scene->GetName();
-    engine_.Spaces().GetSpace(data_.selectedSpace_)->SetScene(scene->GetName());
+    engine_.Scenes().AddScene(sceneName, std::move(scene));
+    data_.selectedScene_ = sceneName;
+    engine_.Spaces().GetSpace(data_.editorSpace_)->SetScene(sceneName);
 
     if (std::filesystem::exists(textureDirectory))
     {
@@ -537,7 +493,7 @@ namespace Barrage
 
   void Editor::BuildGame(bool runExecutable)
   {
-    EditorData& editorData = Editor::Instance->Data();
+    EditorData& editorData = Editor::Get().Data();
     std::string project_directory = editorData.projectDirectory_;
     std::string build_folder_name = "Build";
     std::string output_path = project_directory + "/" + build_folder_name;
@@ -578,6 +534,7 @@ namespace Barrage
 
     LogWidget::AddEntry("Build succeeded.");
 
+#ifdef _WIN64
     if (runExecutable && std::filesystem::exists(executable_path))
     {
       STARTUPINFO si;
@@ -610,5 +567,6 @@ namespace Barrage
       CloseHandle(pi.hProcess);
       CloseHandle(pi.hThread);
     }
+#endif
   }
 }

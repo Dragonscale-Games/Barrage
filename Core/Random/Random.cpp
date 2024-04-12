@@ -15,7 +15,7 @@
 
 #include <random>
 #include <chrono>
-#include <stdexcept>
+
 #include <climits>
 
 namespace Barrage
@@ -30,12 +30,12 @@ namespace Barrage
     }
   }
 
-  unsigned long long Random::GetStartingSeed()
+  unsigned long long Random::GetStartingSeed() const
   {
     return startSeed_;
   }
 
-  unsigned long long Random::GetCurrentSeed()
+  unsigned long long Random::GetCurrentSeed() const
   {
     return currentSeed_;
   }
@@ -140,9 +140,8 @@ namespace Barrage
       seed = seed1 + (static_cast<unsigned long long>(seed2) << 32);
     }
     // if random_device method is not supported, generate a seed using the system clock
-    catch (const std::exception& e)
+    catch (const std::exception&)
     {
-      UNREFERENCED(e);
       auto clock = std::chrono::system_clock::now();
 
       seed = static_cast<unsigned long long>(clock.time_since_epoch().count());

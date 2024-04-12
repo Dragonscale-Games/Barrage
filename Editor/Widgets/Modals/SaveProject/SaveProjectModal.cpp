@@ -22,14 +22,14 @@ namespace Barrage
       return;
     }
 
-    EditorData& editorData = Editor::Instance->Data();
+    EditorData& editorData = Editor::Get().Data();
 
     ImGui::Text("Save project before closing?");
     ImGui::Spacing();
 
     if (ImGui::Button("Save", ImVec2(120.0f, 0.0f)))
     {
-      if (Editor::Instance->SaveProject(Editor::Instance->Data().projectDirectory_))
+      if (Editor::Get().SaveProject(Editor::Get().Data().projectDirectory_))
       {
         editorData.isRunning_ = false;
       }

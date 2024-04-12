@@ -10,38 +10,27 @@
  */
  /* ======================================================================== */
 
- ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #ifndef SceneManager_BARRAGE_H
 #define SceneManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Scene.hpp"
-#include <unordered_map>
 
 namespace Barrage
 {
-  //! Maps scene names to scenes
-  typedef std::unordered_map<std::string, Scene*> SceneMap;
-
-  //! Manages all existing spaces and allows creation of new spaces
   class SceneManager
   {
     public:
       SceneManager();
 
-      ~SceneManager();
-
-      void AddScene(Scene* scene);
+      void AddScene(const std::string& name, Scene&& scene);
 
       Scene* GetScene(const std::string& name);
 
-      std::vector<std::string> GetSceneNames();
-
-      bool RenameScene(const std::string& sceneName, const std::string& newName);
-
       void Clear();
 
-    private:
+    public:
       SceneMap scenes_;
   };
 }

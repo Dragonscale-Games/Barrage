@@ -13,31 +13,40 @@
 
 #include "stdafx.h"
 #include "ActionManager.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine.hpp"
 
 namespace Barrage
 {
+  ActionInfo::ActionInfo() :
+    key_(0),
+    isDown_(false),
+    triggered_(false),
+    released_(false)
+  {
+  }
+
+  ReplayState::ReplayState(uint32_t tick, unsigned char action, ActionInfo info) :
+    tick_(tick),
+    action_(action),
+    isDown_(info.isDown_),
+    triggered_(info.triggered_),
+    released_(info.released_)
+  {
+  }
+  
   ActionManager::ActionManager() :
+    actionInfoMap_(),
     currentTick_(0),
     mode_(Mode::Default),
-    previousState_(),
-    currentState_(),
     replayData_(),
-    replayPos_(0),
-    actionKeyMap_()
+    replayPos_(0)
   {
     replayData_.reserve(10000);
   }
 
-  void ActionManager::MapActionKey(ACTION action, KEY key)
+  void ActionManager::MapActionKey(unsigned char action, int key)
   {
-    actionKeyMap_[action] = key;
-
-    if (action >= previousState_.size())
-    {
-      previousState_.resize(action + 1, false);
-      currentState_.resize(action + 1, false);
-    }
+    actionInfoMap_[action].key_ = key;
   }
 
   void ActionManager::SetMode(Mode newMode)
@@ -50,15 +59,12 @@ namespace Barrage
   void ActionManager::Reset()
   {
     currentTick_ = 0;
-    
-    for (size_t i = 0; i < previousState_.size(); ++i)
-    {
-      previousState_[i] = false;
-    }
 
-    for (size_t i = 0; i < currentState_.size(); ++i)
+    for (auto it = actionInfoMap_.begin(); it != actionInfoMap_.end(); ++it)
     {
-      currentState_[i] = false;
+      it->second.isDown_ = false;
+      it->second.triggered_ = false;
+      it->second.released_ = false;
     }
 
     if (mode_ == Mode::Record)
@@ -73,8 +79,6 @@ namespace Barrage
 
   void ActionManager::Update()
   {
-    previousState_ = currentState_;
-    
     if (mode_ == Mode::Replay)
     {
       GetReplayInput();
@@ -87,11 +91,11 @@ namespace Barrage
     currentTick_++;
   }
 
-  bool ActionManager::ActionTriggered(ACTION action) const
+  bool ActionManager::ActionTriggered(unsigned char action) const
   {
-    if (action < previousState_.size() && action < currentState_.size())
+    if (actionInfoMap_.count(action))
     {
-      return !previousState_[action] && currentState_[action];
+      return actionInfoMap_.at(action).triggered_;
     }
     else
     {
@@ -99,11 +103,11 @@ namespace Barrage
     }
   }
 
-  bool ActionManager::ActionIsDown(ACTION action) const
+  bool ActionManager::ActionIsDown(unsigned char action) const
   {
-    if (action < currentState_.size())
+    if (actionInfoMap_.count(action))
     {
-      return currentState_[action];
+      return actionInfoMap_.at(action).isDown_;
     }
     else
     {
@@ -111,11 +115,11 @@ namespace Barrage
     }
   }
 
-  bool ActionManager::ActionReleased(ACTION action) const
+  bool ActionManager::ActionReleased(unsigned char action) const
   {
-    if (action < previousState_.size() && action < currentState_.size())
+    if (actionInfoMap_.count(action))
     {
-      return previousState_[action] && !currentState_[action];
+      return actionInfoMap_.at(action).released_;
     }
     else
     {
@@ -125,41 +129,49 @@ namespace Barrage
 
   void ActionManager::GetNormalInput()
   {
-    for (size_t i = 0; i < currentState_.size(); ++i)
+    InputManager& input = Engine::Get().Input();
+
+    for (auto it = actionInfoMap_.begin(); it != actionInfoMap_.end(); ++it)
     {
-      currentState_[i] = false;
-    }
+      unsigned char action = it->first;
+      ActionInfo& actionInfo = it->second;
 
-    InputManager& input_manager = Engine::Instance->Input();
+      bool isDown = input.KeyIsDown(actionInfo.key_);
+      bool triggered = input.KeyTriggered(actionInfo.key_);
+      bool released = input.KeyReleased(actionInfo.key_);
 
-    for (auto it = actionKeyMap_.begin(); it != actionKeyMap_.end(); ++it)
-    {
-      ACTION action = it->first;
-      KEY key = it->second;
+      bool recordInput = (actionInfo.isDown_ != isDown) || triggered || released;
+      
+      actionInfo.isDown_ = isDown;
+      actionInfo.triggered_ = triggered;
+      actionInfo.released_ = released;
 
-      currentState_[action] = input_manager.KeyIsDown(key);
-
-      if (mode_ == Mode::Record && currentState_[action] != previousState_[action])
+      if (mode_ == Mode::Record && recordInput)
       {
-        StateChange state_change;
-
-        state_change.tick_ = currentTick_;
-        state_change.action_ = action;
-
-        replayData_.push_back(state_change);
+        replayData_.push_back(ReplayState(currentTick_, action, actionInfo));
       }
     }
   }
 
   void ActionManager::GetReplayInput()
   {
+    for (auto it = actionInfoMap_.begin(); it != actionInfoMap_.end(); ++it)
+    {
+      it->second.triggered_ = false;
+      it->second.released_ = false;
+    }
+    
     while (replayPos_ < replayData_.size() && replayData_[replayPos_].tick_ == currentTick_)
     {
-      ACTION action = replayData_[replayPos_].action_;
+      ReplayState& state = replayData_[replayPos_];
 
-      if (action < currentState_.size())
+      if (actionInfoMap_.count(state.action_))
       {
-        currentState_[action] = !currentState_[action];
+        ActionInfo& actionInfo = actionInfoMap_.at(state.action_);
+
+        actionInfo.isDown_ = state.isDown_;
+        actionInfo.triggered_ = state.triggered_;
+        actionInfo.released_ = state.released_;
       }
 
       replayPos_++;

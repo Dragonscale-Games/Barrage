@@ -17,7 +17,6 @@
 
 #include <Commands/Command.hpp>
 #include <rttr/variant.h>
-#include <string_view>
 
 namespace Barrage
 {
@@ -49,7 +48,7 @@ namespace Barrage
       EditComponent(
         const std::string& sceneName,
         const std::string& poolName,
-        const std::string_view& componentName,
+        const std::string& componentName,
         const rttr::variant& newValue,
         bool chainUndo);
 
@@ -85,7 +84,7 @@ namespace Barrage
     private:
       std::string sceneName_;
       std::string poolName_;
-      std::string_view componentName_;
+      std::string componentName_;
 
       rttr::variant newValue_;
       rttr::variant oldValue_;

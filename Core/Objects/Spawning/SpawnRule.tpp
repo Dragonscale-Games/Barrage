@@ -21,7 +21,13 @@ namespace Barrage
   SpawnRuleT<T>::SpawnRuleT(const std::string& name) : SpawnRule(name), data_()
   {
   }
-  
+
+  template <typename T>
+  std::shared_ptr<SpawnRule> SpawnRuleT<T>::Clone() const
+  {
+    return std::make_shared<SpawnRuleT<T>>(*this);
+  }
+
   template <typename T>
   rttr::variant SpawnRuleT<T>::GetRTTRValue()
   {
@@ -42,8 +48,14 @@ namespace Barrage
   }
 
   template <typename T, typename A>
-  SpawnRuleTA<T,A>::SpawnRuleTA(const std::string& name) : SpawnRuleWithArray(name), data_(), dataArray_()
+  SpawnRuleTA<T, A>::SpawnRuleTA(const std::string& name) : SpawnRuleWithArray(name), data_(), dataArray_()
   {
+  }
+
+  template <typename T, typename A>
+  std::shared_ptr<SpawnRule> SpawnRuleTA<T, A>::Clone() const
+  {
+    return std::make_shared<SpawnRuleTA<T, A>>(*this);
   }
 
   template <typename T, typename A>
@@ -72,11 +84,11 @@ namespace Barrage
   }
 
   template <typename T, typename A>
-  void SpawnRuleTA<T, A>::HandleDestructions(const bool* destructionArray, unsigned deadBeginIndex, unsigned aliveEndIndex)
+  void SpawnRuleTA<T, A>::HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex)
   {
-    unsigned numAliveObjects = dataArray_.HandleDestructions(destructionArray, deadBeginIndex, aliveEndIndex);
+    unsigned numAliveObjects = dataArray_.HandleDestructions(destructionArray, writeIndex, endIndex);
 
-    for (unsigned i = numAliveObjects; i < aliveEndIndex; ++i)
+    for (unsigned i = numAliveObjects; i < endIndex; ++i)
     {
       dataArray_.Data(i) = A();
     }

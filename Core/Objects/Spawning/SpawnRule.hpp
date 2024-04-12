@@ -15,14 +15,58 @@
 #define SpawnRule_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Objects/Components/BaseClasses/ComponentArray.hpp"
+#include "Objects/Components/ComponentArray.hpp"
 #include <rttr/rttr_enable.h>
 #include <string>
 
 namespace Barrage
 {
+  class Space;
   class Pool;
-  
+
+  struct GroupInfo
+  {
+    unsigned numObjectsPerGroup_; // all objects in a group have the same value
+    unsigned numGroups_;          // each group has a different value
+    unsigned numLayerCopies_;     // each layer copy should have the same groups and objects
+
+    inline GroupInfo() : numObjectsPerGroup_(1), numGroups_(0), numLayerCopies_(1) {}
+    inline GroupInfo(unsigned numGroups) : numObjectsPerGroup_(1), numGroups_(numGroups), numLayerCopies_(1) {}
+  };
+
+  struct SpawnRuleInfo
+  {
+    Pool& sourcePool_;
+    Pool& destinationPool_;
+    Space& space_;
+    unsigned startIndex_;
+    unsigned sourceIndex_;
+    GroupInfo& groupInfo_;
+
+    inline SpawnRuleInfo(
+      Pool& sourcePool, 
+      Pool& destinationPool, 
+      Space& space, 
+      unsigned startIndex, 
+      unsigned sourceIndex,
+      GroupInfo& groupInfo
+    ) : 
+      sourcePool_(sourcePool),
+      destinationPool_(destinationPool),
+      space_(space),
+      startIndex_(startIndex),
+      sourceIndex_(sourceIndex),
+      groupInfo_(groupInfo)
+    {
+    }
+  };
+
+  enum class SpawnRuleStage
+  {
+    COUNT_RULE,
+    VALUE_RULE
+  };
+
   //! Base class that all spawn rules should inherit from
   class SpawnRule
   {
@@ -34,7 +78,7 @@ namespace Barrage
       */
       /**************************************************************/
       SpawnRule(const std::string& name);
-      
+
       /**************************************************************/
       /*!
         \brief
@@ -42,6 +86,17 @@ namespace Barrage
       */
       /**************************************************************/
       virtual ~SpawnRule() = default;
+
+      /**************************************************************/
+      /*!
+        \brief
+          Creates a spawn rule that's a deep copy of this spawn rule.
+
+        \return
+          Returns a pointer to the new spawn rule.
+      */
+      /**************************************************************/
+      virtual std::shared_ptr<SpawnRule> Clone() const = 0;
 
       /**************************************************************/
       /*!
@@ -57,30 +112,24 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Executes the spawn function. This is the typical spawn
-          function signature.
+          Executes the spawn rule for all objects from a single 
+          spawner.
 
-        \param initPool
-          The pool spawning the objects.
-
-        \param destPool
-          The pool the objects are being spawned into.
-
-        \param firstObjIndex
-          The index of the first newly spawned object in the
-          destination pool.
-
-        \param numNewObjects
-          The number of newly spawned objects.
-
-        \param sourceIndices
-          The indices of the objects in the initPool that spawned 
-          the new objects. The first source index in this vector
-          corresponds to the first newly spawned object, the second
-          to the second, etc.
+        \param info
+          Contains information about the current spawn (source pool,
+          destination pool, number of objects spawned, etc).
       */
       /**************************************************************/
-      virtual void Execute(Pool& initPool, Pool& destPool, unsigned firstObjIndex, unsigned numNewObjects, std::vector<unsigned>& sourceIndices) = 0;
+      virtual void Execute(SpawnRuleInfo& info);
+
+      void ExecuteFull(
+        Pool& sourcePool,
+        Pool& destinationPool,
+        Space& space,
+        unsigned startIndex,
+        std::vector<unsigned>& sourceIndices,
+        ComponentArrayT<GroupInfo>& groupInfoArray
+      );
 
       /**************************************************************/
       /*!
@@ -105,11 +154,69 @@ namespace Barrage
       /**************************************************************/
       virtual void SetRTTRValue(const rttr::variant& value);
 
+      /**************************************************************/
+      /*!
+        \brief
+          Checks whether the spawn rule has a component array that
+          needs to be updated when objects are destroyed.
+
+        \return
+          Returns true if the spawn rule has an array, returns false
+          otherwise.
+      */
+      /**************************************************************/
+      virtual bool HasArray();
+
+      /**************************************************************/
+      /*!
+        \brief
+          Gets the stage of the pipeline the spawn rule runs in.
+
+        \return
+          Returns the stage of the spawn rule.
+      */
+      /**************************************************************/
+      virtual SpawnRuleStage GetStage();
+
+    protected:
+      /**************************************************************/
+      /*!
+        \brief
+          Helper function for calculating the index of the object
+          being modified.
+
+        \param groupInfo
+          Information about the spawn layer's group and layer copy
+          sizes.
+
+        \param startIndex
+          The index of the first object produced by the spawner.
+
+        \param objectNumber
+          In a group, the number of the current object (starting at
+          zero).
+
+        \param groupNumber
+          In a layer copy, the number of the current group (starting
+          at zero).
+
+        \param layerCopyNumber
+          The number of the current layer copy.
+
+        \return
+          Returns the index of the object to modify.
+      */
+      /**************************************************************/
+      static unsigned CalculateDestinationIndex(
+        SpawnRuleInfo& info,
+        unsigned objectNumber,
+        unsigned groupNumber,
+        unsigned layerCopyNumber
+      );
+    
     private:
       std::string name_;
   };
-
-  typedef std::vector<std::shared_ptr<SpawnRule>> SpawnRuleList;
 
   //! Spawn rules that store data shared by all spawners
   template <typename T>
@@ -123,15 +230,18 @@ namespace Barrage
       */
       /**************************************************************/
       SpawnRuleT(const std::string& name);
-      
+
       /**************************************************************/
       /*!
         \brief
-          Base class requires virtual destructor.
+          Creates a spawn rule that's a deep copy of this spawn rule.
+
+        \return
+          Returns a pointer to the new spawn rule.
       */
       /**************************************************************/
-      virtual ~SpawnRuleT() = default;
-      
+      std::shared_ptr<SpawnRule> Clone() const override;
+
       /**************************************************************/
       /*!
         \brief
@@ -166,19 +276,11 @@ namespace Barrage
       */
       /**************************************************************/
       SpawnRuleWithArray(const std::string& name);
-      
-      /**************************************************************/
-      /*!
-        \brief
-          Base class requires virtual destructor.
-      */
-      /**************************************************************/
-      virtual ~SpawnRuleWithArray() = default;
 
       /**************************************************************/
       /*!
         \brief
-          Sets the number of elements in this spawn rule's data 
+          Sets the number of elements in this spawn rule's data
           array.
 
         \param capacity
@@ -193,16 +295,33 @@ namespace Barrage
           Updates the elements of the spawn rule's array to match
           the positions of still-alive spawners when some spawners
           have been destroyed.
-      
+
         \param destructionArray
           Array of bools that tell whether each spawner is destroyed
           or not.
+
+        \param writeIndex
+          The index of the first dead object.
+
+        \param endIndex
+          One past the index of the last object that could be alive.
       */
       /**************************************************************/
-      virtual void HandleDestructions(const bool* destructionArray, unsigned deadBeginIndex, unsigned aliveEndIndex) = 0;
-  };
+      virtual void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex) = 0;
 
-  typedef std::vector<std::shared_ptr<SpawnRuleWithArray>> SpawnRuleWithArrayList;
+      /**************************************************************/
+      /*!
+        \brief
+          Checks whether the spawn rule has a component array that
+          needs to be updated when objects are destroyed.
+
+        \return
+          Returns true if the spawn rule has an array, returns false
+          otherwise.
+      */
+      /**************************************************************/
+      bool HasArray() override;
+  };
 
   //! Spawn rules that store an array of data (one element per spawner)
   template <typename T, typename A>
@@ -220,10 +339,13 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Base class requires virtual destructor.
+          Creates a spawn rule that's a deep copy of this spawn rule.
+
+        \return
+          Returns a pointer to the new spawn rule.
       */
       /**************************************************************/
-      virtual ~SpawnRuleTA() = default;
+      std::shared_ptr<SpawnRule> Clone() const override;
 
       /**************************************************************/
       /*!
@@ -260,8 +382,8 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Updates the elements of the array to match the positions 
-          of still-alive spawners when some spawners have been 
+          Updates the elements of the array to match the positions
+          of still-alive spawners when some spawners have been
           destroyed.
 
         \param destructionArray
@@ -269,12 +391,14 @@ namespace Barrage
           or not.
       */
       /**************************************************************/
-      void HandleDestructions(const bool* destructionArray, unsigned deadBeginIndex, unsigned aliveEndIndex) override;
+      void HandleDestructions(const Destructible* destructionArray, unsigned writeIndex, unsigned endIndex) override;
 
     protected:
       T data_;
       ComponentArrayT<A> dataArray_;
   };
+
+  using SpawnRuleList = std::vector<DeepPtr<SpawnRule>>;
 }
 
 #include "SpawnRule.tpp"

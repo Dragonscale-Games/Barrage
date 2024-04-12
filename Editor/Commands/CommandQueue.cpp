@@ -24,20 +24,11 @@ namespace Barrage
   {
   }
 
-  CommandQueue::~CommandQueue()
-  {
-    Clear();
-  }
-
-  void CommandQueue::Send(Command* command)
+  void CommandQueue::Send(std::shared_ptr<Command> command)
   {
     if (currentCommand_ == nullptr)
     {
       currentCommand_ = command;
-    }
-    else
-    {
-      delete command;
     }
   }
 
@@ -65,7 +56,6 @@ namespace Barrage
     {
       std::string logMessage = "Failed to execute \"" + currentCommand_->message_ + "\".";
       LogWidget::AddEntry(logMessage.c_str());
-      delete currentCommand_;
     }
 
     currentCommand_ = nullptr;
@@ -102,7 +92,7 @@ namespace Barrage
       return;
     }
 
-    Command* undoCommand = undoStack_.top();
+    std::shared_ptr<Command> undoCommand = undoStack_.top();
     undoCommand->Undo();
 
     undoStack_.pop();
@@ -139,7 +129,7 @@ namespace Barrage
       return false;
     }
     
-    Command* redoCommand = redoStack_.top();
+    std::shared_ptr<Command> redoCommand = redoStack_.top();
     redoCommand->Redo();
 
     redoStack_.pop();
@@ -173,32 +163,24 @@ namespace Barrage
 
   void CommandQueue::SetSceneAndProjectDirty()
   {
-    Editor::Instance->Data().sceneIsDirty_ = true;
-    Editor::Instance->Data().projectIsDirty_ = true;
+    Editor::Get().Data().sceneIsDirty_ = true;
+    Editor::Get().Data().projectIsDirty_ = true;
   }
 
   void CommandQueue::Clear()
   {
-    delete currentCommand_;
+    currentCommand_ = nullptr;
     ClearUndoStack();
     ClearRedoStack();
   }
 
   void CommandQueue::ClearUndoStack()
   {
-    while (!undoStack_.empty())
-    {
-      delete undoStack_.top();
-      undoStack_.pop();
-    }
+    undoStack_ = std::stack<std::shared_ptr<Command>>();
   }
 
   void CommandQueue::ClearRedoStack()
   {
-    while (!redoStack_.empty())
-    {
-      delete redoStack_.top();
-      redoStack_.pop();
-    }
+    redoStack_ = std::stack<std::shared_ptr<Command>>();
   }
 }

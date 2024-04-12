@@ -12,133 +12,103 @@
  /* ======================================================================== */
 
 #include "CreateComponentArray.hpp"
-#include <Editor.hpp>
+#include "Editor.hpp"
+#include "Objects/Components/ComponentFactory.hpp"
 
 namespace Barrage
 {
   CreateComponentArray::CreateComponentArray(
     const std::string& sceneName,
     const std::string& poolName,
-    const std::string_view& componentArrayName) :
+    const std::string& componentArrayName) :
     Command("Added " + std::string(componentArrayName) + " to " + poolName + "."),
     sceneName_(sceneName),
     poolName_(poolName),
-    componentArrayName_(componentArrayName),
-    redoComponentArrays_()
+    componentArrayName_(componentArrayName)
   {
-  }
-
-  CreateComponentArray::~CreateComponentArray()
-  {
-    for (auto it = redoComponentArrays_.begin(); it != redoComponentArrays_.end(); ++it)
-    {
-      delete it->second;
-    }
   }
 
   bool CreateComponentArray::Execute()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    if (scene == nullptr)
+    if (scene == nullptr || scene->poolArchetypes_.count(poolName_) == 0)
     {
       return false;
     }
 
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    if (poolArchetype == nullptr || poolArchetype->HasComponentArray(componentArrayName_))
+    if (poolArchetype.componentArrayNames_.count(componentArrayName_))
+    {
+      return false;
+    }
+    
+    if (AddComponentArraysToObjects(poolArchetype.startingObjects_) == false)
     {
       return false;
     }
 
-    const std::vector<ObjectArchetype*>& startingObjects = poolArchetype->GetStartingObjects();
-    for (auto it = startingObjects.begin(); it != startingObjects.end(); ++it)
+    if (AddComponentArraysToObjects(poolArchetype.spawnArchetypes_) == false)
     {
-      ObjectArchetype* objectArchetype = *it;
-      ComponentArray* componentArray = ComponentAllocator::AllocateComponentArray(componentArrayName_, 1);
-
-      if (componentArray == nullptr || objectArchetype->HasComponentArray(componentArrayName_))
-      {
-        return false;
-      }
-
-      objectArchetype->AddComponentArray(componentArrayName_, componentArray);
+      return false;
     }
 
-    const std::vector<ObjectArchetype*>& spawnArchetypes = poolArchetype->GetSpawnArchetypes();
-    for (auto it = spawnArchetypes.begin(); it != spawnArchetypes.end(); ++it)
-    {
-      ObjectArchetype* objectArchetype = *it;
-      ComponentArray* componentArray = ComponentAllocator::AllocateComponentArray(componentArrayName_, 1);
-
-      if (componentArray == nullptr || objectArchetype->HasComponentArray(componentArrayName_))
-      {
-        return false;
-      }
-
-      objectArchetype->AddComponentArray(componentArrayName_, componentArray);
-    }
-
-    poolArchetype->AddComponentArrayName(componentArrayName_);
+    poolArchetype.componentArrayNames_.insert(componentArrayName_);
 
     return true;
   }
 
   void CreateComponentArray::Undo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    const std::vector<ObjectArchetype*>& startingObjects = poolArchetype->GetStartingObjects();
-    const std::vector<ObjectArchetype*>& spawnArchetypes = poolArchetype->GetSpawnArchetypes();
+    RemoveComponentArraysFromObjects(poolArchetype.startingObjects_);
+    RemoveComponentArraysFromObjects(poolArchetype.spawnArchetypes_);
 
-    RemoveComponentArraysFromObjects(startingObjects);
-    RemoveComponentArraysFromObjects(spawnArchetypes);
-
-    poolArchetype->RemoveComponentArrayName(componentArrayName_);
+    poolArchetype.componentArrayNames_.erase(componentArrayName_);
   }
 
   void CreateComponentArray::Redo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    const std::vector<ObjectArchetype*>& startingObjects = poolArchetype->GetStartingObjects();
-    const std::vector<ObjectArchetype*>& spawnArchetypes = poolArchetype->GetSpawnArchetypes();
+    AddComponentArraysToObjects(poolArchetype.startingObjects_);
+    AddComponentArraysToObjects(poolArchetype.spawnArchetypes_);
 
-    ReplaceComponentArraysOnObjects(startingObjects);
-    ReplaceComponentArraysOnObjects(spawnArchetypes);
-
-    poolArchetype->AddComponentArrayName(componentArrayName_);
+    poolArchetype.componentArrayNames_.insert(componentArrayName_);
   }
 
-  void CreateComponentArray::RemoveComponentArraysFromObjects(const std::vector<ObjectArchetype*>& objects)
+  bool CreateComponentArray::AddComponentArraysToObjects(ObjectArchetypeMap& objects)
   {
     for (auto it = objects.begin(); it != objects.end(); ++it)
     {
-      ObjectArchetype* objectArchetype = *it;
-      std::string objectName = objectArchetype->GetName();
+      ObjectArchetype& objectArchetype = it->second;
+      DeepPtr<ComponentArray> componentArray = ComponentFactory::AllocateComponentArray(componentArrayName_, 1);
 
-      // remove from object
-      ComponentArray* componentArray = objectArchetype->ExtractComponentArray(componentArrayName_);
-      // add to temp storage
-      redoComponentArrays_.insert(std::make_pair(objectName, componentArray));
+      if (!componentArray)
+      {
+        return false;
+      }
+
+      if (objectArchetype.componentArrays_.count(componentArrayName_))
+      {
+        throw std::runtime_error("Object had component array that pool didn't.");
+      }
+
+      objectArchetype.componentArrays_.emplace(componentArrayName_, componentArray);
     }
+
+    return true;
   }
 
-  void CreateComponentArray::ReplaceComponentArraysOnObjects(const std::vector<ObjectArchetype*>& objects)
+  void CreateComponentArray::RemoveComponentArraysFromObjects(ObjectArchetypeMap& objects)
   {
     for (auto it = objects.begin(); it != objects.end(); ++it)
     {
-      ObjectArchetype* objectArchetype = *it;
-      std::string objectName = objectArchetype->GetName();
-      ComponentArray* componentArray = redoComponentArrays_.at(objectName);
-
-      // remove from temp storage
-      redoComponentArrays_.erase(objectName);
-      // add to object
-      objectArchetype->AddComponentArray(componentArrayName_, componentArray);
+      it->second.componentArrays_.erase(componentArrayName_);
     }
   }
 }

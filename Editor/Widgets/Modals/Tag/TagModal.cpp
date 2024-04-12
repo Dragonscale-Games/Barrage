@@ -12,7 +12,7 @@
  /* ======================================================================== */
 
 #include "TagModal.hpp"
-#include <Objects/Components/ComponentAllocator.hpp>
+#include <Objects/Components/ComponentFactory.hpp>
 #include <Editor.hpp>
 #include <Commands/Create/Tag/CreateTag.hpp>
 
@@ -25,17 +25,17 @@ namespace Barrage
       return;
     }
 
-    auto& tags = ComponentAllocator::GetTagNames();
-    EditorData& editorData = Editor::Instance->Data();
+    auto& tags = ComponentFactory::GetTagNames();
+    EditorData& editorData = Editor::Get().Data();
 
     if (tags.size())
     {
       ImGui::Text("Select a tag to add:");
       ImGui::Spacing();
 
-      std::string_view previewString;
+      std::string previewString;
 
-      if (Editor::Instance->Data().selectedTag_.empty())
+      if (editorData.selectedTag_.empty())
       {
         previewString = " ";
       }
@@ -45,11 +45,11 @@ namespace Barrage
       }
 
       ImGui::PushItemWidth(240.0f);
-      if (ImGui::BeginCombo("##TagModalSelector", previewString.data()))
+      if (ImGui::BeginCombo("##TagModalSelector", previewString.c_str()))
       {
         for (auto& tag : tags)
         {
-          if (ImGui::Selectable(tag.data(), tag == editorData.selectedTag_))
+          if (ImGui::Selectable(tag.c_str(), tag == editorData.selectedTag_))
           {
             editorData.selectedTag_ = tag;
           }
@@ -63,7 +63,7 @@ namespace Barrage
 
       if (ImGui::Button("Add", ImVec2(120.0f, 0.0f)))
       {
-        Editor::Instance->Command().Send(new CreateTag(editorData.selectedScene_, editorData.selectedPool_, editorData.selectedTag_));
+        Editor::Get().Command().Send(std::make_shared<CreateTag>(editorData.selectedScene_, editorData.selectedPool_, editorData.selectedTag_));
         ImGui::CloseCurrentPopup();
       }
       ImGui::SameLine();

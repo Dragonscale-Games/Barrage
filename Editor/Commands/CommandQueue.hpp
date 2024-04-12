@@ -17,12 +17,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Command.hpp"
+
 #include <stack>
+#include <memory>
 
 namespace Barrage
 {
-  typedef void (*ClearRedoCallback)();
-  
   //! Command processor class
   class CommandQueue
   {
@@ -38,24 +38,15 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Deallocates all commands currently being tracked.
-      */
-      /**************************************************************/
-      ~CommandQueue();
-
-      /**************************************************************/
-      /*!
-        \brief
           Sends a command to the queue. Sending multiple commands in a
           single frame should be avoided. Only the first command sent
           each frame will be kept; the rest will be discarded.
 
         \param command
-          This should be a pointer to a Command object allocated with
-          new. The CommandQueue will take care of deallocating it.
+          Shared pointer to command object.
       */
       /**************************************************************/
-      void Send(Command* command);
+      void Send(std::shared_ptr<Command> command);
 
       /**************************************************************/
       /*!
@@ -179,9 +170,9 @@ namespace Barrage
       void ClearRedoStack();
 
     private:
-      Command* currentCommand_;        //!< Commands added to the queue are stored here until execution
-      std::stack<Command*> undoStack_; //!< Stores all previously executed commands
-      std::stack<Command*> redoStack_; //!< Stores all previously undone commands (clears when a new command is processed)
+      std::shared_ptr<Command> currentCommand_;        //!< Commands added to the queue are stored here until execution
+      std::stack<std::shared_ptr<Command>> undoStack_; //!< Stores all previously executed commands
+      std::stack<std::shared_ptr<Command>> redoStack_; //!< Stores all previously undone commands (clears when a new command is processed)
   };
 }
 

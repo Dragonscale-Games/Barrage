@@ -12,8 +12,8 @@
  /* ======================================================================== */
 
 #include "ComponentModal.hpp"
-#include <Objects/Components/ComponentAllocator.hpp>
 #include <Editor.hpp>
+#include <Objects/Components/ComponentFactory.hpp>
 #include <Commands/Create/Component/CreateComponent.hpp>
 
 namespace Barrage
@@ -25,17 +25,17 @@ namespace Barrage
       return;
     }
 
-    auto& componentNames = ComponentAllocator::GetComponentNames();
-    EditorData& editorData = Editor::Instance->Data();
+    auto& componentNames = ComponentFactory::GetComponentNames();
+    EditorData& editorData = Editor::Get().Data();
 
     if (componentNames.size())
     {
       ImGui::Text("Select a component to add:");
       ImGui::Spacing();
 
-      std::string_view previewString;
+      std::string previewString;
 
-      if (Editor::Instance->Data().selectedComponent_.empty())
+      if (editorData.selectedComponent_.empty())
       {
         previewString = " ";
       }
@@ -45,11 +45,11 @@ namespace Barrage
       }
 
       ImGui::PushItemWidth(240.0f);
-      if (ImGui::BeginCombo("##ComponentModalSelector", previewString.data()))
+      if (ImGui::BeginCombo("##ComponentModalSelector", previewString.c_str()))
       {
         for (auto& componentName : componentNames)
         {
-          if (ImGui::Selectable(componentName.data(), componentName == editorData.selectedComponent_))
+          if (ImGui::Selectable(componentName.c_str(), componentName == editorData.selectedComponent_))
           {
             editorData.selectedComponent_ = componentName;
           }
@@ -63,7 +63,7 @@ namespace Barrage
 
       if (ImGui::Button("Add", ImVec2(120.0f, 0.0f))) 
       { 
-        Editor::Instance->Command().Send(new CreateComponent(editorData.selectedScene_, editorData.selectedPool_, editorData.selectedComponent_));
+        Editor::Get().Command().Send(std::make_shared<CreateComponent>(editorData.selectedScene_, editorData.selectedPool_, editorData.selectedComponent_));
         ImGui::CloseCurrentPopup(); 
       }
       ImGui::SameLine();

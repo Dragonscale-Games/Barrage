@@ -18,49 +18,48 @@ namespace Barrage
   DeleteTag::DeleteTag(
     const std::string& sceneName,
     const std::string& poolName,
-    const std::string_view& tag) :
-    Command("Removed \"" + std::string(tag) + "\" tag from " + poolName + "."),
+    const std::string& tag) :
+    Command("Removed \"" + tag + "\" tag from " + poolName + "."),
     sceneName_(sceneName),
     poolName_(poolName),
-    tag_(tag),
-    undoIndex_(0)
+    tag_(tag)
   {
   }
 
   bool DeleteTag::Execute()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    if (scene == nullptr)
+    if (scene == nullptr || scene->poolArchetypes_.count(poolName_) == 0)
     {
       return false;
     }
 
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    if (poolArchetype == nullptr || !poolArchetype->HasTag(tag_))
+    if (poolArchetype.tags_.count(tag_) == 0)
     {
       return false;
     }
 
-    poolArchetype->RemoveTag(tag_, &undoIndex_);
+    poolArchetype.tags_.erase(tag_);
 
     return true;
   }
 
   void DeleteTag::Undo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    poolArchetype->AddTag(tag_, &undoIndex_);
+    poolArchetype.tags_.insert(tag_);
   }
 
   void DeleteTag::Redo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    poolArchetype->RemoveTag(tag_, &undoIndex_);
+    poolArchetype.tags_.erase(tag_);
   }
 }

@@ -6,7 +6,7 @@
  * \par             dragonscale.games.llc\@gmail.com
 
  * \brief
-    Represents the game window.
+    Manages the game window.
  */
  /* ======================================================================== */
 
@@ -20,7 +20,7 @@
 
 namespace Barrage
 {
-  class WindowManager //! Represents the game window.
+  class WindowManager //! Manages the game window.
   {
     public:
       static const int DEFAULT_WIDTH = 1280;
@@ -162,29 +162,6 @@ namespace Barrage
       */
       /*************************************************************************/
       GLFWwindow* GetWindowHandle();
-
-      /*************************************************************************/
-      /*!
-        \brief
-          Sets the function to call when the framebuffer size changes.
-
-        \param function
-          The function to call.
-      */
-      /*************************************************************************/
-      void SetFramebufferSizeCallback(GLFWframebuffersizefun function);
-
-      /*************************************************************************/
-      /*!
-        \brief
-          Sets the user pointer, which is arbitrary user data that can be 
-          accessed later through glfwGetWindowUserPointer();
-
-        \param data
-          The data you'd like to access later.
-      */
-      /*************************************************************************/
-      void SetUserPointer(void* data);
 
     private:
       GLFWwindow* window_;            //!< The internal handle to the windowing library.

@@ -15,11 +15,9 @@
 #define HierarchyWidget_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Objects/Archetypes/PoolArchetype/PoolArchetype.hpp>
-#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>
+#include "Scenes/Scene.hpp"
 
 #include <imgui/imgui.h>
-#include <string_view>
 
 namespace Barrage
 {
@@ -35,24 +33,18 @@ namespace Barrage
       /**************************************************************/
       static void Use();
 
-      static ImVec2 GetSize();
-
     private:
       static void SceneGUI();
 
-      static bool PoolGUI(PoolArchetype* poolArchetype);
+      static bool PoolGUI(PoolArchetype& poolArchetype);
 
-      static bool ObjectGUI(const std::string poolName, ObjectArchetype* objectArchetype, bool isSpawnArchetype = false);
-      
-      /**************************************************************/
-      /*!
-        \brief
-          Deselects all items selected in the hierarchy.
-      */
-      /**************************************************************/
+      static bool ObjectGUI(const std::string poolName, ObjectArchetype& objectArchetype, bool isSpawnArchetype);
+
+      static void SelectStartingObject(const std::string name);
+
+      static void SelectSpawnArchetype(const std::string name);
+
       static void DeselectAll();
-
-      static ImVec2 size_;
   };
 }
 

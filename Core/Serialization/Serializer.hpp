@@ -11,7 +11,7 @@
  */
  /* ========================================================================= */
 
- ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #ifndef Serializer_MODULE_H
 #define Serializer_MODULE_H
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,14 +33,15 @@ namespace Barrage
     \param object
       The object being serialized. It must be registered through
       rttr.
-    \tparam T
-      The type of object being serialized.
-    \returns
+    \param allocator
+      RapidJson allocator being used.
+    \return
       A rapidjson value representing the serialized object.
   */
   /*************************************************************************/
   rapidjson::Value Serialize(const rttr::variant& object,
     rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>& allocator);
+
   /*************************************************************************/
   /*!
     \brief

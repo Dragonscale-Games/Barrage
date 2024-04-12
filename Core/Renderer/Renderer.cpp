@@ -10,6 +10,7 @@
  */
  /* ======================================================================== */
 
+#include "stdafx.h"
 #include "Renderer.hpp"
 
 #include <glad/gl.h>
@@ -337,7 +338,7 @@ namespace Barrage
     };
 
     Matrices matrices;
-    matrices.projection = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, 0.1f, 100.0f);
+    matrices.projection = glm::ortho(-960.0f, 960.0f, -540.0f, 540.0f, 0.1f, 100.0f);
     matrices.view = glm::translate(glm::identity<glm::mat4>(), glm::vec3(0.0f, 0.0f, -3.0f));
 
     glGenBuffers(1, &uniformBuffer_);

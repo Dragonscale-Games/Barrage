@@ -14,28 +14,37 @@
 
 namespace Barrage
 {
+  std::string EditorData::editorSpace_ = "Editor Space";
+  
   EditorData::EditorData() :
     isRunning_(false),
     gamePlaying_(false),
     sceneIsDirty_(false),
     projectIsDirty_(false),
+
     openComponentModal_(false),
     openComponentArrayModal_(false),
-    openTagModal_(false),
-    openRenameModal_(false),
     openProjectModal_(false),
+    openRenameModal_(false),
+    openTagModal_(false),
+    
     openSaveProjectModal_(false),
+
     gameTick_(0),
-    renameCallback_(nullptr),
+
     projectName_(),
     projectDirectory_(),
-    selectedSpace_(),
+
     selectedScene_(),
     selectedPool_(),
-    selectedObject_(),
+    selectedStartingObject_(),
+    selectedSpawnArchetype_(),
+
     selectedComponent_(),
     selectedComponentArray_(),
-    selectedTag_()
+    selectedTag_(),
+
+    renameCallback_(nullptr)
   {
   }
 }

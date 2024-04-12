@@ -17,10 +17,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
-#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>
-#include <Objects/Components/BaseClasses/ComponentArray.hpp>
+#include <Objects/Archetypes/ObjectArchetype.hpp>
+#include <Objects/Components/ComponentArray.hpp>
 #include <unordered_map>
-#include <string_view>
 
 namespace Barrage
 {
@@ -48,15 +47,7 @@ namespace Barrage
       CreateComponentArray(
         const std::string& sceneName,
         const std::string& poolName,
-        const std::string_view& componentArrayName);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Deallocates resources.
-      */
-      /**************************************************************/
-      ~CreateComponentArray();
+        const std::string& componentArrayName);
 
     private:
       /**************************************************************/
@@ -92,33 +83,29 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Removes the component array from each object in the input
-          vector.
+          Adds the component array to each object.
+
+        \param objects
+          The objects to add the component array to.
+      */
+      /**************************************************************/
+      bool AddComponentArraysToObjects(ObjectArchetypeMap& objects);
+
+      /**************************************************************/
+      /*!
+        \brief
+          Removes the component array from each object.
 
         \param objects
           The objects to remove the component array from.
       */
       /**************************************************************/
-      void RemoveComponentArraysFromObjects(const std::vector<ObjectArchetype*>& objects);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Replaces the original component arrays on each object in 
-          the input vector.
-
-        \param objects
-          The objects to replace the component array on.
-      */
-      /**************************************************************/
-      void ReplaceComponentArraysOnObjects(const std::vector<ObjectArchetype*>& objects);
+      void RemoveComponentArraysFromObjects(ObjectArchetypeMap& objects);
 
     private:
       std::string sceneName_;
       std::string poolName_;
-      std::string_view componentArrayName_;
-
-      RedoComponentArrayMap redoComponentArrays_;
+      std::string componentArrayName_;
   };
 }
 

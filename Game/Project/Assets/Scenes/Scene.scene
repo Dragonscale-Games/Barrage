@@ -1,575 +1,697 @@
 {
-    "Name": "Scene",
-    "Pools": [
+    "name": "Scene",
+    "poolArchetypes": [
         {
-            "Name": "Player Pool",
-            "Capacity": 1,
-            "Components": {
-                "BoundaryBox": {
-                    "xMin": 480.0,
-                    "xMax": 1440.0,
-                    "yMin": 60.0,
-                    "yMax": 1020.0
-                },
-                "Player": {
-                    "speedFast": 5.599999904632568,
-                    "speedSlow": 3.0,
-                    "isInvincible": false
-                },
-                "CircleCollider": {
-                    "radius": 0.0
-                },
-                "Sprite": {
-                    "texture": "TestShip",
-                    "layer": 0
-                }
-            },
-            "Component Arrays": [
-                "Position",
-                "Rotation",
-                "Scale",
-                "Velocity",
-                "ColorTint",
-                "TextureUV"
-            ],
-            "Tags": [],
-            "Starting Objects": [
-                {
-                    "Name": "Player",
-                    "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 120.0
-                        },
-                        "Velocity": {
-                            "vx": 0.0,
-                            "vy": 0.0
-                        },
-                        "Rotation": {
-                            "angle": {
-                                "value": 0.0
-                            }
-                        },
-                        "TextureUV": {
-                            "uMin": 0.0,
-                            "vMin": 0.0,
-                            "uSize": 1.0,
-                            "vSize": 1.0
-                        },
-                        "Scale": {
-                            "w": 64.0,
-                            "h": 64.0
-                        },
-                        "ColorTint": {
-                            "red": 0.0,
-                            "green": 0.0,
-                            "blue": 0.0,
-                            "alpha": 1.0
-                        }
+            "Key": "Arrow Pool",
+            "Value": {
+                "capacity": 10000,
+                "componentArrayNames": [
+                    "ColorTint",
+                    "Destructible",
+                    "Position",
+                    "Rotation",
+                    "Scale",
+                    "TextureUV",
+                    "Velocity"
+                ],
+                "components": {
+                    "BoundaryBox": {
+                        "xMin": -1920.0,
+                        "xMax": 1920.0,
+                        "yMin": -1080.0,
+                        "yMax": 1080.0
+                    },
+                    "CircleCollider": {
+                        "radius": 8.0
+                    },
+                    "Sprite": {
+                        "texture": "TestBullet",
+                        "layer": 2
                     }
-                }
-            ],
-            "Spawn Archetypes": []
-        },
-        {
-            "Name": "Red Bullet Pool",
-            "Capacity": 500,
-            "Components": {
-                "CircleCollider": {
-                    "radius": 12.5
                 },
-                "Sprite": {
-                    "texture": "TestBullet",
-                    "layer": 2
-                },
-                "BoundaryBox": {
-                    "xMin": 432.0,
-                    "xMax": 1488.0,
-                    "yMin": 12.0,
-                    "yMax": 1068.0
-                }
-            },
-            "Component Arrays": [
-                "Position",
-                "Rotation",
-                "Scale",
-                "Velocity",
-                "Destructible",
-                "ColorTint",
-                "TextureUV"
-            ],
-            "Tags": [
-                "Bullet"
-            ],
-            "Starting Objects": [],
-            "Spawn Archetypes": [
-                {
-                    "Name": "Red Bullet",
-                    "Components": {
-                        "Velocity": {
-                            "vx": 2.083329916000366,
-                            "vy": 0.0
-                        },
-                        "Position": {
-                            "x": 960.0,
-                            "y": 794.0
-                        },
-                        "Rotation": {
-                            "angle": {
-                                "value": 0.0
-                            }
-                        },
-                        "TextureUV": {
-                            "uMin": 0.0,
-                            "vMin": 0.0,
-                            "uSize": 1.0,
-                            "vSize": 1.0
-                        },
-                        "Scale": {
-                            "w": 32.0,
-                            "h": 32.0
-                        },
-                        "Destructible": {},
-                        "ColorTint": {
-                            "red": 1.0,
-                            "green": 0.1423611044883728,
-                            "blue": 0.1423611044883728,
-                            "alpha": 1.0
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "Name": "Red Spawner Pool",
-            "Capacity": 1,
-            "Components": {
-                "Spawner": {
-                    "currentPattern": "PDH",
-                    "patterns": [
-                        {
-                            "Key": "PDH",
-                            "Value": {
-                                "spawnSequence": [],
-                                "automaticSpawns": [
-                                    {
-                                        "spawnType": "Red Bullet Spawn",
-                                        "ticksPerSpawn": 40,
-                                        "numberPerBurst": 1,
-                                        "delay": 0
+                "name": "Arrow Pool",
+                "spawnArchetypes": [
+                    {
+                        "Key": "Arrow Object",
+                        "Value": {
+                            "name": "Arrow Object",
+                            "componentArrays": {
+                                "ColorTint": {
+                                    "red": 1.0,
+                                    "green": 0.0,
+                                    "blue": 0.0,
+                                    "alpha": 1.0
+                                },
+                                "Destructible": {},
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                },
+                                "Rotation": {
+                                    "angle": {
+                                        "value": -0.0
                                     }
-                                ]
+                                },
+                                "Scale": {
+                                    "w": 32.0,
+                                    "h": 32.0
+                                },
+                                "TextureUV": {
+                                    "uMin": 0.0,
+                                    "vMin": 0.0,
+                                    "uSize": 1.0,
+                                    "vSize": 1.0
+                                },
+                                "Velocity": {}
                             }
                         }
-                    ],
-                    "spawnTypes": [
-                        {
-                            "Key": "Red Bullet Spawn",
-                            "Value": {
-                                "destinationPool": "Red Bullet Pool",
-                                "spawnArchetype": "Red Bullet",
-                                "spawnRules": [
-                                    {
-                                        "Name": "MatchPosition"
-                                    },
-                                    {
-                                        "Name": "RandomOffset",
-                                        "Data": {
-                                            "xVariance": 75.0,
-                                            "yVariance": 75.0
-                                        }
-                                    },
-                                    {
-                                        "Name": "RandomDirection"
-                                    },
-                                    {
-                                        "Name": "SpawnRing",
-                                        "Data": {
-                                            "numObjects": 28,
-                                            "radius": 0.0
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            },
-            "Component Arrays": [
-                "Position",
-                "SpawnTimer"
-            ],
-            "Tags": [],
-            "Starting Objects": [
-                {
-                    "Name": "Red Spawner",
-                    "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 880.0
-                        },
-                        "SpawnTimer": {}
                     }
-                }
-            ],
-            "Spawn Archetypes": []
+                ],
+                "startingObjects": [],
+                "tags": [
+                    "Bullet"
+                ]
+            }
         },
         {
-            "Name": "Frame Pool",
-            "Capacity": 1,
-            "Components": {
-                "Sprite": {
-                    "texture": "TestFrame",
-                    "layer": 5
-                }
-            },
-            "Component Arrays": [
-                "Rotation",
-                "Scale",
-                "Position",
-                "ColorTint",
-                "TextureUV"
-            ],
-            "Tags": [],
-            "Starting Objects": [
-                {
-                    "Name": "Frame",
-                    "Components": {
-                        "TextureUV": {
-                            "uMin": 0.0,
-                            "vMin": 0.0,
-                            "uSize": 1.0,
-                            "vSize": 1.0
-                        },
-                        "Rotation": {
-                            "angle": {
-                                "value": 0.0
+            "Key": "Frame Pool",
+            "Value": {
+                "capacity": 1,
+                "componentArrayNames": [
+                    "ColorTint",
+                    "Position",
+                    "Rotation",
+                    "Scale",
+                    "TextureUV"
+                ],
+                "components": {
+                    "Sprite": {
+                        "texture": "TestFrame",
+                        "layer": 4
+                    }
+                },
+                "name": "Frame Pool",
+                "spawnArchetypes": [],
+                "startingObjects": [
+                    {
+                        "Key": "Object",
+                        "Value": {
+                            "name": "Object",
+                            "componentArrays": {
+                                "ColorTint": {
+                                    "red": 0.0,
+                                    "green": 0.0,
+                                    "blue": 0.0,
+                                    "alpha": 1.0
+                                },
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                },
+                                "Rotation": {
+                                    "angle": {
+                                        "value": 0.0
+                                    }
+                                },
+                                "Scale": {
+                                    "w": 1920.0,
+                                    "h": 1080.0
+                                },
+                                "TextureUV": {
+                                    "uMin": 0.0,
+                                    "vMin": 0.0,
+                                    "uSize": 1.0,
+                                    "vSize": 1.0
+                                }
                             }
-                        },
-                        "Scale": {
-                            "w": 1920.0,
-                            "h": 1080.0
-                        },
-                        "Position": {
-                            "x": 960.0,
-                            "y": 540.0
-                        },
-                        "ColorTint": {
-                            "red": 0.0,
-                            "green": 0.0,
-                            "blue": 0.0,
-                            "alpha": 1.0
                         }
                     }
-                }
-            ],
-            "Spawn Archetypes": []
+                ],
+                "tags": []
+            }
         },
         {
-            "Name": "Purple Spawner Pool",
-            "Capacity": 2,
-            "Components": {
-                "Spawner": {
-                    "currentPattern": "PDH",
-                    "patterns": [
-                        {
-                            "Key": "PDH",
-                            "Value": {
-                                "spawnSequence": [],
-                                "automaticSpawns": [
-                                    {
-                                        "spawnType": "Purple Bullet Spawn",
-                                        "ticksPerSpawn": 60,
-                                        "numberPerBurst": 1,
-                                        "delay": 0
-                                    }
-                                ]
-                            }
-                        }
-                    ],
-                    "spawnTypes": [
-                        {
-                            "Key": "Purple Bullet Spawn",
-                            "Value": {
-                                "destinationPool": "Purple Bullet Pool",
-                                "spawnArchetype": "Purple Bullet",
-                                "spawnRules": [
-                                    {
-                                        "Name": "MatchPosition"
-                                    },
-                                    {
-                                        "Name": "RandomOffset",
-                                        "Data": {
-                                            "xVariance": 50.0,
-                                            "yVariance": 50.0
+            "Key": "Orb Pool",
+            "Value": {
+                "capacity": 10000,
+                "componentArrayNames": [
+                    "ColorTint",
+                    "Destructible",
+                    "Lifetime",
+                    "Position",
+                    "Rotation",
+                    "Scale",
+                    "SpawnTimer",
+                    "TextureUV",
+                    "Velocity"
+                ],
+                "components": {
+                    "BoundaryBox": {
+                        "xMin": -1920.0,
+                        "xMax": 1920.0,
+                        "yMin": -1080.0,
+                        "yMax": 1080.0
+                    },
+                    "CircleCollider": {
+                        "radius": 8.0
+                    },
+                    "Spawner": {
+                        "currentPattern": "Eagle Arrows",
+                        "patterns": [
+                            {
+                                "Key": "Eagle Arrows",
+                                "Value": {
+                                    "automaticSpawns": [
+                                        {
+                                            "spawnType": "Eagle Arrow Spawn",
+                                            "ticksPerSpawn": 0,
+                                            "delay": 179
                                         }
-                                    },
-                                    {
-                                        "Name": "RandomDirection"
-                                    },
-                                    {
-                                        "Name": "SpawnRing",
-                                        "Data": {
-                                            "numObjects": 10,
-                                            "radius": 0.0
-                                        }
-                                    }
-                                ]
+                                    ]
+                                }
                             }
-                        }
-                    ]
-                }
-            },
-            "Component Arrays": [
-                "SpawnTimer",
-                "Position"
-            ],
-            "Tags": [],
-            "Starting Objects": [
-                {
-                    "Name": "Purple Spawner Left",
-                    "Components": {
-                        "SpawnTimer": {},
-                        "Position": {
-                            "x": 767.5,
-                            "y": 794.0
-                        }
+                        ],
+                        "spawnTypes": [
+                            {
+                                "Key": "Eagle Arrow Spawn",
+                                "Value": {
+                                    "spawnLayers": [
+                                        {
+                                            "numGroups": 2,
+                                            "sizeRules": [],
+                                            "valueRules": [
+                                                {
+                                                    "Name": "SetSpeed",
+                                                    "Data": {
+                                                        "base": 2.0,
+                                                        "delta": 0.0
+                                                    }
+                                                },
+                                                {
+                                                    "Name": "Fan",
+                                                    "Data": {
+                                                        "spacing": {
+                                                            "value": -2.9147000312805177
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "Name": "MatchPosition"
+                                                },
+                                                {
+                                                    "Name": "MatchDirection"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "destinationPool": "Arrow Pool",
+                                    "spawnArchetype": "Arrow Object"
+                                }
+                            }
+                        ]
+                    },
+                    "Sprite": {
+                        "texture": "TestBullet",
+                        "layer": 0
                     }
                 },
-                {
-                    "Name": "Purple Spawner Right",
-                    "Components": {
-                        "SpawnTimer": {},
-                        "Position": {
-                            "x": 1152.5,
-                            "y": 794.0
+                "name": "Orb Pool",
+                "spawnArchetypes": [
+                    {
+                        "Key": "Orb Object",
+                        "Value": {
+                            "name": "Orb Object",
+                            "componentArrays": {
+                                "ColorTint": {
+                                    "red": 1.0,
+                                    "green": 1.0,
+                                    "blue": 1.0,
+                                    "alpha": 1.0
+                                },
+                                "Destructible": {},
+                                "Lifetime": {
+                                    "ticks": 180
+                                },
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                },
+                                "Rotation": {
+                                    "angle": {
+                                        "value": -0.0
+                                    }
+                                },
+                                "Scale": {
+                                    "w": 64.0,
+                                    "h": 64.0
+                                },
+                                "TextureUV": {
+                                    "uMin": 0.0,
+                                    "vMin": 0.0,
+                                    "uSize": 1.0,
+                                    "vSize": 1.0
+                                },
+                                "Velocity": {}
+                            }
                         }
                     }
-                }
-            ],
-            "Spawn Archetypes": []
+                ],
+                "startingObjects": [],
+                "tags": [
+                    "Bullet"
+                ]
+            }
         },
         {
-            "Name": "Blue Spawner Pool",
-            "Capacity": 2,
-            "Components": {
-                "Spawner": {
-                    "currentPattern": "PDH",
-                    "patterns": [
-                        {
-                            "Key": "PDH",
-                            "Value": {
-                                "spawnSequence": [],
-                                "automaticSpawns": [
-                                    {
-                                        "spawnType": "Blue Bullet Spawn",
-                                        "ticksPerSpawn": 120,
-                                        "numberPerBurst": 1,
-                                        "delay": 0
-                                    }
-                                ]
-                            }
-                        }
-                    ],
-                    "spawnTypes": [
-                        {
-                            "Key": "Blue Bullet Spawn",
-                            "Value": {
-                                "destinationPool": "Blue Bullet Pool",
-                                "spawnArchetype": "Blue Bullet",
-                                "spawnRules": [
-                                    {
-                                        "Name": "MatchPosition"
-                                    },
-                                    {
-                                        "Name": "RandomOffset",
-                                        "Data": {
-                                            "xVariance": 10.0,
-                                            "yVariance": 50.0
-                                        }
-                                    },
-                                    {
-                                        "Name": "RandomDirection"
-                                    },
-                                    {
-                                        "Name": "SpawnRing",
-                                        "Data": {
-                                            "numObjects": 54,
-                                            "radius": 0.0
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            },
-            "Component Arrays": [
-                "SpawnTimer",
-                "Position"
-            ],
-            "Tags": [],
-            "Starting Objects": [
-                {
-                    "Name": "Blue Spawner Left",
-                    "Components": {
-                        "SpawnTimer": {},
-                        "Position": {
-                            "x": 680.0,
-                            "y": 794.0
-                        }
+            "Key": "Player Pool",
+            "Value": {
+                "capacity": 1,
+                "componentArrayNames": [
+                    "ColorTint",
+                    "Position",
+                    "Rotation",
+                    "Scale",
+                    "TextureUV",
+                    "Velocity"
+                ],
+                "components": {
+                    "BoundaryBox": {
+                        "xMin": -480.0,
+                        "xMax": 480.0,
+                        "yMin": -480.0,
+                        "yMax": 480.0
+                    },
+                    "Player": {
+                        "speedFast": 6.0,
+                        "speedSlow": 3.5,
+                        "isInvincible": true
+                    },
+                    "Sprite": {
+                        "texture": "TestShip",
+                        "layer": 0
                     }
                 },
-                {
-                    "Name": "Blue Spawner Right",
-                    "Components": {
-                        "SpawnTimer": {},
-                        "Position": {
-                            "x": 1240.0,
-                            "y": 794.0
+                "name": "Player Pool",
+                "spawnArchetypes": [],
+                "startingObjects": [
+                    {
+                        "Key": "Player",
+                        "Value": {
+                            "name": "Player",
+                            "componentArrays": {
+                                "ColorTint": {
+                                    "red": 0.0,
+                                    "green": 0.0,
+                                    "blue": 0.0,
+                                    "alpha": 1.0
+                                },
+                                "Position": {
+                                    "x": 304.0,
+                                    "y": -414.0
+                                },
+                                "Rotation": {
+                                    "angle": {
+                                        "value": 0.0
+                                    }
+                                },
+                                "Scale": {
+                                    "w": 64.0,
+                                    "h": 64.0
+                                },
+                                "TextureUV": {
+                                    "uMin": 0.0,
+                                    "vMin": 0.0,
+                                    "uSize": 1.0,
+                                    "vSize": 1.0
+                                },
+                                "Velocity": {}
+                            }
                         }
                     }
-                }
-            ],
-            "Spawn Archetypes": []
+                ],
+                "tags": []
+            }
         },
         {
-            "Name": "Purple Bullet Pool",
-            "Capacity": 300,
-            "Components": {
-                "Sprite": {
-                    "texture": "TestBullet",
-                    "layer": 1
-                },
-                "BoundaryBox": {
-                    "xMin": 432.0,
-                    "xMax": 1488.0,
-                    "yMin": 12.0,
-                    "yMax": 1068.0
-                },
-                "CircleCollider": {
-                    "radius": 12.5
-                }
-            },
-            "Component Arrays": [
-                "Position",
-                "Rotation",
-                "Scale",
-                "Destructible",
-                "Velocity",
-                "ColorTint",
-                "TextureUV"
-            ],
-            "Tags": [
-                "Bullet"
-            ],
-            "Starting Objects": [],
-            "Spawn Archetypes": [
-                {
-                    "Name": "Purple Bullet",
-                    "Components": {
-                        "Velocity": {
-                            "vx": 2.2916600704193117,
-                            "vy": 0.0
-                        },
-                        "Position": {
-                            "x": 960.0,
-                            "y": 540.0
-                        },
-                        "TextureUV": {
-                            "uMin": 0.0,
-                            "vMin": 0.0,
-                            "uSize": 1.0,
-                            "vSize": 1.0
-                        },
-                        "Rotation": {
-                            "angle": {
-                                "value": 0.0
+            "Key": "Spawner Pool",
+            "Value": {
+                "capacity": 1,
+                "componentArrayNames": [
+                    "Destructible",
+                    "Lifetime",
+                    "Position",
+                    "SpawnTimer"
+                ],
+                "components": {
+                    "Spawner": {
+                        "currentPattern": "Test Pattern",
+                        "patterns": [
+                            {
+                                "Key": "Test Pattern",
+                                "Value": {
+                                    "automaticSpawns": [
+                                        {
+                                            "spawnType": "Orb Spawn Type",
+                                            "ticksPerSpawn": 10,
+                                            "delay": 0
+                                        },
+                                        {
+                                            "spawnType": "Triangle Spawner Type",
+                                            "ticksPerSpawn": 359,
+                                            "delay": 0
+                                        }
+                                    ]
+                                }
                             }
-                        },
-                        "Scale": {
-                            "w": 32.0,
-                            "h": 32.0
-                        },
-                        "Destructible": {},
-                        "ColorTint": {
-                            "red": 0.0,
-                            "green": 0.0,
-                            "blue": 0.0,
-                            "alpha": 1.0
+                        ],
+                        "spawnTypes": [
+                            {
+                                "Key": "Orb Spawn Type",
+                                "Value": {
+                                    "spawnLayers": [
+                                        {
+                                            "numGroups": 1,
+                                            "sizeRules": [
+                                                {
+                                                    "Name": "IncrementCount",
+                                                    "Data": {
+                                                        "amount": 1,
+                                                        "max": 16
+                                                    }
+                                                }
+                                            ],
+                                            "valueRules": [
+                                                {
+                                                    "Name": "SetSpeed",
+                                                    "Data": {
+                                                        "base": 2.0,
+                                                        "delta": 0.0
+                                                    }
+                                                },
+                                                {
+                                                    "Name": "Ring"
+                                                },
+                                                {
+                                                    "Name": "MatchPosition"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "destinationPool": "Orb Pool",
+                                    "spawnArchetype": "Orb Object"
+                                }
+                            },
+                            {
+                                "Key": "Triangle Spawner Type",
+                                "Value": {
+                                    "spawnLayers": [
+                                        {
+                                            "numGroups": 1,
+                                            "sizeRules": [],
+                                            "valueRules": [
+                                                {
+                                                    "Name": "MatchPosition"
+                                                },
+                                                {
+                                                    "Name": "AimedDirection"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "destinationPool": "Triangle Spawner Pool",
+                                    "spawnArchetype": "Triangle Spawner Archetype"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "name": "Spawner Pool",
+                "spawnArchetypes": [
+                    {
+                        "Key": "Spawn Archetype",
+                        "Value": {
+                            "name": "Spawn Archetype",
+                            "componentArrays": {
+                                "Destructible": {},
+                                "Lifetime": {
+                                    "ticks": 720
+                                },
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                }
+                            }
                         }
                     }
-                }
-            ]
+                ],
+                "startingObjects": [],
+                "tags": []
+            }
         },
         {
-            "Name": "Blue Bullet Pool",
-            "Capacity": 500,
-            "Components": {
-                "CircleCollider": {
-                    "radius": 12.5
-                },
-                "Sprite": {
-                    "texture": "TestBullet",
-                    "layer": 3
-                },
-                "BoundaryBox": {
-                    "xMin": 432.0,
-                    "xMax": 1488.0,
-                    "yMin": 12.0,
-                    "yMax": 1068.0
-                }
-            },
-            "Component Arrays": [
-                "Velocity",
-                "Position",
-                "Rotation",
-                "Scale",
-                "Destructible",
-                "TextureUV",
-                "ColorTint"
-            ],
-            "Tags": [
-                "Bullet"
-            ],
-            "Starting Objects": [],
-            "Spawn Archetypes": [
-                {
-                    "Name": "Blue Bullet",
-                    "Components": {
-                        "Position": {
-                            "x": 960.0,
-                            "y": 540.0
-                        },
-                        "Velocity": {
-                            "vx": 2.3299999237060549,
-                            "vy": 0.0
-                        },
-                        "TextureUV": {
-                            "uMin": 0.0,
-                            "vMin": 0.0,
-                            "uSize": 1.0,
-                            "vSize": 1.0
-                        },
-                        "Rotation": {
-                            "angle": {
-                                "value": 0.0
+            "Key": "Spawner Spawner Pool",
+            "Value": {
+                "capacity": 1,
+                "componentArrayNames": [
+                    "Position",
+                    "SpawnTimer"
+                ],
+                "components": {
+                    "Spawner": {
+                        "currentPattern": "Spawner Spawner Pattern",
+                        "patterns": [
+                            {
+                                "Key": "Spawner Spawner Pattern",
+                                "Value": {
+                                    "automaticSpawns": [
+                                        {
+                                            "spawnType": "Spawner Spawner Spawn",
+                                            "ticksPerSpawn": 1080,
+                                            "delay": 0
+                                        }
+                                    ]
+                                }
                             }
-                        },
-                        "Scale": {
-                            "w": 32.0,
-                            "h": 32.0
-                        },
-                        "Destructible": {},
-                        "ColorTint": {
-                            "red": 0.0,
-                            "green": 0.04166674613952637,
-                            "blue": 1.0,
-                            "alpha": 1.0
+                        ],
+                        "spawnTypes": [
+                            {
+                                "Key": "Spawner Spawner Spawn",
+                                "Value": {
+                                    "spawnLayers": [
+                                        {
+                                            "numGroups": 1,
+                                            "sizeRules": [],
+                                            "valueRules": [
+                                                {
+                                                    "Name": "RandomBoxOffset",
+                                                    "Data": {
+                                                        "xVariance": 150.0,
+                                                        "yVariance": 0.0
+                                                    }
+                                                },
+                                                {
+                                                    "Name": "MatchPosition"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "destinationPool": "Spawner Pool",
+                                    "spawnArchetype": "Spawn Archetype"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "name": "Spawner Spawner Pool",
+                "spawnArchetypes": [],
+                "startingObjects": [
+                    {
+                        "Key": "Object",
+                        "Value": {
+                            "name": "Object",
+                            "componentArrays": {
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 286.0
+                                }
+                            }
                         }
                     }
-                }
-            ]
+                ],
+                "tags": []
+            }
+        },
+        {
+            "Key": "Triangle Pool",
+            "Value": {
+                "capacity": 10000,
+                "componentArrayNames": [
+                    "ColorTint",
+                    "Destructible",
+                    "Position",
+                    "Rotation",
+                    "Scale",
+                    "TextureUV",
+                    "Velocity"
+                ],
+                "components": {
+                    "BoundaryBox": {
+                        "xMin": -1920.0,
+                        "xMax": 1920.0,
+                        "yMin": -1080.0,
+                        "yMax": 1080.0
+                    },
+                    "CircleCollider": {
+                        "radius": 8.0
+                    },
+                    "Sprite": {
+                        "texture": "TestBullet",
+                        "layer": 2
+                    }
+                },
+                "name": "Triangle Pool",
+                "spawnArchetypes": [
+                    {
+                        "Key": "Triangle Object",
+                        "Value": {
+                            "name": "Triangle Object",
+                            "componentArrays": {
+                                "ColorTint": {
+                                    "red": 0.0,
+                                    "green": 0.06399989128112793,
+                                    "blue": 1.0,
+                                    "alpha": 1.0
+                                },
+                                "Destructible": {},
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                },
+                                "Rotation": {
+                                    "angle": {
+                                        "value": -0.0
+                                    }
+                                },
+                                "Scale": {
+                                    "w": 24.0,
+                                    "h": 24.0
+                                },
+                                "TextureUV": {
+                                    "uMin": 0.0,
+                                    "vMin": 0.0,
+                                    "uSize": 1.0,
+                                    "vSize": 1.0
+                                },
+                                "Velocity": {}
+                            }
+                        }
+                    }
+                ],
+                "startingObjects": [],
+                "tags": [
+                    "Bullet"
+                ]
+            }
+        },
+        {
+            "Key": "Triangle Spawner Pool",
+            "Value": {
+                "capacity": 1,
+                "componentArrayNames": [
+                    "Destructible",
+                    "Lifetime",
+                    "Position",
+                    "SpawnTimer",
+                    "Velocity"
+                ],
+                "components": {
+                    "Spawner": {
+                        "currentPattern": "Test Pattern",
+                        "patterns": [
+                            {
+                                "Key": "Test Pattern",
+                                "Value": {
+                                    "automaticSpawns": [
+                                        {
+                                            "spawnType": "Triangle Spawn Type",
+                                            "ticksPerSpawn": 8,
+                                            "delay": 0
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "spawnTypes": [
+                            {
+                                "Key": "Triangle Spawn Type",
+                                "Value": {
+                                    "spawnLayers": [
+                                        {
+                                            "numGroups": 1,
+                                            "sizeRules": [
+                                                {
+                                                    "Name": "IncrementCount",
+                                                    "Data": {
+                                                        "amount": 1,
+                                                        "max": 8
+                                                    }
+                                                }
+                                            ],
+                                            "valueRules": [
+                                                {
+                                                    "Name": "SetSpeed",
+                                                    "Data": {
+                                                        "base": 4.0,
+                                                        "delta": 0.0
+                                                    }
+                                                },
+                                                {
+                                                    "Name": "Fan",
+                                                    "Data": {
+                                                        "spacing": {
+                                                            "value": -0.02617993950843811
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "Name": "MatchPosition"
+                                                },
+                                                {
+                                                    "Name": "MatchDirection"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "destinationPool": "Triangle Pool",
+                                    "spawnArchetype": "Triangle Object"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "name": "Triangle Spawner Pool",
+                "spawnArchetypes": [
+                    {
+                        "Key": "Triangle Spawner Archetype",
+                        "Value": {
+                            "name": "Triangle Spawner Archetype",
+                            "componentArrays": {
+                                "Destructible": {},
+                                "Lifetime": {
+                                    "ticks": 63
+                                },
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0
+                                },
+                                "Velocity": {}
+                            }
+                        }
+                    }
+                ],
+                "startingObjects": [],
+                "tags": []
+            }
         }
     ]
 }

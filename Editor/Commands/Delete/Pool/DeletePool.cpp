@@ -11,7 +11,6 @@
  /* ======================================================================== */
 
 #include "DeletePool.hpp"
-#include <Engine/Engine.hpp>
 #include <Editor.hpp>
 
 namespace Barrage
@@ -20,35 +19,25 @@ namespace Barrage
     Command("Deleted pool. (" + poolName + ")"),
     sceneName_(sceneName),
     poolName_(poolName),
-    undoIndex_(0),
-    undoPoolArchetype_(nullptr)
+    undoPoolArchetype_()
   {
-  }
-
-  DeletePool::~DeletePool()
-  {
-    delete undoPoolArchetype_;
   }
 
   bool DeletePool::Execute()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    if (scene == nullptr)
+    if (scene == nullptr || scene->poolArchetypes_.count(poolName_) == 0)
     {
       return false;
     }
 
-    undoPoolArchetype_ = scene->ExtractPoolArchetype(poolName_, &undoIndex_);
+    undoPoolArchetype_ = scene->poolArchetypes_.at(poolName_);
+    scene->poolArchetypes_.erase(poolName_);
 
-    if (undoPoolArchetype_ == nullptr)
+    if (Editor::Get().Data().selectedPool_ == poolName_)
     {
-      return false;
-    }
-
-    if (Editor::Instance->Data().selectedPool_ == poolName_)
-    {
-      Editor::Instance->Data().selectedPool_ = std::string();
+      Editor::Get().Data().selectedPool_ = std::string();
     }
 
     return true;
@@ -56,21 +45,20 @@ namespace Barrage
 
   void DeletePool::Undo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    scene->AddPoolArchetype(undoPoolArchetype_, &undoIndex_);
-    undoPoolArchetype_ = nullptr;
+    scene->poolArchetypes_.emplace(poolName_, undoPoolArchetype_);
   }
 
   void DeletePool::Redo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    undoPoolArchetype_ = scene->ExtractPoolArchetype(poolName_, &undoIndex_);
+    scene->poolArchetypes_.erase(poolName_);
 
-    if (Editor::Instance->Data().selectedPool_ == poolName_)
+    if (Editor::Get().Data().selectedPool_ == poolName_)
     {
-      Editor::Instance->Data().selectedPool_ = std::string();
+      Editor::Get().Data().selectedPool_ = std::string();
     }
   }
 }

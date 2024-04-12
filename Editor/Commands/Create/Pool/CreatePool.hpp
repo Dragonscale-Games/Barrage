@@ -16,8 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Commands/Command.hpp>
-#include <stack>
-#include <Objects/Archetypes/PoolArchetype/PoolArchetype.hpp>
+#include <Objects/Archetypes/PoolArchetype.hpp>
 
 namespace Barrage
 {
@@ -35,14 +34,6 @@ namespace Barrage
       */
       /**************************************************************/
       CreatePool(const std::string& sceneName);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Deallocates resources.
-      */
-      /**************************************************************/
-      ~CreatePool();
 
     private:
       /**************************************************************/
@@ -77,8 +68,6 @@ namespace Barrage
     private:
       std::string sceneName_;
       std::string poolName_;
-
-      PoolArchetype* redoArchetype_;
   };
 }
 

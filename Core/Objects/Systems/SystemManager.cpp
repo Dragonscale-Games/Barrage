@@ -6,33 +6,27 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here> 
+   In charge of holding systems and calling their update functions.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
 #include "stdafx.h"
 #include "SystemManager.hpp"
+#include "Registration/Registrar.hpp"
 
 namespace Barrage
 {
-  SystemManager::SystemManager() :
+  SystemManager::SystemManager(Space& space) :
+    space_(space),
     systems_(),
-    systemNames_(),
-    updateOrderList_()
+    updateOrderList_(Registrar::GetSystemUpdateOrder())
   {
-  }
+    const StringSet& systemNames = SystemFactory::GetSystemNames();
 
-  SystemManager::~SystemManager()
-  {
-    for (auto it = systems_.begin(); it != systems_.end(); ++it)
+    for (auto& system : systemNames)
     {
-      delete it->second;
+      systems_.emplace(system, SystemFactory::CreateSystem(system, space));
     }
-  }
-
-  void SystemManager::SetUpdateOrder(const std::vector<std::string_view>& updateOrderList)
-  {
-    updateOrderList_ = updateOrderList;
   }
 
   void SystemManager::Subscribe(Pool* pool)
@@ -41,9 +35,9 @@ namespace Barrage
     {
       for (auto it = systems_.begin(); it != systems_.end(); ++it)
       {
-        System* system = it->second;
+        std::shared_ptr<System> system = it->second;
 
-        system->Subscribe(pool);
+        system->Subscribe(space_, pool);
       }
     }
   }
@@ -52,9 +46,9 @@ namespace Barrage
   {
     for (auto it = systems_.begin(); it != systems_.end(); ++it)
     {
-      System* system = it->second;
+      std::shared_ptr<System> system = it->second;
 
-      system->Unsubscribe(pool);
+      system->Unsubscribe(space_, pool);
     }
   }
 
@@ -69,7 +63,7 @@ namespace Barrage
     }
   }
 
-  System* SystemManager::GetSystem(const std::string_view& name)
+  std::shared_ptr<System> SystemManager::GetSystem(const std::string& name)
   {
     if (systems_.find(name) != systems_.end())
       return systems_.at(name);
@@ -77,13 +71,13 @@ namespace Barrage
       return nullptr;
   }
 
-  std::vector<std::string_view> SystemManager::GetRegisteredSystemNames()
-  {
-    return systemNames_;
-  }
-
-  std::vector<std::string_view> SystemManager::GetSystemUpdateOrder()
+  const std::vector<std::string>& SystemManager::GetSystemUpdateOrder() const
   {
     return updateOrderList_;
+  }
+
+  void SystemManager::SetUpdateOrder(const std::vector<std::string>& updateOrderList)
+  {
+    updateOrderList_ = updateOrderList;
   }
 }

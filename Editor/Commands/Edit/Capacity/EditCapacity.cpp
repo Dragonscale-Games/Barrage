@@ -30,39 +30,46 @@ namespace Barrage
 
   bool EditCapacity::Execute()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    if (newValue_ < 1)
+    {
+      LogWidget::AddEntry("Error: Cannot set pool's capacity below 1.");
+      return false;
+    }
 
-    if (scene == nullptr)
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+
+    if (scene == nullptr || scene->poolArchetypes_.count(poolName_) == 0)
     {
       return false;
     }
 
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    if (poolArchetype == nullptr)
+    if (newValue_ < poolArchetype.startingObjects_.size())
     {
+      LogWidget::AddEntry("Error: Cannot set pool's capacity below its number of starting objects.");
       return false;
     }
 
-    oldValue_ = poolArchetype->GetCapacity();
-    poolArchetype->SetCapacity(newValue_);
+    oldValue_ = poolArchetype.capacity_;
+    poolArchetype.capacity_ = newValue_;
 
     return true;
   }
 
   void EditCapacity::Undo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    poolArchetype->SetCapacity(oldValue_);
+    poolArchetype.capacity_ = oldValue_;
   }
 
   void EditCapacity::Redo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    poolArchetype->SetCapacity(newValue_);
+    poolArchetype.capacity_ = newValue_;
   }
 }

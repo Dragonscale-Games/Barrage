@@ -8,26 +8,25 @@
  * \brief
    The main point of contact for game object manipulation.
  */
-/* ======================================================================== */
+ /* ======================================================================== */
 
-////////////////////////////////////////////////////////////////////////////////
+ ////////////////////////////////////////////////////////////////////////////////
 #ifndef ObjectManager_BARRAGE_H
 #define ObjectManager_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "Pools/PoolManager.hpp"
 #include "Systems/SystemManager.hpp"
-#include "Spawning/SpawnRuleAllocator.hpp"
-#include "Random/Random.hpp"
+
+#include <functional>
 
 namespace Barrage
-{ 
+{
   class Space;
-  
+
   //! Main point of contact for game object manipulation
   class ObjectManager
-	{
-    public:   
+  {
+    public:
       /**************************************************************/
       /*!
         \brief
@@ -37,9 +36,10 @@ namespace Barrage
       /**************************************************************/
       ObjectManager(Space& space);
 
-      // ===================================================================
-      // Game loop
-      // ===================================================================
+      ObjectManager(const ObjectManager&) = delete;
+      ObjectManager& operator=(const ObjectManager&) = delete;
+      ObjectManager(ObjectManager&&) = delete;
+      ObjectManager& operator=(ObjectManager&&) = delete;
 
       /**************************************************************/
       /*!
@@ -48,7 +48,7 @@ namespace Barrage
       */
       /**************************************************************/
       void Update();
-      
+
       /**************************************************************/
       /*!
         \brief
@@ -57,60 +57,17 @@ namespace Barrage
       /**************************************************************/
       void Draw();
 
-      // ===================================================================
-      // Systems
-      // ===================================================================
-
-      std::vector<std::string_view> GetRegisteredSystemNames();
-
-      std::vector<std::string_view> GetSystemUpdateOrder();
-
-      void SubscribePools();
-
-      // ===================================================================
-      // Pools
-      // ===================================================================
-
       void CreatePool(const PoolArchetype& archetype);
-
-      Pool* GetPool(const std::string& name) const;
-
-      void DeletePool(const std::string& poolName);
 
       void DeleteAllPools();
 
-      std::vector<std::string> GetPoolNames();
-    
-    private:
-      template <typename T>
-      void RegisterComponent(const std::string_view& componentName);
-      
-      template <typename T>
-      void RegisterComponentArray(const std::string_view& componentName);
+      void SubscribePools();
 
-      template <typename T>
-      void RegisterSystem(const std::string_view& systemName);
-
-      template <typename T>
-      void RegisterSpawnRule(const std::string& spawnRuleName);
-
-      void SetSystemUpdateOrder(const std::vector<std::string_view>& updateOrderList);
-
-      void RegisterCustomComponents();
-
-      void RegisterCustomSystems();
-
-      void RegisterCustomSpawnFunctions();
-
-      void SetSystemUpdateOrder();
-
-    private:
-      PoolManager poolManager_;
+    public:
+      PoolMap pools_;
       SystemManager systemManager_;
-	};
+  };
 }
-
-#include "ObjectManager.tpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif // ObjectManager_BARRAGE_H

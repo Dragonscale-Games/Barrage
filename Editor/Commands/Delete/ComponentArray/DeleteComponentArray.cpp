@@ -19,105 +19,83 @@ namespace Barrage
   DeleteComponentArray::DeleteComponentArray(
     const std::string& sceneName,
     const std::string& poolName,
-    const std::string_view& componentArrayName) :
-    Command("Removed " + std::string(componentArrayName) + " from " + poolName + "."),
+    const std::string& componentArrayName) :
+    Command("Removed " + componentArrayName + " from " + poolName + "."),
     sceneName_(sceneName),
     poolName_(poolName),
     componentArrayName_(componentArrayName),
-    undoIndex_(),
-    undoComponentArrays_()
+    undoStartingObjectArrays_(),
+    undoSpawnArchetypeArrays_()
   {
-  }
-
-  DeleteComponentArray::~DeleteComponentArray()
-  {
-    for (auto it = undoComponentArrays_.begin(); it != undoComponentArrays_.end(); ++it)
-    {
-      delete it->second;
-    }
   }
 
   bool DeleteComponentArray::Execute()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    if (scene == nullptr)
+    if (scene == nullptr || scene->poolArchetypes_.count(poolName_) == 0)
     {
       return false;
     }
 
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    if (poolArchetype == nullptr || !poolArchetype->HasComponentArray(componentArrayName_))
+    if (poolArchetype.componentArrayNames_.count(componentArrayName_) == 0)
     {
       return false;
     }
 
-    const std::vector<ObjectArchetype*> startingObjects = poolArchetype->GetStartingObjects();
-    const std::vector<ObjectArchetype*> spawnArchetypes = poolArchetype->GetSpawnArchetypes();
+    RemoveComponentArraysFromObjects(poolArchetype.startingObjects_, undoStartingObjectArrays_);
+    RemoveComponentArraysFromObjects(poolArchetype.spawnArchetypes_, undoSpawnArchetypeArrays_);
 
-    RemoveComponentArraysFromObjects(startingObjects);
-    RemoveComponentArraysFromObjects(spawnArchetypes);
-
-    poolArchetype->RemoveComponentArrayName(componentArrayName_, &undoIndex_);
+    poolArchetype.componentArrayNames_.erase(componentArrayName_);
 
     return true;
   }
 
   void DeleteComponentArray::Undo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    const std::vector<ObjectArchetype*> startingObjects = poolArchetype->GetStartingObjects();
-    const std::vector<ObjectArchetype*> spawnArchetypes = poolArchetype->GetSpawnArchetypes();
+    ReplaceComponentArraysOnObjects(poolArchetype.startingObjects_, undoStartingObjectArrays_);
+    ReplaceComponentArraysOnObjects(poolArchetype.spawnArchetypes_, undoSpawnArchetypeArrays_);
 
-    ReplaceComponentArraysOnObjects(startingObjects);
-    ReplaceComponentArraysOnObjects(spawnArchetypes);
-
-    poolArchetype->AddComponentArrayName(componentArrayName_, &undoIndex_);
+    poolArchetype.componentArrayNames_.insert(componentArrayName_);
   }
 
   void DeleteComponentArray::Redo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
-    PoolArchetype* poolArchetype = scene->GetPoolArchetype(poolName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
+    PoolArchetype& poolArchetype = scene->poolArchetypes_.at(poolName_);
 
-    const std::vector<ObjectArchetype*> startingObjects = poolArchetype->GetStartingObjects();
-    const std::vector<ObjectArchetype*> spawnArchetypes = poolArchetype->GetSpawnArchetypes();
-    
-    RemoveComponentArraysFromObjects(startingObjects);
-    RemoveComponentArraysFromObjects(spawnArchetypes);
-    
-    poolArchetype->RemoveComponentArrayName(componentArrayName_, &undoIndex_);
+    RemoveComponentArraysFromObjects(poolArchetype.startingObjects_, undoStartingObjectArrays_);
+    RemoveComponentArraysFromObjects(poolArchetype.spawnArchetypes_, undoSpawnArchetypeArrays_);
+
+    poolArchetype.componentArrayNames_.erase(componentArrayName_);
   }
 
-  void DeleteComponentArray::ReplaceComponentArraysOnObjects(const std::vector<ObjectArchetype*>& objects)
+  void DeleteComponentArray::RemoveComponentArraysFromObjects(ObjectArchetypeMap& objects, ComponentArrayMap& arrayMap)
   {
     for (auto it = objects.begin(); it != objects.end(); ++it)
     {
-      ObjectArchetype* objectArchetype = *it;
-      std::string objectName = objectArchetype->GetName();
-      ComponentArray* componentArray = undoComponentArrays_.at(objectName);
-
-      // remove from temp storage
-      undoComponentArrays_.erase(objectName);
-      // add to object
-      objectArchetype->AddComponentArray(componentArrayName_, componentArray);
+      std::string objectName = it->first;
+      ObjectArchetype& objectArchetype = it->second;
+      
+      arrayMap.emplace(objectName, objectArchetype.componentArrays_.at(componentArrayName_));
+      objectArchetype.componentArrays_.erase(componentArrayName_);
     }
   }
 
-  void DeleteComponentArray::RemoveComponentArraysFromObjects(const std::vector<ObjectArchetype*>& objects)
+  void DeleteComponentArray::ReplaceComponentArraysOnObjects(ObjectArchetypeMap& objects, ComponentArrayMap& arrayMap)
   {
     for (auto it = objects.begin(); it != objects.end(); ++it)
     {
-      ObjectArchetype* objectArchetype = *it;
-      std::string objectName = objectArchetype->GetName();
+      std::string objectName = it->first;
+      ObjectArchetype& objectArchetype = it->second;
 
-      // remove from object
-      ComponentArray* componentArray = objectArchetype->ExtractComponentArray(componentArrayName_);
-      // add to temp storage
-      undoComponentArrays_.insert(std::make_pair(objectName, componentArray));
+      objectArchetype.componentArrays_.emplace(componentArrayName_, arrayMap.at(objectName));
+      arrayMap.erase(objectName);
     }
   }
 }

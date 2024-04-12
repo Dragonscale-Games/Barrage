@@ -13,7 +13,7 @@
 
 #include "stdafx.h"
 #include "Space.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine.hpp"
 
 namespace Barrage
 {
@@ -54,17 +54,17 @@ namespace Barrage
     }
   }
 
-  ActionManager& Space::GetActionManager()
+  ActionManager& Space::Actions()
   {
     return actionManager_;
   }
 
-  ObjectManager& Space::GetObjectManager()
+  ObjectManager& Space::Objects()
   {
     return objectManager_;
   }
 
-  Random& Space::GetRNG()
+  Random& Space::RNG()
   {
     return rng_;
   }
@@ -77,22 +77,24 @@ namespace Barrage
       {
         queuedScene_ = name;
       }
-      
+
       return;
     }
-    
-    Scene* new_scene = Engine::Instance->Scenes().GetScene(name);
+
+    Scene* new_scene = Engine::Get().Scenes().GetScene(name);
 
     if (new_scene == nullptr)
+    {
       return;
-    
+    }
+      
     objectManager_.DeleteAllPools();
 
-    const std::vector<PoolArchetype*>& starting_pools = new_scene->GetPoolArchetypes();
+    const PoolArchetypeMap& starting_pools = new_scene->GetPoolArchetypes();
 
     for (auto it = starting_pools.begin(); it != starting_pools.end(); ++it)
     {
-      objectManager_.CreatePool(**it);
+      objectManager_.CreatePool(it->second);
     }
 
     objectManager_.SubscribePools();

@@ -8,10 +8,10 @@
  * \brief
  * Defines helper functions for serializing Barrage objects (registered
  * through RTTR).
- * 
- * Source for some of the ideas used for this serializer: 
+ *
+ * Source for some of the ideas used for this serializer:
  * https://0x00000000.dev/reflection-serializer/
- * 
+ *
 */
 /* ========================================================================= */
 
@@ -22,6 +22,7 @@
 #include <stdafx.h>
 #include <string>
 #include "Serializer.hpp"
+#include <stdexcept>
 
 #include <string_view>
 
@@ -30,9 +31,16 @@
 #include <rttr/variant.h>
 #include <rapidjson/document.h>
 
-#include "Utilities/RuntimeError.hpp"
+#include "Objects/Behavior/BehaviorTree.hpp"
+#include "Objects/Components/Component.hpp"
+#include "Objects/Components/ComponentArray.hpp"
+#include "Objects/Spawning/SpawnRule.hpp"
 
-#include "Objects/Spawning/SpawnRuleAllocator.hpp"
+#include "Utilities/Utilities.hpp"
+
+#include "Objects/Behavior/BehaviorNodeFactory.hpp"
+#include "Objects/Spawning/SpawnRuleFactory.hpp"
+#include "Objects/Components/ComponentFactory.hpp"
 
 namespace
 {
@@ -108,6 +116,10 @@ namespace Barrage
     {
       value = propertyVariant.get_value<size_t>();
     }
+    else if (propertyType == rttr::type::get<long long>())
+    {
+      value = propertyVariant.get_value<long long>();
+    }
     else if (propertyType == rttr::type::get<std::string>())
     {
       const std::string text = propertyVariant.get_value<std::string>();
@@ -171,6 +183,10 @@ namespace Barrage
     {
       property = std::string(value.GetString());
     }
+    else if (propertyType == rttr::type::get<long long>())
+    {
+      property = value.Get<long long>();
+    }
     else
     {
       // We, ideally, never reach this part of execution.
@@ -201,16 +217,45 @@ namespace Barrage
       unwrappedObject = unwrappedObject.extract_wrapped_value();
     }
 
-    if (type == rttr::type::get<SpawnRuleList>())
+    if (type == rttr::type::get<ComponentMap>())
+    {
+      const ComponentMap& componentMap = object.get_value<ComponentMap>();
+      value.SetObject();
+
+      for (auto it = componentMap.begin(); it != componentMap.end(); ++it)
+      {
+        rapidjson::Value componentObject = Barrage::Serialize(it->second->GetRTTRValue(), allocator);
+        rapidjson::Value componentKey(it->first.data(), static_cast<rapidjson::SizeType>(it->first.size()), allocator);
+        value.AddMember(componentKey, componentObject, allocator);
+      }
+    }
+    else if (type == rttr::type::get<ComponentArrayMap>())
+    {
+      const ComponentArrayMap& componentArrayMap = object.get_value<ComponentArrayMap>();
+      value.SetObject();
+
+      for (auto it = componentArrayMap.begin(); it != componentArrayMap.end(); ++it)
+      {
+        if (it->second->GetCapacity() == 0)
+        {
+          continue;
+        }
+        
+        rapidjson::Value componentObject = Barrage::Serialize(it->second->GetRTTRValue(0), allocator);
+        rapidjson::Value componentKey(it->first.data(), static_cast<rapidjson::SizeType>(it->first.size()), allocator);
+        value.AddMember(componentKey, componentObject, allocator);
+      }
+    }
+    else if (type == rttr::type::get<SpawnRuleList>())
     {
       const SpawnRuleList& spawnRuleList = object.get_value<SpawnRuleList>();
-      
+
       value.SetArray();
 
       for (auto it = spawnRuleList.begin(); it != spawnRuleList.end(); ++it)
       {
-        std::shared_ptr<SpawnRule> spawnRule = *it;
-        
+        const DeepPtr<SpawnRule>& spawnRule = *it;
+
         rapidjson::Value spawnRuleValue;
         spawnRuleValue.SetObject();
         rapidjson::Value spawnRuleName = Serialize(spawnRule->GetName(), allocator);
@@ -226,7 +271,60 @@ namespace Barrage
         value.PushBack(spawnRuleValue, allocator);
       }
     }
-    // Handle array-like types.
+    else if (type == rttr::type::get<StringSet>())
+    {
+      const StringSet& stringSet = object.get_value<StringSet>();
+
+      value.SetArray();
+
+      for (auto it = stringSet.begin(); it != stringSet.end(); ++it)
+      {
+        rapidjson::Value currentString = Serialize(*it, allocator);
+
+        value.PushBack(currentString, allocator);
+      }
+    }
+    else if (type == rttr::type::get<DeepPtr<BehaviorNodeRecipe>>())
+    {
+      const DeepPtr<BehaviorNodeRecipe>& nodeRecipe = object.get_value<DeepPtr<BehaviorNodeRecipe>>();
+
+      value.SetObject();
+
+      if (!nodeRecipe || !nodeRecipe->node_)
+      {
+        rapidjson::Value nullValue;
+        nullValue.SetNull();
+
+        value.AddMember("Empty", nullValue, allocator);
+      }
+      else
+      {
+        rapidjson::Value nameValue = Serialize(nodeRecipe->node_->GetName(), allocator);
+        value.AddMember("Name", nameValue, allocator);
+        
+        rttr::variant dataVariant = nodeRecipe->node_->GetRTTRValue();
+        
+        if (dataVariant.is_valid())
+        {
+          rapidjson::Value dataValue = Serialize(dataVariant, allocator);
+          value.AddMember("Data", dataValue, allocator);
+        }
+        
+        if (!nodeRecipe->children_.empty())
+        {
+          rapidjson::Value childrenArrayValue;
+          childrenArrayValue.SetArray();
+        
+          for (auto it = nodeRecipe->children_.begin(); it != nodeRecipe->children_.end(); ++it)
+          {
+            rapidjson::Value childNodeValue = Serialize(*it, allocator);
+            childrenArrayValue.PushBack(childNodeValue, allocator);
+          }
+        
+          value.AddMember("Children", childrenArrayValue, allocator);
+        }
+      }
+    }
     else if (type.is_sequential_container())
     {
       const rttr::variant_sequential_view& asArray = unwrappedObject.create_sequential_view();
@@ -293,10 +391,10 @@ namespace Barrage
   {
     // The object being serialized as an unwrapped object.
     rttr::variant unwrappedObject = object;
-    
+
     if (!type)
     {
-      throw RuntimeError("Failed to interpret type of deserialized object");
+      throw std::runtime_error("Failed to interpret type of deserialized object");
     }
 
     // We care about the contents of all wrapper types.
@@ -306,42 +404,167 @@ namespace Barrage
       unwrappedObject = unwrappedObject.extract_wrapped_value();
     }
 
-    if (type == rttr::type::get<SpawnRuleList>())
+    if (type == rttr::type::get<ComponentMap>())
+    {
+      ComponentMap newComponentMap;
+      
+      for (auto it = data.MemberBegin(); it != data.MemberEnd(); ++it)
+      {
+        std::string name = it->name.GetString();
+      
+        DeepPtr<Component> component = ComponentFactory::AllocateComponent(name);
+      
+        if (component)
+        {
+          rttr::type componentType = rttr::type::get_by_name(name);
+      
+          if (componentType.is_valid())
+          {
+            rttr::variant value = component->GetRTTRValue();
+            Barrage::Deserialize(value, it->value, componentType);
+            component->SetRTTRValue(value);
+          }
+      
+          newComponentMap.emplace(name, component);
+        }
+      }
+
+      object = newComponentMap;
+    }
+    else if (type == rttr::type::get<ComponentArrayMap>())
+    {
+      ComponentArrayMap newComponentArrayMap;
+      
+      for (auto it = data.MemberBegin(); it != data.MemberEnd(); ++it)
+      {
+        std::string name = it->name.GetString();
+
+        DeepPtr<ComponentArray> componentArray = ComponentFactory::AllocateComponentArray(name, 1);
+
+        if (componentArray)
+        {
+          rttr::type componentType = rttr::type::get_by_name(name);
+
+          if (componentType.is_valid())
+          {
+            rttr::variant value = componentArray->GetRTTRValue(0);
+            Barrage::Deserialize(value, it->value, componentType);
+            componentArray->SetRTTRValue(value, 0);
+          }
+
+          newComponentArrayMap.emplace(name, componentArray);
+        }
+      }
+
+      object = newComponentArrayMap;
+    }
+    else if (type == rttr::type::get<SpawnRuleList>())
     {
       SpawnRuleList newSpawnRuleList;
       
       const rapidjson::GenericArray<true, rapidjson::Value> dataAsArray = data.GetArray();
       size_t arraySize = dataAsArray.Size();
-
+      
       for (uint32_t i = 0; i < arraySize; ++i)
       {
         const rapidjson::Value& element = dataAsArray[i];
-
+      
         if (element.HasMember("Name") && element["Name"].IsString())
         {
-          std::shared_ptr<SpawnRule> newSpawnRule = SpawnRuleAllocator::CreateSpawnRule(element["Name"].GetString());
-
+          DeepPtr<SpawnRule> newSpawnRule = SpawnRuleFactory::CreateSpawnRule(element["Name"].GetString());
+      
           if (newSpawnRule)
           {
             if (element.HasMember("Data") && element["Data"].IsObject())
             {
               rttr::variant spawnRuleData = newSpawnRule->GetRTTRValue();
-
+      
               if (spawnRuleData.is_valid())
               {
                 Deserialize(spawnRuleData, element["Data"], spawnRuleData.get_type());
                 newSpawnRule->SetRTTRValue(spawnRuleData);
               }
             }
-
+      
             newSpawnRuleList.push_back(newSpawnRule);
           }
         }
       }
-
+      
       object = newSpawnRuleList;
     }
-    // Handle array-like objects.
+    else if (type == rttr::type::get<StringSet>())
+    {
+      StringSet newStringSet;
+
+      const rapidjson::GenericArray<true, rapidjson::Value> dataAsArray = data.GetArray();
+
+      size_t arraySize = dataAsArray.Size();
+      
+      for (uint32_t i = 0; i < arraySize; ++i)
+      {
+        const rapidjson::Value& element = dataAsArray[i];
+      
+        if (element.IsString())
+        {
+          newStringSet.insert(element.GetString());
+        }
+      }
+
+      object = newStringSet;
+    }
+    else if (type == rttr::type::get<DeepPtr<BehaviorNodeRecipe>>())
+    {
+      if (data.HasMember("Name") && data["Name"].IsString())
+      {
+        std::string behaviorNodeName(data["Name"].GetString());
+        DeepPtr<BehaviorNode> behaviorNode = BehaviorNodeFactory::CreateBehaviorNode(behaviorNodeName);
+
+        if (behaviorNode)
+        {
+          if (data.HasMember("Data") && data["Data"].IsObject())
+          {
+            rttr::variant behaviorNodeData = behaviorNode->GetRTTRValue();
+
+            if (behaviorNodeData.is_valid())
+            {
+              Deserialize(behaviorNodeData, data["Data"], behaviorNodeData.get_type());
+              behaviorNode->SetRTTRValue(behaviorNodeData);
+            }
+          }
+
+          DeepPtr<BehaviorNodeRecipe> behaviorNodeRecipe(std::make_shared<BehaviorNodeRecipe>(behaviorNode));
+
+          if (data.HasMember("Children") && data["Children"].IsArray())
+          {
+            const rapidjson::GenericArray<true, rapidjson::Value> childrenArray = data["Children"].GetArray();
+            size_t arraySize = childrenArray.Size();
+
+            for (uint32_t i = 0; i < arraySize; ++i)
+            {
+              DeepPtr<BehaviorNodeRecipe> childNodeRecipe;
+
+              Deserialize(childNodeRecipe, childrenArray[i]);
+
+              if (childNodeRecipe)
+              {
+                behaviorNodeRecipe->children_.push_back(childNodeRecipe);
+              }
+            }
+          }
+
+          object = behaviorNodeRecipe;
+        }
+        else
+        {
+          object = DeepPtr<BehaviorNodeRecipe>(nullptr);
+        }
+      }
+      else
+      {
+        object = DeepPtr<BehaviorNodeRecipe>(nullptr);
+      }
+    }
     else if (type.is_sequential_container())
     {
       // The array from the JSON data.
@@ -377,7 +600,7 @@ namespace Barrage
       rttr::variant_associative_view objectAsMap = object.create_associative_view();
       const rttr::type keyType = objectAsMap.get_key_type();
       const rttr::type valueType = objectAsMap.get_value_type();
-      
+
       for (uint32_t i = 0; i < arraySize; ++i)
       {
         // Deserialize each member of this map.
@@ -403,7 +626,7 @@ namespace Barrage
           auto success = objectAsMap.insert(key, value);
           if (!success.second)
           {
-            throw RuntimeError("Failed to insert member into map during deserialization");
+            throw std::runtime_error("Failed to insert member into map during deserialization");
           }
         }
       }
@@ -436,10 +659,10 @@ namespace Barrage
 
           Deserialize(propertyVariant, propertyData, propertyType);
           bool success = property.set_value(object, propertyVariant);
-          
+
           if (!success)
           {
-            throw RuntimeError("Failed to read class property during deserialization");
+            throw std::runtime_error("Failed to read class property during deserialization");
           }
         }
       }
@@ -447,7 +670,7 @@ namespace Barrage
     // Uhhhh... we shouldn't be here.
     else
     {
-      throw RuntimeError("Failed to interpret type of deserialized object");
+      throw std::runtime_error("Failed to interpret type of deserialized object");
     }
   }
 }

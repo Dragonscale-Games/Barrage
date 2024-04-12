@@ -19,65 +19,52 @@ namespace Barrage
     Command("New pool created."),
     sceneName_(sceneName),
     poolName_(poolName),
-    redoArchetype_(nullptr)
+    newPool_()
   {
-  }
-
-  DuplicatePool::~DuplicatePool()
-  {
-    delete redoArchetype_;
   }
 
   bool DuplicatePool::Execute()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    if (scene == nullptr)
+    if (scene == nullptr || scene->poolArchetypes_.count(poolName_) == 0)
     {
       return false;
     }
 
-    PoolArchetype* originalPool = scene->GetPoolArchetype(poolName_);
-
-    if (originalPool == nullptr)
-    {
-      return false;
-    }
-
-    PoolArchetype* newPool = new PoolArchetype(*originalPool);
+    newPool_ = scene->poolArchetypes_.at(poolName_);
 
     unsigned counter = 2;
 
     do {
-      poolName_ = originalPool->GetName() + " " + std::to_string(counter);
+      poolName_ = newPool_.name_ + " " + std::to_string(counter);
       counter++;
 
-    } while (scene->GetPoolArchetype(poolName_));
+    } while (scene->poolArchetypes_.count(poolName_));
 
-    newPool->SetName(poolName_);
+    newPool_.name_ = poolName_;
 
-    scene->AddPoolArchetype(newPool);
+    scene->poolArchetypes_.emplace(poolName_, newPool_);
 
     return true;
   }
 
   void DuplicatePool::Undo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    redoArchetype_ = scene->ExtractPoolArchetype(poolName_);
+    scene->poolArchetypes_.erase(poolName_);
 
-    if (Editor::Instance->Data().selectedPool_ == poolName_)
+    if (Editor::Get().Data().selectedPool_ == poolName_)
     {
-      Editor::Instance->Data().selectedPool_ = std::string();
+      Editor::Get().Data().selectedPool_ = std::string();
     }
   }
 
   void DuplicatePool::Redo()
   {
-    Scene* scene = Engine::Instance->Scenes().GetScene(sceneName_);
+    Scene* scene = Engine::Get().Scenes().GetScene(sceneName_);
 
-    scene->AddPoolArchetype(redoArchetype_);
-    redoArchetype_ = nullptr;
+    scene->poolArchetypes_.emplace(poolName_, newPool_);
   }
 }

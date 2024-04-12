@@ -31,11 +31,6 @@ namespace Barrage
       */
       /**************************************************************/
       static void Use();
-
-      static ImVec2 GetSize();
-
-    private:
-      static ImVec2 InspectorWidget::size_;
   };
 }
 

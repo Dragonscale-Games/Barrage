@@ -39,63 +39,69 @@ endif()
 
 # Add the sources for the core library.
 add_library(BarrageCore STATIC 
-  "template.cxx"
+  "Engine.cpp" 
 
-  "Actions/ActionManager.cpp" "Scenes/SceneManager.cpp"
+  "Actions/ActionManager.cpp" 
 
-  "Debug/SymbolManager.cpp" "Debug/${OS_IMPL_FOLDER}/SymbolManager.cpp"
-  "Debug/MemoryDebugger.cpp" "Debug/${OS_IMPL_FOLDER}/MemoryDebugger.cpp"
+  "Audio/AudioManager.cpp"
 
-  "Engine/Engine.cpp" 
-  
-  "File/FileManager.cpp" "File/${OS_IMPL_FOLDER}/FileManager.cpp"
-  "File/FileManager.tpp"
-  
-  "File/Objects/ObjectSource.cpp"
-  
-  "FramerateController/FramerateController.cpp" 
-  
+  "Entry/Entry.cpp"  
+
+  "Framerate/FramerateController.cpp"
+
   "Input/InputManager.cpp"
- 
-  "Objects/ObjectManager.cpp"
-  "Objects/Pools/Pool.cpp"    
-  
-  "Objects/Systems/BaseSystem.cpp"                             
 
-    
-         
-  "Objects/Pools/PoolManager.cpp"                        
-  "Objects/Systems/SystemManager.cpp"                   
-  "Objects/Components/ComponentAllocator.cpp"              
-  "Objects/Archetypes/ObjectArchetype/ObjectArchetype.cpp" 
-  "Objects/Archetypes/PoolArchetype/PoolArchetype.cpp" 
-  "Objects/Pools/PoolType.cpp"  
-  "Math/Curves.tpp"
+  "Logger/Logger.cpp" 
+
+  "Math/Curves/BezierCurve.cpp"
+
+  "Memory/MemoryDebugger.cpp" 
+
+  "Objects/Archetypes/ObjectArchetype.cpp" 
+  "Objects/Archetypes/PoolArchetype.cpp" 
+
+  "Objects/Behavior/BehaviorTree.cpp" 
+  "Objects/Behavior/BehaviorNode.cpp" 
+  "Objects/Behavior/BehaviorNodeFactory.cpp"
+  "Objects/Behavior/ParallelNode.cpp"
+   
+  "Objects/Components/ComponentArray.cpp" 
+  "Objects/Components/ComponentFactory.cpp"
+
+  "Objects/Pools/Pool.cpp" 
+  "Objects/Pools/PoolType.cpp" 
+
+  "Objects/Spawning/SpawnLayer.cpp"
+  "Objects/Spawning/SpawnRule.cpp" 
+  "Objects/Spawning/SpawnRuleFactory.cpp"
+  "Objects/Spawning/SpawnType.cpp"
+
+  "Objects/Systems/System.cpp" 
+  "Objects/Systems/SystemFactory.cpp" 
+  "Objects/Systems/SystemManager.cpp" 
+
+  "Objects/ObjectManager.cpp"
 
   "Random/Random.cpp"
 
-  "Renderer/Renderer.cpp" 
+  "Registration/Registrar.cpp"
+
+  "Renderer/Framebuffers/Framebuffer.cpp"
+  "Renderer/Shaders/Shader.cpp" 
   "Renderer/Textures/Texture.cpp" 
   "Renderer/Textures/TextureManager.cpp" 
-  "Renderer/Shaders/Shader.cpp" 
-  
-  
-  "Scenes/Scene.cpp"
+  "Renderer/Renderer.cpp" 
+
+  "Scenes/Scene.cpp" 
+  "Scenes/SceneManager.cpp" 
 
   "Serialization/Serializer.cpp"
 
-  "Spaces/Space.cpp"
+  "Spaces/Space.cpp" 
   "Spaces/SpaceManager.cpp" 
 
-  "Utilities/RuntimeError.cpp"
-  "Utilities/RecursionTable.tpp"
-  "Utilities/Logger.cpp"
+  "Window/WindowManager.cpp"  )
 
-  "Objects/Spawning/SpawnInfo.cpp"  
-
-  "Entry/Entry.cpp"  "Window/WindowManager.cpp" "Renderer/Framebuffers/Framebuffer.cpp"  "Objects/Spawning/SpawnRule.cpp"  "Objects/Spawning/SpawnRuleAllocator.cpp" "Audio/AudioManager.cpp")
-
-add_library(barragecore ALIAS BarrageCore)
 # And link the dependencies for this library.
 # target_link_libraries(BarrageCore PUBLIC glad glfw glm rapidjson stb_image RTTR::Core)
 target_link_libraries(BarrageCore LINK_PUBLIC spdlog::spdlog glad glfw glm rapidjson stb_image RTTR::Core Soloud)

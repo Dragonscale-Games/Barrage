@@ -6,64 +6,72 @@
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-   <put description here>
+   Handles game object movement.
  */
  /* ======================================================================== */
 
+#include "stdafx.h"
 #include "MovementSystem.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine.hpp"
 #include "Utilities/Utilities.hpp"
 
-#include "Components/Player.hpp"
-#include "ComponentArrays/VelocityArray.hpp"
-#include "Components/BoundaryBox.hpp"
-#include "ComponentArrays/AngularSpeedArray.hpp"
-#include "ComponentArrays/PositionArray.hpp"
-#include "ComponentArrays/RotationArray.hpp"
+#include "Components/Player/Player.hpp"
+#include "ComponentArrays/Velocity/VelocityArray.hpp"
+#include "Components/BoundaryBox/BoundaryBox.hpp"
+#include "ComponentArrays/AngularSpeed/AngularSpeedArray.hpp"
+#include "ComponentArrays/Position/PositionArray.hpp"
+#include "ComponentArrays/Rotation/RotationArray.hpp"
+#include "Components/Movement/Movement.hpp"
 
 namespace Barrage
 {
+  static const std::string BASIC_MOVEMENT_POOLS("Basic Movement Pools");
+  static const std::string BASIC_ROTATION_POOLS("Basic Rotation Pools");
+  static const std::string PLAYER_POOLS("Player Pools");
+  static const std::string BOUNDED_PLAYER_POOLS("Bounded Player Pools");
+  
   MovementSystem::MovementSystem() :
     System()
   {
     PoolType basic_movement_type;
     basic_movement_type.AddComponentArray("Position");
     basic_movement_type.AddComponentArray("Velocity");
-    poolTypes_["Basic Movement Pools"] = basic_movement_type;
+    poolTypes_[BASIC_MOVEMENT_POOLS] = basic_movement_type;
 
     PoolType basic_rotation_type;
     basic_rotation_type.AddComponentArray("Rotation");
     basic_rotation_type.AddComponentArray("AngularSpeed");
-    poolTypes_["Basic Rotation Pools"] = basic_rotation_type;
+    poolTypes_[BASIC_ROTATION_POOLS] = basic_rotation_type;
 
     PoolType player_type;
     player_type.AddComponentArray("Velocity");
     player_type.AddComponent("Player");
-    poolTypes_["Player Pools"] = player_type;
+    poolTypes_[PLAYER_POOLS] = player_type;
 
     PoolType bounded_player_type;
     bounded_player_type.AddComponentArray("Position");
     bounded_player_type.AddComponent("BoundaryBox");
     bounded_player_type.AddComponent("Player");
-    poolTypes_["Bounded Player Pools"] = bounded_player_type;
+    poolTypes_[BOUNDED_PLAYER_POOLS] = bounded_player_type;
   }
 
   void MovementSystem::Update()
   {
-    UpdatePoolGroup("Player Pools", UpdatePlayerMovement);
-    UpdatePoolGroup("Basic Movement Pools", UpdateBasicMovement);
-    UpdatePoolGroup("Basic Rotation Pools", UpdateBasicRotation);
-    UpdatePoolGroup("Bounded Player Pools", UpdatePlayerBounds);
+    UpdatePoolGroup(PLAYER_POOLS, UpdatePlayerMovement);
+    UpdatePoolGroup(BASIC_MOVEMENT_POOLS, UpdateBasicMovement);
+    UpdatePoolGroup(BASIC_ROTATION_POOLS, UpdateBasicRotation);
+    UpdatePoolGroup(BOUNDED_PLAYER_POOLS, UpdatePlayerBounds);
   }
 
-  void MovementSystem::UpdatePlayerMovement(Pool* pool)
+  void MovementSystem::UpdatePlayerMovement(Space& space, Pool& pool)
   {
-    Player& player = pool->GetComponent<Player>("Player")->Data();
+    Player& player = pool.GetComponent<Player>("Player").Data();
+    InputManager& input = Engine::Get().Input();
 
     float speed = 0.0f;
     Velocity player_velocity;
 
-    if (Engine::Instance->Input().KeyIsDown(KEY_SHIFT_LEFT))
+    if (input.KeyIsDown(GLFW_KEY_LEFT_SHIFT))
     {
       speed = player.speedSlow_;
     }
@@ -72,16 +80,16 @@ namespace Barrage
       speed = player.speedFast_;
     }
 
-    if (Engine::Instance->Input().KeyIsDown(KEY_LEFT))
+    if (input.KeyIsDown(GLFW_KEY_LEFT))
       player_velocity.vx_ = -speed;
-    else if (Engine::Instance->Input().KeyIsDown(KEY_RIGHT))
+    else if (input.KeyIsDown(GLFW_KEY_RIGHT))
       player_velocity.vx_ = speed;
     else
       player_velocity.vx_ = 0.0f;
 
-    if (Engine::Instance->Input().KeyIsDown(KEY_UP))
+    if (input.KeyIsDown(GLFW_KEY_UP))
       player_velocity.vy_ = speed;
-    else if (Engine::Instance->Input().KeyIsDown(KEY_DOWN))
+    else if (input.KeyIsDown(GLFW_KEY_DOWN))
       player_velocity.vy_ = -speed;
     else
       player_velocity.vy_ = 0.0f;
@@ -92,9 +100,9 @@ namespace Barrage
       player_velocity.vy_ = player_velocity.vy_ / 1.4142f;
     }
 
-    VelocityArray& velocity_array = *pool->GetComponentArray<Velocity>("Velocity");
+    VelocityArray& velocity_array = pool.GetComponentArray<Velocity>("Velocity");
 
-    unsigned num_objects = pool->GetActiveObjectCount();
+    unsigned num_objects = pool.ActiveObjectCount();
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
@@ -102,12 +110,12 @@ namespace Barrage
     }
   }
 
-  void MovementSystem::UpdatePlayerBounds(Pool* pool)
+  void MovementSystem::UpdatePlayerBounds(Space& space, Pool& pool)
   {
-    PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
-    BoundaryBox& bounds = pool->GetComponent<BoundaryBox>("BoundaryBox")->Data();
+    PositionArray& position_array = pool.GetComponentArray<Position>("Position");
+    BoundaryBox& bounds = pool.GetComponent<BoundaryBox>("BoundaryBox").Data();
 
-    unsigned num_objects = pool->GetActiveObjectCount();
+    unsigned num_objects = pool.ActiveObjectCount();
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
@@ -125,12 +133,12 @@ namespace Barrage
     }
   }
 
-  void MovementSystem::UpdateBasicMovement(Pool* pool)
+  void MovementSystem::UpdateBasicMovement(Space& space, Pool& pool)
   {
-    PositionArray& position_array = *pool->GetComponentArray<Position>("Position");
-    VelocityArray& velocity_array = *pool->GetComponentArray<Velocity>("Velocity");
+    PositionArray& position_array = pool.GetComponentArray<Position>("Position");
+    VelocityArray& velocity_array = pool.GetComponentArray<Velocity>("Velocity");
 
-    unsigned num_objects = pool->GetActiveObjectCount();
+    unsigned num_objects = pool.ActiveObjectCount();
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
@@ -139,12 +147,12 @@ namespace Barrage
     }
   }
 
-  void MovementSystem::UpdateBasicRotation(Pool* pool)
+  void MovementSystem::UpdateBasicRotation(Space& space, Pool& pool)
   {
-    RotationArray& rotation_array = *pool->GetComponentArray<Rotation>("Rotation");
-    AngularSpeedArray& angular_speed_array = *pool->GetComponentArray<AngularSpeed>("AngularSpeed");
+    RotationArray& rotation_array = pool.GetComponentArray<Rotation>("Rotation");
+    AngularSpeedArray& angular_speed_array = pool.GetComponentArray<AngularSpeed>("AngularSpeed");
 
-    unsigned num_objects = pool->GetActiveObjectCount();
+    unsigned num_objects = pool.ActiveObjectCount();
 
     for (unsigned i = 0; i < num_objects; ++i)
     {

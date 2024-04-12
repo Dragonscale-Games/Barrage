@@ -18,14 +18,11 @@
 
 #include <Commands/Command.hpp>
 #include <unordered_map>
-#include <string_view>
-#include <Objects/Components/BaseClasses/ComponentArray.hpp>
-#include <Objects/Archetypes/ObjectArchetype/ObjectArchetype.hpp>
+#include <Objects/Components/ComponentArray.hpp>
+#include <Objects/Archetypes/ObjectArchetype.hpp>
 
 namespace Barrage
 {
-  typedef std::unordered_map<std::string, ComponentArray*> UndoComponentArrayMap;
-  
   //! Removes a component array from a pool and its objects
   class DeleteComponentArray : public Command
   {
@@ -48,15 +45,7 @@ namespace Barrage
       DeleteComponentArray(
         const std::string& sceneName,
         const std::string& poolName,
-        const std::string_view& componentArrayName);
-
-      /**************************************************************/
-      /*!
-        \brief
-          Deallocates resources.
-      */
-      /**************************************************************/
-      ~DeleteComponentArray();
+        const std::string& componentArrayName);
 
     private:
       /**************************************************************/
@@ -90,34 +79,38 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
-          Replaces the original component arrays on each object in
-          the input vector.
+          Removes the component array from each object.
 
         \param objects
-          The objects to replace the component array on.
+          The objects to remove the component array from.
+
+        \param arrayMap
+          The map to store the component arrays in.
       */
       /**************************************************************/
-      void ReplaceComponentArraysOnObjects(const std::vector<ObjectArchetype*>& objects);
+      void RemoveComponentArraysFromObjects(ObjectArchetypeMap& objects, ComponentArrayMap& arrayMap);
 
       /**************************************************************/
       /*!
         \brief
-          Removes the component array from each object in the input
-          vector.
+          Replaces the original component arrays on each object.
 
         \param objects
-          The objects to remove the component array from.
+          The objects to replace the component array on.
+
+        \param arrayMap
+          The map the component arrays are stored in.
       */
       /**************************************************************/
-      void RemoveComponentArraysFromObjects(const std::vector<ObjectArchetype*>& objects);
+      void ReplaceComponentArraysOnObjects(ObjectArchetypeMap& objects, ComponentArrayMap& arrayMap);
 
     private:
       std::string sceneName_;
       std::string poolName_;
-      std::string_view componentArrayName_;
+      std::string componentArrayName_;
 
-      unsigned undoIndex_;
-      UndoComponentArrayMap undoComponentArrays_;
+      ComponentArrayMap undoStartingObjectArrays_;
+      ComponentArrayMap undoSpawnArchetypeArrays_;
   };
 }
 

@@ -11,18 +11,15 @@
  /* ======================================================================== */
 
 #include "MainMenuWidget.hpp"
-#include <Editor.hpp>
-#include "Commands/Create/Pool/CreatePool.hpp"
-#include "Commands/Create/Object/CreateObject.hpp"
-#include "nfd.h"
-#include <filesystem>
-#include <Windows.h>
+#include "Editor.hpp"
+
 #include "Widgets/Windows/Performance/PerformanceWidget.hpp"
+
+#include <nfd.h>
+#include <filesystem>
 
 namespace Barrage
 {
-  ImVec2 MainMenuWidget::size_ = ImVec2(0.0f, 0.0f);
-  
   void MainMenuWidget::Use()
   {
     ImGui::BeginMainMenuBar();
@@ -31,21 +28,21 @@ namespace Barrage
     {
       if (ImGui::MenuItem("New project"))
       {
-        Editor::Instance->CreateProject("BulletGame");
+        Editor::Get().CreateProject("BulletGame");
       }
-      
+
       ImGui::Spacing();
 
       if (ImGui::MenuItem("Open project"))
       {
-        Editor::Instance->OpenProject();
+        Editor::Get().OpenProject();
       }
 
       ImGui::Spacing();
 
       if (ImGui::MenuItem("Save project"))
       {
-        Editor::Instance->SaveProject(Editor::Instance->Data().projectDirectory_);
+        Editor::Get().SaveProject(Editor::Get().Data().projectDirectory_);
       }
 
       ImGui::Spacing();
@@ -63,7 +60,7 @@ namespace Barrage
 
       if (ImGui::MenuItem("Build"))
       {
-        if (Editor::Instance->SaveProject(Editor::Instance->Data().projectDirectory_))
+        if (Editor::Get().SaveProject(Editor::Get().Data().projectDirectory_))
         {
           Editor::BuildGame();
         }
@@ -72,12 +69,12 @@ namespace Barrage
           LogWidget::AddEntry("Could not build game. (Error saving project before build.)");
         }
       }
-      
+#ifdef _WIN64
       ImGui::Spacing();
 
       if (ImGui::MenuItem("Build and run"))
       {
-        if (Editor::Instance->SaveProject(Editor::Instance->Data().projectDirectory_))
+        if (Editor::Get().SaveProject(Editor::Get().Data().projectDirectory_))
         {
           Editor::BuildGame(true);
         }
@@ -86,25 +83,23 @@ namespace Barrage
           LogWidget::AddEntry("Could not build game. (Error saving project before build.)");
         }
       }
-
+#endif
       ImGui::Spacing();
       ImGui::Separator();
       ImGui::Spacing();
       
       if (ImGui::MenuItem("Exit"))
       {
-        Editor::Instance->Data().isRunning_ = false;
+        Editor::Get().Data().isRunning_ = false;
       }
 
       ImGui::EndMenu();
     }
 
-    size_ = ImGui::GetItemRectSize();
-
     if (ImGui::BeginMenu("Edit"))
     {
-      bool undoAvailable = Editor::Instance->Command().UndoAvailable();
-      
+      bool undoAvailable = Editor::Get().Command().UndoAvailable();
+
       if (!undoAvailable)
       {
         ImGui::BeginDisabled();
@@ -112,7 +107,7 @@ namespace Barrage
 
       if (ImGui::MenuItem("Undo"))
       {
-        Editor::Instance->Command().Undo();
+        Editor::Get().Command().Undo();
       }
 
       if (!undoAvailable)
@@ -120,7 +115,7 @@ namespace Barrage
         ImGui::EndDisabled();
       }
 
-      bool redoAvailable = Editor::Instance->Command().RedoAvailable();
+      bool redoAvailable = Editor::Get().Command().RedoAvailable();
 
       if (!redoAvailable)
       {
@@ -131,7 +126,7 @@ namespace Barrage
 
       if (ImGui::MenuItem("Redo"))
       {
-        Editor::Instance->Command().Redo();
+        Editor::Get().Command().Redo();
       }
 
       if (!redoAvailable)
@@ -142,46 +137,7 @@ namespace Barrage
       ImGui::EndMenu();
     }
 
-    if (ImGui::BeginMenu("Create"))
-    {
-      if (ImGui::MenuItem("Pool"))
-      {
-        std::string& scene = Editor::Instance->Data().selectedScene_;
-        Editor::Instance->Command().Send(new CreatePool(scene));
-      }
-
-      if (Editor::Instance->Data().selectedPool_.empty())
-      {
-        ImGui::BeginDisabled();
-      }
-
-      ImGui::Spacing();
-
-      if (ImGui::MenuItem("Object"))
-      {
-        std::string& scene = Editor::Instance->Data().selectedScene_;
-        std::string& pool = Editor::Instance->Data().selectedPool_;
-        Editor::Instance->Command().Send(new CreateObject(scene, pool, true));
-      }
-
-      ImGui::Spacing();
-
-      if (ImGui::MenuItem("Spawn archetype"))
-      {
-        std::string& scene = Editor::Instance->Data().selectedScene_;
-        std::string& pool = Editor::Instance->Data().selectedPool_;
-        Editor::Instance->Command().Send(new CreateObject(scene, pool, false));
-      }
-
-      if (Editor::Instance->Data().selectedPool_.empty())
-      {
-        ImGui::EndDisabled();
-      }
-
-      ImGui::EndMenu();
-    }
-
-    bool gamePlaying = Editor::Instance->Data().gamePlaying_;
+    bool gamePlaying = Editor::Get().Data().gamePlaying_;
 
     if (ImGui::BeginMenu("Game"))
     {
@@ -189,15 +145,15 @@ namespace Barrage
       {
         if (ImGui::MenuItem("Stop"))
         {
-          Editor::Instance->Data().gamePlaying_ = false;
-          Editor::Instance->Data().sceneIsDirty_ = true;
+          Editor::Get().Data().gamePlaying_ = false;
+          Editor::Get().Data().sceneIsDirty_ = true;
         }
       }
       else
       {
         if (ImGui::MenuItem("Play"))
         {
-          Editor::Instance->Data().gamePlaying_ = true;
+          Editor::Get().Data().gamePlaying_ = true;
           PerformanceWidget::Reset();
         }
       }
@@ -206,11 +162,6 @@ namespace Barrage
     }
 
     ImGui::EndMainMenuBar();
-  }
-
-  ImVec2 MainMenuWidget::GetSize()
-  {
-    return size_;
   }
 
   void MainMenuWidget::ImportTexture()
@@ -227,7 +178,7 @@ namespace Barrage
     std::filesystem::path file_path(raw_path);
     free(raw_path);
 
-    std::string texture_directory(Editor::Instance->Data().projectDirectory_ + "/Assets/Textures");
+    std::string texture_directory(Editor::Get().Data().projectDirectory_ + "/Assets/Textures");
 
     if (!std::filesystem::exists(texture_directory))
     {
@@ -247,7 +198,7 @@ namespace Barrage
       return;
     }
 
-    if (!Engine::Instance->Graphics().Textures().LoadTexture(file_path.stem().string()))
+    if (!Engine::Get().Graphics().Textures().LoadTexture(file_path.stem().string()))
     {
       LogWidget::AddEntry("Error loading texture file after import.");
       return;

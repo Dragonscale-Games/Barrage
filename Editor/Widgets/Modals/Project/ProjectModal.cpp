@@ -46,11 +46,11 @@ namespace Barrage
 
   bool ProjectModal::CreateNewProject()
   {
-    return Editor::Instance->CreateProject("BulletGame");
+    return Editor::Get().CreateProject("BulletGame");
   }
 
   bool ProjectModal::OpenProject()
   {
-    return Editor::Instance->OpenProject();
+    return Editor::Get().OpenProject();
   }
 }

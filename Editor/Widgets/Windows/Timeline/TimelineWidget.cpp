@@ -11,7 +11,7 @@
  /* ======================================================================== */
 
 #include "TimelineWidget.hpp"
-#include <Editor.hpp>
+#include "Editor.hpp"
 
 namespace Barrage
 {
@@ -19,14 +19,14 @@ namespace Barrage
   
   void TimelineWidget::Use()
   {
-    unsigned& gameTick = Editor::Instance->Data().gameTick_;
-    
+    unsigned& gameTick = Editor::Get().Data().gameTick_;
+
     ImGui::Begin("Timeline");
-    
+
     if (ImGui::Button("<|"))
     {
       gameTick = 0;
-      Editor::Instance->Data().sceneIsDirty_ = true;
+      Editor::Get().Data().sceneIsDirty_ = true;
     }
 
     ImGui::InvisibleButton("##timeline", ImVec2(-1, -1));
@@ -46,7 +46,7 @@ namespace Barrage
       // Calculate the selected value based on the click position
       float t = (pos.x - min.x) / (max.x - min.x); // will be 0..1 depending on position
       gameTick = static_cast<unsigned>(t * MAX_TICKS);
-      Editor::Instance->Data().sceneIsDirty_ = true;
+      Editor::Get().Data().sceneIsDirty_ = true;
     }
 
     // Get the bounds of the timeline again
@@ -63,7 +63,7 @@ namespace Barrage
     ImVec2 line_end(x, max.y);
     ImGui::GetWindowDrawList()->AddLine(line_start, line_end, IM_COL32(255, 0, 0, 255), 1.0f);
 
-    
+
     ImGui::End();
   }
 }

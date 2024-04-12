@@ -31,12 +31,8 @@ namespace Barrage
       /**************************************************************/
       static void Use();
 
-      static ImVec2 GetSize();
-
     private:
       static void ImportTexture();
-
-      static ImVec2 size_;
   };
 }
 
