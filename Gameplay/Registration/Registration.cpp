@@ -47,6 +47,8 @@
 #include "Components/Spawner/Spawner.hpp"
 #include "Components/Sprite/Sprite.hpp"
 
+#include "SpawnRules/Color/Set/SpawnSetColor.hpp"
+
 #include "SpawnRules/Count/Increment/SpawnIncrementCount.hpp"
 
 #include "SpawnRules/Direction/Aimed/SpawnAimedDirection.hpp"
@@ -112,6 +114,8 @@ namespace Barrage
     RegisterComponent<Sprite>("Sprite");
     RegisterComponent<Spawner>("Spawner");
     
+    RegisterSpawnRule<Spawn::SetColor>("SetColor");
+
     RegisterSpawnRule<Spawn::IncrementCount>("IncrementCount");
 
     RegisterSpawnRule<Spawn::AimedDirection>("AimedDirection");
@@ -176,6 +180,8 @@ namespace Barrage
     Player::Reflect();
     Spawner::Reflect();
     Sprite::Reflect();
+
+    Spawn::SetColor::Reflect();
 
     Spawn::IncrementCount::Reflect();
 

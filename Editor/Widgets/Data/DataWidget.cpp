@@ -1076,6 +1076,8 @@ namespace Barrage
         }
         ImGui::EndGroup();
       }
+
+      ImGui::TreePop();
     }
 
     if (fieldChanged)
