@@ -26,7 +26,7 @@ namespace Barrage
       std::string text_;
       bool succeeds_;
 
-      DebugData();
+      inline DebugData() : text_(), succeeds_(true) {};
     };
     
     class Debug : public BehaviorNodeT<DebugData>

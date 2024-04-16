@@ -31,7 +31,8 @@ namespace Barrage
   BehaviorTree::BehaviorTree() :
     tree_(),
     recipe_(),
-    nodeIndices_()
+    nodeIndices_(),
+    capacity_(1)
   {
   }
 
@@ -75,6 +76,18 @@ namespace Barrage
       {
         DeepPtr<BehaviorNodeRecipe>* childRecipePtr = &(*it);
         nodeRecipes.push_back(std::make_pair(childRecipePtr, currentIndex));
+      }
+    }
+
+    for (auto it = tree_.begin(); it != tree_.end(); ++it)
+    {
+      DeepPtr<BehaviorNode>& behaviorNode = *it;
+
+      if (behaviorNode->HasArray())
+      {
+        std::shared_ptr<BehaviorNodeWithArray> behaviorNodePtr = std::static_pointer_cast<BehaviorNodeWithArray>(behaviorNode.Get());
+
+        behaviorNodePtr->SetCapacity(capacity_);
       }
     }
   }
@@ -161,19 +174,7 @@ namespace Barrage
 
   void BehaviorTree::SetCapacity(unsigned capacity)
   {
-    // TODO: optimize (store indices to array nodes)
-
-    for (auto it = tree_.begin(); it != tree_.end(); ++it)
-    {
-      DeepPtr<BehaviorNode>& behaviorNode = *it;
-
-      if (behaviorNode->HasArray())
-      {
-        std::shared_ptr<BehaviorNodeWithArray> behaviorNodePtr = std::static_pointer_cast<BehaviorNodeWithArray>(behaviorNode.Get());
-
-        behaviorNodePtr->SetCapacity(capacity);
-      }
-    }
+    capacity_ = capacity;
 
     nodeIndices_.SetCapacity(capacity);
 

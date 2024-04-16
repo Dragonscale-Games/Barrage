@@ -61,6 +61,7 @@ namespace Barrage
       BehaviorNodeList tree_;
       DeepPtr<BehaviorNodeRecipe> recipe_;
       ComponentArrayT<int> nodeIndices_;
+      unsigned capacity_;
   };
 }
 

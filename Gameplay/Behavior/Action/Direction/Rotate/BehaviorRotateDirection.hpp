@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            BehaviorWait.hpp
+ * \file            BehaviorRotateDirection.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -11,8 +11,8 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef BehaviorWait_BARRAGE_H
-#define BehaviorWait_BARRAGE_H
+#ifndef BehaviorRotateDirection_BARRAGE_H
+#define BehaviorRotateDirection_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Behavior/BehaviorNode.hpp"
@@ -21,30 +21,25 @@ namespace Barrage
 {
   namespace Behavior
   {
-    struct WaitData
+    struct RotateDirectionData
     {
-      unsigned numTicks_;
+      Radian angle_;
+      float cosineAngle_; // precomputed, should not be edited manually
+      float sinAngle_;    // precomputed, should not be edited manually
 
-      WaitData();
-    };
-    
-    struct WaitArrayElement
-    {
-      unsigned elapsedTicks_;
-
-      WaitArrayElement();
+      inline RotateDirectionData() : angle_(0.0f), cosineAngle_(1.0f), sinAngle_(0.0f) {};
     };
 
-    class Wait : public BehaviorNodeTA<WaitData, WaitArrayElement>
+    class RotateDirection : public BehaviorNodeT<RotateDirectionData>
     {
       public:
-        Wait();
+        RotateDirection();
 
         std::shared_ptr<BehaviorNode> Clone() const override;
 
-        void OnBegin(BehaviorNodeInfo& info) override;
-
         BehaviorState Execute(BehaviorNodeInfo& info) override;
+
+        void SetRTTRValue(const rttr::variant& value) override;
 
         static void Reflect();
     };
@@ -52,5 +47,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // BehaviorWait_BARRAGE_H
+#endif // BehaviorRotateDirection_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

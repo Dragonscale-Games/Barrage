@@ -470,7 +470,9 @@ namespace Barrage
     engine_.Scenes().Clear();
     engine_.Scenes().AddScene(sceneName, std::move(scene));
     data_.selectedScene_ = sceneName;
-    engine_.Spaces().GetSpace(data_.editorSpace_)->SetScene(sceneName);
+    Space* editorSpace = engine_.Spaces().GetSpace(data_.editorSpace_);
+    editorSpace->SetScene(sceneName);
+    editorSpace->RNG().SetSeed(0xC0FFEEC0FFEE);
 
     if (std::filesystem::exists(textureDirectory))
     {
