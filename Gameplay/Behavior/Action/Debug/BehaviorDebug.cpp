@@ -18,12 +18,6 @@ namespace Barrage
 {
   namespace Behavior
   {
-    DebugData::DebugData() : 
-      text_(),
-      succeeds_(true)
-    {
-    }
-    
     Debug::Debug() : BehaviorNodeT<DebugData>("Debug", BehaviorNodeType::Action) {};
     
     std::shared_ptr<BehaviorNode> Debug::Clone() const

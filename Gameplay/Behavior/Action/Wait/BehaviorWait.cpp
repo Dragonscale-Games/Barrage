@@ -33,6 +33,11 @@ namespace Barrage
       return std::make_shared<Wait>(*this);
     }
 
+    void Wait::OnBegin(BehaviorNodeInfo& info)
+    {
+      dataArray_.Data(info.objectIndex_).elapsedTicks_ = 0;
+    }
+
     BehaviorState Wait::Execute(BehaviorNodeInfo& info)
     {
       unsigned& elapsedTicks = dataArray_.Data(info.objectIndex_).elapsedTicks_;

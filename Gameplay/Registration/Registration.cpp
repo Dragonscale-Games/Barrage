@@ -14,6 +14,7 @@
 #include "Objects/ObjectManager.hpp"
 
 #include "Behavior/Action/Debug/BehaviorDebug.hpp"
+#include "Behavior/Action/Direction/Rotate/BehaviorRotateDirection.hpp"
 #include "Behavior/Action/Wait/BehaviorWait.hpp"
 
 #include "Behavior/Composite/Selector/BehaviorSelector.hpp"
@@ -81,6 +82,7 @@ namespace Barrage
   void Registrar::GameplayRegistration()
   {
     RegisterBehaviorNode<Behavior::Debug>("Debug");
+    RegisterBehaviorNode<Behavior::RotateDirection>("RotateDirection");
     RegisterBehaviorNode<Behavior::Wait>("Wait");
     
     RegisterBehaviorNode<Behavior::Selector>("Selector");
@@ -160,6 +162,7 @@ namespace Barrage
   void Registrar::GameplayReflection()
   {
     Behavior::Debug::Reflect();
+    Behavior::RotateDirection::Reflect();
     Behavior::Wait::Reflect();
     
     Behavior::Repeat::Reflect();

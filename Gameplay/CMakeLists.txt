@@ -34,6 +34,7 @@ add_library(Gameplay STATIC
 	"Registration/Registration.cpp"
 
 	"Behavior/Action/Debug/BehaviorDebug.cpp"
+	"Behavior/Action/Direction/Rotate/BehaviorRotateDirection.cpp"
 	"Behavior/Action/Wait/BehaviorWait.cpp" 
 
 	"Behavior/Composite/Sequence/BehaviorSequence.cpp" 
@@ -67,6 +68,8 @@ add_library(Gameplay STATIC
 	"Components/Spawner/Spawner.cpp" 
 	"Components/Sprite/Sprite.cpp" 
     
+	"SpawnRules/Color/Set/SpawnSetColor.cpp"
+
 	"SpawnRules/Count/Increment/SpawnIncrementCount.cpp"
 
 	"SpawnRules/Direction/Aimed/SpawnAimedDirection.cpp"
@@ -93,7 +96,8 @@ add_library(Gameplay STATIC
 	"Systems/Draw/DrawSystem.cpp"
 	"Systems/Lifetime/LifetimeSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
-	"Systems/Spawn/SpawnSystem.cpp"      "SpawnRules/Color/Set/SpawnSetColor.cpp")
+	"Systems/Spawn/SpawnSystem.cpp"      
+	 )
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
