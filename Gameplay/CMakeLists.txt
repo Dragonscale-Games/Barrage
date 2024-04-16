@@ -67,6 +67,8 @@ add_library(Gameplay STATIC
 	"Components/Spawner/Spawner.cpp" 
 	"Components/Sprite/Sprite.cpp" 
     
+	"SpawnRules/Color/Set/SpawnSetColor.cpp"
+
 	"SpawnRules/Count/Increment/SpawnIncrementCount.cpp"
 
 	"SpawnRules/Direction/Aimed/SpawnAimedDirection.cpp"
