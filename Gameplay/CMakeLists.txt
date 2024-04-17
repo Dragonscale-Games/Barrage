@@ -86,6 +86,8 @@ add_library(Gameplay STATIC
 	"SpawnRules/Position/Offset/SpawnOffsetPosition.cpp" 
 	"SpawnRules/Position/RandomBoxOffset/SpawnRandomBoxOffset.cpp" 
 
+	"SpawnRules/Rotation/MatchDirection/SpawnRotationMatchDirection.cpp" 
+
 	"SpawnRules/Speed/Random/SpawnRandomSpeed.cpp"
 	"SpawnRules/Speed/Set/SpawnSetSpeed.cpp"
 
