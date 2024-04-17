@@ -66,6 +66,8 @@
 #include "SpawnRules/Position/Offset/SpawnOffsetPosition.hpp"
 #include "SpawnRules/Position/RandomBoxOffset/SpawnRandomBoxOffset.hpp"
 
+#include "SpawnRules/Rotation/MatchDirection/SpawnRotationMatchDirection.hpp"
+
 #include "SpawnRules/Speed/Random/SpawnRandomSpeed.hpp"
 #include "SpawnRules/Speed/Set/SpawnSetSpeed.hpp"
 
@@ -133,6 +135,8 @@ namespace Barrage
     RegisterSpawnRule<Spawn::MatchPosition>("MatchPosition");
     RegisterSpawnRule<Spawn::OffsetPosition>("OffsetPosition");
     RegisterSpawnRule<Spawn::RandomBoxOffset>("RandomBoxOffset");
+
+    RegisterSpawnRule<Spawn::RotationMatchDirection>("RotationMatchDirection");
 
     RegisterSpawnRule<Spawn::RandomSpeed>("RandomSpeed");
     RegisterSpawnRule<Spawn::SetSpeed>("SetSpeed");
