@@ -1,7 +1,7 @@
 
 /* ======================================================================== */
 /*!
- * \file            SpawnSpiral.cpp
+ * \file            SpawnIterateOrientation.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -15,7 +15,7 @@
  /* ======================================================================== */
 
 #include <stdafx.h>
-#include "SpawnSpiral.hpp"
+#include "SpawnIterateOrientation.hpp"
 #include "Objects/Pools/Pool.hpp"
 #include "ComponentArrays/Position/PositionArray.hpp"
 #include "ComponentArrays/Velocity/VelocityArray.hpp"
@@ -24,19 +24,19 @@ namespace Barrage
 {
   namespace Spawn
   {
-    Spiral::Spiral() : SpawnRuleTA<SpiralData, SpiralArrayElement>("Spiral") {}
+    IterateOrientation::IterateOrientation() : SpawnRuleTA<IterateOrientationData, IterateOrientationArrayElement>("IterateOrientation") {}
 
-    std::shared_ptr<SpawnRule> Spiral::Clone() const
+    std::shared_ptr<SpawnRule> IterateOrientation::Clone() const
     {
-      return std::make_shared<Spiral>(*this);
+      return std::make_shared<IterateOrientation>(*this);
     }
 
-    void Spiral::Execute(SpawnRuleInfo& info)
+    void IterateOrientation::Execute(SpawnRuleInfo& info)
     {
       float& angle = dataArray_.Data(info.sourceIndex_).angle_.value_;
       float cos_angle = glm::cos(angle);
       float sin_angle = glm::sin(angle);
-      angle = ClampWrapped(angle + data_.angleDelta_.value_, 0.0f, 2.0f * 3.1415926f);
+      angle = ClampWrapped(angle + data_.angleStep_.value_, 0.0f, 2.0f * 3.1415926f);
 
       PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
       VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
@@ -58,11 +58,11 @@ namespace Barrage
       }
     }
 
-    void Spiral::Reflect()
+    void IterateOrientation::Reflect()
     {
-      rttr::registration::class_<Spawn::SpiralData>("SpiralData")
+      rttr::registration::class_<Spawn::IterateOrientationData>("IterateOrientationData")
         .constructor<>() (rttr::policy::ctor::as_object)
-        .property("angleDelta", &Spawn::SpiralData::angleDelta_)
+        .property("angleStep", &Spawn::IterateOrientationData::angleStep_)
         ;
     }
   }

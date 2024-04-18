@@ -1,21 +1,22 @@
 /* ======================================================================== */
 /*!
- * \file            SpawnMatchDirection.hpp
+ * \file            SpawnRandomOrientation.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-
+   Applies a random orientation to an entire layer of objects.
 
    Requirements:
-
+   -Position (destination)
+   -Velocity (destination)
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef SpawnMatchDirection_BARRAGE_H
-#define SpawnMatchDirection_BARRAGE_H
+#ifndef SpawnRandomOrientation_BARRAGE_H
+#define SpawnRandomOrientation_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Spawning/SpawnRule.hpp"
@@ -24,18 +25,18 @@ namespace Barrage
 {
   namespace Spawn
   {
-    class MatchDirection : public SpawnRule
+    class RandomOrientation : public SpawnRule
     {
-    public:
-      MatchDirection();
+      public:
+        RandomOrientation();
 
-      std::shared_ptr<SpawnRule> Clone() const override;
+        std::shared_ptr<SpawnRule> Clone() const override;
 
-      void Execute(SpawnRuleInfo& info) override;
+        void Execute(SpawnRuleInfo& info) override;
     };
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // SpawnMatchDirection_BARRAGE_H
+#endif // SpawnRandomOrientation_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

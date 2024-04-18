@@ -1,57 +1,51 @@
- 
 /* ======================================================================== */
 /*!
- * \file            SpawnSpacedFan.cpp
+ * \file            SpawnRandomOrientation.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
-
+   Applies a random orientation to an entire layer of objects.
 
    Requirements:
-
+   -Position (destination)
+   -Velocity (destination)
  */
  /* ======================================================================== */
 
 #include <stdafx.h>
-#include "SpawnFan.hpp"
-#include "Objects/Pools/Pool.hpp"
+#include "SpawnRandomOrientation.hpp"
+#include "Random/Random.hpp"
 #include "ComponentArrays/Position/PositionArray.hpp"
 #include "ComponentArrays/Velocity/VelocityArray.hpp"
+#include "Spaces/Space.hpp"
 
 namespace Barrage
 {
   namespace Spawn
   {
-    Fan::Fan() : SpawnRuleT<FanData>("Fan") {}
+    RandomOrientation::RandomOrientation() : SpawnRule("RandomOrientation") {}
 
-    std::shared_ptr<SpawnRule> Fan::Clone() const
+    std::shared_ptr<SpawnRule> RandomOrientation::Clone() const
     {
-      return std::make_shared<Fan>(*this);
+      return std::make_shared<RandomOrientation>(*this);
     }
 
-    void Fan::Execute(SpawnRuleInfo& info)
+    void RandomOrientation::Execute(SpawnRuleInfo& info)
     {
-      if (info.groupInfo_.numGroups_ == 0)
-      {
-        return;
-      }
-      
-      float totalAngle = (info.groupInfo_.numGroups_ - 1) * data_.spacing_.value_;
-      float startAngle = -(totalAngle / 2.0f);
-
+      Random& rng = info.space_.RNG();
       PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
       VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
 
-      for (unsigned layerCopy = 0; layerCopy < info.groupInfo_.numLayerCopies_; ++layerCopy)
+      for (unsigned group = 0; group < info.groupInfo_.numGroups_; ++group)
       {
-        for (unsigned group = 0; group < info.groupInfo_.numGroups_; ++group)
-        {
-          float angle = startAngle + group * data_.spacing_.value_;
-          float cos_angle = glm::cos(angle);
-          float sin_angle = glm::sin(angle);
+        float angle = 3.1415926f * rng.RangeFloat(0, 2.0f);
+        float cos_angle = glm::cos(angle);
+        float sin_angle = glm::sin(angle);
 
+        for (unsigned layerCopy = 0; layerCopy < info.groupInfo_.numLayerCopies_; ++layerCopy)
+        {
           for (unsigned object = 0; object < info.groupInfo_.numObjectsPerGroup_; ++object)
           {
             unsigned dest_index = CalculateDestinationIndex(info, object, group, layerCopy);
@@ -63,14 +57,6 @@ namespace Barrage
           }
         }
       }
-    }
-
-    void Fan::Reflect()
-    {
-      rttr::registration::class_<Spawn::FanData>("FanData")
-        .constructor<>() (rttr::policy::ctor::as_object)
-        .property("spacing", &Spawn::FanData::spacing_)
-        ;
     }
   }
 }

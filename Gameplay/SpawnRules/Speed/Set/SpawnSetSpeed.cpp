@@ -37,7 +37,7 @@ namespace Barrage
       {
         for (unsigned group = 0; group < info.groupInfo_.numGroups_; ++group)
         {
-          float speed = data_.base_ + group * data_.delta_;
+          float speed = data_.baseSpeed_ + group * data_.delta_;
           
           for (unsigned object = 0; object < info.groupInfo_.numObjectsPerGroup_; ++object)
           {
@@ -54,9 +54,9 @@ namespace Barrage
     {
       SpawnRuleT<SetSpeedData>::SetRTTRValue(value);
 
-      if (data_.base_ < MINIMUM_SPEED)
+      if (data_.baseSpeed_ < MINIMUM_SPEED)
       {
-        data_.base_ = MINIMUM_SPEED;
+        data_.baseSpeed_ = MINIMUM_SPEED;
       }
     }
 
@@ -64,7 +64,7 @@ namespace Barrage
     {
       rttr::registration::class_<Spawn::SetSpeedData>("SetSpeedData")
         .constructor<>() (rttr::policy::ctor::as_object)
-        .property("base", &Spawn::SetSpeedData::base_)
+        .property("baseSpeed", &Spawn::SetSpeedData::baseSpeed_)
         .property("delta", &Spawn::SetSpeedData::delta_)
         ;
     }

@@ -1,7 +1,7 @@
 
 /* ======================================================================== */
 /*!
- * \file            SpawnMatchDirection.cpp
+ * \file            SpawnMatchSpawnerDirection.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -15,7 +15,7 @@
  /* ======================================================================== */
 
 #include <stdafx.h>
-#include "SpawnMatchDirection.hpp"
+#include "SpawnMatchSpawnerDirection.hpp"
 #include "ComponentArrays/Velocity/VelocityArray.hpp"
 #include "Objects/Pools/Pool.hpp"
 #include "glm/glm.hpp"
@@ -24,14 +24,14 @@ namespace Barrage
 {
   namespace Spawn
   {
-    MatchDirection::MatchDirection() : SpawnRule("MatchDirection") {}
+    MatchSpawnerDirection::MatchSpawnerDirection() : SpawnRule("MatchSpawnerDirection") {}
 
-    std::shared_ptr<SpawnRule> MatchDirection::Clone() const
+    std::shared_ptr<SpawnRule> MatchSpawnerDirection::Clone() const
     {
-      return std::make_shared<MatchDirection>(*this);
+      return std::make_shared<MatchSpawnerDirection>(*this);
     }
 
-    void MatchDirection::Execute(SpawnRuleInfo& info)
+    void MatchSpawnerDirection::Execute(SpawnRuleInfo& info)
     {
       Velocity& sourceVelocity = info.sourcePool_.GetComponentArray<Velocity>("Velocity").Data(info.sourceIndex_);
       VelocityArray& destVelocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
@@ -48,8 +48,10 @@ namespace Barrage
           {
             unsigned destIndex = CalculateDestinationIndex(info, object, group, layerCopy);
             Velocity& destVelocity = destVelocities.Data(destIndex);
+            float speed = glm::length(glm::vec2(destVelocity.vx_, destVelocity.vy_));
 
-            destVelocity.Rotate(cos_angle, sin_angle);
+            destVelocity.vx_ = speed * cos_angle;
+            destVelocity.vy_ = speed * sin_angle;
           }
         }
       }

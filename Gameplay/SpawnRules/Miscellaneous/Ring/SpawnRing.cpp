@@ -33,10 +33,15 @@ namespace Barrage
 
     void Ring::Execute(SpawnRuleInfo& info)
     {
+      if (info.groupInfo_.numGroups_ == 0)
+      {
+        return;
+      }
+      
+      float spacing = (2.0f * 3.1415926f) / info.groupInfo_.numGroups_;
+
       PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
       VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
-
-      float spacing = (2.0f * 3.1415926f) / info.groupInfo_.numGroups_;
 
       for (unsigned layerCopy = 0; layerCopy < info.groupInfo_.numLayerCopies_; ++layerCopy)
       {

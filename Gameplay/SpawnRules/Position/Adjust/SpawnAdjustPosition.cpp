@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            SpawnOffsetPosition.cpp
+ * \file            SpawnAdjustPosition.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -14,7 +14,7 @@
  /* ======================================================================== */
 
 #include <stdafx.h>
-#include "SpawnOffsetPosition.hpp"
+#include "SpawnAdjustPosition.hpp"
 #include "Objects/Pools/Pool.hpp"
 #include "ComponentArrays/Position/PositionArray.hpp"
 
@@ -22,14 +22,14 @@ namespace Barrage
 {
   namespace Spawn
   {
-    OffsetPosition::OffsetPosition() : SpawnRuleT<OffsetPositionData>("OffsetPosition") {}
+    AdjustPosition::AdjustPosition() : SpawnRuleT<AdjustPositionData>("AdjustPosition") {}
 
-    std::shared_ptr<SpawnRule> OffsetPosition::Clone() const
+    std::shared_ptr<SpawnRule> AdjustPosition::Clone() const
     {
-      return std::make_shared<OffsetPosition>(*this);
+      return std::make_shared<AdjustPosition>(*this);
     }
 
-    void OffsetPosition::Execute(SpawnRuleInfo& info)
+    void AdjustPosition::Execute(SpawnRuleInfo& info)
     {
       PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
 
@@ -37,7 +37,7 @@ namespace Barrage
       {
         for (unsigned group = 0; group < info.groupInfo_.numGroups_; ++group)
         {
-          glm::vec2 offset = data_.base_ + static_cast<float>(group) * data_.delta_;
+          glm::vec2 offset = data_.baseOffset_ + static_cast<float>(group) * data_.delta_;
 
           for (unsigned object = 0; object < info.groupInfo_.numObjectsPerGroup_; ++object)
           {
@@ -51,12 +51,12 @@ namespace Barrage
       }
     }
 
-    void OffsetPosition::Reflect()
+    void AdjustPosition::Reflect()
     {
-      rttr::registration::class_<Spawn::OffsetPositionData>("OffsetPositionData")
+      rttr::registration::class_<Spawn::AdjustPositionData>("AdjustPositionData")
         .constructor<>() (rttr::policy::ctor::as_object)
-        .property("base", &Spawn::OffsetPositionData::base_)
-        .property("delta", &Spawn::OffsetPositionData::delta_)
+        .property("baseOffset", &Spawn::AdjustPositionData::baseOffset_)
+        .property("delta", &Spawn::AdjustPositionData::delta_)
         ;
     }
   }

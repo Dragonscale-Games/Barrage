@@ -36,7 +36,6 @@ namespace Barrage
     void RandomDirection::Execute(SpawnRuleInfo& info)
     {
       Random& rng = info.space_.RNG();
-      PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
       VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
 
       for (unsigned group = 0; group < info.groupInfo_.numGroups_; ++group)
@@ -50,10 +49,8 @@ namespace Barrage
           for (unsigned object = 0; object < info.groupInfo_.numObjectsPerGroup_; ++object)
           {
             unsigned dest_index = CalculateDestinationIndex(info, object, group, layerCopy);
-            Position& dest_position = dest_positions.Data(dest_index);
             Velocity& dest_velocity = dest_velocities.Data(dest_index);
             
-            dest_position.Rotate(cos_angle, sin_angle);
             dest_velocity.Rotate(cos_angle, sin_angle);
           }
         }

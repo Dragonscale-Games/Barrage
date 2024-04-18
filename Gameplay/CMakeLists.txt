@@ -70,20 +70,23 @@ add_library(Gameplay STATIC
     
 	"SpawnRules/Color/Set/SpawnSetColor.cpp"
 
-	"SpawnRules/Count/Increment/SpawnIncrementCount.cpp"
+	"SpawnRules/Count/Iterate/SpawnIterateCount.cpp"
 
-	"SpawnRules/Direction/Aimed/SpawnAimedDirection.cpp"
-	"SpawnRules/Direction/Match/SpawnMatchDirection.cpp"
+	
+	"SpawnRules/Direction/MatchSpawner/SpawnMatchSpawnerDirection.cpp"
 	"SpawnRules/Direction/Random/SpawnRandomDirection.cpp" 
 	"SpawnRules/Direction/Set/SpawnSetDirection.cpp"
 
 	"SpawnRules/Miscellaneous/Fan/SpawnFan.cpp" 
 	"SpawnRules/Miscellaneous/Mirror/SpawnMirror.cpp"
 	"SpawnRules/Miscellaneous/Ring/SpawnRing.cpp" 
-	"SpawnRules/Miscellaneous/Spiral/SpawnSpiral.cpp"
 
-	"SpawnRules/Position/Match/SpawnMatchPosition.cpp"
-	"SpawnRules/Position/Offset/SpawnOffsetPosition.cpp" 
+	"SpawnRules/Orientation/Adjust/SpawnAdjustOrientation.cpp"
+	"SpawnRules/Orientation/Iterate/SpawnIterateOrientation.cpp"
+	"SpawnRules/Orientation/Random/SpawnRandomOrientation.cpp"
+
+	"SpawnRules/Position/MatchSpawner/SpawnMatchSpawnerPosition.cpp"
+	"SpawnRules/Position/Adjust/SpawnAdjustPosition.cpp" 
 	"SpawnRules/Position/RandomBoxOffset/SpawnRandomBoxOffset.cpp" 
 
 	"SpawnRules/Rotation/MatchDirection/SpawnRotationMatchDirection.cpp" 
@@ -99,7 +102,7 @@ add_library(Gameplay STATIC
 	"Systems/Lifetime/LifetimeSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
 	"Systems/Spawn/SpawnSystem.cpp"      
-	 )
+	   )
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

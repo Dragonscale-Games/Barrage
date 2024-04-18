@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            SpawnSpiral.hpp
+ * \file            SpawnMatchSpawnerDirection.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -14,45 +14,28 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef SpawnSpiral_BARRAGE_H
-#define SpawnSpiral_BARRAGE_H
+#ifndef SpawnMatchSpawnerDirection_BARRAGE_H
+#define SpawnMatchSpawnerDirection_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Spawning/SpawnRule.hpp"
-#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
   namespace Spawn
   {
-    struct SpiralData
+    class MatchSpawnerDirection : public SpawnRule
     {
-      Radian angleDelta_;
+    public:
+      MatchSpawnerDirection();
 
-      inline SpiralData() : angleDelta_(0.0f) {};
-    };
+      std::shared_ptr<SpawnRule> Clone() const override;
 
-    struct SpiralArrayElement
-    {
-      Radian angle_;
-
-      inline SpiralArrayElement() : angle_(0.0f) {};
-    };
-    
-    class Spiral : public SpawnRuleTA<SpiralData, SpiralArrayElement>
-    {
-      public:
-        Spiral();
-
-        std::shared_ptr<SpawnRule> Clone() const override;
-
-        void Execute(SpawnRuleInfo& info) override;
-
-        static void Reflect();
+      void Execute(SpawnRuleInfo& info) override;
     };
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // SpawnSpiral_BARRAGE_H
+#endif // SpawnMatchSpawnerDirection_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,22 +1,21 @@
- 
 /* ======================================================================== */
 /*!
- * \file            SpawnSetDirection.cpp
+ * \file            SpawnAdjustOrientation.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
 
  * \brief
+    Rotates the orientation of an entire layer of objects.
 
    Requirements:
-   -Position (source)
-   -Position (destination)
-   -Velocity (destination)
+   - Position (destination)
+   - Velocity (destination)
  */
  /* ======================================================================== */
 
 #include <stdafx.h>
-#include "SpawnSetDirection.hpp"
+#include "SpawnAdjustOrientation.hpp"
 #include "Objects/Pools/Pool.hpp"
 #include "ComponentArrays/Position/PositionArray.hpp"
 #include "ComponentArrays/Velocity/VelocityArray.hpp"
@@ -25,15 +24,16 @@ namespace Barrage
 {
   namespace Spawn
   {
-    SetDirection::SetDirection() : SpawnRuleT<SetDirectionData>("SetDirection") {}
+    AdjustOrientation::AdjustOrientation() : SpawnRuleT<AdjustOrientationData>("AdjustOrientation") {}
 
-    std::shared_ptr<SpawnRule> SetDirection::Clone() const
+    std::shared_ptr<SpawnRule> AdjustOrientation::Clone() const
     {
-      return std::make_shared<SetDirection>(*this);
+      return std::make_shared<AdjustOrientation>(*this);
     }
 
-    void SetDirection::Execute(SpawnRuleInfo& info)
+    void AdjustOrientation::Execute(SpawnRuleInfo& info)
     {
+      PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
       VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
 
       for (unsigned layerCopy = 0; layerCopy < info.groupInfo_.numLayerCopies_; ++layerCopy)
@@ -43,29 +43,29 @@ namespace Barrage
           for (unsigned object = 0; object < info.groupInfo_.numObjectsPerGroup_; ++object)
           {
             unsigned dest_index = CalculateDestinationIndex(info, object, group, layerCopy);
+            Position& dest_position = dest_positions.Data(dest_index);
             Velocity& dest_velocity = dest_velocities.Data(dest_index);
-            float speed = glm::length(glm::vec2(dest_velocity.vx_, dest_velocity.vy_));
 
-            dest_velocity.vx_ = speed * data_.cosineAngle_;
-            dest_velocity.vy_ = speed * data_.sinAngle_;
+            dest_position.Rotate(data_.cosineAngle_, data_.sinAngle_);
+            dest_velocity.Rotate(data_.cosineAngle_, data_.sinAngle_);
           }
         }
       }
     }
 
-    void SetDirection::SetRTTRValue(const rttr::variant& value)
+    void AdjustOrientation::SetRTTRValue(const rttr::variant& value)
     {
-      SpawnRuleT<SetDirectionData>::SetRTTRValue(value);
+      SpawnRuleT<AdjustOrientationData>::SetRTTRValue(value);
 
       data_.cosineAngle_ = glm::cos(data_.angle_.value_);
       data_.sinAngle_ = glm::sin(data_.angle_.value_);
     }
 
-    void SetDirection::Reflect()
+    void AdjustOrientation::Reflect()
     {
-      rttr::registration::class_<Spawn::SetDirectionData>("SetDirectionData")
+      rttr::registration::class_<Spawn::AdjustOrientationData>("AdjustOrientationData")
         .constructor<>() (rttr::policy::ctor::as_object)
-        .property("angle", &Spawn::SetDirectionData::angle_)
+        .property("angle", &Spawn::AdjustOrientationData::angle_)
         ;
     }
   }

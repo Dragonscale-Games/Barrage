@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            SpawnOffsetPosition.hpp
+ * \file            SpawnAdjustPosition.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -14,8 +14,8 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef SpawnOffsetPosition_BARRAGE_H
-#define SpawnOffsetPosition_BARRAGE_H
+#ifndef SpawnAdjustPosition_BARRAGE_H
+#define SpawnAdjustPosition_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Spawning/SpawnRule.hpp"
@@ -25,18 +25,18 @@ namespace Barrage
 {
   namespace Spawn
   {
-    struct OffsetPositionData
+    struct AdjustPositionData
     {
-      glm::vec2 base_;
+      glm::vec2 baseOffset_;
       glm::vec2 delta_;
 
-      inline OffsetPositionData() : base_(0.0f), delta_(0.0f) {};
+      inline AdjustPositionData() : baseOffset_(0.0f), delta_(0.0f) {};
     };
     
-    class OffsetPosition : public SpawnRuleT<OffsetPositionData>
+    class AdjustPosition : public SpawnRuleT<AdjustPositionData>
     {
       public:
-        OffsetPosition();
+        AdjustPosition();
 
         std::shared_ptr<SpawnRule> Clone() const override;
 
@@ -48,5 +48,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // SpawnOffsetPosition_BARRAGE_H
+#endif // SpawnAdjustPosition_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////

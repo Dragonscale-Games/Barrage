@@ -1,7 +1,7 @@
  
 /* ======================================================================== */
 /*!
- * \file            SpawnMatchPosition.cpp
+ * \file            SpawnMatchSpawnerPosition.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -15,7 +15,7 @@
  /* ======================================================================== */
 
 #include <stdafx.h>
-#include "SpawnMatchPosition.hpp"
+#include "SpawnMatchSpawnerPosition.hpp"
 #include "ComponentArrays/Position/PositionArray.hpp"
 #include "Objects/Pools/Pool.hpp"
 
@@ -23,14 +23,14 @@ namespace Barrage
 {
   namespace Spawn
   {
-    MatchPosition::MatchPosition() : SpawnRule("MatchPosition") {}
+    MatchSpawnerPosition::MatchSpawnerPosition() : SpawnRule("MatchSpawnerPosition") {}
 
-    std::shared_ptr<SpawnRule> MatchPosition::Clone() const
+    std::shared_ptr<SpawnRule> MatchSpawnerPosition::Clone() const
     {
-      return std::make_shared<MatchPosition>(*this);
+      return std::make_shared<MatchSpawnerPosition>(*this);
     }
 
-    void MatchPosition::Execute(SpawnRuleInfo& info)
+    void MatchSpawnerPosition::Execute(SpawnRuleInfo& info)
     {
       Position& sourcePosition = info.sourcePool_.GetComponentArray<Position>("Position").Data(info.sourceIndex_);
       PositionArray& destPositions = info.destinationPool_.GetComponentArray<Position>("Position");

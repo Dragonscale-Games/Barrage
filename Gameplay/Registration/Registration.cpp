@@ -50,20 +50,22 @@
 
 #include "SpawnRules/Color/Set/SpawnSetColor.hpp"
 
-#include "SpawnRules/Count/Increment/SpawnIncrementCount.hpp"
+#include "SpawnRules/Count/Iterate/SpawnIterateCount.hpp"
 
-#include "SpawnRules/Direction/Aimed/SpawnAimedDirection.hpp"
-#include "SpawnRules/Direction/Match/SpawnMatchDirection.hpp"
+#include "SpawnRules/Direction/MatchSpawner/SpawnMatchSpawnerDirection.hpp"
 #include "SpawnRules/Direction/Random/SpawnRandomDirection.hpp"
 #include "SpawnRules/Direction/Set/SpawnSetDirection.hpp"
 
 #include "SpawnRules/Miscellaneous/Fan/SpawnFan.hpp"
 #include "SpawnRules/Miscellaneous/Mirror/SpawnMirror.hpp"
 #include "SpawnRules/Miscellaneous/Ring/SpawnRing.hpp"
-#include "SpawnRules/Miscellaneous/Spiral/SpawnSpiral.hpp"
 
-#include "SpawnRules/Position/Match/SpawnMatchPosition.hpp"
-#include "SpawnRules/Position/Offset/SpawnOffsetPosition.hpp"
+#include "SpawnRules/Orientation/Adjust/SpawnAdjustOrientation.hpp"
+#include "SpawnRules/Orientation/Iterate/SpawnIterateOrientation.hpp"
+#include "SpawnRules/Orientation/Random/SpawnRandomOrientation.hpp"
+
+#include "SpawnRules/Position/Adjust/SpawnAdjustPosition.hpp"
+#include "SpawnRules/Position/MatchSpawner/SpawnMatchSpawnerPosition.hpp"
 #include "SpawnRules/Position/RandomBoxOffset/SpawnRandomBoxOffset.hpp"
 
 #include "SpawnRules/Rotation/MatchDirection/SpawnRotationMatchDirection.hpp"
@@ -120,20 +122,22 @@ namespace Barrage
     
     RegisterSpawnRule<Spawn::SetColor>("SetColor");
 
-    RegisterSpawnRule<Spawn::IncrementCount>("IncrementCount");
+    RegisterSpawnRule<Spawn::IterateCount>("IterateCount");
 
-    RegisterSpawnRule<Spawn::AimedDirection>("AimedDirection");
-    RegisterSpawnRule<Spawn::MatchDirection>("MatchDirection");
+    RegisterSpawnRule<Spawn::MatchSpawnerDirection>("MatchSpawnerDirection");
     RegisterSpawnRule<Spawn::RandomDirection>("RandomDirection");
     RegisterSpawnRule<Spawn::SetDirection>("SetDirection");
 
     RegisterSpawnRule<Spawn::Fan>("Fan");
     RegisterSpawnRule<Spawn::Mirror>("Mirror");
     RegisterSpawnRule<Spawn::Ring>("Ring");
-    RegisterSpawnRule<Spawn::Spiral>("Spiral");
 
-    RegisterSpawnRule<Spawn::MatchPosition>("MatchPosition");
-    RegisterSpawnRule<Spawn::OffsetPosition>("OffsetPosition");
+    RegisterSpawnRule<Spawn::AdjustOrientation>("AdjustOrientation");
+    RegisterSpawnRule<Spawn::IterateOrientation>("IterateOrientation");
+    RegisterSpawnRule<Spawn::RandomOrientation>("RandomOrientation");
+
+    RegisterSpawnRule<Spawn::AdjustPosition>("AdjustPosition");
+    RegisterSpawnRule<Spawn::MatchSpawnerPosition>("MatchSpawnerPosition");
     RegisterSpawnRule<Spawn::RandomBoxOffset>("RandomBoxOffset");
 
     RegisterSpawnRule<Spawn::RotationMatchDirection>("RotationMatchDirection");
@@ -190,14 +194,16 @@ namespace Barrage
 
     Spawn::SetColor::Reflect();
 
-    Spawn::IncrementCount::Reflect();
+    Spawn::IterateCount::Reflect();
 
     Spawn::SetDirection::Reflect();
 
     Spawn::Fan::Reflect();
-    Spawn::Spiral::Reflect();
 
-    Spawn::OffsetPosition::Reflect();
+    Spawn::AdjustOrientation::Reflect();
+    Spawn::IterateOrientation::Reflect();
+
+    Spawn::AdjustPosition::Reflect();
     Spawn::RandomBoxOffset::Reflect();
 
     Spawn::RandomSpeed::Reflect();

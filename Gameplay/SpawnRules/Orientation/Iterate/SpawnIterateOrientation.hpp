@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            SpawnSetSpeed.hpp
+ * \file            SpawnIterateOrientation.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -9,40 +9,44 @@
 
 
    Requirements:
-   - Velocity (destination)
+
  */
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef SpawnSetSpeed_BARRAGE_H
-#define SpawnSetSpeed_BARRAGE_H
+#ifndef SpawnIterateOrientation_BARRAGE_H
+#define SpawnIterateOrientation_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Spawning/SpawnRule.hpp"
-#include "ComponentArrays/Velocity/VelocityArray.hpp"
+#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
   namespace Spawn
   {
-    struct SetSpeedData
+    struct IterateOrientationData
     {
-      float baseSpeed_;
-      float delta_;
+      Radian angleStep_;
 
-      inline SetSpeedData() : baseSpeed_(MINIMUM_SPEED), delta_(0.0f) {};
+      inline IterateOrientationData() : angleStep_(0.0f) {};
+    };
+
+    struct IterateOrientationArrayElement
+    {
+      Radian angle_;
+
+      inline IterateOrientationArrayElement() : angle_(0.0f) {};
     };
     
-    class SetSpeed : public SpawnRuleT<SetSpeedData>
+    class IterateOrientation : public SpawnRuleTA<IterateOrientationData, IterateOrientationArrayElement>
     {
       public:
-        SetSpeed();
+        IterateOrientation();
 
         std::shared_ptr<SpawnRule> Clone() const override;
 
         void Execute(SpawnRuleInfo& info) override;
-
-        void SetRTTRValue(const rttr::variant& value) override;
 
         static void Reflect();
     };
@@ -50,5 +54,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // SpawnSetSpeed_BARRAGE_H
+#endif // SpawnIterateOrientation_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
