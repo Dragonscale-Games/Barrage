@@ -16,6 +16,7 @@
 #include <stdafx.h>
 #include "SpawnIterateCount.hpp"
 #include "Objects/Pools/Pool.hpp"
+#include <climits>
 
 namespace Barrage
 {
@@ -30,11 +31,21 @@ namespace Barrage
 
     void IterateCount::Execute(SpawnRuleInfo& info)
     {
-      int new_count = info.groupInfo_.numGroups_ + data_.amount_;
+      long long new_count = static_cast<long long>(info.groupInfo_.numGroups_) + data_.countStep_;
       
-      if (new_count >= data_.min_ && new_count <= data_.max_)
+      if (new_count >= static_cast<long long>(data_.min_) && new_count <= static_cast<long long>(data_.max_))
       {
-        info.groupInfo_.numGroups_ = new_count;
+        info.groupInfo_.numGroups_ = static_cast<unsigned>(new_count);
+      }
+    }
+
+    void IterateCount::SetRTTRValue(const rttr::variant& value)
+    {
+      SpawnRuleT<IterateCountData>::SetRTTRValue(value);
+      
+      if (data_.max_ < data_.min_)
+      {
+        data_.max_ = data_.min_;
       }
     }
 
@@ -47,7 +58,7 @@ namespace Barrage
     {
       rttr::registration::class_<Spawn::IterateCountData>("IterateCountData")
         .constructor<>() (rttr::policy::ctor::as_object)
-        .property("amount", &Spawn::IterateCountData::amount_)
+        .property("countStep", &Spawn::IterateCountData::countStep_)
         .property("min", &Spawn::IterateCountData::min_)
         .property("max", &Spawn::IterateCountData::max_)
         ;

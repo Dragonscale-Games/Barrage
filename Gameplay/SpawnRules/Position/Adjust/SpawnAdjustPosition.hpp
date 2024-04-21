@@ -27,10 +27,10 @@ namespace Barrage
   {
     struct AdjustPositionData
     {
-      glm::vec2 baseOffset_;
+      glm::vec2 base_;
       glm::vec2 delta_;
 
-      inline AdjustPositionData() : baseOffset_(0.0f), delta_(0.0f) {};
+      inline AdjustPositionData() : base_(0.0f), delta_(0.0f) {};
     };
     
     class AdjustPosition : public SpawnRuleT<AdjustPositionData>

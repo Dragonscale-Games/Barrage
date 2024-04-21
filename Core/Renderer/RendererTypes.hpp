@@ -33,8 +33,8 @@ namespace Barrage
     {
       glm::vec2 rpos(x_, y_);
 
-      rpos.x =  x_ * cosAngle + y_ * sinAngle;
-      rpos.y = -x_ * sinAngle + y_ * cosAngle;
+      rpos.x = x_ * cosAngle - y_ * sinAngle;
+      rpos.y = x_ * sinAngle + y_ * cosAngle;
 
       x_ = rpos.x;
       y_ = rpos.y;

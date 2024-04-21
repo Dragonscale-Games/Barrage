@@ -56,8 +56,6 @@ namespace Barrage
       static void SpawnObjects(Space& space, Pool& pool);
 
       void LinkAndValidateSpawns(Space& space, Pool* pool);
-
-      void MakeSpawnVelocitiesNonZero(Pool* pool);
 	};
 }
 

@@ -36,9 +36,7 @@ namespace Barrage
       Velocity& sourceVelocity = info.sourcePool_.GetComponentArray<Velocity>("Velocity").Data(info.sourceIndex_);
       VelocityArray& destVelocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
 
-      float angle = sourceVelocity.GetAngle();
-      float cos_angle = glm::cos(angle);
-      float sin_angle = glm::sin(angle);
+      Radian sourceAngle = sourceVelocity.GetAngle();
 
       for (unsigned layerCopy = 0; layerCopy < info.groupInfo_.numLayerCopies_; ++layerCopy)
       {
@@ -48,10 +46,8 @@ namespace Barrage
           {
             unsigned destIndex = CalculateDestinationIndex(info, object, group, layerCopy);
             Velocity& destVelocity = destVelocities.Data(destIndex);
-            float speed = glm::length(glm::vec2(destVelocity.vx_, destVelocity.vy_));
 
-            destVelocity.vx_ = speed * cos_angle;
-            destVelocity.vy_ = speed * sin_angle;
+            destVelocity.SetAngle(sourceAngle.value_);
           }
         }
       }

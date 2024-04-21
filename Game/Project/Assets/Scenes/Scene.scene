@@ -62,7 +62,14 @@
                                     "uSize": 1.0,
                                     "vSize": 1.0
                                 },
-                                "Velocity": {}
+                                "Velocity": {
+                                    "angle": {
+                                        "value": 4.71238899230957
+                                    },
+                                    "speed": 0.0,
+                                    "vx": 0.0,
+                                    "vy": 0.0
+                                }
                             }
                         }
                     }
@@ -137,7 +144,6 @@
                 "componentArrayNames": [
                     "ColorTint",
                     "Destructible",
-                    "Lifetime",
                     "Position",
                     "Rotation",
                     "Scale",
@@ -154,61 +160,6 @@
                     },
                     "CircleCollider": {
                         "radius": 8.0
-                    },
-                    "Spawner": {
-                        "currentPattern": "Eagle Arrows",
-                        "patterns": [
-                            {
-                                "Key": "Eagle Arrows",
-                                "Value": {
-                                    "automaticSpawns": [
-                                        {
-                                            "spawnType": "Eagle Arrow Spawn",
-                                            "ticksPerSpawn": 0,
-                                            "delay": 179
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        "spawnTypes": [
-                            {
-                                "Key": "Eagle Arrow Spawn",
-                                "Value": {
-                                    "spawnLayers": [
-                                        {
-                                            "numGroups": 2,
-                                            "sizeRules": [],
-                                            "valueRules": [
-                                                {
-                                                    "Name": "SetSpeed",
-                                                    "Data": {
-                                                        "base": 2.0,
-                                                        "delta": 0.0
-                                                    }
-                                                },
-                                                {
-                                                    "Name": "Fan",
-                                                    "Data": {
-                                                        "spacing": {
-                                                            "value": -2.9147000312805177
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    "Name": "MatchPosition"
-                                                },
-                                                {
-                                                    "Name": "MatchDirection"
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                    "destinationPool": "Arrow Pool",
-                                    "spawnArchetype": "Arrow Object"
-                                }
-                            }
-                        ]
                     },
                     "Sprite": {
                         "texture": "TestBullet",
@@ -229,9 +180,6 @@
                                     "alpha": 1.0
                                 },
                                 "Destructible": {},
-                                "Lifetime": {
-                                    "ticks": 180
-                                },
                                 "Position": {
                                     "x": 0.0,
                                     "y": 0.0
@@ -242,8 +190,8 @@
                                     }
                                 },
                                 "Scale": {
-                                    "w": 64.0,
-                                    "h": 64.0
+                                    "w": 48.0,
+                                    "h": 8.0
                                 },
                                 "TextureUV": {
                                     "uMin": 0.0,
@@ -251,7 +199,14 @@
                                     "uSize": 1.0,
                                     "vSize": 1.0
                                 },
-                                "Velocity": {}
+                                "Velocity": {
+                                    "angle": {
+                                        "value": 4.71238899230957
+                                    },
+                                    "speed": 0.0,
+                                    "vx": 0.0,
+                                    "vy": 0.0
+                                }
                             }
                         }
                     }
@@ -324,7 +279,14 @@
                                     "uSize": 1.0,
                                     "vSize": 1.0
                                 },
-                                "Velocity": {}
+                                "Velocity": {
+                                    "angle": {
+                                        "value": 4.71238899230957
+                                    },
+                                    "speed": 0.0,
+                                    "vx": 0.0,
+                                    "vy": 0.0
+                                }
                             }
                         }
                     }
@@ -338,268 +300,6 @@
                 "capacity": 1,
                 "componentArrayNames": [
                     "Destructible",
-                    "Lifetime",
-                    "Position",
-                    "SpawnTimer"
-                ],
-                "components": {
-                    "Spawner": {
-                        "currentPattern": "Test Pattern",
-                        "patterns": [
-                            {
-                                "Key": "Test Pattern",
-                                "Value": {
-                                    "automaticSpawns": [
-                                        {
-                                            "spawnType": "Orb Spawn Type",
-                                            "ticksPerSpawn": 10,
-                                            "delay": 0
-                                        },
-                                        {
-                                            "spawnType": "Triangle Spawner Type",
-                                            "ticksPerSpawn": 359,
-                                            "delay": 0
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        "spawnTypes": [
-                            {
-                                "Key": "Orb Spawn Type",
-                                "Value": {
-                                    "spawnLayers": [
-                                        {
-                                            "numGroups": 1,
-                                            "sizeRules": [
-                                                {
-                                                    "Name": "IncrementCount",
-                                                    "Data": {
-                                                        "amount": 1,
-                                                        "max": 16
-                                                    }
-                                                }
-                                            ],
-                                            "valueRules": [
-                                                {
-                                                    "Name": "SetSpeed",
-                                                    "Data": {
-                                                        "base": 2.0,
-                                                        "delta": 0.0
-                                                    }
-                                                },
-                                                {
-                                                    "Name": "Ring"
-                                                },
-                                                {
-                                                    "Name": "MatchPosition"
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                    "destinationPool": "Orb Pool",
-                                    "spawnArchetype": "Orb Object"
-                                }
-                            },
-                            {
-                                "Key": "Triangle Spawner Type",
-                                "Value": {
-                                    "spawnLayers": [
-                                        {
-                                            "numGroups": 1,
-                                            "sizeRules": [],
-                                            "valueRules": [
-                                                {
-                                                    "Name": "MatchPosition"
-                                                },
-                                                {
-                                                    "Name": "AimedDirection"
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                    "destinationPool": "Triangle Spawner Pool",
-                                    "spawnArchetype": "Triangle Spawner Archetype"
-                                }
-                            }
-                        ]
-                    }
-                },
-                "name": "Spawner Pool",
-                "spawnArchetypes": [
-                    {
-                        "Key": "Spawn Archetype",
-                        "Value": {
-                            "name": "Spawn Archetype",
-                            "componentArrays": {
-                                "Destructible": {},
-                                "Lifetime": {
-                                    "ticks": 720
-                                },
-                                "Position": {
-                                    "x": 0.0,
-                                    "y": 0.0
-                                }
-                            }
-                        }
-                    }
-                ],
-                "startingObjects": [],
-                "tags": []
-            }
-        },
-        {
-            "Key": "Spawner Spawner Pool",
-            "Value": {
-                "capacity": 1,
-                "componentArrayNames": [
-                    "Position",
-                    "SpawnTimer"
-                ],
-                "components": {
-                    "Spawner": {
-                        "currentPattern": "Spawner Spawner Pattern",
-                        "patterns": [
-                            {
-                                "Key": "Spawner Spawner Pattern",
-                                "Value": {
-                                    "automaticSpawns": [
-                                        {
-                                            "spawnType": "Spawner Spawner Spawn",
-                                            "ticksPerSpawn": 1080,
-                                            "delay": 0
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        "spawnTypes": [
-                            {
-                                "Key": "Spawner Spawner Spawn",
-                                "Value": {
-                                    "spawnLayers": [
-                                        {
-                                            "numGroups": 1,
-                                            "sizeRules": [],
-                                            "valueRules": [
-                                                {
-                                                    "Name": "RandomBoxOffset",
-                                                    "Data": {
-                                                        "xVariance": 150.0,
-                                                        "yVariance": 0.0
-                                                    }
-                                                },
-                                                {
-                                                    "Name": "MatchPosition"
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                    "destinationPool": "Spawner Pool",
-                                    "spawnArchetype": "Spawn Archetype"
-                                }
-                            }
-                        ]
-                    }
-                },
-                "name": "Spawner Spawner Pool",
-                "spawnArchetypes": [],
-                "startingObjects": [
-                    {
-                        "Key": "Object",
-                        "Value": {
-                            "name": "Object",
-                            "componentArrays": {
-                                "Position": {
-                                    "x": 0.0,
-                                    "y": 286.0
-                                }
-                            }
-                        }
-                    }
-                ],
-                "tags": []
-            }
-        },
-        {
-            "Key": "Triangle Pool",
-            "Value": {
-                "capacity": 10000,
-                "componentArrayNames": [
-                    "ColorTint",
-                    "Destructible",
-                    "Position",
-                    "Rotation",
-                    "Scale",
-                    "TextureUV",
-                    "Velocity"
-                ],
-                "components": {
-                    "BoundaryBox": {
-                        "xMin": -1920.0,
-                        "xMax": 1920.0,
-                        "yMin": -1080.0,
-                        "yMax": 1080.0
-                    },
-                    "CircleCollider": {
-                        "radius": 8.0
-                    },
-                    "Sprite": {
-                        "texture": "TestBullet",
-                        "layer": 2
-                    }
-                },
-                "name": "Triangle Pool",
-                "spawnArchetypes": [
-                    {
-                        "Key": "Triangle Object",
-                        "Value": {
-                            "name": "Triangle Object",
-                            "componentArrays": {
-                                "ColorTint": {
-                                    "red": 0.0,
-                                    "green": 0.06399989128112793,
-                                    "blue": 1.0,
-                                    "alpha": 1.0
-                                },
-                                "Destructible": {},
-                                "Position": {
-                                    "x": 0.0,
-                                    "y": 0.0
-                                },
-                                "Rotation": {
-                                    "angle": {
-                                        "value": -0.0
-                                    }
-                                },
-                                "Scale": {
-                                    "w": 24.0,
-                                    "h": 24.0
-                                },
-                                "TextureUV": {
-                                    "uMin": 0.0,
-                                    "vMin": 0.0,
-                                    "uSize": 1.0,
-                                    "vSize": 1.0
-                                },
-                                "Velocity": {}
-                            }
-                        }
-                    }
-                ],
-                "startingObjects": [],
-                "tags": [
-                    "Bullet"
-                ]
-            }
-        },
-        {
-            "Key": "Triangle Spawner Pool",
-            "Value": {
-                "capacity": 1,
-                "componentArrayNames": [
-                    "Destructible",
-                    "Lifetime",
                     "Position",
                     "SpawnTimer",
                     "Velocity"
@@ -613,8 +313,8 @@
                                 "Value": {
                                     "automaticSpawns": [
                                         {
-                                            "spawnType": "Triangle Spawn Type",
-                                            "ticksPerSpawn": 8,
+                                            "spawnType": "Orb Spawn Type",
+                                            "ticksPerSpawn": 120,
                                             "delay": 0
                                         }
                                     ]
@@ -623,73 +323,97 @@
                         ],
                         "spawnTypes": [
                             {
-                                "Key": "Triangle Spawn Type",
+                                "Key": "Orb Spawn Type",
                                 "Value": {
                                     "spawnLayers": [
                                         {
-                                            "numGroups": 1,
-                                            "sizeRules": [
-                                                {
-                                                    "Name": "IncrementCount",
-                                                    "Data": {
-                                                        "amount": 1,
-                                                        "max": 8
-                                                    }
-                                                }
-                                            ],
+                                            "numGroups": 10,
+                                            "sizeRules": [],
                                             "valueRules": [
                                                 {
-                                                    "Name": "SetSpeed",
+                                                    "Name": "AdjustPosition",
                                                     "Data": {
-                                                        "base": 4.0,
-                                                        "delta": 0.0
+                                                        "base": {
+                                                            "x": 0.0,
+                                                            "y": 0.0
+                                                        },
+                                                        "delta": {
+                                                            "x": 29.0,
+                                                            "y": 40.0
+                                                        }
                                                     }
                                                 },
                                                 {
                                                     "Name": "Fan",
                                                     "Data": {
                                                         "spacing": {
-                                                            "value": -0.02617993950843811
+                                                            "value": -0.24434611201286317
                                                         }
                                                     }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "numGroups": 2,
+                                            "sizeRules": [],
+                                            "valueRules": [
+                                                {
+                                                    "Name": "Mirror"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "numGroups": 1,
+                                            "sizeRules": [],
+                                            "valueRules": [
+                                                {
+                                                    "Name": "MatchSpawnerOrientation"
                                                 },
                                                 {
-                                                    "Name": "MatchPosition"
+                                                    "Name": "RandomOrientation"
                                                 },
                                                 {
-                                                    "Name": "MatchDirection"
+                                                    "Name": "RandomSpeed",
+                                                    "Data": {
+                                                        "minSpeed": 1.0,
+                                                        "maxSpeed": 4.0
+                                                    }
                                                 }
                                             ]
                                         }
                                     ],
-                                    "destinationPool": "Triangle Pool",
-                                    "spawnArchetype": "Triangle Object"
+                                    "destinationPool": "Orb Pool",
+                                    "spawnArchetype": "Orb Object"
                                 }
                             }
                         ]
                     }
                 },
-                "name": "Triangle Spawner Pool",
-                "spawnArchetypes": [
+                "name": "Spawner Pool",
+                "spawnArchetypes": [],
+                "startingObjects": [
                     {
-                        "Key": "Triangle Spawner Archetype",
+                        "Key": "Spawner",
                         "Value": {
-                            "name": "Triangle Spawner Archetype",
+                            "name": "Spawner",
                             "componentArrays": {
                                 "Destructible": {},
-                                "Lifetime": {
-                                    "ticks": 63
-                                },
                                 "Position": {
                                     "x": 0.0,
                                     "y": 0.0
                                 },
-                                "Velocity": {}
+                                "Velocity": {
+                                    "angle": {
+                                        "value": 0.0
+                                    },
+                                    "speed": 0.0,
+                                    "vx": 0.0,
+                                    "vy": 0.0
+                                }
                             }
                         }
                     }
                 ],
-                "startingObjects": [],
                 "tags": []
             }
         }

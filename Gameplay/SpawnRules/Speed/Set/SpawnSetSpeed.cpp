@@ -50,16 +50,6 @@ namespace Barrage
       }
     }
 
-    void SetSpeed::SetRTTRValue(const rttr::variant& value)
-    {
-      SpawnRuleT<SetSpeedData>::SetRTTRValue(value);
-
-      if (data_.baseSpeed_ < MINIMUM_SPEED)
-      {
-        data_.baseSpeed_ = MINIMUM_SPEED;
-      }
-    }
-
     void SetSpeed::Reflect()
     {
       rttr::registration::class_<Spawn::SetSpeedData>("SetSpeedData")

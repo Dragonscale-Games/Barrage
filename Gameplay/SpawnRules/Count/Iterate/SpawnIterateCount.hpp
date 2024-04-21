@@ -26,11 +26,11 @@ namespace Barrage
   {
     struct IterateCountData
     {
-      int amount_;
+      int countStep_;
       unsigned min_;
       unsigned max_;
 
-      inline IterateCountData() : amount_(0), min_(1), max_(1) {};
+      inline IterateCountData() : countStep_(1), min_(0), max_(100) {};
     };
     
     class IterateCount : public SpawnRuleT<IterateCountData>
@@ -41,6 +41,8 @@ namespace Barrage
         std::shared_ptr<SpawnRule> Clone() const override;
 
         void Execute(SpawnRuleInfo& info) override;
+
+        void SetRTTRValue(const rttr::variant& value) override;
 
         SpawnRuleStage GetStage() override;
 

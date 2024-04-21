@@ -47,7 +47,7 @@ namespace Barrage
             Velocity& dest_velocity = dest_velocities.Data(dest_index);
 
             dest_position.Rotate(data_.cosineAngle_, data_.sinAngle_);
-            dest_velocity.Rotate(data_.cosineAngle_, data_.sinAngle_);
+            dest_velocity.Rotate(data_.angle_.value_);
           }
         }
       }

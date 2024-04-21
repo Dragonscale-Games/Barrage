@@ -23,8 +23,14 @@ namespace Barrage
 {
   using StringSet = std::set<std::string>;
   
-  constexpr unsigned char CHAR_TRUE = 1;
-  constexpr unsigned char CHAR_FALSE = 0;
+  constexpr float BARRAGE_PI = 3.1415926f;
+
+  struct Degree
+  {
+    float value_;
+
+    inline Degree(float value) : value_(value) {};
+  };
 
   struct Radian
   {
@@ -32,6 +38,8 @@ namespace Barrage
 
     inline Radian() : value_(0.0f) {};
     inline Radian(float value) : value_(value) {};
+    inline Radian(Degree value) : value_(value.value_ * BARRAGE_PI / 180.0f) {};
+    inline Degree ToDegrees() { return Degree(value_ * 180.0f / BARRAGE_PI); };
   };
   
   struct Dummy

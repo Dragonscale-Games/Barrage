@@ -1,7 +1,7 @@
  
 /* ======================================================================== */
 /*!
- * \file            SpawnRandomBoxOffset.cpp
+ * \file            SpawnRandomPositionBox.cpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -15,7 +15,7 @@
  /* ======================================================================== */
 
 #include <stdafx.h>
-#include "SpawnRandomBoxOffset.hpp"
+#include "SpawnRandomPositionBox.hpp"
 #include "Spaces/Space.hpp"
 #include "ComponentArrays/Position/PositionArray.hpp"
 #include "Objects/Pools/Pool.hpp"
@@ -24,14 +24,14 @@ namespace Barrage
 {
   namespace Spawn
   {
-    RandomBoxOffset::RandomBoxOffset() : SpawnRuleT<RandomBoxOffsetData>("RandomBoxOffset") {}
+    RandomPositionBox::RandomPositionBox() : SpawnRuleT<RandomPositionBoxData>("RandomPositionBox") {}
 
-    std::shared_ptr<SpawnRule> RandomBoxOffset::Clone() const
+    std::shared_ptr<SpawnRule> RandomPositionBox::Clone() const
     {
-      return std::make_shared<RandomBoxOffset>(*this);
+      return std::make_shared<RandomPositionBox>(*this);
     }
 
-    void RandomBoxOffset::Execute(SpawnRuleInfo& info)
+    void RandomPositionBox::Execute(SpawnRuleInfo& info)
     {
       Random& rng = info.space_.RNG();
       PositionArray& destPositions = info.destinationPool_.GetComponentArray<Position>("Position");
@@ -55,12 +55,12 @@ namespace Barrage
       }
     }
 
-    void RandomBoxOffset::Reflect()
+    void RandomPositionBox::Reflect()
     {
-      rttr::registration::class_<Spawn::RandomBoxOffsetData>("RandomBoxOffset")
+      rttr::registration::class_<Spawn::RandomPositionBoxData>("RandomPositionBox")
         .constructor<>() (rttr::policy::ctor::as_object)
-        .property("xVariance", &Spawn::RandomBoxOffsetData::xVariance_)
-        .property("yVariance", &Spawn::RandomBoxOffsetData::yVariance_)
+        .property("xVariance", &Spawn::RandomPositionBoxData::xVariance_)
+        .property("yVariance", &Spawn::RandomPositionBoxData::yVariance_)
         ;
     }
   }

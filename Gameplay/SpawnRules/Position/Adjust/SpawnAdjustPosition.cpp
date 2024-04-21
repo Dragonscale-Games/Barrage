@@ -37,7 +37,7 @@ namespace Barrage
       {
         for (unsigned group = 0; group < info.groupInfo_.numGroups_; ++group)
         {
-          glm::vec2 offset = data_.baseOffset_ + static_cast<float>(group) * data_.delta_;
+          glm::vec2 offset = data_.base_ + static_cast<float>(group) * data_.delta_;
 
           for (unsigned object = 0; object < info.groupInfo_.numObjectsPerGroup_; ++object)
           {
@@ -55,7 +55,7 @@ namespace Barrage
     {
       rttr::registration::class_<Spawn::AdjustPositionData>("AdjustPositionData")
         .constructor<>() (rttr::policy::ctor::as_object)
-        .property("baseOffset", &Spawn::AdjustPositionData::baseOffset_)
+        .property("base", &Spawn::AdjustPositionData::base_)
         .property("delta", &Spawn::AdjustPositionData::delta_)
         ;
     }

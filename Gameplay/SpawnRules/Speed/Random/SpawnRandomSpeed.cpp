@@ -55,11 +55,6 @@ namespace Barrage
     {
       SpawnRuleT<RandomSpeedData>::SetRTTRValue(value);
 
-      if (data_.minSpeed_ < MINIMUM_SPEED)
-      {
-        data_.minSpeed_ = MINIMUM_SPEED;
-      }
-      
       if (data_.maxSpeed_ < data_.minSpeed_)
       {
         data_.maxSpeed_ = data_.minSpeed_;

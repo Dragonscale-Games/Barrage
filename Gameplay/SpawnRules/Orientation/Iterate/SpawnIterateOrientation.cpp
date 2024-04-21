@@ -19,6 +19,7 @@
 #include "Objects/Pools/Pool.hpp"
 #include "ComponentArrays/Position/PositionArray.hpp"
 #include "ComponentArrays/Velocity/VelocityArray.hpp"
+#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
@@ -36,7 +37,7 @@ namespace Barrage
       float& angle = dataArray_.Data(info.sourceIndex_).angle_.value_;
       float cos_angle = glm::cos(angle);
       float sin_angle = glm::sin(angle);
-      angle = ClampWrapped(angle + data_.angleStep_.value_, 0.0f, 2.0f * 3.1415926f);
+      angle = ClampWrapped(angle + data_.angleStep_.value_, 0.0f, 2.0f * BARRAGE_PI);
 
       PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
       VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
@@ -52,7 +53,7 @@ namespace Barrage
             Velocity& dest_velocity = dest_velocities.Data(dest_index);
 
             dest_position.Rotate(cos_angle, sin_angle);
-            dest_velocity.Rotate(cos_angle, sin_angle);
+            dest_velocity.Rotate(angle);
           }
         }
       }

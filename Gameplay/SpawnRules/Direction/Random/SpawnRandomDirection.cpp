@@ -40,9 +40,7 @@ namespace Barrage
 
       for (unsigned group = 0; group < info.groupInfo_.numGroups_; ++group)
       {
-        float angle = 3.1415926f * rng.RangeFloat(0, 2.0f);
-        float cos_angle = glm::cos(angle);
-        float sin_angle = glm::sin(angle);
+        float angle = rng.RangeFloat(0, 2.0f * BARRAGE_PI);
 
         for (unsigned layerCopy = 0; layerCopy < info.groupInfo_.numLayerCopies_; ++layerCopy)
         {
@@ -51,7 +49,7 @@ namespace Barrage
             unsigned dest_index = CalculateDestinationIndex(info, object, group, layerCopy);
             Velocity& dest_velocity = dest_velocities.Data(dest_index);
             
-            dest_velocity.Rotate(cos_angle, sin_angle);
+            dest_velocity.SetAngle(angle);
           }
         }
       }

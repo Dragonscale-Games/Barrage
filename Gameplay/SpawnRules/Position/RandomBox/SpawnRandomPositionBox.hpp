@@ -1,6 +1,6 @@
 /* ======================================================================== */
 /*!
- * \file            SpawnRandomBoxOffset.hpp
+ * \file            SpawnRandomPositionBox.hpp
  * \par             Barrage Engine
  * \author          David Cruse
  * \par             david.n.cruse\@gmail.com
@@ -14,8 +14,8 @@
  /* ======================================================================== */
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef SpawnRandomBoxOffset_BARRAGE_H
-#define SpawnRandomBoxOffset_BARRAGE_H
+#ifndef SpawnRandomPositionBox_BARRAGE_H
+#define SpawnRandomPositionBox_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Spawning/SpawnRule.hpp"
@@ -24,18 +24,18 @@ namespace Barrage
 {
   namespace Spawn
   {
-    struct RandomBoxOffsetData
+    struct RandomPositionBoxData
     {
       float xVariance_;
       float yVariance_;
 
-      inline RandomBoxOffsetData() : xVariance_(0.0f), yVariance_(0.0f) {};
+      inline RandomPositionBoxData() : xVariance_(0.0f), yVariance_(0.0f) {};
     };
     
-    class RandomBoxOffset : public SpawnRuleT<RandomBoxOffsetData>
+    class RandomPositionBox : public SpawnRuleT<RandomPositionBoxData>
     {
       public:
-        RandomBoxOffset();
+        RandomPositionBox();
 
         std::shared_ptr<SpawnRule> Clone() const override;
 
@@ -47,5 +47,5 @@ namespace Barrage
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#endif // SpawnRandomBoxOffset_BARRAGE_H
+#endif // SpawnRandomPositionBox_BARRAGE_H
 ////////////////////////////////////////////////////////////////////////////////
