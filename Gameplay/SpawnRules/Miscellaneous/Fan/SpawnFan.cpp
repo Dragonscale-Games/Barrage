@@ -33,11 +33,16 @@ namespace Barrage
 
     void Fan::Execute(SpawnRuleInfo& info)
     {
-      PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
-      VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
-
+      if (info.groupInfo_.numGroups_ == 0)
+      {
+        return;
+      }
+      
       float totalAngle = (info.groupInfo_.numGroups_ - 1) * data_.spacing_.value_;
       float startAngle = -(totalAngle / 2.0f);
+
+      PositionArray& dest_positions = info.destinationPool_.GetComponentArray<Position>("Position");
+      VelocityArray& dest_velocities = info.destinationPool_.GetComponentArray<Velocity>("Velocity");
 
       for (unsigned layerCopy = 0; layerCopy < info.groupInfo_.numLayerCopies_; ++layerCopy)
       {
@@ -54,7 +59,7 @@ namespace Barrage
             Velocity& dest_velocity = dest_velocities.Data(dest_index);
 
             dest_position.Rotate(cos_angle, sin_angle);
-            dest_velocity.Rotate(cos_angle, sin_angle);
+            dest_velocity.Rotate(angle);
           }
         }
       }

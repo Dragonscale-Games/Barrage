@@ -69,7 +69,7 @@ namespace Barrage
     InputManager& input = Engine::Get().Input();
 
     float speed = 0.0f;
-    Velocity player_velocity;
+    glm::vec2 player_velocity;
 
     if (input.KeyIsDown(GLFW_KEY_LEFT_SHIFT))
     {
@@ -81,23 +81,35 @@ namespace Barrage
     }
 
     if (input.KeyIsDown(GLFW_KEY_LEFT))
-      player_velocity.vx_ = -speed;
-    else if (input.KeyIsDown(GLFW_KEY_RIGHT))
-      player_velocity.vx_ = speed;
-    else
-      player_velocity.vx_ = 0.0f;
-
-    if (input.KeyIsDown(GLFW_KEY_UP))
-      player_velocity.vy_ = speed;
-    else if (input.KeyIsDown(GLFW_KEY_DOWN))
-      player_velocity.vy_ = -speed;
-    else
-      player_velocity.vy_ = 0.0f;
-
-    if (player_velocity.vx_ && player_velocity.vy_)
     {
-      player_velocity.vx_ = player_velocity.vx_ / 1.4142f;
-      player_velocity.vy_ = player_velocity.vy_ / 1.4142f;
+      player_velocity.x = -speed;
+    }
+    else if (input.KeyIsDown(GLFW_KEY_RIGHT))
+    {
+      player_velocity.x = speed;
+    }
+    else
+    {
+      player_velocity.x = 0.0f;
+    }
+      
+    if (input.KeyIsDown(GLFW_KEY_UP))
+    {
+      player_velocity.y = speed;
+    }
+    else if (input.KeyIsDown(GLFW_KEY_DOWN))
+    {
+      player_velocity.y = -speed;
+    }
+    else
+    {
+      player_velocity.y = 0.0f;
+    }
+
+    if (player_velocity.x && player_velocity.y)
+    {
+      player_velocity.x = player_velocity.x / 1.4142f;
+      player_velocity.y = player_velocity.y / 1.4142f;
     }
 
     VelocityArray& velocity_array = pool.GetComponentArray<Velocity>("Velocity");
@@ -106,7 +118,7 @@ namespace Barrage
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      velocity_array.Data(i) = player_velocity;
+      velocity_array.Data(i).SetVelocity(player_velocity.x, player_velocity.y);
     }
   }
 
@@ -142,8 +154,8 @@ namespace Barrage
 
     for (unsigned i = 0; i < num_objects; ++i)
     {
-      position_array.Data(i).x_ += velocity_array.Data(i).vx_;
-      position_array.Data(i).y_ += velocity_array.Data(i).vy_;
+      position_array.Data(i).x_ += velocity_array.Data(i).GetVx();
+      position_array.Data(i).y_ += velocity_array.Data(i).GetVy();
     }
   }
 

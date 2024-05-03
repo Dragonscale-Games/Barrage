@@ -28,10 +28,8 @@ namespace Barrage
     struct SetDirectionData
     {
       Radian angle_;
-      float cosineAngle_; // precomputed, should not be edited manually
-      float sinAngle_;    // precomputed, should not be edited manually
 
-      inline SetDirectionData() : angle_(0.0f), cosineAngle_(1.0f), sinAngle_(0.0f) {};
+      inline SetDirectionData() : angle_(0.0f) {};
     };
     
     class SetDirection : public SpawnRuleT<SetDirectionData>
@@ -42,8 +40,6 @@ namespace Barrage
         std::shared_ptr<SpawnRule> Clone() const override;
 
         void Execute(SpawnRuleInfo& info) override;
-
-        void SetRTTRValue(const rttr::variant& value) override;
 
         static void Reflect();
     };

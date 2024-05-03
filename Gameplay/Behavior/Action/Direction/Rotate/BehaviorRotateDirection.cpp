@@ -29,17 +29,9 @@ namespace Barrage
     {
       Velocity& velocity = info.pool_.GetComponentArray<Velocity>("Velocity").Data(info.objectIndex_);
 
-      velocity.Rotate(data_.cosineAngle_, data_.sinAngle_);
+      velocity.Rotate(data_.angle_.value_);
 
       return BehaviorState::Success();
-    }
-
-    void RotateDirection::SetRTTRValue(const rttr::variant& value)
-    {
-      BehaviorNodeT<RotateDirectionData>::SetRTTRValue(value);
-
-      data_.cosineAngle_ = glm::cos(data_.angle_.value_);
-      data_.sinAngle_ = glm::sin(data_.angle_.value_);
     }
 
     void RotateDirection::Reflect()

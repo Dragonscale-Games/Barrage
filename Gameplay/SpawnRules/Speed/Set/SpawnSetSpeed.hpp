@@ -27,10 +27,10 @@ namespace Barrage
   {
     struct SetSpeedData
     {
-      float base_;
+      float baseSpeed_;
       float delta_;
 
-      inline SetSpeedData() : base_(MINIMUM_SPEED), delta_(0.0f) {};
+      inline SetSpeedData() : baseSpeed_(0.0f), delta_(0.0f) {};
     };
     
     class SetSpeed : public SpawnRuleT<SetSpeedData>
@@ -41,8 +41,6 @@ namespace Barrage
         std::shared_ptr<SpawnRule> Clone() const override;
 
         void Execute(SpawnRuleInfo& info) override;
-
-        void SetRTTRValue(const rttr::variant& value) override;
 
         static void Reflect();
     };

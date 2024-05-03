@@ -47,7 +47,7 @@ namespace Barrage
             Rotation& destRotation = destRotations.Data(destIndex);
             Velocity& destVelocity = destVelocities.Data(destIndex);
             
-            destRotation.angle_ = glm::atan(-destVelocity.vx_, destVelocity.vy_);
+            destRotation.angle_ = destVelocity.GetAngle();
           }
         }
       }

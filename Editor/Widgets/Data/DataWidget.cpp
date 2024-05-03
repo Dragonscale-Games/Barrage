@@ -569,16 +569,16 @@ namespace Barrage
 
   void DataWidget::AngleWidget(DataObject& object)
   {
-    Radian angle = object.GetValue<Radian>();
-    angle.value_ = -angle.value_ * 360.0f / (2 * IM_PI);
+    Radian angleRadians = object.GetValue<Radian>();
+    Degree angleDegrees = angleRadians.ToDegrees();
 
-    // just so the user never sees "negative zero" in the editor
-    if (angle.value_ == -0.0f)
+    // just so the user never sees "negative zero" for an angle in the editor
+    if (angleDegrees.value_ == -0.0f)
     {
-      angle.value_ = 0.0f;
+      angleDegrees.value_ = 0.0f;
     }
 
-    bool fieldChanged = ImGui::DragFloat("angle", &angle.value_);
+    bool fieldChanged = ImGui::DragFloat("angle", &angleDegrees.value_);
 
     if (ImGui::IsItemActive())
     {
@@ -587,8 +587,8 @@ namespace Barrage
 
     if (fieldChanged || ImGui::IsItemDeactivatedAfterEdit())
     {
-      angle.value_ = -angle.value_ * (2 * IM_PI) / 360.0f;
-      object.SetValue(angle);
+      angleRadians = Radian(angleDegrees);
+      object.SetValue(angleRadians);
     }
   }
 
@@ -1005,7 +1005,7 @@ namespace Barrage
     bool fieldChanged = false;
 
     const ImU32 one_step = 1;
-    fieldChanged |= ImGui::InputScalar("numGroups", ImGuiDataType_U32, &spawnLayer.baseNumGroups_, &one_step);
+    fieldChanged |= ImGui::InputScalar("count", ImGuiDataType_U32, &spawnLayer.baseNumGroups_, &one_step);
 
     if (ImGui::TreeNodeEx("spawnRules", ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_DefaultOpen))
     {

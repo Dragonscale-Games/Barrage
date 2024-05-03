@@ -17,28 +17,55 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Objects/Components/ComponentArray.hpp"
+#include "Utilities/Utilities.hpp"
 
 namespace Barrage
 {
-  static const float MINIMUM_SPEED = 0.000001f;
-  
   //!< Speed and direction of a game object
   struct Velocity
   {
-    float vx_; //!< x speed in world units per tick
-    float vy_; //!< y speed in world units per tick
-
     Velocity();
 
-    Velocity(float vx, float vy);
+    Velocity(float angle, float speed);
 
-    void Rotate(float cosAngle, float sinAngle);
+    Radian GetAngle() const;
+
+    float GetSpeed() const;
+
+    float GetVx() const;
+
+    float GetVy() const;
+
+    void SetAngle(Radian angle);
 
     void SetSpeed(float speed);
 
-    float GetAngle();
+    void SetVelocity(float vx, float vy);
+
+    void SetVx(float vx);
+
+    void SetVy(float vy);
+
+    void Rotate(float angle);
+
+    void AddSpeed(float speed);
+
+    void AddVelocity(float vx, float vy);
 
     static void Reflect();
+
+    private:
+      void UpdateCartesianValues();
+
+      void UpdatePolarValues();
+
+    private:
+      Radian angle_; //!< angle from x axis (counterclockwise is positive)
+      float speed_;  //!< total speed in world units per tick
+      float vx_;     //!< x speed in world units per tick
+      float vy_;     //!< y speed in world units per tick
+
+      static constexpr float MINIMUM_SPEED_THRESHOLD = 0.000001f;
   };
 
   typedef Barrage::ComponentArrayT<Velocity> VelocityArray;

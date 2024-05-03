@@ -158,7 +158,7 @@ namespace Barrage
     x += ttt * p3_.x_; 
     y += ttt * p3_.y_; 
 
-    return Position(x, y);
+    return Position(static_cast<float>(x), static_cast<float>(y));
   }
 
   void BezierCurve::BuildCurve()

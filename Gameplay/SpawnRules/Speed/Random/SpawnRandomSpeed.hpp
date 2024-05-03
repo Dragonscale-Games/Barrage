@@ -30,7 +30,7 @@ namespace Barrage
       float minSpeed_;
       float maxSpeed_;
 
-      inline RandomSpeedData() : minSpeed_(MINIMUM_SPEED), maxSpeed_(MINIMUM_SPEED) {};
+      inline RandomSpeedData() : minSpeed_(0.0f), maxSpeed_(1.0f) {};
     };
     
     class RandomSpeed : public SpawnRuleT<RandomSpeedData>

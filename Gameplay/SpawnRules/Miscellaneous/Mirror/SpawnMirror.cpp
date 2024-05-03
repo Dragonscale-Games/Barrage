@@ -47,7 +47,7 @@ namespace Barrage
             Velocity& velocity = dest_velocities.Data(dest_index);
 
             position.x_  = -position.x_;
-            velocity.vx_ = -velocity.vx_;
+            velocity.SetVx(-velocity.GetVx());
           }
         }
       }

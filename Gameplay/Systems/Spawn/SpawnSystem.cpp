@@ -23,7 +23,6 @@ namespace Barrage
 {
   static const std::string ALL_POOLS("All Pools");
   static const std::string SPAWNER_POOLS("Spawner Pools");
-  static const std::string VELOCITY_POOLS("Velocity Pools");
   
   SpawnSystem::SpawnSystem() :
     System()
@@ -34,10 +33,6 @@ namespace Barrage
     PoolType spawner_type;
     spawner_type.AddComponent("Spawner");
     poolTypes_[SPAWNER_POOLS] = spawner_type;
-
-    PoolType velocity_type;
-    velocity_type.AddComponentArray("Velocity");
-    poolTypes_[VELOCITY_POOLS] = velocity_type;
   }
 
   void SpawnSystem::Subscribe(Space& space, Pool* pool)
@@ -51,11 +46,6 @@ namespace Barrage
         if (it->first == SPAWNER_POOLS)
         {
           LinkAndValidateSpawns(space, pool);
-        }
-        else if (it->first == VELOCITY_POOLS)
-        {
-          MakeSpawnVelocitiesNonZero(pool);
-          continue; // we don't need to store these pools
         }
 
         poolGroups_[it->first].push_back(pool);
@@ -181,26 +171,6 @@ namespace Barrage
     if (spawner.patterns_.count(spawner.currentPattern_) == 0)
     {
       spawner.patterns_[spawner.currentPattern_];
-    }
-  }
-
-  void SpawnSystem::MakeSpawnVelocitiesNonZero(Pool* pool)
-  {
-    //
-    // spawn archetypes with a velocity of 0 break some spawn rules, so give them a slight magnitude here
-    //
-
-    ObjectArchetypeMap& spawnArchetypes = pool->spawnArchetypes_;
-
-    for (auto it = spawnArchetypes.begin(); it != spawnArchetypes.end(); ++it)
-    {
-      ObjectArchetype& spawnArchetype = it->second;
-      Velocity& velocity = dynamic_cast<VelocityArray&>(*spawnArchetype.componentArrays_.at("Velocity")).Data(0);
-
-      if (glm::length(glm::vec2(velocity.vx_, velocity.vy_)) < MINIMUM_SPEED)
-      {
-        velocity = Velocity();
-      }
     }
   }
 }

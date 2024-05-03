@@ -70,24 +70,37 @@ add_library(Gameplay STATIC
     
 	"SpawnRules/Color/Set/SpawnSetColor.cpp"
 
-	"SpawnRules/Count/Increment/SpawnIncrementCount.cpp"
+	"SpawnRules/Count/Iterate/SpawnIterateCount.cpp"
 
-	"SpawnRules/Direction/Aimed/SpawnAimedDirection.cpp"
-	"SpawnRules/Direction/Match/SpawnMatchDirection.cpp"
+	"SpawnRules/Direction/Adjust/SpawnAdjustDirection.cpp"
+	"SpawnRules/Direction/Iterate/SpawnIterateDirection.cpp"
+	"SpawnRules/Direction/MatchSpawner/SpawnMatchSpawnerDirection.cpp"
 	"SpawnRules/Direction/Random/SpawnRandomDirection.cpp" 
 	"SpawnRules/Direction/Set/SpawnSetDirection.cpp"
 
 	"SpawnRules/Miscellaneous/Fan/SpawnFan.cpp" 
 	"SpawnRules/Miscellaneous/Mirror/SpawnMirror.cpp"
 	"SpawnRules/Miscellaneous/Ring/SpawnRing.cpp" 
-	"SpawnRules/Miscellaneous/Spiral/SpawnSpiral.cpp"
 
-	"SpawnRules/Position/Match/SpawnMatchPosition.cpp"
-	"SpawnRules/Position/Offset/SpawnOffsetPosition.cpp" 
-	"SpawnRules/Position/RandomBoxOffset/SpawnRandomBoxOffset.cpp" 
+	"SpawnRules/Orientation/Adjust/SpawnAdjustOrientation.cpp"
+	"SpawnRules/Orientation/Iterate/SpawnIterateOrientation.cpp"
+	"SpawnRules/Orientation/MatchSpawner/SpawnMatchSpawnerOrientation.cpp"
+	"SpawnRules/Orientation/Random/SpawnRandomOrientation.cpp"
 
+	"SpawnRules/Position/Adjust/SpawnAdjustPosition.cpp" 
+	"SpawnRules/Position/Iterate/SpawnIteratePosition.cpp"
+	"SpawnRules/Position/MatchSpawner/SpawnMatchSpawnerPosition.cpp"
+	"SpawnRules/Position/RandomBox/SpawnRandomPositionBox.cpp" 
+	"SpawnRules/Position/Set/SpawnSetPosition.cpp"
+
+	"SpawnRules/Rotation/Adjust/SpawnAdjustRotation.cpp"
+	"SpawnRules/Rotation/Iterate/SpawnIterateRotation.cpp"
 	"SpawnRules/Rotation/MatchDirection/SpawnRotationMatchDirection.cpp" 
+	"SpawnRules/Rotation/Random/SpawnRandomRotation.cpp"
+	"SpawnRules/Rotation/Set/SpawnSetRotation.cpp"
 
+	"SpawnRules/Speed/Adjust/SpawnAdjustSpeed.cpp"
+	"SpawnRules/Speed/Iterate/SpawnIterateSpeed.cpp"
 	"SpawnRules/Speed/Random/SpawnRandomSpeed.cpp"
 	"SpawnRules/Speed/Set/SpawnSetSpeed.cpp"
 
@@ -99,7 +112,7 @@ add_library(Gameplay STATIC
 	"Systems/Lifetime/LifetimeSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
 	"Systems/Spawn/SpawnSystem.cpp"      
-	 )
+  )
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
