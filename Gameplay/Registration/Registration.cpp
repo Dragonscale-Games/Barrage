@@ -80,6 +80,7 @@
 #include "SpawnRules/Rotation/Set/SpawnSetRotation.hpp"
 
 #include "SpawnRules/Speed/Adjust/SpawnAdjustSpeed.hpp"
+#include "SpawnRules/Speed/Iterate/SpawnIterateSpeed.hpp"
 #include "SpawnRules/Speed/Random/SpawnRandomSpeed.hpp"
 #include "SpawnRules/Speed/Set/SpawnSetSpeed.hpp"
 
@@ -162,6 +163,7 @@ namespace Barrage
     RegisterSpawnRule<Spawn::SetRotation>("SetRotation");
 
     RegisterSpawnRule<Spawn::AdjustSpeed>("AdjustSpeed");
+    RegisterSpawnRule<Spawn::IterateSpeed>("IterateSpeed");
     RegisterSpawnRule<Spawn::RandomSpeed>("RandomSpeed");
     RegisterSpawnRule<Spawn::SetSpeed>("SetSpeed");
 
@@ -235,6 +237,7 @@ namespace Barrage
     Spawn::SetRotation::Reflect();
 
     Spawn::AdjustSpeed::Reflect();
+    Spawn::IterateSpeed::Reflect();
     Spawn::RandomSpeed::Reflect();
     Spawn::SetSpeed::Reflect();
   }
