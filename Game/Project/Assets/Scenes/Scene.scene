@@ -163,7 +163,7 @@
                     },
                     "Sprite": {
                         "texture": "TestBullet",
-                        "layer": 0
+                        "layer": 1
                     }
                 },
                 "name": "Orb Pool",
@@ -190,8 +190,8 @@
                                     }
                                 },
                                 "Scale": {
-                                    "w": 48.0,
-                                    "h": 8.0
+                                    "w": 32.0,
+                                    "h": 32.0
                                 },
                                 "TextureUV": {
                                     "uMin": 0.0,
@@ -314,7 +314,7 @@
                                     "automaticSpawns": [
                                         {
                                             "spawnType": "Orb Spawn Type",
-                                            "ticksPerSpawn": 120,
+                                            "ticksPerSpawn": 30,
                                             "delay": 0
                                         }
                                     ]
@@ -327,38 +327,30 @@
                                 "Value": {
                                     "spawnLayers": [
                                         {
-                                            "numGroups": 10,
+                                            "numGroups": 1,
                                             "sizeRules": [],
                                             "valueRules": [
                                                 {
-                                                    "Name": "AdjustPosition",
-                                                    "Data": {
-                                                        "base": {
-                                                            "x": 0.0,
-                                                            "y": 0.0
-                                                        },
-                                                        "delta": {
-                                                            "x": 29.0,
-                                                            "y": 40.0
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    "Name": "Fan",
-                                                    "Data": {
-                                                        "spacing": {
-                                                            "value": -0.24434611201286317
-                                                        }
-                                                    }
+                                                    "Name": "RandomDirection"
                                                 }
                                             ]
                                         },
                                         {
-                                            "numGroups": 2,
+                                            "numGroups": 20,
                                             "sizeRules": [],
                                             "valueRules": [
                                                 {
-                                                    "Name": "Mirror"
+                                                    "Name": "Ring"
+                                                },
+                                                {
+                                                    "Name": "SetSpeed",
+                                                    "Data": {
+                                                        "baseSpeed": 2.0,
+                                                        "delta": 0.0
+                                                    }
+                                                },
+                                                {
+                                                    "Name": "MatchSpawnerPosition"
                                                 }
                                             ]
                                         },
@@ -367,16 +359,10 @@
                                             "sizeRules": [],
                                             "valueRules": [
                                                 {
-                                                    "Name": "MatchSpawnerOrientation"
-                                                },
-                                                {
-                                                    "Name": "RandomOrientation"
-                                                },
-                                                {
-                                                    "Name": "RandomSpeed",
+                                                    "Name": "RandomPositionBox",
                                                     "Data": {
-                                                        "minSpeed": 1.0,
-                                                        "maxSpeed": 4.0
+                                                        "xVariance": 256.0,
+                                                        "yVariance": 128.0
                                                     }
                                                 }
                                             ]
@@ -400,7 +386,7 @@
                                 "Destructible": {},
                                 "Position": {
                                     "x": 0.0,
-                                    "y": 0.0
+                                    "y": 256.0
                                 },
                                 "Velocity": {
                                     "angle": {
