@@ -14,7 +14,11 @@
 
 namespace Barrage
 {
-  Sprite::Sprite() : texture_("<default>"), layer_(0)
+  Sprite::Sprite() : 
+    texture_("<default>"), 
+    layer_(0),
+    cols_(1),
+    rows_(1)
   {
   }
 
@@ -24,6 +28,8 @@ namespace Barrage
       .constructor<>() (rttr::policy::ctor::as_object)
       .property("texture", &Sprite::texture_)
       .property("layer", &Sprite::layer_)
+      .property("cols", &Sprite::cols_)
+      .property("rows", &Sprite::rows_)
       ;
   }
 }

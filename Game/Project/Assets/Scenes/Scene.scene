@@ -26,7 +26,9 @@
                     },
                     "Sprite": {
                         "texture": "TestBullet",
-                        "layer": 2
+                        "layer": 2,
+                        "cols": 1,
+                        "rows": 1
                     }
                 },
                 "name": "Arrow Pool",
@@ -94,7 +96,9 @@
                 "components": {
                     "Sprite": {
                         "texture": "TestFrame",
-                        "layer": 4
+                        "layer": 4,
+                        "cols": 1,
+                        "rows": 1
                     }
                 },
                 "name": "Frame Pool",
@@ -140,7 +144,7 @@
         {
             "Key": "Orb Pool",
             "Value": {
-                "capacity": 10000,
+                "capacity": 100000,
                 "componentArrayNames": [
                     "ColorTint",
                     "Destructible",
@@ -152,6 +156,29 @@
                     "Velocity"
                 ],
                 "components": {
+                    "Animation": {
+                        "animationSequences": [
+                            {
+                                "spriteFrames": [
+                                    0,
+                                    1,
+                                    2,
+                                    3,
+                                    4,
+                                    5,
+                                    6,
+                                    7,
+                                    8,
+                                    9,
+                                    10,
+                                    11
+                                ],
+                                "ticksPerFrame": 79,
+                                "loops": true,
+                                "name": "<untitled>"
+                            }
+                        ]
+                    },
                     "BoundaryBox": {
                         "xMin": -1920.0,
                         "xMax": 1920.0,
@@ -162,8 +189,10 @@
                         "radius": 8.0
                     },
                     "Sprite": {
-                        "texture": "TestBullet",
-                        "layer": 1
+                        "texture": "TestAnimation",
+                        "layer": 1,
+                        "cols": 4,
+                        "rows": 3
                     }
                 },
                 "name": "Orb Pool",
@@ -174,9 +203,9 @@
                             "name": "Orb Object",
                             "componentArrays": {
                                 "ColorTint": {
-                                    "red": 1.0,
-                                    "green": 1.0,
-                                    "blue": 1.0,
+                                    "red": 0.0,
+                                    "green": 0.0,
+                                    "blue": 0.0,
                                     "alpha": 1.0
                                 },
                                 "Destructible": {},
@@ -243,7 +272,9 @@
                     },
                     "Sprite": {
                         "texture": "TestShip",
-                        "layer": 0
+                        "layer": 0,
+                        "cols": 1,
+                        "rows": 1
                     }
                 },
                 "name": "Player Pool",
@@ -262,7 +293,7 @@
                                 },
                                 "Position": {
                                     "x": 0.0,
-                                    "y": -414.0
+                                    "y": -384.0
                                 },
                                 "Rotation": {
                                     "angle": {
@@ -345,7 +376,7 @@
                                                 {
                                                     "Name": "SetSpeed",
                                                     "Data": {
-                                                        "baseSpeed": 2.0,
+                                                        "baseSpeed": 1.0,
                                                         "delta": 0.0
                                                     }
                                                 },

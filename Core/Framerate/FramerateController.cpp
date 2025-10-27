@@ -86,6 +86,8 @@ namespace Barrage
         minimumFrameTime_ = DT_60HZ / 2;
         break;
 
+      case FpsCap::NO_CAP:
+        [[fallthrough]];
       default:
         minimumFrameTime_ = 0;
         break;
