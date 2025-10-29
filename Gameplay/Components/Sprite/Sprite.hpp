@@ -25,6 +25,8 @@ namespace Barrage
     public:
       std::string texture_; //!< Name of the texture to draw with
       unsigned layer_;      //!< Layer of the drawn object (lower layers are drawn beneath higher ones)
+      unsigned cols_;       //!< Number of columns in the sprite (if it's a spritesheet)
+      unsigned rows_;       //!< Number of rows in the sprite (if it's a spritesheet)
 
       Sprite();
 

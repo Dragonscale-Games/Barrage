@@ -40,6 +40,7 @@
 #include "ComponentArrays/TextureUV/TextureUVArray.hpp"
 #include "ComponentArrays/Velocity/VelocityArray.hpp"
 
+#include "Components/Animation/Animation.hpp"
 #include "Components/Behavior/Behavior.hpp"
 #include "Components/BoundaryBox/BoundaryBox.hpp"
 #include "Components/CircleCollider/CircleCollider.hpp"
@@ -123,6 +124,7 @@ namespace Barrage
     RegisterComponentArray<TextureUV>("TextureUV");
     RegisterComponentArray<Velocity>("Velocity");
 
+    RegisterComponent<Animation>("Animation");
     RegisterComponent<BehaviorTree>("BehaviorTree");
     RegisterComponent<BoundaryBox>("BoundaryBox");
     RegisterComponent<CircleCollider>("CircleCollider");
@@ -185,6 +187,7 @@ namespace Barrage
     update_order.push_back("LifetimeSystem");
     update_order.push_back("SpawnSystem");
     update_order.push_back("CollisionSystem");
+    update_order.push_back("DrawSystem");
 
     SetSystemUpdateOrder(update_order);
   }
@@ -207,6 +210,7 @@ namespace Barrage
     TextureUVReflect();
     Velocity::Reflect();
 
+    Animation::Reflect();
     BoundaryBox::Reflect();
     CircleCollider::Reflect();
     Movement::Reflect();

@@ -60,6 +60,7 @@ add_library(Gameplay STATIC
 	"ComponentArrays/TextureUV/TextureUVArray.cpp" 
 	"ComponentArrays/Velocity/VelocityArray.cpp" 
 
+	"Components/Animation/Animation.cpp"
 	"Components/Behavior/Behavior.cpp"
 	"Components/BoundaryBox/BoundaryBox.cpp" 
 	"Components/CircleCollider/CircleCollider.cpp" 
@@ -112,7 +113,7 @@ add_library(Gameplay STATIC
 	"Systems/Lifetime/LifetimeSystem.cpp"
 	"Systems/Movement/MovementSystem.cpp"
 	"Systems/Spawn/SpawnSystem.cpp"      
-  )
+    )
 
 target_link_libraries(Gameplay PUBLIC BarrageCore)
 target_include_directories(Gameplay PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")

@@ -56,12 +56,22 @@ namespace Barrage
       /**************************************************************/
       /*!
         \brief
+          Updates animations and other draw-related data.
+      */
+      /**************************************************************/
+      void Update() override;
+
+      /**************************************************************/
+      /*!
+        \brief
           Draws all pools contained in the system.
       */
       /**************************************************************/
       void Draw();
 
     private:
+      static void UpdateAnimations(Space& space, Pool& pool);
+      
       DrawPoolMap drawPools_;
   };
 }

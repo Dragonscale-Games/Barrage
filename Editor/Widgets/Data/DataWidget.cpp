@@ -1108,6 +1108,18 @@ namespace Barrage
 
     const ImU32 one_step = 1;
     fieldChanged |= ImGui::InputScalar("layer", ImGuiDataType_U32, &sprite.layer_, &one_step);
+    fieldChanged |= ImGui::InputScalar("cols", ImGuiDataType_U32, &sprite.cols_, &one_step);
+    fieldChanged |= ImGui::InputScalar("rows", ImGuiDataType_U32, &sprite.rows_, &one_step);
+
+    if (sprite.cols_ == 0)
+    {
+      sprite.cols_ = 1;
+    }
+
+    if (sprite.rows_ == 0)
+    {
+      sprite.rows_ = 1;
+    }
 
     if (ImGui::IsItemActive())
     {
